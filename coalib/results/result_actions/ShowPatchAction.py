@@ -39,14 +39,17 @@ def print_beautified_diff(difflines, printer):
         elif line.startswith('+++'):
             print_to_name(printer, line[4:])
         elif line.startswith('+'):
-            print_to_name(printer, line[1:])
+            printer.print(format_line(line[1:], real_nr=current_line_added),
+                          color='green')
             current_line_added += 1
         elif line.startswith('-'):
-            printer.print(format_line
-                          ('Line affected {}'.format(current_line_added)))
-            printer.print(format_line(''))
-            print_from_name(printer, line[1:])
+            printer.print(format_line(line[1:],
+                                      real_nr=current_line_subtracted),
+                          color='red')
             current_line_subtracted += 1
+        else:
+            current_line_subtracted += 1
+            current_line_added += 1
 
 
 class ShowPatchAction(ResultAction):
@@ -81,18 +84,18 @@ class ShowPatchAction(ResultAction):
               result,
               original_file_dict,
               file_diff_dict,
-              colored: bool=True,
+              no_color: bool=False,
               show_result_on_top: bool=False):
         """
         (S)how patch
 
-        :param colored:
+        :param no_color:
             Whether or not to use colored output.
         :param show_result_on_top:
             Set this to True if you want to show the result info on top.
             (Useful for e.g. coala_ci.)
         """
-        printer = ConsolePrinter(colored)
+        printer = ConsolePrinter(not no_color)
 
         if show_result_on_top:
             from coalib.output.ConsoleInteraction import print_result

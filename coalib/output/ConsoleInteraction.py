@@ -17,7 +17,7 @@ from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
-from coalib.results.result_actions.ChainPatchAction import ChainPatchAction
+from coalib.results.result_actions.DoNothingAction import DoNothingAction
 from coalib.results.result_actions.ShowAppliedPatchesAction import (
     ShowAppliedPatchesAction)
 from coalib.results.result_actions.PrintDebugMessageAction import (
@@ -88,7 +88,6 @@ CLI_ACTIONS = (OpenEditorAction(),
                PrintMoreInfoAction(),
                ShowPatchAction(),
                IgnoreResultAction(),
-               ChainPatchAction(),
                ShowAppliedPatchesAction())
 DIFF_EXCERPT_MAX_SIZE = 4
 
@@ -288,16 +287,20 @@ def print_result(console_printer,
         return
 
     if hasattr(section, 'name'):
-        console_printer.print('\n**** {bear} [Section: {section}] ****\n'
-                              .format(bear=result.origin, section=section.name),
+        console_printer.print('**** {bear} [Section: {section} | Severity: '
+                              '{severity}] ****'
+                              .format(bear=result.origin,
+                                      section=section.name,
+                                      severity=RESULT_SEVERITY.__str__(
+                                          result.severity)),
                               color=RESULT_SEVERITY_COLORS[result.severity])
     else:
-        console_printer.print('\n**** {bear} [Section: {section}] ****\n'
-                              .format(bear=result.origin, section='<empty>'),
+        console_printer.print('**** {bear} [Section {section} | Severity '
+                              '{severity}] ****'
+                              .format(bear=result.origin, section='<empty>',
+                                      severity=RESULT_SEVERITY.__str__(
+                                          result.severity)),
                               color=RESULT_SEVERITY_COLORS[result.severity])
-    console_printer.print(format_lines('[Severity: {sev}]'.format(
-        sev=RESULT_SEVERITY.__str__(result.severity)), '!'),
-        color=RESULT_SEVERITY_COLORS[result.severity])
     lexer = TextLexer()
     result.message = highlight_text(no_color, result.message,
                                     lexer, BackgroundMessageStyle)
@@ -622,69 +625,56 @@ def choose_action(console_printer, actions, apply_single=False):
     :param actions:         Actions available to the user.
     :param apply_single:    The action that should be applied for all results.
                             If it's not selected, has a value of False.
-    :return:                Return choice of action of user.
+    :return:                Return a tuple of lists, a list with the names of
+                            actions that needs to be applied and a list with
+                            with the description of the actions.
     """
+    actions.insert(0, DoNothingAction().get_metadata())
+    actions_desc = []
+    actions_name = []
     if apply_single:
-        if apply_single == 'Do (N)othing':
-            return 0
-        for i, action in enumerate(actions, 1):
+        for i, action in enumerate(actions, 0):
             if apply_single == action.desc:
-                return i
-        return 0
+                return ([action.desc], [action.name])
+        return (['Do (N)othing'], ['Do (N)othing'])
     else:
         while True:
-            color_letter(console_printer, '[    ] *0. Do (N)othing')
-            for i, action in enumerate(actions, 1):
-                color_letter(console_printer, format_lines('{:>2}. {}'.format(
+            for i, action in enumerate(actions, 0):
+                output = '{:>2}. {}' if i != 0 else '*{}. {}'
+                color_letter(console_printer, format_lines(output.format(
                     i, action.desc), symbol='['))
 
             line = format_lines(STR_ENTER_NUMBER, symbol='[')
 
             choice = input(line)
-            if not choice:
-                return 0
             choice = str(choice)
-            if choice.isalpha():
-                choice = choice.upper()
-                choice = '(' + choice + ')'
-                if choice == '(N)':
-                    return 0
-                for i, action in enumerate(actions, 1):
-                    if choice in action.desc:
-                        return i
-            elif choice.isnumeric():
-                choice = int(choice)
-                if 0 <= choice <= len(actions):
-                    return choice
 
-            console_printer.print(format_lines(
-                'Please enter a valid letter.', symbol='['))
+            for c in choice:
+                c = str(c)
+                actions_desc_len = len(actions_desc)
+                if c.isnumeric():
+                    for i, action in enumerate(actions, 0):
+                        c = int(c)
+                        if i == c:
+                            actions_desc.append(action.desc)
+                            actions_name.append(action.name)
+                            break
+                elif c.isalpha():
+                    c = c.upper()
+                    c = '(' + c + ')'
+                    for i, action in enumerate(actions, 1):
+                        if c in action.desc:
+                            actions_desc.append(action.desc)
+                            actions_name.append(action.name)
+                            break
+                if actions_desc_len == len(actions_desc):
+                    console_printer.print(format_lines(
+                        'Please enter a valid letter.', symbol='['))
 
-
-def print_actions(console_printer, section, actions, failed_actions,
-                  apply_single):
-    """
-    Prints the given actions and lets the user choose.
-
-    :param console_printer: Object to print messages on the console.
-    :param actions:         A list of FunctionMetadata objects.
-    :param failed_actions:  A set of all actions that have failed. A failed
-                            action remains in the list until it is
-                            successfully executed.
-    :param apply_single:    The action that should be applied for all results.
-                            If it's not selected, has a value of False.
-    :return:                A tuple with the name member of the
-                            FunctionMetadata object chosen by the user
-                            and a Section containing at least all needed
-                            values for the action. If the user did
-                            choose to do nothing, return (None, None).
-    """
-    choice = choose_action(console_printer, actions, apply_single)
-
-    if choice == 0:
-        return None, None
-
-    return get_action_info(section, actions[choice - 1], failed_actions)
+            if not choice:
+                actions_desc.append(DoNothingAction().get_metadata().desc)
+                actions_name.append(DoNothingAction().get_metadata().name)
+            return (actions_desc, actions_name)
 
 
 def try_to_apply_action(action_name,
@@ -740,85 +730,6 @@ def try_to_apply_action(action_name,
         failed_actions.add(action_name)
 
 
-def apply_chain_action(console_printer,
-                       section,
-                       metadata_list,
-                       action_dict,
-                       failed_actions,
-                       result,
-                       file_diff_dict,
-                       file_dict,
-                       applied_actions):
-    """
-    Asks the user for an action and applies it.
-
-    :param console_printer: Object to print messages on the console.
-    :param section:         Currently active section.
-    :param metadata_list:   Contains metadata for all the actions.
-    :param action_dict:     Contains the action names as keys and their
-                            references as values.
-    :param failed_actions:  A set of all actions that have failed. A failed
-                            action remains in the list until it is successfully
-                            executed.
-    :param result:          Result corresponding to the actions.
-    :param file_diff_dict:  If it is an action which applies a patch, this
-                            contains the diff of the patch to be applied to
-                            the file with filename as keys.
-    :param file_dict:       Dictionary with filename as keys and its contents
-                            as values.
-    :param applied_actions: A dictionary that contains the result, file_dict,
-                            file_diff_dict and the section for an action.
-    :return:                Return False if the action that is applied is Do
-                            (N)othing or True otherwise.
-    """
-    flag = False
-
-    action_list = str(section['actions'])
-    action_list = list(action_list)
-    for action_choice in action_list:
-        if action_choice.isalpha():
-            action_choice = action_choice.upper()
-            action_choice = '(' + action_choice + ')'
-            if action_choice == '(N)':
-                return False
-            flag = False
-            for action_n in metadata_list:
-                if action_choice in action_n.desc:
-                    chosen_action = action_dict[action_n.name]
-                    action_choice_made = action_choice
-                    flag = True
-                    break
-            if flag:
-                for index, action_details in enumerate(metadata_list, 1):
-                    if action_choice_made in action_details.desc:
-                        action_name, section = get_action_info(
-                            section, metadata_list[index-1], failed_actions)
-                        try_to_apply_action(action_name,
-                                            chosen_action,
-                                            console_printer,
-                                            section,
-                                            metadata_list,
-                                            action_dict,
-                                            failed_actions,
-                                            result,
-                                            file_diff_dict,
-                                            file_dict,
-                                            applied_actions)
-            else:
-                console_printer.print(
-                    format_lines('Couldn\'t apply \'{}\''.format(
-                        action_choice), symbol='['),
-                    color=HIGHLIGHTED_CODE_COLOR)
-        else:
-            console_printer.print(
-                format_lines('Please enter a letter'.format(
-                    action_choice), symbol='['),
-                color=HIGHLIGHTED_CODE_COLOR)
-
-    section.delete_setting('actions')
-    return True
-
-
 def ask_for_action_and_apply(console_printer,
                              section,
                              metadata_list,
@@ -854,37 +765,52 @@ def ask_for_action_and_apply(console_printer,
                             it makes sense that the user may choose to execute
                             another action, False otherwise.
     """
-    action_name, section = print_actions(console_printer, section,
-                                         metadata_list, failed_actions,
-                                         apply_single=apply_single)
-    if action_name is None:
-        return False
+    actions_desc, actions_name = choose_action(console_printer, metadata_list,
+                                               apply_single)
 
-    if action_name == 'ChainPatchAction':
-        ret = apply_chain_action(console_printer,
-                                 section,
-                                 metadata_list,
-                                 action_dict,
-                                 failed_actions,
-                                 result,
-                                 file_diff_dict,
-                                 file_dict,
-                                 applied_actions)
-        return ret
+    if apply_single:
+        if apply_single == 'Do (N)othing':
+            return False
+        for index, action_details in enumerate(metadata_list, 1):
+            if apply_single == action_details.desc:
+                action_name, section = get_action_info(
+                    section, metadata_list[index - 1], failed_actions)
+                chosen_action = action_dict[action_details.name]
+                try_to_apply_action(action_name,
+                                    chosen_action,
+                                    console_printer,
+                                    section,
+                                    metadata_list,
+                                    action_dict,
+                                    failed_actions,
+                                    result,
+                                    file_diff_dict,
+                                    file_dict,
+                                    applied_actions)
     else:
-        chosen_action = action_dict[action_name]
-        try_to_apply_action(action_name,
-                            chosen_action,
-                            console_printer,
-                            section,
-                            metadata_list,
-                            action_dict,
-                            failed_actions,
-                            result,
-                            file_diff_dict,
-                            file_dict,
-                            applied_actions)
-        return True
+        for action_choice, action_choice_name in zip(actions_desc,
+                                                     actions_name):
+            if action_choice == 'Do (N)othing':
+                return False
+            chosen_action = action_dict[action_choice_name]
+            action_choice_made = action_choice
+            for index, action_details in enumerate(metadata_list, 1):
+                if action_choice_made in action_details.desc:
+                    action_name, section = get_action_info(
+                        section, metadata_list[index-1], failed_actions)
+                    try_to_apply_action(action_name,
+                                        chosen_action,
+                                        console_printer,
+                                        section,
+                                        metadata_list,
+                                        action_dict,
+                                        failed_actions,
+                                        result,
+                                        file_diff_dict,
+                                        file_dict,
+                                        applied_actions)
+
+    return True
 
 
 def show_enumeration(console_printer,

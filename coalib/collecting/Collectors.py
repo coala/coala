@@ -1,4 +1,5 @@
 import functools
+import logging
 import os
 import pkg_resources
 import itertools
@@ -220,6 +221,7 @@ def collect_bears_by_aspects(aspects, kinds):
     """
     all_bears = get_all_bears()
     bears_found = tuple([] for i in range(len(kinds)))
+    unfulfilled_aspects = []
     for aspect in aspects.get_leaf_aspects():
         for bear in all_bears:
             if (aspect in bear.aspects['detect'] or
@@ -229,7 +231,12 @@ def collect_bears_by_aspects(aspects, kinds):
                 if bear not in bears_found[index]:
                     bears_found[index].append(bear)
                 break
+        else:
+            unfulfilled_aspects.append(type(aspect).__qualname__)
 
+    if unfulfilled_aspects:
+        logging.warning('coala cannot find bear that could analyze the '
+                        'following aspects: {}'.format(unfulfilled_aspects))
     return bears_found
 
 

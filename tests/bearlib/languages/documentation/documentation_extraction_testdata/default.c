@@ -33,11 +33,6 @@ int foobar(int x) {
 }
 
      /** line 1
-      *  line2
-      */
+      *  line2 */
 
     /** */
-
-/**
- * A doc-comment aborted in the middle of writing
- * This won't get parsed (hopefully...)

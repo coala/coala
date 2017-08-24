@@ -3,7 +3,7 @@ import unittest
 from coalib.bearlib.languages.documentation.DocstyleDefinition import (
     DocstyleDefinition)
 from coalib.bearlib.languages.documentation.DocumentationComment import (
-    DocumentationComment)
+    DocumentationComment, MalformedComment)
 from coalib.bearlib.languages.documentation.DocBaseClass import (
     DocBaseClass)
 from tests.bearlib.languages.documentation.TestUtils import (
@@ -11,6 +11,7 @@ from tests.bearlib.languages.documentation.TestUtils import (
 from coalib.results.TextPosition import TextPosition
 from coalib.results.TextRange import TextRange
 from coalib.results.Diff import Diff
+from textwrap import dedent
 
 
 class DocBaseClassTest(unittest.TestCase):
@@ -72,7 +73,7 @@ class DocBaseClassTest(unittest.TestCase):
 
         self.assertEqual(
             list(DocBaseClass.extract(data, 'C', 'doxygen')),
-            [DocumentationComment(' my main description\n continues here ',
+            [DocumentationComment(' my main description\n continues here',
                                   docstyle_C_doxygen, '',
                                   docstyle_C_doxygen.markers[0],
                                   TextPosition(1, 1))])
@@ -259,6 +260,164 @@ class DocBaseClassTest(unittest.TestCase):
             list(DocBaseClass.extract(data, 'PYTHON3', 'default')),
             [])
 
+    def test_DocBaseClass_extraction_PYTHON3_5(self):
+        data = ['r"""\n', 'This is a raw docstring\n', '"""\n']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        self.assertEqual(
+            list(DocBaseClass.extract(data, 'PYTHON3', 'default')),
+            [DocumentationComment('\nThis is a raw docstring\n',
+                                  docstyle_PYTHON3_default, 'r',
+                                  docstyle_PYTHON3_default.markers[0],
+                                  TextPosition(1, 2))])
+
+    def test_DocBaseClass_instantiate_padding_PYTHON3_6(self):
+        data = ['def some_function:\n',
+                '\n',
+                '   """ documentation in single line """\n',
+                '\n',
+                '\n',
+                'print(1)']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+            self.assertEqual([doc.top_padding, doc.bottom_padding],
+                             [1, 2])
+
+    def test_DocBaseClass_instantiate_padding_PYTHON3_7(self):
+        data = ['class some_class:\n',
+                '\n',
+                '\n',
+                '   """ documentation in single line """\n',
+                '\n',
+                '\n',
+                'print(1)\n']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+            self.assertEqual([doc.top_padding, doc.bottom_padding],
+                             [2, 2])
+
+    def test_DocBaseClass_instantiate_padding_inline_PYTHON3_8(self):
+        # To test that bottom_padding sets to nothing if docstring is
+        # followed by inline docstring.
+        data = ['def some_function:\n',
+                '\n',
+                '   """\n',
+                '   documentation in single line\n',
+                '   """ # This is inline docstring',
+                '\n',
+                '\n',
+                'print(1)']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+            self.assertEqual([doc.top_padding, doc.bottom_padding],
+                             [1, 0])
+
+    def test_DocBaseClass_instantiate_padding_inline_PYTHON3_9(self):
+        # Paddings will not be instantiated for docstring_type=others
+        data = ['\n',
+                '   """\n',
+                '   documentation in single line\n',
+                '   """ # This is inline docstring',
+                '\n',
+                '\n',
+                'print(1)']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+            self.assertEqual([doc.top_padding, doc.bottom_padding],
+                             [0, 0])
+
+    def test_DocBaseClass_instantiate_docstring_type_PYTHON3_10(self):
+        data = ['class xyz:\n',
+                '   """\n',
+                '   This docstring is of docstring_type class\n',
+                '   """\n']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+            self.assertEqual(doc.docstring_type, 'class')
+
+    def test_DocBaseClass_instantiate_docstring_type_PYTHON3_11(self):
+        data = ['def xyz:\n',
+                '   """\n',
+                '   This docstring is of docstring_type function\n',
+                '   """\n']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+            self.assertEqual(doc.docstring_type, 'function')
+
+    def test_DocBaseClass_instantiate_docstring_type_PYTHON3_12(self):
+        data = ['\n',
+                '   """\n',
+                '   This docstring is of docstring_type others\n',
+                '   """\n',
+                '\n',
+                'print(1)']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+            self.assertEqual(doc.docstring_type, 'others')
+
+    def test_DocBaseClass_instantiate_docstring_type_PYTHON3_13(self):
+        data = ['## Documentation for a function.\n',
+                '#\n',
+                '#  More details.\n',
+                'def func():\n',
+                '    pass\n']
+
+        docstyle_PYTHON3_doxygen = DocstyleDefinition.load('PYTHON3',
+                                                           'doxygen')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'doxygen'):
+            self.assertEqual(doc.docstring_type, 'function')
+
+    def test_DocBaseClass_instantiate_docstring_type_PYTHON3_14(self):
+        data = ['## Documentation for a class.\n',
+                '#\n',
+                '#  More details.\n',
+                'class PyClass:\n',
+                '\n']
+
+        docstyle_PYTHON3_doxygen = DocstyleDefinition.load('PYTHON3',
+                                                           'doxygen')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'doxygen'):
+            self.assertEqual(doc.docstring_type, 'class')
+
+    def test_DocBaseClass_instantiate_docstring_type_PYTHON3_15(self):
+        data = ['def some_function():\n',
+                '"""\n',
+                'documentation\n',
+                '"""\n',
+                'class myPrivateClass:\n',
+                '    pass']
+
+        docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
+                                                           'default')
+
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+            self.assertEqual(doc.docstring_type, 'function')
+
     def test_generate_diff(self):
         data_old = ['\n', '""" documentation in single line  """\n']
         for doc_comment in DocBaseClass.extract(
@@ -288,3 +447,47 @@ class DocBaseClassTest(unittest.TestCase):
         test_object = DocBaseClass()
         self.assertRaises(NotImplementedError,
                           test_object.process_documentation)
+
+    def test_MalformedComment1_C(self):
+        data = ['/**\n',
+                '* A doc-comment aborted in the middle of writing\n',
+                '* This won\'t get parsed (hopefully...)\n']
+
+        expected = [dedent("""\
+            Please check the docstring for faulty markers. A starting
+            marker has been found, but no instance of DocComment is
+            returned."""), 0]
+
+        for doc_comment in DocBaseClass.extract(data, 'C', 'doxygen'):
+            self.assertEqual(
+                [doc_comment.message, doc_comment.line],
+                expected)
+
+    def test_MalformedComment2_CPP(self):
+        data = ['\n',
+                '/** Aborts...\n']
+
+        expected = [dedent("""\
+            Please check the docstring for faulty markers. A starting
+            marker has been found, but no instance of DocComment is
+            returned."""), 1]
+
+        for doc_comment in DocBaseClass.extract(data, 'CPP', 'doxygen'):
+            self.assertEqual(
+                [doc_comment.message, doc_comment.line],
+                expected)
+
+    def test_MalformedComment3_JAVA(self):
+        data = ['/**\n',
+                '* Markers are faulty\n',
+                '*/']
+
+        expected = [dedent("""\
+            Please check the docstring for faulty markers. A starting
+            marker has been found, but no instance of DocComment is
+            returned."""), 0]
+
+        for doc_comment in DocBaseClass.extract(data, 'JAVA', 'default'):
+            self.assertEqual(
+                [doc_comment.message, doc_comment.line],
+                expected)

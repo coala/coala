@@ -5,6 +5,10 @@ param_end = :
 exception_start = :raises\ # here's a space
 exception_end = :
 return_sep = :return:
+docstring_type_regex = class, def # defines class and function signature.
+docstring_position = top # defines position where docstring regex is found.
+class_padding = 0, 1
+function_padding = 0, 0
 
 [PYTHON3]
 doc-marker = """, , """
@@ -13,6 +17,10 @@ param_end = :
 exception_start = :raises\ # here's a space
 exception_end = :
 return_sep = :return:
+docstring_type_regex = class, def # defines class and function signature.
+docstring_position = top # defines position where docstring regex is found.
+class_padding = 0, 1
+function_padding = 0, 0
 
 [JAVA]
 doc-marker1 = /**, \ *, \ */

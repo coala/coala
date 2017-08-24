@@ -9,14 +9,12 @@ def foobar_explosion(radius):
     """
     A nice and neat way of documenting code.
     :param radius: The explosion radius. """
-
-
     def get_55():
         """A function that returns 55."""
-
-
         return 55
+
     return get_55() * radius
+
 
 """
 Docstring with layouted text.
@@ -42,9 +40,8 @@ def best_docstring(param1, param2):
     :return: Long Return Description That Makes No Sense And Will
              Cut to the Next Line.
     """
-
-
     return None
+
 
 def docstring_find(filename):
     """
@@ -72,8 +69,6 @@ def foobar_triangle(side_A, side_B, side_C):
 
     :return: returns perimeter
     """
-
-
     return side_A + side_B + side_C
 
     # This example of triple quote string literal is ignored.

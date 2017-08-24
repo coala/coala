@@ -1,8 +1,10 @@
 import re
 
 from coalib.bearlib.languages.documentation.DocumentationComment import (
-    DocumentationComment)
+    DocumentationComment, MalformedComment)
 from coalib.results.TextPosition import TextPosition
+from coalib.results.TextRange import TextRange
+from textwrap import dedent
 
 
 def _extract_doc_comment_simple(content, line, column, markers):
@@ -123,22 +125,21 @@ def _extract_doc_comment_standard(content, line, column, markers):
     line += 1
 
     while line < len(content):
-        pos = content[line].find(markers[2].strip())
-        each_line_pos = content[line].find(markers[1].strip())
+        pos = content[line].find(markers[2])
+        each_line_pos = content[line].find(markers[1])
 
         if pos == -1:
             if each_line_pos == -1:
                 # If the first text occurrence is not the each-line marker
                 # now we violate the doc-comment layout.
                 return None
-            doc_comment += content[line][
-                           each_line_pos + len(markers[1].strip()):]
+            doc_comment += content[line][each_line_pos + len(markers[1]):]
         else:
             # If no each-line marker found or it's located past the end marker:
             # extract no further and end the doc-comment.
             if each_line_pos != -1 and each_line_pos + 1 < pos:
                 doc_comment += content[line][each_line_pos +
-                                             len(markers[1].strip()):pos]
+                                             len(markers[1]):pos]
 
             return line, pos + len(markers[2]), doc_comment
 
@@ -173,16 +174,12 @@ def _extract_doc_comment(content, line, column, markers):
 
 def _compile_multi_match_regex(strings):
     """
-    Compiles a regex object that checks for indentation before the starting
-    marker (so as to ignore triple quote string literals) and group matches
-    each of the given strings.
+    Compiles a regex object that matches each of the given strings.
 
     :param strings: The strings to match.
     :return:        A regex object.
     """
-    return re.compile('(?P<indent>^\s*)(?P<marker>' +
-                      ('|'.join(re.escape(s) for s in strings)) +
-                      ')')
+    return re.compile('|'.join(re.escape(s) for s in strings))
 
 
 def _extract_doc_comment_from_line(content, line, column, regex,
@@ -190,9 +187,9 @@ def _extract_doc_comment_from_line(content, line, column, regex,
     cur_line = content[line]
     begin_match = regex.search(cur_line, column)
     if begin_match:
+        indent = cur_line[:begin_match.start()]
         column = begin_match.end()
-        indent = begin_match.group('indent')
-        for marker in marker_dict[begin_match.group('marker')]:
+        for marker in marker_dict[begin_match.group()]:
             doc_comment = _extract_doc_comment(content, line, column, marker)
             if doc_comment is not None:
                 end_line, end_column, documentation = doc_comment
@@ -201,7 +198,16 @@ def _extract_doc_comment_from_line(content, line, column, regex,
                 doc = DocumentationComment(documentation, docstyle_definition,
                                            indent, marker, position)
 
-                return end_line, end_column, doc
+                break
+
+        if doc_comment:
+            return end_line, end_column, doc
+        else:
+            malformed_comment = MalformedComment(dedent("""\
+                Please check the docstring for faulty markers. A starting
+                marker has been found, but no instance of DocComment is
+                returned."""), line)
+            return line + 1, 0, malformed_comment
 
     return line + 1, 0, None
 
@@ -249,5 +255,77 @@ def extract_documentation_with_markers(content, docstyle_definition):
             begin_regex,
             marker_dict,
             docstyle_definition)
-        if doc:
+
+        if doc and isinstance(doc, MalformedComment):
             yield doc
+        elif doc:
+            # Ignore string literals
+            ignore_regex = re.compile(
+                '^\s*r?(?P<marker>' +
+                ('|'.join(re.escape(s) for s in doc.marker[0])) +
+                ')')
+            # Starting line of doc_string where marker is present
+            start_line = doc.range.start.line - 1
+            ignore_string_match = ignore_regex.search(content[start_line])
+
+            # Instantiate padding
+            top_padding = 0
+            bottom_padding = 0
+            # minus 2 because we want to check the line before the marker.
+            start_index = doc.range.start.line - 2
+            end_index = doc.range.end.line
+            while start_index >= 0 and not content[start_index].strip():
+                top_padding += 1
+                start_index -= 1
+            # If the end_index is instantiated above the len(content) i.e.
+            # In case where ending marker of docstring is at the last line.
+            # Then the doc.bottom_padding will be default to 0. This will also
+            # prevent IndexError raised by content[end_index].
+            while end_index < len(content) and not content[end_index].strip():
+                # This condition will take place if theres an inline docstring
+                # following documentation.
+                if ((doc.marker[2]+'\n') != content[end_index-1][-4:]
+                        and bottom_padding == 0):
+                    break
+                bottom_padding += 1
+                end_index += 1
+
+            class_regex = re.compile(
+                doc.docstyle_definition.docstring_type_regex.class_sign)
+            function_regex = re.compile(
+                doc.docstyle_definition.docstring_type_regex.func_sign)
+
+            # End line differs when mid marker and end marker is different
+            if doc.marker[1] == doc.marker[2]:
+                end_index = end_index - 1
+
+            # Check for docstring_position and then check for class regex
+            # and function regex to define the type of docstring.
+            if doc.docstyle_definition.docstring_position == 'top':
+                if class_regex.search(content[start_index]):
+                    doc.docstring_type = 'class'
+                elif function_regex.search(content[start_index]):
+                    doc.docstring_type = 'function'
+            elif doc.docstyle_definition.docstring_position == 'bottom':
+                if (end_index < len(content) and
+                        class_regex.search(content[end_index])):
+                    doc.docstring_type = 'class'
+                elif (end_index < len(content) and
+                        function_regex.search(content[end_index])):
+                    doc.docstring_type = 'function'
+
+            # Disabled automatic padding for docstring_type='others' as this
+            # will cause overlapping of range in consecutive docstrings. Which
+            # diff.replace() is unable to handle.
+            if doc.docstring_type != 'others':
+                doc.top_padding = top_padding
+                doc.bottom_padding = bottom_padding
+
+                doc.range = TextRange.from_values(
+                    start_index + 2,
+                    1 if top_padding > 0 else doc.range.start.column,
+                    end_index,
+                    1 if bottom_padding > 0 else doc.range.end.column)
+
+            if ignore_string_match:
+                yield doc
