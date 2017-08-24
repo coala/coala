@@ -81,6 +81,18 @@ def typed_list(conversion_func):
     return Converter()
 
 
+str_list = typed_list(str)
+
+
+int_list = typed_list(int)
+
+
+float_list = typed_list(float)
+
+
+bool_list = typed_list(bool)
+
+
 def typed_dict(key_type, value_type, default):
     """
     Creates a class that converts a setting into a dict with the given types.

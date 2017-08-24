@@ -261,6 +261,10 @@ The Setting does support some very basic types:
 -  List of strings (``list``, values will be split by comma)
 -  Dict of strings (``dict``, values will be split by comma and colon)
 
+You can use shortcuts for basic types, ``str_list`` for strings,
+``int_list`` for ints, ``float_list`` for floats and ``bool_list`` for
+boolean values.
+
 If you need another type, you can write the conversion function yourself
 and use this function as the annotation (if you cannot convert value, be
 sure to throw ``TypeError`` or ``ValueError``). We've provided a few
