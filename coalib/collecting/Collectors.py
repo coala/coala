@@ -148,10 +148,11 @@ def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer):
                                             pkg=exception.req),
                         exception, log_level=LOG_LEVEL.WARNING)
                 except BaseException as exception:
-                    log_printer.log_exception(
+                    log_printer.warn(
                         'Unable to collect bears from {file}. Probably the '
                         'file is malformed or the module code raises an '
-                        'exception.'.format(file=matching_file),
+                        'exception: {e}.'.format(file=matching_file,
+                                                 e=exception),
                         exception,
                         log_level=LOG_LEVEL.WARNING)
 
