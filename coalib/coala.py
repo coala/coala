@@ -43,6 +43,8 @@ def main(debug=False):
                               ' '.join(req_ipdb.install_command()))
                 sys.exit(13)
 
+            debug = True
+
         if debug or args.debug:
             args.log_level = 'DEBUG'
 
@@ -61,7 +63,7 @@ def main(debug=False):
         if args.show_bears:
             from coalib.settings.ConfigurationGathering import (
                 get_all_bears)
-            filtered_bears = get_all_bears(log_printer)
+            filtered_bears = get_all_bears(log_printer, debug=debug)
             if args.filter_by_language:
                 log_printer.warn(
                     "'--filter-by-language ...' is deprecated. "
