@@ -363,8 +363,7 @@ def get_all_bears(log_printer=None, arg_parser=None, silent=True):
     """
     sections, _ = load_configuration(arg_list=None,
                                      arg_parser=arg_parser,
-                                     silent=silent,
-                                     args=None)
+                                     silent=silent)
     local_bears, global_bears = collect_all_bears_from_sections(
         sections)
     return local_bears, global_bears
