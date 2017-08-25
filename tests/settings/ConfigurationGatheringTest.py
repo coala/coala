@@ -13,6 +13,8 @@ from coalib.misc import Constants
 from coalib.settings.Section import Section
 from coala_utils.ContextManagers import (
     make_temp, change_directory, retrieve_stdout)
+
+from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.output.printers.LogPrinter import LogPrinter
 from coala_utils.string_processing import escape
 from coalib.settings.ConfigurationGathering import (
@@ -234,6 +236,53 @@ class ConfigurationGatheringTest(unittest.TestCase):
             arg_list=['cli', 'test1', 'test2'])
 
         self.assertEqual(targets, ['cli', 'test1', 'test2'])
+
+    def test_targets_substring(self):
+        current_dir = os.path.abspath(os.path.dirname(__file__))
+        test_dir = os.path.join(current_dir, 'section_manager_test_files')
+        with change_directory(test_dir):
+            log_printer = ListLogPrinter()
+            _, _, _, targets = gather_configuration(
+                lambda *args: True,
+                log_printer,
+                arg_list=['-c', 'inherit_coafile', 'python'])
+            self.assertEqual(
+                targets, ['python', 'all.python', 'all.python.codestyle'])
+
+            log_messages = [_l.message for _l in log_printer.logs]
+            msg = "No matching section found for 'python'."
+            self.assertNotIn(msg, log_messages)
+
+            _, _, _, targets = gather_configuration(
+                lambda *args: True,
+                log_printer,
+                arg_list=['-c', 'inherit_coafile', 'all'])
+
+            expected_all = [
+                'all',
+                'all.python',
+                'all.c',
+                'all.python.codestyle',
+                'all.java.codestyle',
+            ]
+            self.assertEqual(targets, expected_all)
+
+            _, _, _, targets = gather_configuration(
+                lambda *args: True,
+                self.log_printer,
+                arg_list=['-c', 'inherit_coafile', 'all.python'])
+            self.assertEqual(targets, ['all.python', 'all.python.codestyle'])
+
+            log_printer = ListLogPrinter()
+            _, _, _, targets = gather_configuration(
+                lambda *args: True,
+                log_printer,
+                arg_list=['-c', 'inherit_coafile', 'ja'])
+            self.assertEqual(targets, ['ja'])
+
+            log_messages = [_l.message for _l in log_printer.logs]
+            msg = "No matching section found for 'ja'."
+            self.assertIn(msg, log_messages)
 
     def test_find_user_config(self):
         current_dir = os.path.abspath(os.path.dirname(__file__))
