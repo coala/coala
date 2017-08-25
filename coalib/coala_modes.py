@@ -3,7 +3,7 @@ def mode_normal(console_printer, log_printer, args, debug=False):
 
     from coalib.coala_main import run_coala
     from coalib.output.ConsoleInteraction import (
-        acquire_settings, nothing_done,
+        acquire_settings,
         print_results, print_section_beginning)
 
     partial_print_sec_beg = functools.partial(
@@ -13,7 +13,6 @@ def mode_normal(console_printer, log_printer, args, debug=False):
         print_results=print_results,
         acquire_settings=acquire_settings,
         print_section_beginning=partial_print_sec_beg,
-        nothing_done=nothing_done,
         console_printer=console_printer,
         args=args,
         debug=debug)

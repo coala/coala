@@ -12,7 +12,7 @@ from coalib.bears.Bear import Bear
 from coala_utils.ContextManagers import (
     make_temp, retrieve_stdout, simulate_console_inputs)
 from coalib.output.ConsoleInteraction import (
-    acquire_actions_and_apply, acquire_settings, get_action_info, nothing_done,
+    acquire_actions_and_apply, acquire_settings, get_action_info,
     print_affected_files, print_result, print_results,
     print_results_formatted, print_results_no_input, print_section_beginning,
     show_bear, show_bears, ask_for_action_and_apply, print_diffs_info,
@@ -619,12 +619,6 @@ Project wide:
         with retrieve_stdout() as stdout:
             print_section_beginning(self.console_printer, Section('name'))
             self.assertEqual(stdout.getvalue(), 'Executing section name...\n')
-
-    def test_nothing_done(self):
-        nothing_done(self.log_printer)
-        self.assertEqual(['No existent section was targeted or enabled. '
-                          'Nothing to do.'],
-                         [log.message for log in self.log_printer.logs])
 
     def test_print_results_empty(self):
         with retrieve_stdout() as stdout:
