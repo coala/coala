@@ -34,14 +34,11 @@ class AspectInstanceTest:
         for name in SubAspect_tastes:
             with pytest.raises(AttributeError) as exc:
                 setattr(aspect, name, 'value')
-            assert str(exc.value) \
-                == "A 'taste' value for this aspectclass instance "\
-                   'exists already.'
+            assert str(exc.value) == "A 'taste' value for this aspectclass instance exists already."
         for name in ['docs', 'subaspects', 'tastes', '_tastes']:
             with pytest.raises(AttributeError) as exc:
                 setattr(aspect, name, 'value')
-            assert str(exc.value) \
-                == "can't set attributes of aspectclass instances"
+            assert str(exc.value) == "can't set attributes of aspectclass instances"
 
     def test_get(self, RootAspect, SubAspect, SubSubAspect):
         assert RootAspect.get(RootAspect) is RootAspect

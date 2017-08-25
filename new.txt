@@ -1,0 +1,5 @@
+Remove use of line continuation
+
+Remove use of line continuation (/'s) completely.
+
+Closes https://github.com/coala/coala/issues/4552

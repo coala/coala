@@ -1,8 +1,7 @@
 import uuid
 from os.path import relpath
 
-from coala_utils.decorators import (
-    enforce_signature, generate_ordering, generate_repr, get_public_members)
+from coala_utils.decorators import (enforce_signature, generate_ordering, generate_repr, get_public_members)
 from coalib.bearlib.aspects import aspectbase
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
@@ -36,8 +35,7 @@ class Result:
     Result messages can also have arguments. The message is python
     style formatted with these arguments.
 
-    >>> r = Result('origin','{arg1} and {arg2}', \
-           message_arguments={'arg1': 'foo', 'arg2': 'bar'})
+    >>> r = Result('origin', '{arg1} and {arg2}', message_arguments={'arg1': 'foo', 'arg2': 'bar'})
     >>> r.message
     'foo and bar'
 

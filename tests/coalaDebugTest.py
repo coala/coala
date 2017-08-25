@@ -24,9 +24,7 @@ class coalaDebugTest(unittest.TestCase):
         sys.argv = self.old_argv
 
     def test_coala_main_bear__init__raises(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme  '], None) as (lines, filename), \
-                self.assertRaisesRegex(
+        with bear_test_module(), prepare_file(['#fixme  '], None) as (lines, filename), self.assertRaisesRegex(
                     RuntimeError,
                     r'^The bear ErrorTestBear does not fulfill all '
                     r"requirements\. 'I_do_not_exist' is not installed\.$"):
@@ -39,9 +37,7 @@ class coalaDebugTest(unittest.TestCase):
 
     def test_run_coala_bear__init__raises(self):
         configure_logging()
-        with bear_test_module(), \
-                prepare_file(['#fixme  '], None) as (lines, filename), \
-                self.assertRaisesRegex(
+        with bear_test_module(), prepare_file(['#fixme  '], None) as (lines, filename), self.assertRaisesRegex(
                     RuntimeError,
                     r'^The bear ErrorTestBear does not fulfill all '
                     r"requirements. 'I_do_not_exist' is not installed.$"):
@@ -56,9 +52,7 @@ class coalaDebugTest(unittest.TestCase):
                 debug=True)
 
     def test_coala_main_bear_run_raises(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme  '], None) as (lines, filename), \
-                self.assertRaisesRegex(
+        with bear_test_module(), prepare_file(['#fixme  '], None) as (lines, filename), self.assertRaisesRegex(
                     RuntimeError, r"^That's all the RaiseTestBear can do\.$"):
             execute_coala(
                 coala.main, 'coala',
@@ -69,9 +63,7 @@ class coalaDebugTest(unittest.TestCase):
 
     def test_run_coala_bear_run_raises(self):
         configure_logging()
-        with bear_test_module(), \
-                prepare_file(['#fixme  '], None) as (lines, filename), \
-                self.assertRaisesRegex(
+        with bear_test_module(), prepare_file(['#fixme  '], None) as (lines, filename), self.assertRaisesRegex(
                     RuntimeError, r"^That's all the RaiseTestBear can do\.$"):
             run_coala(
                 console_printer=ConsolePrinter(),
@@ -87,9 +79,7 @@ class coalaDebugTest(unittest.TestCase):
     def test_coala_main_mode_json_raises(self, mocked_mode_json):
         mocked_mode_json.side_effect = RuntimeError('Mocked mode_json fails.')
 
-        with bear_test_module(), \
-                prepare_file(['#fixme  '], None) as (lines, filename), \
-                self.assertRaisesRegex(RuntimeError,
+        with bear_test_module(), prepare_file(['#fixme  '], None) as (lines, filename), self.assertRaisesRegex(RuntimeError,
                                        r'^Mocked mode_json fails\.$'):
             # additionally use RaiseTestBear to verify independency from
             # failing bears

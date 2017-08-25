@@ -56,8 +56,7 @@ class coalaCITest(unittest.TestCase):
         self.test_nonexistent(debug=True)
 
     def test_find_no_issues(self, debug=False):
-        with bear_test_module(), \
-                prepare_file(['#include <a>'], None) as (lines, filename):
+        with bear_test_module(), prepare_file(['#include <a>'], None) as (lines, filename):
             retval, stdout, stderr = execute_coala(coala.main, 'coala',
                                                    '--non-interactive',
                                                    '-c', os.devnull,
@@ -81,8 +80,7 @@ class coalaCITest(unittest.TestCase):
         self.test_find_no_issues(debug=True)
 
     def test_find_issues(self, debug=False):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
+        with bear_test_module(), prepare_file(['#fixme'], None) as (lines, filename):
             retval, stdout, stderr = execute_coala(coala.main, 'coala',
                                                    '--non-interactive',
                                                    '-c', os.devnull,
@@ -100,8 +98,7 @@ class coalaCITest(unittest.TestCase):
         self.test_find_issues(debug=True)
 
     def test_show_patch(self, debug=False):
-        with bear_test_module(), \
-             prepare_file(['\t#include <a>'], None) as (lines, filename):
+        with bear_test_module(), prepare_file(['\t#include <a>'], None) as (lines, filename):
             retval, stdout, stderr = execute_coala(
                 coala.main, 'coala', '--non-interactive',
                 '-c', os.devnull,

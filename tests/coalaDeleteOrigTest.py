@@ -32,8 +32,7 @@ class coalaDeleteOrigTest(unittest.TestCase):
             self.assertIn("Couldn't delete", output)
 
         # Directory instead of file
-        with tempfile.TemporaryDirectory() as filename, \
-                retrieve_stderr() as stderr:
+        with tempfile.TemporaryDirectory() as filename, retrieve_stderr() as stderr:
             mock_glob.return_value = [filename]
             retval = coala_delete_orig.main(section=self.section)
             output = stderr.getvalue()
