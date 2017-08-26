@@ -65,13 +65,13 @@ def pickle_load(log_printer, identifier, fallback=None):
     >>> from pyprint.NullPrinter import NullPrinter
     >>> from coalib.output.printers.LogPrinter import LogPrinter
     >>> log_printer = LogPrinter(NullPrinter())
-    >>> test_data = {"answer": 42}
-    >>> pickle_dump(log_printer, "test_project", test_data)
+    >>> test_data = {'answer': 42}
+    >>> pickle_dump(log_printer, 'test_project', test_data)
     True
-    >>> pickle_load(log_printer, "test_project")
+    >>> pickle_load(log_printer, 'test_project')
     {'answer': 42}
-    >>> pickle_load(log_printer, "nonexistent_project")
-    >>> pickle_load(log_printer, "nonexistent_project", fallback=42)
+    >>> pickle_load(log_printer, 'nonexistent_project')
+    >>> pickle_load(log_printer, 'nonexistent_project', fallback=42)
     42
 
     :param log_printer: A LogPrinter object to use for logging.
