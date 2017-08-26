@@ -21,8 +21,8 @@ class HiddenResult(Result):
         obj.contents later.
 
         :param origin:   The originating bear.
-        :param contents: Any object that is picklable since it will be
-                         transferred across processes.
+        :param contents: Additional picklable data accessible by dependent
+                         bears besides ``message``.
         """
         Result.__init__(self, origin, '')
 
