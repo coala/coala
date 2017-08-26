@@ -114,6 +114,24 @@ class coalaTest(unittest.TestCase):
                                     'coala must return nonzero when errors '
                                     'occured')
 
+    def test_coala_aspect(self):
+        with bear_test_module(), \
+                prepare_file(['#fixme'], None) as (lines, filename):
+            retval, stdout, stderr = execute_coala(
+                             coala.main,
+                             'coala', '-c', os.devnull,
+                             '--non-interactive', '--no-color',
+                             '-f', re.escape(filename),
+                             '-S', 'cli.aspects=UnusedLocalVariable',
+                             'cli.language=Python')
+            self.assertIn(
+                'AspectTestBear: This result has no patch attached.',
+                stderr)
+            self.assertIn('This is just a dummy result',
+                          stdout)
+            self.assertNotEqual(retval, 0,
+                                'coala must return nonzero when errors occured')
+
     @unittest.mock.patch('sys.version_info', tuple((2, 7, 11)))
     def test_python_version_27(self):
         with self.assertRaises(SystemExit):
