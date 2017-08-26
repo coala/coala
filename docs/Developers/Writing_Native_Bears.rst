@@ -236,7 +236,7 @@ we want to run it locally. To install our NewBear:
 
 ::
 
-    pip3 install -U <path/to/coala-bears>
+    sudo pip3 install -U <path/to/coala-bears>
 
 Our NewBear is installed.
 
