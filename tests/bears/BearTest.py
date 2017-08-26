@@ -251,11 +251,14 @@ class BearTest(BearTestBase):
         self.assertTrue(self.queue.empty())
         self.assertFalse(self.uut.was_executed)
 
-    def check_message(self, log_level, message=None):
+    def check_message(self, log_level, message=None, regex=False):
         msg = self.queue.get()
         self.assertIsInstance(msg, LogMessage)
         if message:
-            self.assertEqual(msg.message, message)
+            if regex:
+                self.assertRegexpMatches(msg.message, message)
+            else:
+                self.assertEqual(msg.message, message)
 
         self.assertEqual(msg.log_level, log_level, msg)
 
