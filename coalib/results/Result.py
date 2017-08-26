@@ -69,8 +69,8 @@ class Result:
         :param message:
             Base message to show with this result.
         :param affected_code:
-            A tuple of SourceRange objects pointing to related positions in the
-            source code.
+            A tuple of ``SourceRange`` objects pointing to related positions
+            in the source code.
         :param severity:
             Severity of this result.
         :param additional_info:
@@ -287,7 +287,7 @@ class Result:
         """
         Determines if the result overlaps with source ranges provided.
 
-        :param ranges: A list SourceRange objects to check for overlap.
+        :param ranges: A list ``SourceRange`` objects to check for overlap.
         :return:       True if the ranges overlap with the result.
         """
         if isinstance(ranges, SourceRange):
