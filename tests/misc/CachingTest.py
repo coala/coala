@@ -101,8 +101,7 @@ class CachingTest(unittest.TestCase):
         A simple integration test to assert that results are not dropped
         when coala is ran multiple times with caching enabled.
         """
-        with bear_test_module(), \
-                prepare_file(['a=(5,6)'], None) as (lines, filename):
+        with bear_test_module(), prepare_file(['a=(5,6)'], None) as (lines, filename):
             with simulate_console_inputs('n'):
                 retval, stdout, stderr = execute_coala(
                     coala.main,

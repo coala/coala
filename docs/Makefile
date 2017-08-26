@@ -85,15 +85,13 @@ json:
 htmlhelp:
 	$(SPHINXBUILD) -b htmlhelp $(ALLSPHINXOPTS) $(BUILDDIR)/htmlhelp
 	@echo
-	@echo "Build finished; now you can run HTML Help Workshop with the" \
-	      ".hhp project file in $(BUILDDIR)/htmlhelp."
+	@echo "Build finished; now you can run HTML Help Workshop with the .hhp project file in $(BUILDDIR)/htmlhelp."
 
 .PHONY: qthelp
 qthelp:
 	$(SPHINXBUILD) -b qthelp $(ALLSPHINXOPTS) $(BUILDDIR)/qthelp
 	@echo
-	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
-	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
+	@echo "Build finished; now you can run \"qcollectiongenerator\" with the .qhcp project file in $(BUILDDIR)/qthelp, like this:"
 	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/coala.qhcp"
 	@echo "To view the help file:"
 	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/coala.qhc"
@@ -103,9 +101,7 @@ applehelp:
 	$(SPHINXBUILD) -b applehelp $(ALLSPHINXOPTS) $(BUILDDIR)/applehelp
 	@echo
 	@echo "Build finished. The help book is in $(BUILDDIR)/applehelp."
-	@echo "N.B. You won't be able to view it unless you put it in" \
-	      "~/Library/Documentation/Help or install it in your application" \
-	      "bundle."
+	@echo "N.B. You won't be able to view it unless you put it in ~/Library/Documentation/Help or install it in your application bundle."
 
 .PHONY: devhelp
 devhelp:
@@ -128,8 +124,7 @@ latex:
 	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
 	@echo
 	@echo "Build finished; the LaTeX files are in $(BUILDDIR)/latex."
-	@echo "Run \`make' in that directory to run these through (pdf)latex" \
-	      "(use \`make latexpdf' here to do that automatically)."
+	@echo "Run \`make' in that directory to run these through (pdf)latex (use \`make latexpdf' here to do that automatically)."
 
 .PHONY: latexpdf
 latexpdf:
@@ -162,8 +157,7 @@ texinfo:
 	$(SPHINXBUILD) -b texinfo $(ALLSPHINXOPTS) $(BUILDDIR)/texinfo
 	@echo
 	@echo "Build finished. The Texinfo files are in $(BUILDDIR)/texinfo."
-	@echo "Run \`make' in that directory to run these through makeinfo" \
-	      "(use \`make info' here to do that automatically)."
+	@echo "Run \`make' in that directory to run these through makeinfo (use \`make info' here to do that automatically)."
 
 .PHONY: info
 info:
@@ -188,20 +182,17 @@ changes:
 linkcheck:
 	$(SPHINXBUILD) -b linkcheck $(ALLSPHINXOPTS) $(BUILDDIR)/linkcheck
 	@echo
-	@echo "Link check complete; look for any errors in the above output " \
-	      "or in $(BUILDDIR)/linkcheck/output.txt."
+	@echo "Link check complete; look for any errors in the above output or in $(BUILDDIR)/linkcheck/output.txt."
 
 .PHONY: doctest
 doctest:
 	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest
-	@echo "Testing of doctests in the sources finished, look at the " \
-	      "results in $(BUILDDIR)/doctest/output.txt."
+	@echo "Testing of doctests in the sources finished, look at the results in $(BUILDDIR)/doctest/output.txt."
 
 .PHONY: coverage
 coverage:
 	$(SPHINXBUILD) -b coverage $(ALLSPHINXOPTS) $(BUILDDIR)/coverage
-	@echo "Testing of coverage in the sources finished, look at the " \
-	      "results in $(BUILDDIR)/coverage/python.txt."
+	@echo "Testing of coverage in the sources finished, look at the results in $(BUILDDIR)/coverage/python.txt."
 
 .PHONY: xml
 xml:
