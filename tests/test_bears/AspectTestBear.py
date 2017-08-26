@@ -27,5 +27,5 @@ class AspectTestBear(
             message='This is just a dummy result',
             severity=RESULT_SEVERITY.INFO,
             file=filename,
-            aspect=Root.Redundancy.UnusedVariable.UnusedLocalVariable,
+            aspect=Root.Redundancy.UnusedVariable.UnusedLocalVariable('py'),
         )
