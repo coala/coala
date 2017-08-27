@@ -131,7 +131,7 @@ class Section:
         self.name = str(name)
         self.defaults = defaults
         self.contents = OrderedDict()
-        self.aspect = None
+        self.aspects = None
         self.language = None
 
     def bear_dirs(self):
