@@ -125,6 +125,9 @@ class Result:
         self.diffs = diffs
         self.id = uuid.uuid4().int
         self.aspect = aspect
+        if self.aspect and not self.additional_info:
+            self.additional_info = '{} {}'.format(
+                aspect.docs.importance_reason, aspect.docs.fix_suggestions)
 
     @property
     def message(self):
