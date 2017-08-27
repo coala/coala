@@ -3,7 +3,6 @@ import os
 
 from coalib.bearlib.aspects import AspectList, Root, get as get_aspect
 from coalib.bearlib.aspects.meta import issubaspect
-from coalib.bearlib.languages.Language import UnknownLanguageError
 from coalib.misc import Constants
 from coalib.settings.Section import (
     Section, Setting, append_to_sections, extract_aspects_from_section)
@@ -246,24 +245,3 @@ class SectionTest(unittest.TestCase):
         self.assertTrue(issubaspect(get_aspect('trailingperiod'),
                                     get_aspect('commitmessage')))
         self.assertIsNone(aspects.get('trailingperiod'))
-
-    def test_extract_aspects_from_section_no_aspects(self):
-        section = Section('section')
-        self.assertIsNone(extract_aspects_from_section(section))
-
-    def test_extract_aspects_from_section_no_language(self):
-        section = Section('section')
-        section.append(Setting('aspects', 'commitmessage'))
-        with self.assertRaisesRegex(
-                AttributeError,
-                'Language was not found in configuration file. '
-                'Usage of aspect-based configuration must include '
-                'language information.'):
-            extract_aspects_from_section(section)
-
-    def test_extract_aspects_from_section_incorrect_language(self):
-        section = Section('section')
-        section.append(Setting('aspects', 'commitmessage'))
-        section.append(Setting('language', 'not a language'))
-        with self.assertRaises(UnknownLanguageError):
-            extract_aspects_from_section(section)

@@ -363,7 +363,7 @@ class BearTest(BearTestBase):
 
     def test_bear_with_specific_language(self):
         self.uut = BearWithLanguage(self.settings, self.queue)
-        self.settings.language = Language['HTML 5.1']
+        self.settings['language'] = 'HTML 5.1'
         result = self.uut.execute()[0]
         self.assertIsInstance(result, Language)
         self.assertEqual(str(result), 'Hypertext Markup Language 5.1')

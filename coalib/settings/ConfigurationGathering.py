@@ -5,6 +5,7 @@ import logging
 
 from coalib.collecting.Collectors import (
     collect_all_bears_from_sections, filter_section_bears_by_languages)
+from coalib.bearlib.languages.Language import Language, UnknownLanguageError
 from coalib.misc import Constants
 from coalib.output.ConfWriter import ConfWriter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
@@ -30,14 +31,47 @@ def aspectize_sections(sections):
     :param sections:  List of section that potentially contain aspects setting.
     :return:          The new sections.
     """
-    for section_name, section in sections.items():
-        section.aspects = extract_aspects_from_section(section)
-        if section.aspects is not None and len(section.get('bears')):
-            logging.warning("'aspects' and 'bears' configuration is detected "
-                            "in section '{}'. Aspect-based configuration will "
-                            'takes priority and will overwrite any '
-                            'explicitly listed bears'.format(section_name))
+    for _, section in sections.items():
+        if validate_aspect_config(section):
+            section.aspects = extract_aspects_from_section(section)
+        else:
+            section.aspects = None
     return sections
+
+
+def validate_aspect_config(section):
+    """
+    Validate if a section contain required setting to run in aspects mode.
+
+    :param section: The section that potentially contain aspect
+                    setting.
+    :return:        The validity of section.
+    """
+    aspects = section.get('aspects')
+    section_language = section.get('language')
+
+    if not len(aspects):
+        return False
+
+    if not len(section_language):
+        logging.warning('Setting `language` is not found in section `{}`. '
+                        'Usage of aspect-based setting must include '
+                        'language information.'.format(section.name))
+        return False
+
+    try:
+        Language[section_language]
+    except UnknownLanguageError as exc:
+        logging.warning('Section `{}` contain invalid language setting. '
+                        '{}'.format(section.name, exc))
+        return False
+
+    if len(section.get('bears')):
+        logging.warning('`aspects` and `bears` setting is detected '
+                        'in section `{}`. Aspect-based configuration will '
+                        'takes priority and will overwrite any '
+                        'explicitly listed bears.'.format(section.name))
+    return True
 
 
 def merge_section_dicts(lower, higher):

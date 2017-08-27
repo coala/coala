@@ -46,8 +46,11 @@ def append_to_sections(sections,
 
 def extract_aspects_from_section(section):
     """
-    Extracts aspects and their related settings from a section and create an
-    AspectList from it.
+    Extract aspects settings from a section into an AspectList.
+
+    Note that the section is assumed to already have valid and complete aspects
+    related setting. This checking could be done by
+    :meth:`coalib.settings.ConfigurationGathering.validate_aspect_config`.
 
     :param section: Section object.
     :return:        AspectList containing aspectclass instance with
@@ -55,15 +58,6 @@ def extract_aspects_from_section(section):
     """
     aspects = section.get('aspects')
     language = section.get('language')
-
-    # Skip aspects initialization if not configured in section
-    if not len(aspects):
-        return None
-
-    if not len(language):
-        raise AttributeError('Language was not found in configuration file. '
-                             'Usage of aspect-based configuration must '
-                             'include language information.')
 
     aspect_instances = AspectList(exclude=section.get('excludes'))
 
