@@ -90,7 +90,7 @@ class Section:
     >>> len(sections)
     1
     >>> str(sections)
-    "{'all': <Section object(contents=OrderedDict([('test1', ..."
+    "{'all': <Section object(... contents=OrderedDict([('test1', ..."
 
     We can also add settings that can be appended to other settings. Basically
     it takes the default value of the setting which resides in the defaults of
@@ -131,6 +131,7 @@ class Section:
         self.name = str(name)
         self.defaults = defaults
         self.contents = OrderedDict()
+        self.aspect = None
         self.language = None
 
     def bear_dirs(self):
