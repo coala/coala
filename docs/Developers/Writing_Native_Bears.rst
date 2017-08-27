@@ -277,6 +277,8 @@ advanced conversions for you:
    conversion to all keys, the ``value_type`` conversion to all values
    and uses the ``default`` value for all unset keys. Use ``typed_dict``
    if the order is irrelevant for you.
+-  ``coalib.settings.Setting.language``, converts into coala ``Language``
+   object.
 
 Results
 -------

@@ -3,9 +3,12 @@ import re
 import unittest
 from collections import OrderedDict
 
+from coalib.bearlib.languages import Language
 from coalib.settings.Setting import (
     Setting, path, path_list, url, typed_dict, typed_list, typed_ordered_dict,
-    glob, glob_list)
+    glob, glob_list,
+    language,
+)
 from coalib.parsing.Globbing import glob_escape
 
 
@@ -71,6 +74,20 @@ class SettingTest(unittest.TestCase):
             glob_list(self.uut),
             [glob_escape(os.path.abspath(os.path.join('test (1)', '.'))),
              abspath])
+
+    def test_language(self):
+        self.uut = Setting('key', 'python 3.4')
+        result = language(self.uut)
+        self.assertIsInstance(result, Language)
+        self.assertEqual(str(result), 'Python 3.4')
+
+    def test_language_invalid(self):
+        self.uut = Setting('key', 'not a language')
+        with self.assertRaisesRegexp(
+                ValueError,
+                'Language `not a language` is not a valid language name or '
+                'not recognized by coala.'):
+            language(self.uut)
 
     def test_typed_list(self):
         self.uut = Setting('key', '1, 2, 3')
