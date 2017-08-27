@@ -215,7 +215,7 @@ class SectionTest(unittest.TestCase):
             'aspects',
             'spelling, commitmessage, methodsmell'))
         # Custom taste for ColonExistence
-        section.append(Setting('commitmessage.shortlog_colon', 'false'))
+        section.append(Setting('commitmessage:shortlog_colon', 'false'))
         section.language = Language['py 3.4']
 
         aspects = extract_aspects_from_section(section)

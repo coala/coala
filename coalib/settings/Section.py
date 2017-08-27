@@ -56,6 +56,7 @@ def extract_aspects_from_section(section):
     :return:        AspectList containing aspectclass instance with
                     user-defined tastes.
     """
+    ASPECT_TASTE_DELIMITER = ':'
     aspects = section.get('aspects')
     language = section.language
 
@@ -63,7 +64,7 @@ def extract_aspects_from_section(section):
 
     for aspect in AspectList(aspects):
         # Search all related tastes in section.
-        tastes = {name.split('.')[-1]: value
+        tastes = {name.split(ASPECT_TASTE_DELIMITER)[-1]: value
                   for name, value in section.contents.items()
                   if name.lower().startswith(aspect.__name__.lower())}
         aspect_instances.append(aspect(language, **tastes))
