@@ -48,22 +48,14 @@ def validate_aspect_config(section):
     :return:        The validity of section.
     """
     aspects = section.get('aspects')
-    section_language = section.get('language')
 
     if not len(aspects):
         return False
 
-    if not len(section_language):
+    if not section.language:
         logging.warning('Setting `language` is not found in section `{}`. '
                         'Usage of aspect-based setting must include '
                         'language information.'.format(section.name))
-        return False
-
-    try:
-        Language[section_language]
-    except UnknownLanguageError as exc:
-        logging.warning('Section `{}` contain invalid language setting. '
-                        '{}'.format(section.name, exc))
         return False
 
     if len(section.get('bears')):
@@ -72,6 +64,24 @@ def validate_aspect_config(section):
                         'takes priority and will overwrite any '
                         'explicitly listed bears.'.format(section.name))
     return True
+
+
+def _set_section_language(sections):
+    """
+    Validate ``language`` setting and inject them to section if valid.
+
+    :param sections: List of sections that potentially contain ``language``.
+    """
+    for section_name, section in sections.items():
+        section_language = section.get('language')
+        if not len(section_language):
+            continue
+
+        try:
+            section.language = Language[section_language]
+        except UnknownLanguageError as exc:
+            logging.warning('Section `{}` contain invalid language setting: '
+                            '{}'.format(section_name, exc))
 
 
 def merge_section_dicts(lower, higher):
@@ -474,6 +484,7 @@ def gather_configuration(acquire_settings,
         arg_list = sys.argv[1:] if arg_list is None else arg_list
     sections, targets = load_configuration(arg_list, arg_parser=arg_parser,
                                            args=args)
+    _set_section_language(sections)
     aspectize_sections(sections)
     local_bears, global_bears = fill_settings(sections,
                                               acquire_settings)

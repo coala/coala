@@ -3,6 +3,7 @@ import os
 
 from coalib.bearlib.aspects import AspectList, Root, get as get_aspect
 from coalib.bearlib.aspects.meta import issubaspect
+from coalib.bearlib.languages import Language
 from coalib.misc import Constants
 from coalib.settings.Section import (
     Section, Setting, append_to_sections, extract_aspects_from_section)
@@ -215,7 +216,7 @@ class SectionTest(unittest.TestCase):
             'spelling, commitmessage, methodsmell'))
         # Custom taste for ColonExistence
         section.append(Setting('commitmessage.shortlog_colon', 'false'))
-        section.append(Setting('language', 'py 3.4'))
+        section.language = Language['py 3.4']
 
         aspects = extract_aspects_from_section(section)
         spelling_instance = Root.Spelling('py 3.4')
@@ -238,7 +239,7 @@ class SectionTest(unittest.TestCase):
         section = Section('section')
         section.append(Setting('aspects', 'commitmessage'))
         section.append(Setting('excludes', 'TrailingPeriod'))
-        section.append(Setting('language', 'py 3.4'))
+        section.language = Language['py 3.4']
 
         aspects = extract_aspects_from_section(section)
 

@@ -10,6 +10,7 @@ from pyprint.NullPrinter import NullPrinter
 import pytest
 
 from coalib.bearlib.aspects.Metadata import CommitMessage
+from coalib.bearlib.languages import Language
 from coalib.misc import Constants
 from coalib.settings.Section import Section
 from coala_utils.ContextManagers import (
@@ -19,6 +20,7 @@ from coala_utils.string_processing import escape
 from coalib.settings.ConfigurationGathering import (
     aspectize_sections,
     validate_aspect_config,
+    _set_section_language,
     find_user_config,
     gather_configuration,
     get_filtered_bears,
@@ -355,7 +357,7 @@ class AspectConfigurationTest(unittest.TestCase):
     def setUp(self):
         self.section = Section('aspect section')
         self.section.append(Setting('aspects', 'commitmessage'))
-        self.section.append(Setting('language', 'python'))
+        self.section.language = Language['python']
         self.sections = {'aspect section': self.section}
 
     def test_aspectize_sections(self):
@@ -384,7 +386,7 @@ class AspectConfigurationTest(unittest.TestCase):
                 'explicitly listed bears.')
 
     def test_validate_aspect_no_language(self):
-        self.section['language'] = ''
+        self.section.language = None
 
         logger = logging.getLogger()
         with self.assertLogs(logger, 'WARNING') as cm:
@@ -395,17 +397,37 @@ class AspectConfigurationTest(unittest.TestCase):
                 'Usage of aspect-based setting must include '
                 'language information.')
 
-    def test_validate_aspect_invalid_language(self):
+
+class ValidateAndInjectLanguageTest(unittest.TestCase):
+
+    def setUp(self):
+        self.section = Section('language section')
+        self.section.append(Setting('language', 'python'))
+        self.sections = {'language section': self.section}
+        self.language = Language['python']
+
+    def test__set_section_language(self):
+        _set_section_language(self.sections)
+        self.assertIsInstance(self.section.language, Language)
+        self.assertEqual(str(self.language), str(self.section.language))
+
+    def test__set_section_language_no_language(self):
+        self.section['language'] = ''
+        _set_section_language(self.sections)
+        self.assertIsNone(self.section.language)
+
+    def test__set_section_language_wrong_language(self):
         self.section['language'] = 'INVALID_LANGUAGE'
 
         logger = logging.getLogger()
         with self.assertLogs(logger, 'WARNING') as cm:
-            self.assertFalse(validate_aspect_config(self.section))
+            _set_section_language(self.sections)
             self.assertRegex(
                 cm.output[0],
-                'Section `aspect section` contain invalid language setting. '
+                'Section `language section` contain invalid language setting. '
                 '\'Language `INVALID_LANGUAGE` is not a valid language name or '
                 'not recognized by coala.\'')
+            self.assertIsNone(self.section.language)
 
 
 class ConfigurationGatheringCollectionTest(unittest.TestCase):

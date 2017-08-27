@@ -275,6 +275,10 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
 
     def run_bear_from_section(self, args, kwargs):
         try:
+            # Don't get `language` setting from `section.contents`
+            if self.section.language and (
+                    'language' in self.get_metadata()._optional_params):
+                kwargs['language'] = self.section.language
             kwargs.update(
                 self.get_metadata().create_params_from_section(self.section))
         except ValueError as err:
@@ -337,7 +341,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         """
         return FunctionMetadata.from_function(
             cls.run,
-            omit={'self', 'dependency_results'})
+            omit={'self', 'dependency_results', 'language'})
 
     @classmethod
     def __json__(cls):

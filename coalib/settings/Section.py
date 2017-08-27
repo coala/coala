@@ -57,7 +57,7 @@ def extract_aspects_from_section(section):
                     user-defined tastes.
     """
     aspects = section.get('aspects')
-    language = section.get('language')
+    language = section.language
 
     aspect_instances = AspectList(exclude=section.get('excludes'))
 
@@ -131,6 +131,7 @@ class Section:
         self.name = str(name)
         self.defaults = defaults
         self.contents = OrderedDict()
+        self.language = None
 
     def bear_dirs(self):
         bear_dirs = path_list(self.get('bear_dirs', ''))
