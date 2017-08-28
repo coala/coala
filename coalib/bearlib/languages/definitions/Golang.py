@@ -3,6 +3,7 @@ from coalib.bearlib.languages.Language import Language
 
 @Language
 class Golang:
+    aliases = 'go'
     extensions = '.go',
     comment_delimiter = '//'
     multiline_comment_delimiters = {'/*': '*/'}
