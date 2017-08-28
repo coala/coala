@@ -125,3 +125,11 @@ class FilterTest(unittest.TestCase):
             # All bear plus 1 line holding the closing colour escape sequence.
             self.assertEqual(len(stdout.strip().splitlines()),
                              TEST_BEARS_COUNT + 1)
+
+    def check_by_style(self):
+        retval, stdout, stderr = execute_coala(
+            coala.main, 'coala', '-B' '--filter-by', 'can_detect')
+        self.assertEqual(retval, 0)
+        self.assertRaises(InvalidFilterException,
+                          InvalidFilterException,
+                          str(filter), FilterHelper.get_all_filters_str())
