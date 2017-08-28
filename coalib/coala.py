@@ -18,7 +18,8 @@ from pyprint.ConsolePrinter import ConsolePrinter
 
 from dependency_management.requirements.PipRequirement import PipRequirement
 
-from coalib.parsing.FilterHelper import FilterHelper, InvalidFilterException
+from coalib.parsing.FilterHelper import (
+    apply_filter, apply_filters, InvalidFilterException)
 from coalib.output.Logging import configure_logging
 from coalib.parsing.DefaultArgParser import default_arg_parser
 from coalib.misc.Exceptions import get_exitcode
@@ -70,7 +71,7 @@ def main(debug=False):
                 # Each iteration of the following loop applies
                 # filters one by one provided as arguments
                 try:
-                    filtered_bears = FilterHelper.apply_filters(
+                    filtered_bears = apply_filters(
                         args.filter_by, filtered_bears)
                 except InvalidFilterException as ex:
                     # If filter is not available
@@ -88,8 +89,7 @@ def main(debug=False):
         elif args.show_capabilities:
             from coalib.collecting.Collectors import (
                 filter_capabilities_by_languages)
-            local_bears, _ = FilterHelper.apply_filter(
-                'language', args.show_capabilities)
+            local_bears, _ = apply_filter('language', args.show_capabilities)
             capabilities = filter_capabilities_by_languages(
                 local_bears, args.show_capabilities)
             show_language_bears_capabilities(capabilities, console_printer)

@@ -4,7 +4,7 @@ from pyprint.ConsolePrinter import ConsolePrinter
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.output.printers.LogPrinter import LogPrinter
-from coalib.parsing.FilterHelper import FilterHelper
+from coalib.parsing.FilterHelper import apply_filters
 from coalib.coala_modes import mode_normal
 from coalib.parsing.DefaultArgParser import default_arg_parser
 
@@ -41,8 +41,7 @@ def filter_bears(language):
     :param language: The language to filter with.
     :return:         A list of bears.
     """
-    return list(FilterHelper.apply_filters(
-        [['language', language]], None)[0]['cli'])
+    return list(apply_filters([['language', language]], None)[0]['cli'])
 
 
 def find_language(filename):

@@ -1,7 +1,8 @@
 import unittest
 
 from coalib import coala
-from coalib.parsing.FilterHelper import FilterHelper, InvalidFilterException
+from coalib.parsing.FilterHelper import (
+    get_all_filters_str, InvalidFilterException)
 from tests.TestUtilities import (
     bear_test_module,
     execute_coala,
@@ -106,7 +107,7 @@ class FilterTest(unittest.TestCase):
                                    '{!r} is an invalid filter. Available '
                                    'filters: {}'.format(
                                        filter,
-                                       FilterHelper.get_all_filters_str()))
+                                       get_all_filters_str()))
 
     def test_filter_by_can_fix_null(self):
         with bear_test_module():
