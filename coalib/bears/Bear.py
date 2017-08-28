@@ -277,7 +277,8 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         try:
             # Don't get `language` setting from `section.contents`
             if self.section.language and (
-                    'language' in self.get_metadata()._optional_params):
+                    'language' in self.get_metadata()._optional_params or
+                    'language' in self.get_metadata()._non_optional_params):
                 kwargs['language'] = self.section.language
             kwargs.update(
                 self.get_metadata().create_params_from_section(self.section))
