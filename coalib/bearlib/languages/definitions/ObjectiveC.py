@@ -3,4 +3,4 @@ from coalib.bearlib.languages.Language import Language
 
 @Language
 class ObjectiveC:
-    pass
+    aliases = 'objective-c',
