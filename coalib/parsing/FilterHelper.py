@@ -35,8 +35,8 @@ def apply_filter(filter_name, filter_args, all_bears=None):
 
 def apply_filters(filters, bears=None):
     """
-    Returns bears after filtering based on ``args``. It returns
-    intersection of bears if more than one element is present in ``args``
+    Returns bears after filtering based on ``filters``. It returns
+    intersection of bears if more than one element is present in ``filters``
     list.
 
     :param filters:
