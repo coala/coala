@@ -43,7 +43,10 @@ The path of the temporary configuration file can be accessed inside
 
 .. note::
 
-    By default, no configuration file is generated.
+   By default, no configuration file is generated, as all the necessary
+   settings are already bundled with the linter. But if the user wants
+   use some external tools which may increase the performance of the
+   linter, them they can ask for a config file to generate.
 
 Custom Processing Functions with ``process_output``
 ---------------------------------------------------
