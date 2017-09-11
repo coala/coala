@@ -17,7 +17,7 @@
 coala supports popular programming languages including **Python**, **C/C++**, **Java**, **JavaScript**, **CSS**, and `several others <http://coala.io/#!/languages>`_ out of the box.
 
 
-`Install coala <http://coala.io/#!/home#installation>`_ | `Get Involved <http://coala.io/#!/getinvolved>`_ | `Chat <https://coala.io/chat>`_ | `Roadmap <https://projects.coala.io>`_ | `Blog <http://blog.coala.io>`_ | `Twitter <https://www.twitter.com/coala_io>`_
+`Install coala <http://coala.io/#!/home#installation>`_ | `Get Involved <http://coala.io/#/getinvolved>`_ | `Chat <https://coala.io/chat>`_ | `Roadmap <https://projects.coala.io>`_ | `Blog <http://blog.coala.io>`_ | `Twitter <https://www.twitter.com/coala_io>`_
 
 
 .. |Linux Build Status| image:: https://img.shields.io/circleci/project/coala/coala/master.svg?label=linux%20build
