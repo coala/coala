@@ -24,7 +24,7 @@ def check_setuptools_version(version):
               file=sys.stderr)
         return 2
 
-    pip_list = subprocess.check_output(['pip', 'list', '--format=legacy'])
+    pip_list = subprocess.check_output(['sudo','pip', 'list', '--format=legacy'])
     pip_list = pip_list.decode('utf8')
     if 'setuptools (%s)' % version not in pip_list:
         print('Failed! pip list reports wrong setuptools:\n%s' % pip_list,
