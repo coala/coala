@@ -37,6 +37,14 @@ social: !!map
     icon: fa-linkedin
     url: https://www.linkedin.com/in/userzimmermann
     color: cyan
+  facebook:
+    icon: fa-facebook
+    url: https://www.facebook.com/zimmermann.code
+    color: purple
+  instagram:
+    icon: fa-instagram
+    url: https://www.instagram.com/user.zimmermann
+    color: pink
 
 metadata: !!map
   country: Germany
