@@ -297,7 +297,7 @@ class MalformedComment:
     of MalformedComment will be returned instead of DocumentationComment.
     """
 
-    def __init__(self, message, line_number):
+    def __init__(self, message, line):
         """
         Instantiate a MalformedComment, which contains the information about
         the error: a message explaining the behaviour and a line number where
@@ -305,9 +305,9 @@ class MalformedComment:
 
         :param message:
             Contains the message about the error.
-        :param line_number:
+        :param line:
             Contains the current line number of the docstring where the error
             has occured.
         """
         self.message = message
-        self.line = line_number
+        self.line = line
