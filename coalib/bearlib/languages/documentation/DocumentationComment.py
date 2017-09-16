@@ -297,17 +297,17 @@ class MalformedComment:
     of MalformedComment will be returned instead of DocumentationComment.
     """
 
-    def __init__(self, message, line):
+    def __init__(self, message, line_number):
         """
         Instantiate a MalformedComment, which contains the information about
-        the error: a message explaining the behaviour and a line no where the
-        error has occured.
+        the error: a message explaining the behaviour and a line number where
+        the error has occured.
 
         :param message:
             Contains the message about the error.
-        :param line:
-            Contains the current line of the docstring where the error has
-            occured.
+        :param line_number:
+            Contains the current line number of the docstring where the error
+            has occured.
         """
         self.message = message
-        self.line = line
+        self.line = line_number
