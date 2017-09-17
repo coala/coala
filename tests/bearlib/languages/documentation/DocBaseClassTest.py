@@ -453,7 +453,7 @@ class DocBaseClassTest(unittest.TestCase):
                 '* A doc-comment aborted in the middle of writing\n',
                 '* This won\'t get parsed (hopefully...)\n']
 
-        expected = [dedent("""\
+        expected = [dedent("""
             Please check the docstring for faulty markers. A starting
             marker has been found, but no instance of DocComment is
             returned."""), 0]
@@ -467,7 +467,7 @@ class DocBaseClassTest(unittest.TestCase):
         data = ['\n',
                 '/** Aborts...\n']
 
-        expected = [dedent("""\
+        expected = [dedent("""
             Please check the docstring for faulty markers. A starting
             marker has been found, but no instance of DocComment is
             returned."""), 1]
@@ -482,7 +482,7 @@ class DocBaseClassTest(unittest.TestCase):
                 '* Markers are faulty\n',
                 '*/']
 
-        expected = [dedent("""\
+        expected = [dedent("""
             Please check the docstring for faulty markers. A starting
             marker has been found, but no instance of DocComment is
             returned."""), 0]
