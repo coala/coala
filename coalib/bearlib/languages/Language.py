@@ -272,7 +272,7 @@ class Language(metaclass=LanguageMeta):
 
     >>> Language.TrumpScript.comment_delimiter
     OrderedDict([(<Version('2.7')>, '#'), (<Version('3.3')>, '#'),
-(<Version('3.4')>, '#'), (<Version('3.5')>, '#'), (<Version('3.6')>, '#')])
+    (<Version('3.4')>, '#'), (<Version('3.5')>, '#'), (<Version('3.6')>, '#')])
 
     Any nonexistent item will of course not be served:
 
