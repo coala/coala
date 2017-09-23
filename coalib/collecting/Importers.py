@@ -12,11 +12,13 @@ def _import_module(file_path):
     if not os.path.exists(file_path):
         raise ImportError
 
-    module_name = os.path.splitext(os.path.basename(file_path))[0]
     module_dir = os.path.dirname(file_path)
 
-    if module_dir not in sys.path:
-        sys.path.insert(0, module_dir)
+    # `module_dir` should be never in the `sys.path`. If `module_dir`
+    # is in the `sys.path`, it's considered as a bug.
+    assert module_dir not in sys.path
+
+    module_name = os.path.splitext(os.path.basename(file_path))[0]
 
     # Ugly inconsistency: Python will insist on correctly cased module names
     # independent of whether the OS is case-sensitive or not.
@@ -28,7 +30,18 @@ def _import_module(file_path):
                 module_name = cased_module_name
                 break
 
-    return __import__(module_name)
+    # Force insert `module_dir` at front of the `sys.path`
+    sys.path.insert(0, module_dir)
+
+    try:
+        module = __import__(module_name)
+    finally:
+        # Remove `module_dir` from `sys.path`, so bear's dependencies won't
+        # clash with other coala-bears packages that have the same name with
+        # it.
+        sys.path.remove(module_dir)
+
+    return module
 
 
 def _is_subclass(test_class, superclasses):

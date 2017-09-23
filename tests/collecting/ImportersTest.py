@@ -1,5 +1,7 @@
 import os
+import sys
 import unittest
+from mock import patch
 from collections import OrderedDict
 
 from importlib.machinery import (
@@ -149,3 +151,8 @@ class ImportObjectsTest(unittest.TestCase):
                            attributes='method',
                            local=True,
                            verbose=False)
+
+    def test_clean_sys_path(self):
+        with patch.object(sys, 'path', ['/dir1']):
+            import_objects(self.testfile1_path)
+            self.assertEqual(sys.path, ['/dir1'])
