@@ -53,9 +53,6 @@ def main(debug=False):
         console_printer = ConsolePrinter(print_colored=not args.no_color)
         configure_logging(not args.no_color)
 
-        if args.json:  # needs to be checked in order to display bears in json
-            return mode_json(args, debug=debug)
-
         if args.show_bears:
             from coalib.settings.ConfigurationGathering import (
                 get_all_bears)
@@ -83,7 +80,8 @@ def main(debug=False):
                        global_bears,
                        args.show_description or args.show_details,
                        args.show_details,
-                       console_printer)
+                       console_printer,
+                       args)
 
             return 0
         elif args.show_capabilities:
@@ -95,6 +93,9 @@ def main(debug=False):
             show_language_bears_capabilities(capabilities, console_printer)
 
             return 0
+
+        if args.json:
+            return mode_json(args, debug=debug)
 
     except BaseException as exception:  # pylint: disable=broad-except
         if not isinstance(exception, SystemExit):
