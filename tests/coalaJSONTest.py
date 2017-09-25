@@ -81,7 +81,8 @@ class coalaJSONTest(unittest.TestCase):
     def test_show_language_bears(self):
         with bear_test_module():
             retval, stdout, stderr = execute_coala(
-                coala.main, 'coala', '--json', '-B', '-l', 'java', '-I')
+                coala.main, 'coala', '--json', '-B', '--filter-by', 'language',
+                'java', '-I')
             self.assertEqual(retval, 0)
             output = json.loads(stdout)
             self.assertEqual(len(output['bears']), 2)
@@ -150,3 +151,17 @@ class coalaJSONTest(unittest.TestCase):
         self.assertFalse(stdout2)
         self.assertFalse(stderr2)
         os.remove('file.json')
+
+    def test_show_language_bears_output_file(self):
+        with bear_test_module():
+            retval, stdout, stderr = execute_coala(
+                coala.main, 'coala', '--json', '-B', '--filter-by', 'language',
+                'java', '-I', '--output', 'bears.json')
+
+        with open('bears.json') as fp:
+            data = json.load(fp)
+        os.remove('bears.json')
+
+        self.assertEqual(retval, 0)
+        self.assertEqual(len(data['bears']), 2)
+        self.assertFalse(stderr)
