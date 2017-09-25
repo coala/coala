@@ -44,7 +44,7 @@ before_install:
     fi
 
   # Use pip 9, so that setuptools can be downgraded.
-  - pip install pip==9 setuptools==17
+  - pip install -v -v -v pip==9 setuptools==17
   - python .misc/check_setuptools.py
 
   # https://github.com/coala/coala/issues/3183
