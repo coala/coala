@@ -1,0 +1,96 @@
+sudo: false
+language: python
+python:
+  - 3.4
+  - 3.5
+  - 3.6
+
+matrix:
+  include:
+    # OSX build removed due to long build startup delays
+    # Restore matrix job entry from d2d67fab to test OSX
+    - python: 2.7
+      env: UNSUPPORTED=true
+      script: .misc/check_unsupported.sh
+    - python: 3.3
+      env: UNSUPPORTED=true
+      script: .misc/check_unsupported.sh
+
+env:
+  global:
+    - PATH="$PATH:$TRAVIS_BUILD_DIR/node_modules/.bin"
+
+cache:
+  pip: true
+  directories:
+    - node_modules
+    - docs/_build
+
+addons:
+  apt:
+    packages:
+      - clang-3.4
+    sources:
+      - llvm-toolchain-precise
+
+before_install:
+  - if [[ $TRAVIS_OS_NAME == osx ]]; then TRAVIS_PYTHON_VERSION=3.5; fi
+
+  - >
+    if [[ $TRAVIS_OS_NAME == osx ]]; then
+      brew install python3
+      sudo ln -sf $(which python3) $(which python)
+      sudo ln -sf $(which pip3) $(which pip 2>/dev/null || echo /usr/bin/pip)
+    fi
+
+  # Use pip 9, so that setuptools can be downgraded.
+  # https://github.com/coala/coala/issues/4708
+  # Apart from builds with python 2.7 and 3.5, it installs setuptools
+  # twice. So, it is required to uninstall one version manually.
+  - pip uninstall setuptools --yes
+  - pip install pip==9 setuptools==17
+  - python .misc/check_setuptools.py
+
+  # https://github.com/coala/coala/issues/3183
+  # Travis automatically installs the `requirements.txt` in "install" stage
+  - cp requirements.txt requirements.orig
+  - cat test-requirements.txt docs-requirements.txt >> requirements.txt
+  - sed -i.bak '/^-r/d' requirements.txt
+
+  # OSX is not a real Travis 'python' image, so it does not install
+  # requirements.txt automatically.
+  - if [[ $TRAVIS_OS_NAME == osx ]]; then pip install -r requirements.txt; fi
+
+  # For bears in .coafile requiring npm dependencies
+  - npm install
+
+before_script:
+  # Restore the original requirements.txt
+  - mv requirements.orig requirements.txt
+  - python .misc/check_setuptools.py
+
+script:
+  - py.test
+  - python setup.py bdist_wheel
+  - pip install ./dist/coala-*.whl
+  - pip install coala-bears[alldeps] --pre -U
+  # https://github.com/coala/coala-bears/issues/1037
+  - >
+    if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
+      sed -i.bak '/bears = GitCommitBear/d' .coafile
+    fi
+  - coala --non-interactive
+  - python setup.py docs
+
+after_success:
+  - codecov
+
+after_failure:
+  - codecov
+
+notifications:
+  email: false
+
+branches:
+  exclude:
+    - /^sils\//
