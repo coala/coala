@@ -335,8 +335,9 @@ and clicking ``New Pull Request``.
 
     If you are generating a pull request for a particular issue, you need to
     specify the issue number that your pull request resolves. If an issue is
-    labeled as a ``bug``, use ``Fixes XXXX`` and if it's not labeled as
-    ``bug``, ``use Closes XXXX``, where ``XXXX`` denotes the issue number.
+    labeled as a ``bug``, use ``Fixes <full-issue-url>`` and if it's not labeled as
+    ``bug``, use ``Closes <full-issue-url>``. For additional details, refer to
+	`Writing good commits: http://coala.io/commit>`_.
 
 If you know you have more work to do on this ``Pull Request`` before it is
 ready to be accepted, you can indicate this to other
