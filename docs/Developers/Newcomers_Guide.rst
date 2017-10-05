@@ -420,8 +420,8 @@ commit!
     $ git push --force myfork
 
 The meaning of ``myfork`` is explained
-`in step 4 of this guide
-<http://api.coala.io/en/latest/Developers/Newcomers_Guide.html#step-4-creating-a-fork-and-testing-your-changes>`__.
+`in step 3 of this guide
+<http://api.coala.io/en/latest/Developers/Newcomers_Guide.html#step-3-creating-a-fork-and-testing-your-changes>`__.
 The ``Pull Request`` will automatically update with the newest changes.
 
 **Congratulations!** Your PR just got accepted! You're awesome.
