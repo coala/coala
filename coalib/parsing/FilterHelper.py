@@ -10,10 +10,6 @@ available_filters = {'language': language_filter,
                      'can_fix': can_fix_filter}
 
 
-def get_all_filters_str(sep=', '):
-    return sep.join(sorted(available_filters))
-
-
 def is_valid_filter(filter):
     return filter in available_filters
 
@@ -27,7 +23,8 @@ def apply_filter(filter_name, filter_args, all_bears=None):
         raise InvalidFilterException('{!r} is an invalid filter. '
                                      'Available filters: {}'.format(
                                          filter_name,
-                                         get_all_filters_str()))
+                                         ', '.join(sorted(
+                                             available_filters))))
     if not filter_args or len(filter_args) == 0:
         return all_bears
     return available_filters[filter_name](all_bears, filter_args)
