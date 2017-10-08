@@ -5,12 +5,14 @@ from distutils.errors import DistutilsOptionError
 
 from setuptools.dist import Distribution
 
+from coalib import VERSION
 from coalib.misc.BuildManPage import BuildManPage, ManPageFormatter
 from coala_utils.ContextManagers import make_temp
 
+
 app_name = 'name'
 app_description = ('short description ' * 2).strip()
-app_long_description = ('long description ' * 80).strip()
+# app_long_description = ('long description ' * 80).strip()
 section_name = 'sect'
 section_text = ('section text ' * 5).strip()
 sections = {section_name: section_text}
@@ -39,7 +41,7 @@ class ManPageFormatterTest(unittest.TestCase):
         uut = ManPageFormatter(app_name, parser=test_arg_parser())
         today = datetime.date.today().strftime('%Y\\-%m\\-%d')
         self.assertEqual(uut._mk_title(),
-                         '.TH {0} {1} {2}\n'.format(app_name, 1, today))
+                         '.TH {0} {1} {2} "coala {3}"\n'.format(app_name, 1, today, VERSION))  # Ignore LineLengthBear
 
     def test_mk_name(self):
         uut = ManPageFormatter(app_name, parser=test_arg_parser())
@@ -58,10 +60,10 @@ class ManPageFormatterTest(unittest.TestCase):
                                parser=test_arg_parser())
         self.assertEqual(uut._mk_description(), '')
         uut = ManPageFormatter(app_name,
-                               parser=test_arg_parser(),
-                               long_desc=app_long_description)
-        self.assertEqual(uut._mk_description(),
-                         '.SH DESCRIPTION\n{}\n'.format(app_long_description))
+                               parser=test_arg_parser())
+        # long_desc=app_long_description)
+       # self.assertEqual(uut._mk_description(),
+        #                 '.SH DESCRIPTION\n{}\n'.format(app_long_description))
 
     def test_mk_options(self):
         uut = ManPageFormatter(app_name, parser=test_arg_parser())
@@ -97,14 +99,14 @@ class ManPageFormatterTest(unittest.TestCase):
                                       prog=app_name))
         today = datetime.date.today().strftime('%Y\\-%m\\-%d')
         self.assertEqual(parser.format_man_page(),
-                         '.TH {0} 1 {1}\n'
+                         '.TH {0} 1 {1} "coala {2}"\n'
                          '.SH NAME\n'
                          '{0}\n'
                          '.SH SYNOPSIS\n'
                          ' \\fBname\\fR [-h]\n\n\n'
                          '.SH OPTIONS\n'
                          '  -h, --help  show this help message and exit\n'
-                         .format(app_name, today))
+                         .format(app_name, today, VERSION))
 
 
 class BuildManPageTest(unittest.TestCase):
@@ -126,15 +128,13 @@ class BuildManPageTest(unittest.TestCase):
 
             today = datetime.date.today().strftime('%Y\\-%m\\-%d')
             self.assertEqual(result,
-                             """.TH {0} 1 {1}
+                             """.TH {0} 1 {1} "coala {2}"
 .SH NAME
 {0}
 .SH SYNOPSIS
  \\fB{0}\\fR [-h] [-a A] arg1
 
 
-.SH DESCRIPTION
-UNKNOWN
 .SH OPTIONS
   arg1
 
@@ -142,8 +142,6 @@ UNKNOWN
                         show this help message and exit
   \\fB-a\\fR \\fIA\\fR
 .SH LICENSE
- UNKNOWN
 .SH MAINTAINER(S)
- UNKNOWN
 .SH SEE ALSO
- Online documentation: UNKNOWN""".format(app_name, today))
+ Online documentation: UNKNOWN""".format(app_name, today, VERSION))
