@@ -28,14 +28,14 @@ Let us understand how to write tests for ``TooManyLinesBear`` in ``some_dir``.
                 filename,
                 max_number_of_lines: int=10):
             """
-            Detects if a file has more than "max_number_of_lines" lines
+            Detects if a file has more than `max_number_of_lines` lines.
 
-            :param max_number_of_lines    Maximum number of lines to be
+            :param max_number_of_lines:   Maximum number of lines to be
                                           allowed for a file. Default is 10.
             """
 
-            if(len(file)>max_number_of_lines):
-                yield Result(self, "Too many lines")
+            if len(file) > max_number_of_lines:
+                yield Result(self, 'Too many lines')
 
 **EXAMPLE 1** using ``verify_local_bear``
 
