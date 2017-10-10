@@ -235,6 +235,7 @@ class BearTest(BearTestBase):
         base = Bear(self.settings, None)
         self.assertRaises(NotImplementedError, base.run)
         self.assertEqual(base.get_non_optional_settings(), {})
+        self.assertEqual(base.get_optional_settings(), {})
 
     def test_message_queue(self):
         self.uut.execute()
@@ -432,6 +433,28 @@ class BearTest(BearTestBase):
         self.assertEqual(DependentBear.get_non_optional_settings(recurse=False),
                          {'y': ('Second value, but better.', int),
                           'w': ('Fourth value.', float)})
+
+    def test_get_optional_settings(self):
+        self.assertEqual(StandAloneBear.get_optional_settings(recurse=True),
+                         {'a': (('First default value. (Optional, '
+                                 "defaults to '33'.)"), int, 33),
+                          'b': (('Second default value. (Optional, '
+                                 "defaults to '34'.)"), int, 34)})
+
+        # Test settings of dependency bears. Also test settings-override-
+        # behaviour for dependency bears with equal setting names.
+        self.assertEqual(DependentBear.get_optional_settings(recurse=True),
+                         {'a': (('First default value, but better. (Optional, '
+                                 "defaults to '35'.)"), float, 35),
+                          'b': (('Second default value. (Optional, '
+                                 "defaults to '34'.)"), int, 34),
+                          'c': (('Third default value. (Optional, '
+                                 "defaults to '36'.)"), float, 36)})
+        self.assertEqual(DependentBear.get_optional_settings(recurse=False),
+                         {'a': (('First default value, but better. (Optional, '
+                                 "defaults to '35'.)"), float, 35),
+                          'c': (('Third default value. (Optional, '
+                                 "defaults to '36'.)"), float, 36)})
 
     def test_get_config_dir(self):
         section = Section('default')

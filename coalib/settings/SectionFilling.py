@@ -29,15 +29,7 @@ def fill_section(section, acquire_settings, log_printer, bears):
     :return:                 The new section.
     """
     # Retrieve needed settings.
-    prel_needed_settings = {}
-    for bear in bears:
-        needed = bear.get_non_optional_settings()
-        for key in needed:
-            if key in prel_needed_settings:
-                prel_needed_settings[key].append(bear.name)
-            else:
-                prel_needed_settings[key] = [needed[key][0],
-                                             bear.name]
+    prel_needed_settings, _ = get_required_and_optional_settings(bears)
 
     # Strip away existent settings.
     needed_settings = {}
@@ -58,6 +50,96 @@ def fill_section(section, acquire_settings, log_printer, bears):
             section.append(Setting(setting, help_text))
 
     return section
+
+
+def get_required_and_optional_settings(bears):
+    """
+    Given a list of bears, retrieves the required and optional settings for
+    each bear, and returns as a dict.
+
+    :param bears: All bear classes or instances.
+    :return:      A tuple with a dict for required and a dict for optional
+                  settings. Each dict of settings has keys representing the
+                  setting name, and the value is a list of bear names for
+                  which that setting is required or optional.
+    """
+    required_settings = {}
+    optional_settings = {}
+    for bear in bears:
+        needed = bear.get_non_optional_settings()
+        optional = bear.get_optional_settings()
+        for key in needed:
+            if key in required_settings:
+                required_settings[key].append(bear.name)
+            else:
+                required_settings[key] = [needed[key][0],
+                                          bear.name]
+        for key in optional:
+            if key in optional_settings:
+                optional_settings[key].append(bear.name)
+            else:
+                optional_settings[key] = [optional[key][0],
+                                          bear.name]
+    return (required_settings, optional_settings)
+
+
+def warn_extraneous_settings(bears, parsed_settings):
+    """
+    Warns the user if any of the settings are not used by any of the
+    given bears.
+
+    :param bears:           All bear classes or instances.
+    :param parsed_settings: List of dicts, where each dict has a setting
+                            and value key, corresponding to each custom
+                            setting.
+    """
+    (required_settings,
+        optional_settings) = get_required_and_optional_settings(bears)
+    for setting_definition in parsed_settings:
+        if (setting_definition['setting'] not in required_settings and
+                setting_definition['setting'] not in optional_settings):
+            logging.warning('Setting \'{}\' is not used by any bear, '
+                            'ignoring'.format(setting_definition['setting']))
+
+
+def get_section_bears(section):
+    """
+    Returns all local and global bears from a given section.
+
+    :param section: Section from which to get local and global bears.
+    :return:        A tuple containing a list of local bears in the section,
+                    and a list of the global bears in the section.
+    """
+    bear_dirs = section.bear_dirs()
+    if getattr(section, 'aspects', None):
+        section_local_bears, section_global_bears = (
+            collect_bears_by_aspects(
+                section.aspects,
+                [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL]))
+    else:
+        bears = list(section.get('bears', ''))
+        section_local_bears, section_global_bears = collect_bears(
+            bear_dirs,
+            bears,
+            [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL])
+    section_local_bears = Dependencies.resolve(section_local_bears)
+    section_global_bears = Dependencies.resolve(section_global_bears)
+    return section_local_bears, section_global_bears
+
+
+def get_all_bears_from_sections(sections):
+    """
+    Returns a list of all bears from a a list of sections.
+
+    :param sections: Sections with bears to get.
+    :return:         A list of all bears in the sections.
+    """
+    all_bears_from_sections = []
+    for _, section in sections.items():
+        section_local_bears, section_global_bears = get_section_bears(section)
+        all_bears_from_sections.extend(section_local_bears)
+        all_bears_from_sections.extend(section_global_bears)
+    return all_bears_from_sections
 
 
 def fill_settings(sections,
@@ -94,20 +176,7 @@ def fill_settings(sections,
     global_bears = {}
 
     for section_name, section in sections.items():
-        bear_dirs = section.bear_dirs()
-        if getattr(section, 'aspects', None):
-            section_local_bears, section_global_bears = (
-                collect_bears_by_aspects(
-                    section.aspects,
-                    [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL]))
-        else:
-            bears = list(section.get('bears', ''))
-            section_local_bears, section_global_bears = collect_bears(
-                bear_dirs,
-                bears,
-                [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL])
-        section_local_bears = Dependencies.resolve(section_local_bears)
-        section_global_bears = Dependencies.resolve(section_global_bears)
+        section_local_bears, section_global_bears = get_section_bears(section)
         all_bears = copy.deepcopy(section_local_bears)
         all_bears.extend(section_global_bears)
         if section.is_enabled(targets):
