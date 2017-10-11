@@ -72,10 +72,13 @@ class FileCache:
         """
         Initialize FileCache.
 
-        :param log_printer: An object to use for logging.
-        :param project_dir: The root directory of the project to be used
-                            as a key identifier.
-        :param flush_cache: Flush the cache and rebuild it.
+        :param log_printer:
+            An object to use for logging.
+        :param project_dir:
+            The root directory of the project to be used
+            as a key identifier.
+        :param flush_cache:
+            Flush the cache and rebuild it.
         """
         self.project_dir = project_dir
         self.current_time = int(time.time())
@@ -139,7 +142,8 @@ class FileCache:
         Removes the given files from the cache so that they are no longer
         considered cached for this and the next run.
 
-        :param files: A set of files to remove from cache.
+        :param files:
+            A set of files to remove from cache.
         """
         self.to_untrack.update(files)
 
@@ -148,9 +152,10 @@ class FileCache:
         Start tracking files given in ``files`` by adding them to the
         database.
 
-        :param files: A set of files that need to be tracked.
-                      These files are initialized with their last
-                      modified tag as -1.
+        :param files:
+            A set of files that need to be tracked.
+            These files are initialized with their last
+            modified tag as -1.
         """
         for file in files:
             if file not in self.data:
@@ -161,8 +166,10 @@ class FileCache:
         Returns the set of files that are not in the cache yet or have been
         untracked.
 
-        :param files: The list of collected files.
-        :return:      A set of files that are uncached.
+        :param files:
+            The list of collected files.
+        :return:
+            A set of files that are uncached.
         """
         if self.data == {}:
             # The first run on this project. So all files are new

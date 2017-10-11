@@ -22,10 +22,12 @@ class AspectList(list):
         >>> AspectList([CommitMessage.Shortlog, 'CommitMessage.Body'])
         [<aspectclass '...Shortlog'>, <aspectclass '...Body'>]
 
-        :param seq: A sequence containing either aspectclass, aspectclass
-                    instance, or string of partial/full qualified aspect name.
-        :param exclude: A sequence of either aspectclass or string of aspect
-                        name that marked as excluded from the list.
+        :param seq:
+            A sequence containing either aspectclass, aspectclass
+            instance, or string of partial/full qualified aspect name.
+        :param exclude:
+            A sequence of either aspectclass or string of aspect
+            name that marked as excluded from the list.
         """
         super().__init__((item if isaspect(item) else
                           coalib.bearlib.aspects[item] for item in seq))
@@ -49,9 +51,11 @@ class AspectList(list):
         Return first item that match or contain an aspect. See
         :meth:`coalib.bearlib.aspects.aspectbase.get` for further example.
 
-        :param aspect: An aspectclass OR name of an aspect.
-        :return:       An aspectclass OR aspectclass instance, depend on
-                       AspectList content. Return None if no match found.
+        :param aspect:
+            An aspectclass OR name of an aspect.
+        :return:
+            An aspectclass OR aspectclass instance, depend on
+            AspectList content. Return None if no match found.
         """
         if not isaspect(aspect):
             aspect = coalib.bearlib.aspects[aspect]
@@ -66,8 +70,10 @@ class AspectList(list):
         """
         Remove first matching item in list.
 
-        :param item:        An aspectclass
-        :raises ValueError: When to be removed item is not found in list.
+        :param item:
+            An aspectclass
+        :raises ValueError:
+            When to be removed item is not found in list.
         """
         for aspect in self:
             if aspect is item or isinstance(aspect, item):
@@ -80,7 +86,8 @@ class AspectList(list):
         """
         Breakdown all of item in self into their leaf subaspects.
 
-        :return: An AspectList contain ONLY leaf aspects.
+        :return:
+            An AspectList contain ONLY leaf aspects.
         """
         aspects = type(self)()
         for leaf_aspect in itertools.chain.from_iterable([

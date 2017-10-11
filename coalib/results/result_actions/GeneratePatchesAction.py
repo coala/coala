@@ -22,9 +22,12 @@ def create_arg_parser(files, bears):
     """
     A function that generates a `default_arg_parser`.
 
-    :param files: A list that contains filenames.
-    :param bears: A list that contains name of bears.
-    :return:      An object of type `default_arg_parser`.
+    :param files:
+        A list that contains filenames.
+    :param bears:
+        A list that contains name of bears.
+    :return:
+        An object of type `default_arg_parser`.
     """
     args = default_arg_parser().parse_args()
     args.files = files
@@ -38,8 +41,10 @@ def filter_bears(language):
     """
     Filter bears by language.
 
-    :param language: The language to filter with.
-    :return:         A list of bears.
+    :param language:
+        The language to filter with.
+    :return:
+        A list of bears.
     """
     return list(apply_filters([['language', language]], None)[0]['cli'])
 
@@ -48,10 +53,11 @@ def find_language(filename):
     """
     Find the language used in `filename`.
 
-    :param filename: The name of the file.
-    :return:         The language used.
+    :param filename:
+        The name of the file.
+    :return:
+        The language used.
     """
-
     return guess_lexer_for_filename(filename, 'Error, no file '
                                     'found').name
 

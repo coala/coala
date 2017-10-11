@@ -66,7 +66,7 @@ class aspectsModule(ModuleType):
 
         :param aspectname:
             Name of the aspect that should be searched.
-        :raise MultipleAspectFoundError:
+            :raise MultipleAspectFoundError:
             When multiple aspects with same name was found.
         :return:
             An aspectclass or None.

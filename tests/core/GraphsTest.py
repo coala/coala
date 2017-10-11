@@ -28,7 +28,6 @@ def traverse_graph_on_cyclic_graph_test(graph, start_nodes):
     :param start_nodes:
         The nodes where to start walking from.
     """
-
     def test_function(self):
         with self.assertRaises(CircularDependencyError) as cm:
             traverse_graph(start_nodes, partial(get_successive_nodes, graph))
@@ -49,7 +48,6 @@ def traverse_graph_test(graph, start_nodes, expected):
     :return:
         A test function testing ``test_traverse_graph``.
     """
-
     def test_function(self):
         results = []
 

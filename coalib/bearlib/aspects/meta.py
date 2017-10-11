@@ -16,6 +16,7 @@ class aspectclass(type):
 
     Root aspectclass is :class:`coalib.bearlib.aspects.Root`.
     """
+
     def __init__(cls, clsname, bases, clsattrs):
         """
         Initializes the ``.subaspects`` dict on new aspectclasses.

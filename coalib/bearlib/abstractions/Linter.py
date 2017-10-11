@@ -30,6 +30,7 @@ def _prepare_options(options, bear_class):
     :param bear_class:
         The Bear ``class`` which is being decorated by ``linter``.
     """
+
     allowed_options = {'executable',
                        'output_format',
                        'use_stdin',
@@ -477,7 +478,7 @@ def _create_linter(klass, options):
                 provide a good result:
 
                 - filename - The name of the linted file. This is relevant for
-                    global bears only.
+                global bears only.
                 - line - The line where the issue starts.
                 - column - The column where the issue starts.
                 - end_line - The line where the issue ends.
@@ -886,14 +887,14 @@ def linter(executable: str,
         The output format of the underlying executable. Valid values are
 
         - ``None``: Define your own format by overriding ``process_output``.
-          Overriding ``process_output`` is then mandatory, not specifying it
-          raises a ``ValueError``.
+        Overriding ``process_output`` is then mandatory, not specifying it
+        raises a ``ValueError``.
         - ``'regex'``: Parse output using a regex. See parameter
-          ``output_regex``.
+        ``output_regex``.
         - ``'corrected'``: The output is the corrected of the given file. Diffs
-          are then generated to supply patches for results.
+        are then generated to supply patches for results.
         - ``'unified_diff'``: The output is the unified diff of the corrections.
-          Patches are then supplied for results using this output.
+        Patches are then supplied for results using this output.
 
         Passing something else raises a ``ValueError``.
     :param output_regex:
@@ -903,7 +904,7 @@ def linter(executable: str,
         result:
 
         - filename - The name of the linted file. This is relevant for
-            global bears only.
+        global bears only.
         - line - The line where the issue starts.
         - column - The column where the issue starts.
         - end_line - The line where the issue ends.
@@ -926,10 +927,10 @@ def linter(executable: str,
         mapped **case-insensitive**!
 
         - ``RESULT_SEVERITY.MAJOR``: Mapped by ``critical``, ``c``,
-          ``fatal``, ``fail``, ``f``, ``error``, ``err`` or ``e``.
+        ``fatal``, ``fail``, ``f``, ``error``, ``err`` or ``e``.
         - ``RESULT_SEVERITY.NORMAL``: Mapped by ``warning``, ``warn`` or ``w``.
         - ``RESULT_SEVERITY.INFO``: Mapped by ``information``, ``info``, ``i``,
-          ``note`` or ``suggestion``.
+        ``note`` or ``suggestion``.
 
         A ``ValueError`` is raised when the named group ``severity`` is not
         used inside ``output_regex`` and this parameter is given.

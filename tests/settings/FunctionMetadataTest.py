@@ -11,11 +11,13 @@ class TestClass:
         """
         Description
 
-        :param param2: d
-        :param param4: p4 desc
-        :return:       ret
+        :param param2:
+            d
+        :param param4:
+            p4 desc
+        :return:
+            ret
         """
-
     def good_function(self, a_param: int):
         pass
 

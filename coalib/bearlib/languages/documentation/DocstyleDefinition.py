@@ -15,6 +15,7 @@ class DocstyleDefinition:
     documentation comment (for which language, documentation style/tool used
     etc.).
     """
+
     Metadata = namedtuple('Metadata', ('param_start', 'param_end',
                                        'exception_start', 'exception_end',
                                        'return_sep'))
@@ -34,32 +35,40 @@ class DocstyleDefinition:
         """
         Instantiates a new DocstyleDefinition.
 
-        :param language: The case insensitive programming language of the
-                         documentation comment, e.g. ``"CPP"`` for C++ or
-                         ``"PYTHON3"``.
-        :param docstyle: The case insensitive documentation style/tool used
-                         to document code, e.g. ``"default"`` or ``"doxygen"``.
-        :param markers:  An iterable of marker/delimiter string iterables
-                         or a single marker/delimiter string iterable that
-                         identify a documentation comment. See ``markers``
-                         property for more details on markers.
-        :param metadata: A namedtuple consisting of certain attributes that
-                         form the layout of the certain documentation comment
-                         e.g. ``param_start`` defining the start symbol of
-                         the parameter fields and ``param_end`` defining the
-                         end.
-        :param class_padding: A namedtuple consisting of values about
-                         blank lines before and after the documentation of
-                         ``docstring_type`` class.
-        :param function_padding: A namedtuple consisting of values about
-                         blank lines before and after the documentation of
-                         ``docstring_type`` function.
-        :param docstring_type_regex: A namedtuple consisting of regex
-                         about ``class`` and ``function`` of a language, which
-                         is used to determine ``docstring_type`` of
-                         DocumentationComment.
-        :param docstring_position: Defines the position where the regex of
-                         docstring type is present(i.e. ``top`` or ``bottom``).
+        :param language:
+            The case insensitive programming language of the
+            documentation comment, e.g. ``"CPP"`` for C++ or
+            ``"PYTHON3"``.
+        :param docstyle:
+            The case insensitive documentation style/tool used
+            to document code, e.g. ``"default"`` or ``"doxygen"``.
+        :param markers:
+            An iterable of marker/delimiter string iterables
+            or a single marker/delimiter string iterable that
+            identify a documentation comment. See ``markers``
+            property for more details on markers.
+        :param metadata:
+            A namedtuple consisting of certain attributes that
+            form the layout of the certain documentation comment
+            e.g. ``param_start`` defining the start symbol of
+            the parameter fields and ``param_end`` defining the
+            end.
+        :param class_padding:
+            A namedtuple consisting of values about
+            blank lines before and after the documentation of
+            ``docstring_type`` class.
+        :param function_padding:
+            A namedtuple consisting of values about
+            blank lines before and after the documentation of
+            ``docstring_type`` function.
+        :param docstring_type_regex:
+            A namedtuple consisting of regex
+            about ``class`` and ``function`` of a language, which
+            is used to determine ``docstring_type`` of
+            DocumentationComment.
+        :param docstring_position:
+            Defines the position where the regex of
+            docstring type is present(i.e. ``top`` or ``bottom``).
         """
         self._language = language.lower()
         self._docstyle = docstyle.lower()
@@ -89,8 +98,9 @@ class DocstyleDefinition:
         """
         The programming language.
 
-        :return: A lower-case string defining the programming language (i.e.
-                 "cpp" or "python").
+        :return:
+            A lower-case string defining the programming language (i.e.
+            "cpp" or "python").
         """
         return self._language
 
@@ -99,8 +109,9 @@ class DocstyleDefinition:
         """
         The documentation style/tool used to document code.
 
-        :return: A lower-case string defining the docstyle (i.e. "default" or
-                 "doxygen").
+        :return:
+            A lower-case string defining the docstyle (i.e. "default" or
+            "doxygen").
         """
         return self._docstyle
 
@@ -138,8 +149,9 @@ class DocstyleDefinition:
             ///
             /// Detailed documentation.
 
-        :return: A tuple of marker/delimiter string tuples that identify a
-                 documentation comment.
+        :return:
+            A tuple of marker/delimiter string tuples that identify a
+            documentation comment.
         """
         return self._markers
 
@@ -161,6 +173,7 @@ class DocstyleDefinition:
         These values are official standard of following blank lines before and
         after the documentation of ``docstring_type`` class.
         """
+
         return self._class_padding
 
     @property
@@ -209,22 +222,27 @@ class DocstyleDefinition:
             When placing new coala docstyle definition files, these must
             consist of only lowercase letters and end with ``.coalang``!
 
-        :param language:           The case insensitive programming language of
-                                   the documentation comment as a string.
-        :param docstyle:           The case insensitive documentation
-                                   style/tool used to document code, e.g.
-                                   ``"default"`` or ``"doxygen"``.
-        :param coalang_dir:        Path to directory with coalang docstyle
-                                   definition files. This replaces the default
-                                   path if given.
-        :raises FileNotFoundError: Raised when the given docstyle was not
-                                   found.
-        :raises KeyError:          Raised when the given language is not
-                                   defined for given docstyle.
-        :return:                   The ``DocstyleDefinition`` for given language
-                                   and docstyle.
+        :param language:
+            The case insensitive programming language of
+            the documentation comment as a string.
+        :param docstyle:
+            The case insensitive documentation
+            style/tool used to document code, e.g.
+            ``"default"`` or ``"doxygen"``.
+        :param coalang_dir:
+            Path to directory with coalang docstyle
+            definition files. This replaces the default
+            path if given.
+        :raises FileNotFoundError:
+            Raised when the given docstyle was not
+            found.
+        :raises KeyError:
+            Raised when the given language is not
+            defined for given docstyle.
+        :return:
+            The ``DocstyleDefinition`` for given language
+            and docstyle.
         """
-
         docstyle = docstyle.lower()
 
         language_config_parser = ConfParser(remove_empty_iter_elements=False)
@@ -298,7 +316,8 @@ class DocstyleDefinition:
         Returns a sequence of pairs with ``(docstyle, language)`` which are
         available when using ``load()``.
 
-        :return: A sequence of pairs with ``(docstyle, language)``.
+        :return:
+            A sequence of pairs with ``(docstyle, language)``.
         """
         pattern = os.path.join(os.path.dirname(__file__), '*.coalang')
 

@@ -15,16 +15,20 @@ class SourceRange(TextRange):
         """
         Creates a new SourceRange.
 
-        :param start:       A SourcePosition indicating the start of the range.
-        :param end:         A SourcePosition indicating the end of the range.
-                            If ``None`` is given, the start object will be used
-                            here. end must be in the same file and be greater
-                            than start as negative ranges are not allowed.
-        :raises TypeError:  Raised when
-                            - start is not of type SourcePosition.
-                            - end is neither of type SourcePosition, nor is it
-                              None.
-        :raises ValueError: Raised when file of start and end mismatch.
+        :param start:
+            A SourcePosition indicating the start of the range.
+        :param end:
+            A SourcePosition indicating the end of the range.
+            If ``None`` is given, the start object will be used
+            here. end must be in the same file and be greater
+            than start as negative ranges are not allowed.
+        :raises TypeError:
+            Raised when
+            - start is not of type SourcePosition.
+            - end is neither of type SourcePosition, nor is it
+            None.
+        :raises ValueError:
+            Raised when file of start and end mismatch.
         """
         TextRange.__init__(self, start, end)
 
@@ -52,7 +56,8 @@ class SourceRange(TextRange):
         """
         Creates a SourceRange from a clang SourceRange object.
 
-        :param range: A cindex.SourceRange object.
+        :param range:
+            A cindex.SourceRange object.
         """
         return cls.from_values(range.start.file.name,
                                range.start.line,
@@ -69,9 +74,12 @@ class SourceRange(TextRange):
         """
         Creates a SourceRange from a start and end positions.
 
-        :param file:           Name of the file.
-        :param position_start: Start of range given by AbsolutePosition.
-        :param position_end:   End of range given by AbsolutePosition or None.
+        :param file:
+            Name of the file.
+        :param position_start:
+            Start of range given by AbsolutePosition.
+        :param position_end:
+            End of range given by AbsolutePosition or None.
         """
         start = SourcePosition(file, position_start.line, position_start.column)
         end = None
@@ -89,8 +97,9 @@ class SourceRange(TextRange):
         Retrieves the filename this source range refers to while taking the
         possible file renamings in the given file_diff_dict into account:
 
-        :param file_diff_dict: A dictionary with filenames as key and their
-                               associated Diff objects as values.
+        :param file_diff_dict:
+            A dictionary with filenames as key and their
+            associated Diff objects as values.
         """
         diff = file_diff_dict.get(self.file)
         if diff is None:
@@ -109,8 +118,10 @@ class SourceRange(TextRange):
         self.end.line is None:     -> last line of file
         self.end.column is None:   -> last column of self.end.line
 
-        :param file_contents: File contents of the applicable file
-        :return:              TextRange with absolute values
+        :param file_contents:
+            File contents of the applicable file
+        :return:
+            TextRange with absolute values
         """
         tr = TextRange.expand(self, file_contents)
 
@@ -123,40 +134,40 @@ class SourceRange(TextRange):
     @enforce_signature
     def affected_source(self, file_dict: dict):
         r"""
-        Tells which lines are affected in a specified file within a given range.
+        rTells which lines are affected in a specified file within a given range.
 
-        >>> from os.path import abspath
-        >>> sr = SourceRange.from_values('file_name', start_line=2, end_line=2)
-        >>> sr.affected_source({
-        ...     abspath('file_name'): ('def fun():\n', '    x = 2  \n')
-        ... })
-        ('    x = 2  \n',)
+        r>>> from os.path import abspath
+        r>>> sr = SourceRange.from_values('file_name', start_line=2, end_line=2)
+        r>>> sr.affected_source({
+        r...     abspath('file_name'): ('def fun():\n', '    x = 2  \n')
+        r... })
+        r('    x = 2  \n',)
 
-        If more than one line is affected.
+        rIf more than one line is affected.
 
-        >>> sr = SourceRange.from_values('file_name', start_line=2, end_line=3)
-        >>> sr.affected_source({
-        ...     abspath('file_name'): ('def fun():\n',
-        ...                            '    x = 2  \n', '    print(x)  \n')
-        ... })
-        ('    x = 2  \n', '    print(x)  \n')
+        r>>> sr = SourceRange.from_values('file_name', start_line=2, end_line=3)
+        r>>> sr.affected_source({
+        r...     abspath('file_name'): ('def fun():\n',
+        r...                            '    x = 2  \n', '    print(x)  \n')
+        r... })
+        r('    x = 2  \n', '    print(x)  \n')
 
-        If the file indicated at the source range is not in the `file_dict` or
-        the lines are not given, this will return `None`:
+        rIf the file indicated at the source range is not in the `file_dict` or
+        rthe lines are not given, this will return `None`:
 
-        >>> sr = SourceRange.from_values('file_name_not_present',
-        ...     start_line=2, end_line=2)
-        >>> sr.affected_source({abspath('file_name'):
-        ...     ('def fun():\n', '    x = 2  \n')})
+        r>>> sr = SourceRange.from_values('file_name_not_present',
+        r...     start_line=2, end_line=2)
+        r>>> sr.affected_source({abspath('file_name'):
+        r...     ('def fun():\n', '    x = 2  \n')})
 
-        :param file_dict:
-            It is a dictionary where the file names are the keys and
-            the contents of the files are the values(which is of type tuple).
-        :return:
-            A tuple of affected lines in the specified file.
-            If the file is not affected or the file is not present in
-            ``file_dict`` return ``None``.
-        """
+        r:param file_dict:
+        r    It is a dictionary where the file names are the keys and
+        r    the contents of the files are the values(which is of type tuple).
+        r:return:
+        r    A tuple of affected lines in the specified file.
+        r    If the file is not affected or the file is not present in
+        r    ``file_dict`` return ``None``.
+        r"""
         if self.start.file in file_dict and self.start.line and self.end.line:
             # line number starts from 1, index starts from 0
             return file_dict[self.start.file][self.start.line - 1:self.end.line]

@@ -18,9 +18,12 @@ class LineDiff:
         Creates a new LineDiff object. Note that a line cannot be
         changed _and_ deleted at the same time.
 
-        :param change: False or a tuple (original, replacement)
-        :param delete: True/False
-        :param add_after: False or a list of lines to append after this ones
+        :param change:
+            False or a tuple (original, replacement)
+        :param delete:
+            True/False
+        :param add_after:
+            False or a list of lines to append after this ones
         """
         # change property setter will need this value for assertion
         self._delete = False

@@ -18,10 +18,11 @@ def typechain(*args):
     Traceback (most recent call last):
         ...
     ValueError: Couldn't convert value 'str' to any specified type or find it \
-in specified values.
+    in specified values.
 
-    :raises TypeError:  Raises when either no functions are specified for
-                        checking.
+    :raises TypeError:
+        Raises when either no functions are specified for
+        checking.
     """
     if len(args) == 0:
         raise TypeError('No arguments were provided.')
@@ -32,8 +33,9 @@ in specified values.
         casted to one of types in args, or the value itself if it is in the
         args.
 
-        :raises ValueError: Raises when cannot transform value in any one of
-                            specified ways.
+        :raises ValueError:
+            Raises when cannot transform value in any one of
+            specified ways.
         """
         for arg in args:
             if value == arg:

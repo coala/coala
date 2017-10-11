@@ -19,15 +19,18 @@ class ResultAction:
 
         Returns ``True`` or a string containing the not_applicable message.
 
-        :param result:             The result from the coala run to check if an
-                                   Action is applicable.
-        :param original_file_dict: A dictionary containing the files in the
-                                   state where the result was generated.
-        :param file_diff_dict:     A dictionary containing a diff for every
-                                   file from the state in the
-                                   original_file_dict to the current state.
-                                   This dict will be altered so you do not
-                                   need to use the return value.
+        :param result:
+            The result from the coala run to check if an
+            Action is applicable.
+        :param original_file_dict:
+            A dictionary containing the files in the
+            state where the result was generated.
+        :param file_diff_dict:
+            A dictionary containing a diff for every
+            file from the state in the
+            original_file_dict to the current state.
+            This dict will be altered so you do not
+            need to use the return value.
         """
         return True
 
@@ -48,17 +51,22 @@ class ResultAction:
         given as a section. The file dictionaries
         are needed for differential results.
 
-        :param result:             The result to apply.
-        :param original_file_dict: A dictionary containing the files in the
-                                   state where the result was generated.
-        :param file_diff_dict:     A dictionary containing a diff for every
-                                   file from the state in the
-                                   original_file_dict to the current state.
-                                   This dict will be altered so you do not
-                                   need to use the return value.
-        :param section:            The section where to retrieve the additional
-                                   information.
-        :return:                   The modified file_diff_dict.
+        :param result:
+            The result to apply.
+        :param original_file_dict:
+            A dictionary containing the files in the
+            state where the result was generated.
+        :param file_diff_dict:
+            A dictionary containing a diff for every
+            file from the state in the
+            original_file_dict to the current state.
+            This dict will be altered so you do not
+            need to use the return value.
+        :param section:
+            The section where to retrieve the additional
+            information.
+        :return:
+            The modified file_diff_dict.
         """
         params = self.get_metadata().create_params_from_section(section)
         return self.apply(result, original_file_dict, file_diff_dict, **params)

@@ -88,9 +88,13 @@ class StandAloneBear(Bear):
     def run(self, x: int, y: int, z: int=33):
         """
         Test run.
-        :param x: First value.
-        :param y: Second value.
-        :param z: Third value.
+
+        :param x:
+            First value.
+        :param y:
+            Second value.
+        :param z:
+            Third value.
         """
         yield x
         yield y
@@ -104,8 +108,11 @@ class DependentBear(Bear):
     def run(self, y: int, w: float):
         """
         Test run with more params.
-        :param y: Second value, but better.
-        :param w: Fourth value.
+
+        :param y:
+            Second value, but better.
+        :param w:
+            Fourth value.
         """
         yield y
         yield w

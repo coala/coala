@@ -12,12 +12,17 @@ def filter_results(original_file_dict,
     """
     Filters results for such ones that are unique across file changes
 
-    :param original_file_dict: Dict of lists of file contents before  changes
-    :param modified_file_dict: Dict of lists of file contents after changes
-    :param original_results:   List of results of the old files
-    :param modified_results:   List of results of the new files
-    :return:                   List of results from new files that are unique
-                               from all those that existed in the old changes
+    :param original_file_dict:
+        Dict of lists of file contents before  changes
+    :param modified_file_dict:
+        Dict of lists of file contents after changes
+    :param original_results:
+        List of results of the old files
+    :param modified_results:
+        List of results of the new files
+    :return:
+        List of results from new files that are unique
+        from all those that existed in the old changes
     """
 
     renamed_files = ensure_files_present(original_file_dict,
@@ -67,9 +72,12 @@ def basics_match(original_result,
     * severity
     * debug_msg
 
-    :param original_result: A result of the old files
-    :param modified_result: A result of the new files
-    :return:                Boolean value whether or not the properties match
+    :param original_result:
+        A result of the old files
+    :param modified_result:
+        A result of the new files
+    :return:
+        Boolean value whether or not the properties match
     """
 
     return all(getattr(original_result, member) ==
@@ -85,12 +93,18 @@ def source_ranges_match(original_file_dict,
     """
     Checks whether the SourceRanges of two results match
 
-    :param original_file_dict: Dict of lists of file contents before changes
-    :param diff_dict:          Dict of diffs describing the changes per file
-    :param original_result_diff_dict: diff for each file for this result
-    :param modified_result_diff_dict: guess
-    :param renamed_files:   A dictionary containing file renamings across runs
-    :return:                     Boolean value whether the SourceRanges match
+    :param original_file_dict:
+        Dict of lists of file contents before changes
+    :param diff_dict:
+        Dict of diffs describing the changes per file
+    :param original_result_diff_dict:
+        diff for each file for this result
+    :param modified_result_diff_dict:
+        guess
+    :param renamed_files:
+        A dictionary containing file renamings across runs
+    :return:
+        Boolean value whether the SourceRanges match
     """
     for file_name in original_file_dict:
 
@@ -114,9 +128,12 @@ def remove_range(file_contents, source_range):
     """
     removes the chars covered by the sourceRange from the file
 
-    :param file_contents: list of lines in the file
-    :param source_range:  Source Range
-    :return:              list of file contents without specified chars removed
+    :param file_contents:
+        list of lines in the file
+    :param source_range:
+        Source Range
+    :return:
+        list of file contents without specified chars removed
     """
     if not file_contents:
         return []
@@ -165,11 +182,14 @@ def remove_result_ranges_diffs(result_list, file_dict):
     Calculates the diffs to all files in file_dict that describe the removal of
     each respective result's affected code.
 
-    :param result_list: list of results
-    :param file_dict:   dict of file contents
-    :return:            returnvalue[result][file] is a diff of the changes the
-                        removal of this result's affected code would cause for
-                        the file.
+    :param result_list:
+        list of results
+    :param file_dict:
+        dict of file contents
+    :return:
+        returnvalue[result][file] is a diff of the changes the
+        removal of this result's affected code would cause for
+        the file.
     """
     result_diff_dict_dict = {}
     for original_result in result_list:
@@ -219,9 +239,12 @@ def ensure_files_present(original_file_dict, modified_file_dict):
     """
     Ensures that all files are available as keys in both dicts.
 
-    :param original_file_dict: Dict of lists of file contents before  changes
-    :param modified_file_dict: Dict of lists of file contents after changes
-    :return:                   Return a dictionary of renamed files.
+    :param original_file_dict:
+        Dict of lists of file contents before  changes
+    :param modified_file_dict:
+        Dict of lists of file contents after changes
+    :return:
+        Return a dictionary of renamed files.
     """
     original_files = set(original_file_dict.keys())
     modified_files = set(modified_file_dict.keys())

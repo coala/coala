@@ -123,8 +123,10 @@ def print_section_beginning(console_printer, section):
     Will be called after initialization current_section in
     begin_section()
 
-    :param console_printer: Object to print messages on the console.
-    :param section:         The section that will get executed now.
+    :param console_printer:
+        Object to print messages on the console.
+    :param section:
+        The section that will get executed now.
     """
     console_printer.print('Executing section {name}...'.format(
         name=section.name))
@@ -135,7 +137,8 @@ def nothing_done(log_printer=None):
     Will be called after processing a coafile when nothing had to be done,
     i.e. no section was enabled/targeted.
 
-    :param log_printer: A LogPrinter object.
+    :param log_printer:
+        A LogPrinter object.
     """
     logging.warning('No existent section was targeted or enabled. Nothing to '
                     'do.')
@@ -151,16 +154,23 @@ def acquire_actions_and_apply(console_printer,
     """
     Acquires applicable actions and applies them.
 
-    :param console_printer: Object to print messages on the console.
-    :param section:         Name of section to which the result belongs.
-    :param file_diff_dict:  Dictionary containing filenames as keys and Diff
-                            objects as values.
-    :param result:          A derivative of Result.
-    :param file_dict:       A dictionary containing all files with filename as
-                            key.
-    :param apply_single:    The action that should be applied for all results.
-                            If it's not selected, has a value of False.
-    :param cli_actions:     The list of cli actions available.
+    :param console_printer:
+        Object to print messages on the console.
+    :param section:
+        Name of section to which the result belongs.
+    :param file_diff_dict:
+        Dictionary containing filenames as keys and Diff
+        objects as values.
+    :param result:
+        A derivative of Result.
+    :param file_dict:
+        A dictionary containing all files with filename as
+        key.
+    :param apply_single:
+        The action that should be applied for all results.
+        If it's not selected, has a value of False.
+    :param cli_actions:
+        The list of cli actions available.
     """
     cli_actions = CLI_ACTIONS if cli_actions is None else cli_actions
     failed_actions = set()
@@ -214,11 +224,14 @@ def print_lines(console_printer,
     Prints the lines between the current and the result line. If needed
     they will be shortened.
 
-    :param console_printer: Object to print messages on the console.
-    :param file_dict:       A dictionary containing all files as values with
-                            filenames as key.
-    :param sourcerange:     The SourceRange object referring to the related
-                            lines to print.
+    :param console_printer:
+        Object to print messages on the console.
+    :param file_dict:
+        A dictionary containing all files as values with
+        filenames as key.
+    :param sourcerange:
+        The SourceRange object referring to the related
+        lines to print.
     """
     no_color = not console_printer.print_colored
     for i in range(sourcerange.start.line, sourcerange.end.line + 1):
@@ -271,17 +284,24 @@ def print_result(console_printer,
     """
     Prints the result to console.
 
-    :param console_printer: Object to print messages on the console.
-    :param section:         Name of section to which the result belongs.
-    :param file_diff_dict:  Dictionary containing filenames as keys and Diff
-                            objects as values.
-    :param result:          A derivative of Result.
-    :param file_dict:       A dictionary containing all files with filename as
-                            key.
-    :param apply_single:    The action that should be applied for all results.
-                            If it's not selected, has a value of False.
-    :param interactive:     Variable to check whether or not to
-                            offer the user actions interactively.
+    :param console_printer:
+        Object to print messages on the console.
+    :param section:
+        Name of section to which the result belongs.
+    :param file_diff_dict:
+        Dictionary containing filenames as keys and Diff
+        objects as values.
+    :param result:
+        A derivative of Result.
+    :param file_dict:
+        A dictionary containing all files with filename as
+        key.
+    :param apply_single:
+        The action that should be applied for all results.
+        If it's not selected, has a value of False.
+    :param interactive:
+        Variable to check whether or not to
+        offer the user actions interactively.
     """
     no_color = not console_printer.print_colored
     if not isinstance(result, Result):
@@ -338,8 +358,10 @@ def print_diffs_info(diffs, printer):
     """
     Prints diffs information (number of additions and deletions) to the console.
 
-    :param diffs:    List of Diff objects containing corresponding diff info.
-    :param printer:  Object responsible for printing diffs on console.
+    :param diffs:
+        List of Diff objects containing corresponding diff info.
+    :param printer:
+        Object responsible for printing diffs on console.
     """
     for filename, diff in sorted(diffs.items()):
         additions, deletions = diff.stats()
@@ -360,10 +382,13 @@ def print_results_formatted(log_printer,
     Prints results through the format string from the format setting done by
     user.
 
-    :param log_printer:    Printer responsible for logging the messages.
-    :param section:        The section to which the results belong.
-    :param result_list:    List of Result objects containing the corresponding
-                           results.
+    :param log_printer:
+        Printer responsible for logging the messages.
+    :param section:
+        The section to which the results belong.
+    :param result_list:
+        List of Result objects containing the corresponding
+        results.
     """
     default_format = ('id:{id}:origin:{origin}:file:{file}:line:{line}:'
                       'column:{column}:end_line:{end_line}:end_column:'
@@ -414,11 +439,15 @@ def print_affected_files(console_printer,
     """
     Prints all the affected files and affected lines within them.
 
-    :param console_printer: Object to print messages on the console.
-    :param log_printer:     Printer responsible for logging the messages.
-    :param result:          The result to print the context for.
-    :param file_dict:       A dictionary containing all files with filename as
-                            key.
+    :param console_printer:
+        Object to print messages on the console.
+    :param log_printer:
+        Printer responsible for logging the messages.
+    :param result:
+        The result to print the context for.
+    :param file_dict:
+        A dictionary containing all files with filename as
+        key.
     """
     if len(result.affected_code) == 0:
         console_printer.print('\n' + STR_PROJECT_WIDE,
@@ -448,16 +477,23 @@ def print_results_no_input(log_printer,
     """
     Prints all non interactive results in a section
 
-    :param log_printer:    Printer responsible for logging the messages.
-    :param section:        The section to which the results belong to.
-    :param result_list:    List containing the results
-    :param file_dict:      A dictionary containing all files with filename as
-                           key.
-    :param file_diff_dict: A dictionary that contains filenames as keys and
-                           diff objects as values.
-    :param apply_single:   The action that should be applied for all results.
-                           If it's not selected, has a value of False.
-    :param console_printer: Object to print messages on the console.
+    :param log_printer:
+        Printer responsible for logging the messages.
+    :param section:
+        The section to which the results belong to.
+    :param result_list:
+        List containing the results
+    :param file_dict:
+        A dictionary containing all files with filename as
+        key.
+    :param file_diff_dict:
+        A dictionary that contains filenames as keys and
+        diff objects as values.
+    :param apply_single:
+        The action that should be applied for all results.
+        If it's not selected, has a value of False.
+    :param console_printer:
+        Object to print messages on the console.
     """
     for result in result_list:
 
@@ -485,16 +521,23 @@ def print_results(log_printer,
     """
     Prints all the results in a section.
 
-    :param log_printer:    Printer responsible for logging the messages.
-    :param section:        The section to which the results belong to.
-    :param result_list:    List containing the results
-    :param file_dict:      A dictionary containing all files with filename as
-                           key.
-    :param file_diff_dict: A dictionary that contains filenames as keys and
-                           diff objects as values.
-    :param apply_single:   The action that should be applied for all results.
-                           If it's not selected, has a value of False.
-    :param console_printer: Object to print messages on the console.
+    :param log_printer:
+        Printer responsible for logging the messages.
+    :param section:
+        The section to which the results belong to.
+    :param result_list:
+        List containing the results
+    :param file_dict:
+        A dictionary containing all files with filename as
+        key.
+    :param file_diff_dict:
+        A dictionary that contains filenames as keys and
+        diff objects as values.
+    :param apply_single:
+        The action that should be applied for all results.
+        If it's not selected, has a value of False.
+    :param console_printer:
+        Object to print messages on the console.
     """
     for result in sorted(result_list):
 
@@ -515,11 +558,14 @@ def print_affected_lines(console_printer, file_dict, sourcerange):
     """
     Prints the lines affected by the bears.
 
-    :param console_printer:    Object to print messages on the console.
-    :param file_dict:          A dictionary containing all files with filename
-                               as key.
-    :param sourcerange:        The SourceRange object referring to the related
-                               lines to print.
+    :param console_printer:
+        Object to print messages on the console.
+    :param file_dict:
+        A dictionary containing all files with filename
+        as key.
+    :param sourcerange:
+        The SourceRange object referring to the related
+        lines to print.
     """
     console_printer.print('\n' + os.path.relpath(sourcerange.file),
                           color=FILE_NAME_COLOR)
@@ -540,11 +586,14 @@ def require_setting(setting_name, arr, section):
     This method is responsible for prompting a user about a missing setting and
     taking its value as input from the user.
 
-    :param setting_name: Name of the setting missing
-    :param arr:          A list containing a description in [0] and the name
-                         of the bears who need this setting in [1] and
-                         following.
-    :param section:      The section the action corresponds to.
+    :param setting_name:
+        Name of the setting missing
+    :param arr:
+        A list containing a description in [0] and the name
+        of the bears who need this setting in [1] and
+        following.
+    :param section:
+        The section the action corresponds to.
     """
     needed = join_names(arr[1:])
 
@@ -568,15 +617,13 @@ def acquire_settings(log_printer, settings_names_dict, section):
         description in [0] and the name of the bears who need this setting in
         [1] and following.
 
-                        Example:
+        Example:
 
-    ::
+        ::
 
         {"UseTabs": ["describes whether tabs should be used instead of spaces",
-                     "SpaceConsistencyBear",
-                     "SomeOtherBear"]}
-
-
+        "SpaceConsistencyBear",
+        "SomeOtherBear"]}
     :param section:
         The section the action corresponds to.
     :return:
@@ -601,12 +648,16 @@ def get_action_info(section, action, failed_actions):
     Gets all the required Settings for an action. It updates the section with
     the Settings.
 
-    :param section:         The section the action corresponds to.
-    :param action:          The action to get the info for.
-    :param failed_actions:  A set of all actions that have failed. A failed
-                            action remains in the list until it is successfully
-                            executed.
-    :return:                Action name and the updated section.
+    :param section:
+        The section the action corresponds to.
+    :param action:
+        The action to get the info for.
+    :param failed_actions:
+        A set of all actions that have failed. A failed
+        action remains in the list until it is successfully
+        executed.
+    :return:
+        Action name and the updated section.
     """
     params = action.non_optional_params
 
@@ -625,13 +676,17 @@ def choose_action(console_printer, actions, apply_single=False):
     Presents the actions available to the user and takes as input the action
     the user wants to choose.
 
-    :param console_printer: Object to print messages on the console.
-    :param actions:         Actions available to the user.
-    :param apply_single:    The action that should be applied for all results.
-                            If it's not selected, has a value of False.
-    :return:                Return a tuple of lists, a list with the names of
-                            actions that needs to be applied and a list with
-                            with the description of the actions.
+    :param console_printer:
+        Object to print messages on the console.
+    :param actions:
+        Actions available to the user.
+    :param apply_single:
+        The action that should be applied for all results.
+        If it's not selected, has a value of False.
+    :return:
+        Return a tuple of lists, a list with the names of
+        actions that needs to be applied and a list with
+        with the description of the actions.
     """
     actions.insert(0, DoNothingAction().get_metadata())
     actions_desc = []
@@ -695,24 +750,35 @@ def try_to_apply_action(action_name,
     """
     Try to apply the given action.
 
-    :param action_name:     The name of the action.
-    :param choose_action:   The action object that will be applied.
-    :param console_printer: Object to print messages on the console.
-    :param section:         Currently active section.
-    :param metadata_list:   Contains metadata for all the actions.
-    :param action_dict:     Contains the action names as keys and their
-                            references as values.
-    :param failed_actions:  A set of all actions that have failed. A failed
-                            action remains in the list until it is successfully
-                            executed.
-    :param result:          Result corresponding to the actions.
-    :param file_diff_dict:  If it is an action which applies a patch, this
-                            contains the diff of the patch to be applied to
-                            the file with filename as keys.
-    :param applied_actions: A dictionary that contains the result, file_dict,
-                            file_diff_dict and the section for an action.
-    :param file_dict:       Dictionary with filename as keys and its contents
-                            as values.
+    :param action_name:
+        The name of the action.
+    :param choose_action:
+        The action object that will be applied.
+    :param console_printer:
+        Object to print messages on the console.
+    :param section:
+        Currently active section.
+    :param metadata_list:
+        Contains metadata for all the actions.
+    :param action_dict:
+        Contains the action names as keys and their
+        references as values.
+    :param failed_actions:
+        A set of all actions that have failed. A failed
+        action remains in the list until it is successfully
+        executed.
+    :param result:
+        Result corresponding to the actions.
+    :param file_diff_dict:
+        If it is an action which applies a patch, this
+        contains the diff of the patch to be applied to
+        the file with filename as keys.
+    :param applied_actions:
+        A dictionary that contains the result, file_dict,
+        file_diff_dict and the section for an action.
+    :param file_dict:
+        Dictionary with filename as keys and its contents
+        as values.
     """
     try:
         chosen_action.apply_from_section(result,
@@ -747,27 +813,38 @@ def ask_for_action_and_apply(console_printer,
     """
     Asks the user for an action and applies it.
 
-    :param console_printer: Object to print messages on the console.
-    :param section:         Currently active section.
-    :param metadata_list:   Contains metadata for all the actions.
-    :param action_dict:     Contains the action names as keys and their
-                            references as values.
-    :param failed_actions:  A set of all actions that have failed. A failed
-                            action remains in the list until it is successfully
-                            executed.
-    :param result:          Result corresponding to the actions.
-    :param file_diff_dict:  If it is an action which applies a patch, this
-                            contains the diff of the patch to be applied to
-                            the file with filename as keys.
-    :param file_dict:       Dictionary with filename as keys and its contents
-                            as values.
-    :param apply_single:    The action that should be applied for all results.
-                            If it's not selected, has a value of False.
-    :param applied_actions: A dictionary that contains the result, file_dict,
-                            file_diff_dict and the section for an action.
-    :return:                Returns a boolean value. True will be returned, if
-                            it makes sense that the user may choose to execute
-                            another action, False otherwise.
+    :param console_printer:
+        Object to print messages on the console.
+    :param section:
+        Currently active section.
+    :param metadata_list:
+        Contains metadata for all the actions.
+    :param action_dict:
+        Contains the action names as keys and their
+        references as values.
+    :param failed_actions:
+        A set of all actions that have failed. A failed
+        action remains in the list until it is successfully
+        executed.
+    :param result:
+        Result corresponding to the actions.
+    :param file_diff_dict:
+        If it is an action which applies a patch, this
+        contains the diff of the patch to be applied to
+        the file with filename as keys.
+    :param file_dict:
+        Dictionary with filename as keys and its contents
+        as values.
+    :param apply_single:
+        The action that should be applied for all results.
+        If it's not selected, has a value of False.
+    :param applied_actions:
+        A dictionary that contains the result, file_dict,
+        file_diff_dict and the section for an action.
+    :return:
+        Returns a boolean value. True will be returned, if
+        it makes sense that the user may choose to execute
+        another action, False otherwise.
     """
     actions_desc, actions_name = choose_action(console_printer, metadata_list,
                                                apply_single)
@@ -831,11 +908,16 @@ def show_enumeration(console_printer,
     <indentation> * Item 1
     <indentation> * Item 2
 
-    :param console_printer: Object to print messages on the console.
-    :param title:           Title of the text to be printed
-    :param items:           The iterable object.
-    :param indentation:     Number of spaces to indent every line by.
-    :param no_items_text:   Text printed when iterable object is empty.
+    :param console_printer:
+        Object to print messages on the console.
+    :param title:
+        Title of the text to be printed
+    :param items:
+        The iterable object.
+    :param indentation:
+        Number of spaces to indent every line by.
+    :param no_items_text:
+        Text printed when iterable object is empty.
     """
     if not items:
         console_printer.print(indentation + no_items_text)
@@ -858,10 +940,14 @@ def show_bear(bear,
     """
     Displays all information about a bear.
 
-    :param bear:             The bear to be displayed.
-    :param show_description: True if the main description should be shown.
-    :param show_params:      True if the details should be shown.
-    :param console_printer:  Object to print messages on the console.
+    :param bear:
+        The bear to be displayed.
+    :param show_description:
+        True if the main description should be shown.
+    :param show_params:
+        True if the details should be shown.
+    :param console_printer:
+        Object to print messages on the console.
     """
     console_printer.print(bear.name, color='blue')
 
@@ -915,13 +1001,17 @@ def print_bears(bears,
     """
     Presents all bears being used in a stylized manner.
 
-    :param bears:            It's a dictionary with bears as keys and list of
-                             sections containing those bears as values.
-    :param show_description: True if the main description of the bears should
-                             be shown.
-    :param show_params:      True if the parameters and their description
-                             should be shown.
-    :param console_printer:  Object to print messages on the console.
+    :param bears:
+        It's a dictionary with bears as keys and list of
+        sections containing those bears as values.
+    :param show_description:
+        True if the main description of the bears should
+        be shown.
+    :param show_params:
+        True if the parameters and their description
+        should be shown.
+    :param console_printer:
+        Object to print messages on the console.
     """
     if not bears:
         console_printer.print('No bears to show. Did you forget to install '
@@ -947,15 +1037,20 @@ def show_bears(local_bears,
     Extracts all the bears from each enabled section or the sections in the
     targets and passes a dictionary to the show_bears_callback method.
 
-    :param local_bears:      Dictionary of local bears with section names
-                             as keys and bear list as values.
-    :param global_bears:     Dictionary of global bears with section
-                             names as keys and bear list as values.
-    :param show_description: True if the main description of the bears should
-                             be shown.
-    :param show_params:      True if the parameters and their description
-                             should be shown.
-    :param console_printer:  Object to print messages on the console.
+    :param local_bears:
+        Dictionary of local bears with section names
+        as keys and bear list as values.
+    :param global_bears:
+        Dictionary of global bears with section
+        names as keys and bear list as values.
+    :param show_description:
+        True if the main description of the bears should
+        be shown.
+    :param show_params:
+        True if the parameters and their description
+        should be shown.
+    :param console_printer:
+        Object to print messages on the console.
     """
     bears = inverse_dicts(local_bears, global_bears)
 

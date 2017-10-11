@@ -15,16 +15,21 @@ def fill_section(section, acquire_settings, log_printer, bears):
     If a setting is requested by several bears, the help text from the
     latest bear will be taken.
 
-    :param section:          A section containing available settings. Settings
-                             will be added if some are missing.
-    :param acquire_settings: The method to use for requesting settings. It will
-                             get a parameter which is a dictionary with the
-                             settings name as key and a list containing a
-                             description in [0] and the names of the bears
-                             who need this setting in all following indexes.
-    :param log_printer:      The log printer for logging.
-    :param bears:            All bear classes or instances.
-    :return:                 The new section.
+    :param section:
+        A section containing available settings. Settings
+        will be added if some are missing.
+    :param acquire_settings:
+        The method to use for requesting settings. It will
+        get a parameter which is a dictionary with the
+        settings name as key and a list containing a
+        description in [0] and the names of the bears
+        who need this setting in all following indexes.
+    :param log_printer:
+        The log printer for logging.
+    :param bears:
+        All bear classes or instances.
+    :return:
+        The new section.
     """
     # Retrieve needed settings.
     prel_needed_settings = {}
@@ -63,21 +68,27 @@ def fill_settings(sections,
 
     This will retrieve all bears and their dependencies.
 
-    :param sections:            The sections to fill up, modified in place.
-    :param acquire_settings:    The method to use for requesting settings. It
-                                will get a parameter which is a dictionary with
-                                the settings name as key and a list containing
-                                a description in [0] and the names of the bears
-                                who need this setting in all following indexes.
-    :param log_printer:         The log printer to use for logging.
-    :param fill_section_method: Method to be used to fill the section settings.
-    :param kwargs:              Any other arguments for the fill_section_method
-                                can be supplied via kwargs, which are passed
-                                directly to the fill_section_method.
-    :return:                    A tuple containing (local_bears, global_bears),
-                                each of them being a dictionary with the
-                                section name as key and as value the bears as a
-                                list.
+    :param sections:
+        The sections to fill up, modified in place.
+    :param acquire_settings:
+        The method to use for requesting settings. It
+        will get a parameter which is a dictionary with
+        the settings name as key and a list containing
+        a description in [0] and the names of the bears
+        who need this setting in all following indexes.
+    :param log_printer:
+        The log printer to use for logging.
+    :param fill_section_method:
+        Method to be used to fill the section settings.
+    :param kwargs:
+        Any other arguments for the fill_section_method
+        can be supplied via kwargs, which are passed
+        directly to the fill_section_method.
+    :return:
+        A tuple containing (local_bears, global_bears),
+        each of them being a dictionary with the
+        section name as key and as value the bears as a
+        list.
     """
     local_bears = {}
     global_bears = {}

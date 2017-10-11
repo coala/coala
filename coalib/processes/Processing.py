@@ -49,8 +49,10 @@ def fill_queue(queue_fill, any_list):
     """
     Takes element from a list and populates a queue with those elements.
 
-    :param queue_fill: The queue to be filled.
-    :param any_list:   List containing the elements.
+    :param queue_fill:
+        The queue to be filled.
+    :param any_list:
+        List containing the elements.
     """
     for elem in any_list:
         queue_fill.put(elem)
@@ -77,10 +79,12 @@ def get_default_actions(section):
     """
     Parses the key ``default_actions`` in the given section.
 
-    :param section:    The section where to parse from.
-    :return:           A dict with the bearname as keys and their default
-                       actions as values and another dict that contains bears
-                       and invalid action names.
+    :param section:
+        The section where to parse from.
+    :return:
+        A dict with the bearname as keys and their default
+        actions as values and another dict that contains bears
+        and invalid action names.
     """
     try:
         default_actions = dict(section['default_actions'])
@@ -111,14 +115,20 @@ def autoapply_actions(results,
     """
     Auto-applies actions like defined in the given section.
 
-    :param results:        A list of results.
-    :param file_dict:      A dictionary containing the name of files and its
-                           contents.
-    :param file_diff_dict: A dictionary that contains filenames as keys and
-                           diff objects as values.
-    :param section:        The section.
-    :param log_printer:    A log printer instance to log messages on.
-    :return:               A list of unprocessed results.
+    :param results:
+        A list of results.
+    :param file_dict:
+        A dictionary containing the name of files and its
+        contents.
+    :param file_diff_dict:
+        A dictionary that contains filenames as keys and
+        diff objects as values.
+    :param section:
+        The section.
+    :param log_printer:
+        A log printer instance to log messages on.
+    :return:
+        A list of unprocessed results.
     """
 
     default_actions, invalid_actions = get_default_actions(section)
@@ -183,13 +193,16 @@ def check_result_ignore(result, ignore_ranges):
     user can ignore results with an origin like `CSecurityBear (buffer)` with
     just `# Ignore CSecurityBear`.
 
-    :param result:        The result that needs to be checked.
-    :param ignore_ranges: A list of tuples, each containing a list of lower
-                          cased affected bearnames and a SourceRange to
-                          ignore. If any of the bearname lists is empty, it
-                          is considered an ignore range for all bears.
-                          This may be a list of globbed bear wildcards.
-    :return:              True if the result has to be ignored.
+    :param result:
+        The result that needs to be checked.
+    :param ignore_ranges:
+        A list of tuples, each containing a list of lower
+        cased affected bearnames and a SourceRange to
+        ignore. If any of the bearname lists is empty, it
+        is considered an ignore range for all bears.
+        This may be a list of globbed bear wildcards.
+    :return:
+        True if the result has to be ignored.
     """
     for bears, range in ignore_ranges:
         orig = result.origin.lower().split(' ')[0]
@@ -214,24 +227,33 @@ def print_result(results,
     Takes the results produced by each bear and gives them to the print_results
     method to present to the user.
 
-    :param results:        A list of results.
-    :param file_dict:      A dictionary containing the name of files and its
-                           contents.
-    :param retval:         It is True if no results were yielded ever before.
-                           If it is False this function will return False no
-                           matter what happens. Else it depends on if this
-                           invocation yields results.
-    :param print_results:  A function that prints all given results appropriate
-                           to the output medium.
-    :param file_diff_dict: A dictionary that contains filenames as keys and
-                           diff objects as values.
-    :param ignore_ranges:  A list of SourceRanges. Results that affect code in
-                           any of those ranges will be ignored.
-    :param apply_single:   The action that should be applied for all results,
-                           If it's not selected, has a value of False.
-    :param console_printer: Object to print messages on the console.
-    :return:               Returns False if any results were yielded. Else
-                           True.
+    :param results:
+        A list of results.
+    :param file_dict:
+        A dictionary containing the name of files and its
+        contents.
+    :param retval:
+        It is True if no results were yielded ever before.
+        If it is False this function will return False no
+        matter what happens. Else it depends on if this
+        invocation yields results.
+    :param print_results:
+        A function that prints all given results appropriate
+        to the output medium.
+    :param file_diff_dict:
+        A dictionary that contains filenames as keys and
+        diff objects as values.
+    :param ignore_ranges:
+        A list of SourceRanges. Results that affect code in
+        any of those ranges will be ignored.
+    :param apply_single:
+        The action that should be applied for all results,
+        If it's not selected, has a value of False.
+    :param console_printer:
+        Object to print messages on the console.
+    :return:
+        Returns False if any results were yielded. Else
+        True.
     """
     min_severity_str = str(section.get('min_severity', 'INFO')).upper()
     min_severity = RESULT_SEVERITY.str_dict.get(min_severity_str, 'INFO')
@@ -260,12 +282,16 @@ def get_file_dict(filename_list, log_printer=None, allow_raw_files=False):
     """
     Reads all files into a dictionary.
 
-    :param filename_list:   List of names of paths to files to get contents of.
-    :param log_printer:     The logger which logs errors.
-    :param allow_raw_files: Allow the usage of raw files (non text files),
-                            disabled by default
-    :return:                Reads the content of each file into a dictionary
-                            with filenames as keys.
+    :param filename_list:
+        List of names of paths to files to get contents of.
+    :param log_printer:
+        The logger which logs errors.
+    :param allow_raw_files:
+        Allow the usage of raw files (non text files),
+        disabled by default
+    :return:
+        Reads the content of each file into a dictionary
+        with filenames as keys.
     """
     file_dict = {}
     for filename in filename_list:
@@ -296,10 +322,14 @@ def filter_raising_callables(it, exception, *args, debug=False, **kwargs):
     Filters all callable items inside the given iterator that raise the
     given exceptions.
 
-    :param it:        The iterator to filter.
-    :param exception: The (tuple of) exception(s) to filter for.
-    :param args:      Positional arguments to pass to the callable.
-    :param kwargs:    Keyword arguments to pass to the callable.
+    :param it:
+        The iterator to filter.
+    :param exception:
+        The (tuple of) exception(s) to filter for.
+    :param args:
+        Positional arguments to pass to the callable.
+    :param kwargs:
+        Keyword arguments to pass to the callable.
     """
     for elem in it:
         try:
@@ -319,15 +349,22 @@ def instantiate_bears(section,
     """
     Instantiates each bear with the arguments it needs.
 
-    :param section:          The section the bears belong to.
-    :param local_bear_list:  List of local bear classes to instantiate.
-    :param global_bear_list: List of global bear classes to instantiate.
-    :param file_dict:        Dictionary containing filenames and their
-                             contents.
-    :param message_queue:    Queue responsible to maintain the messages
-                             delivered by the bears.
-    :param console_printer:  Object to print messages on the console.
-    :return:                 The local and global bear instance lists.
+    :param section:
+        The section the bears belong to.
+    :param local_bear_list:
+        List of local bear classes to instantiate.
+    :param global_bear_list:
+        List of global bear classes to instantiate.
+    :param file_dict:
+        Dictionary containing filenames and their
+        contents.
+    :param message_queue:
+        Queue responsible to maintain the messages
+        delivered by the bears.
+    :param console_printer:
+        Object to print messages on the console.
+    :return:
+        The local and global bear instance lists.
     """
     local_bear_list = [bear
                        for bear in filter_raising_callables(
@@ -364,21 +401,31 @@ def instantiate_processes(section,
     Instantiate the number of processes that will run bears which will be
     responsible for running bears in a multiprocessing environment.
 
-    :param section:          The section the bears belong to.
-    :param local_bear_list:  List of local bears belonging to the section.
-    :param global_bear_list: List of global bears belonging to the section.
-    :param job_count:        Max number of processes to create.
-    :param cache:            An instance of ``misc.Caching.FileCache`` to use as
-                             a file cache buffer.
-    :param log_printer:      The log printer to warn to.
-    :param console_printer:  Object to print messages on the console.
-    :param debug:            Bypass multiprocessing and activate debug mode
-                             for bears, not catching any exceptions on running
-                             them.
-    :param use_raw_files:    Allow the usage of raw files (non text files)
-    :return:                 A tuple containing a list of processes,
-                             and the arguments passed to each process which are
-                             the same for each object.
+    :param section:
+        The section the bears belong to.
+    :param local_bear_list:
+        List of local bears belonging to the section.
+    :param global_bear_list:
+        List of global bears belonging to the section.
+    :param job_count:
+        Max number of processes to create.
+    :param cache:
+        An instance of ``misc.Caching.FileCache`` to use as
+        a file cache buffer.
+    :param log_printer:
+        The log printer to warn to.
+    :param console_printer:
+        Object to print messages on the console.
+    :param debug:
+        Bypass multiprocessing and activate debug mode
+        for bears, not catching any exceptions on running
+        them.
+    :param use_raw_files:
+        Allow the usage of raw files (non text files)
+    :return:
+        A tuple containing a list of processes,
+        and the arguments passed to each process which are
+        the same for each object.
     """
     filename_list = collect_files(
         glob_list(section.get('files', '')),
@@ -464,10 +511,13 @@ def get_ignore_scope(line, keyword):
     """
     Retrieves the bears that are to be ignored defined in the given line.
 
-    :param line:    The line containing the ignore declaration.
-    :param keyword: The keyword that was found. Everything after the rightmost
-                    occurrence of it will be considered for the scope.
-    :return:        A list of lower cased bearnames or an empty list (-> "all")
+    :param line:
+        The line containing the ignore declaration.
+    :param keyword:
+        The keyword that was found. Everything after the rightmost
+        occurrence of it will be considered for the scope.
+    :return:
+        A list of lower cased bearnames or an empty list (-> "all")
     """
     toignore = line[line.rfind(keyword) + len(keyword):]
     if toignore.startswith('all'):
@@ -481,7 +531,8 @@ def yield_ignore_ranges(file_dict):
     Yields tuples of affected bears and a SourceRange that shall be ignored for
     those.
 
-    :param file_dict: The file dictionary.
+    :param file_dict:
+        The file dictionary.
     """
     for filename, file in file_dict.items():
         start = None
@@ -536,10 +587,12 @@ def get_file_list(results):
     """
     Get the set of files that are affected in the given results.
 
-    :param results: A list of results from which the list of files is to be
-                    extracted.
-    :return:        A set of file paths containing the mentioned list of
-                    files.
+    :param results:
+        A list of results from which the list of files is to be
+        extracted.
+    :return:
+        A set of file paths containing the mentioned list of
+        files.
     """
     return {code.file for result in results for code in result.affected_code}
 
@@ -560,32 +613,42 @@ def process_queues(processes,
     Iterate the control queue and send the results received to the print_result
     method so that they can be presented to the user.
 
-    :param processes:          List of processes which can be used to run
-                               Bears.
-    :param control_queue:      Containing control elements that indicate
-                               whether there is a result available and which
-                               bear it belongs to.
-    :param local_result_dict:  Dictionary containing results respective to
-                               local bears. It is modified by the processes
-                               i.e. results are added to it by multiple
-                               processes.
-    :param global_result_dict: Dictionary containing results respective to
-                               global bears. It is modified by the processes
-                               i.e. results are added to it by multiple
-                               processes.
-    :param file_dict:          Dictionary containing file contents with
-                               filename as keys.
-    :param print_results:      Prints all given results appropriate to the
-                               output medium.
-    :param cache:              An instance of ``misc.Caching.FileCache`` to use
-                               as a file cache buffer.
-    :param debug:              Run in debug mode, expecting that no logger
-                               thread is running.
-    :param apply_single:       The action that should be applied for all
-                               results. If it's not selected, has a value of
-                               False.
-    :return:                   Return True if all bears execute successfully and
-                               Results were delivered to the user. Else False.
+    :param processes:
+        List of processes which can be used to run
+        Bears.
+    :param control_queue:
+        Containing control elements that indicate
+        whether there is a result available and which
+        bear it belongs to.
+    :param local_result_dict:
+        Dictionary containing results respective to
+        local bears. It is modified by the processes
+        i.e. results are added to it by multiple
+        processes.
+    :param global_result_dict:
+        Dictionary containing results respective to
+        global bears. It is modified by the processes
+        i.e. results are added to it by multiple
+        processes.
+    :param file_dict:
+        Dictionary containing file contents with
+        filename as keys.
+    :param print_results:
+        Prints all given results appropriate to the
+        output medium.
+    :param cache:
+        An instance of ``misc.Caching.FileCache`` to use
+        as a file cache buffer.
+    :param debug:
+        Run in debug mode, expecting that no logger
+        thread is running.
+    :param apply_single:
+        The action that should be applied for all
+        results. If it's not selected, has a value of
+        False.
+    :return:
+        Return True if all bears execute successfully and
+        Results were delivered to the user. Else False.
     """
     file_diff_dict = {}
     retval = False
@@ -683,11 +746,13 @@ def simplify_section_result(section_result):
     Takes in a section's result from ``execute_section`` and simplifies it
     for easy usage in other functions.
 
-    :param section_result: The result of a section which was executed.
-    :return:               Tuple containing:
-                            - bool - True if results were yielded
-                            - bool - True if unfixed results were yielded
-                            - list - Results from all bears (local and global)
+    :param section_result:
+        The result of a section which was executed.
+    :return:
+        Tuple containing:
+        - bool - True if results were yielded
+        - bool - True if unfixed results were yielded
+        - list - Results from all bears (local and global)
     """
     section_yielded_result = section_result[0]
     results_for_section = []
@@ -729,27 +794,37 @@ def execute_section(section,
     3. Output results from the Processes
     4. Join all processes
 
-    :param section:          The section to execute.
-    :param global_bear_list: List of global bears belonging to the section.
-                             Dependencies are already resolved.
-    :param local_bear_list:  List of local bears belonging to the section.
-                             Dependencies are already resolved.
-    :param print_results:    Prints all given results appropriate to the
-                             output medium.
-    :param cache:            An instance of ``misc.Caching.FileCache`` to use as
-                             a file cache buffer.
-    :param log_printer:      The log_printer to warn to.
-    :param console_printer:  Object to print messages on the console.
-    :param debug:            Bypass multiprocessing and run bears in debug mode,
-                             not catching any exceptions.
-    :param apply_single:     The action that should be applied for all results.
-                             If it's not selected, has a value of False.
-    :return:                 Tuple containing a bool (True if results were
-                             yielded, False otherwise), a Manager.dict
-                             containing all local results(filenames are key)
-                             and a Manager.dict containing all global bear
-                             results (bear names are key) as well as the
-                             file dictionary.
+    :param section:
+        The section to execute.
+    :param global_bear_list:
+        List of global bears belonging to the section.
+        Dependencies are already resolved.
+    :param local_bear_list:
+        List of local bears belonging to the section.
+        Dependencies are already resolved.
+    :param print_results:
+        Prints all given results appropriate to the
+        output medium.
+    :param cache:
+        An instance of ``misc.Caching.FileCache`` to use as
+        a file cache buffer.
+    :param log_printer:
+        The log_printer to warn to.
+    :param console_printer:
+        Object to print messages on the console.
+    :param debug:
+        Bypass multiprocessing and run bears in debug mode,
+        not catching any exceptions.
+    :param apply_single:
+        The action that should be applied for all results.
+        If it's not selected, has a value of False.
+    :return:
+        Tuple containing a bool (True if results were
+        yielded, False otherwise), a Manager.dict
+        containing all local results(filenames are key)
+        and a Manager.dict containing all global bear
+        results (bear names are key) as well as the
+        file dictionary.
     """
     if debug:
         running_processes = 1

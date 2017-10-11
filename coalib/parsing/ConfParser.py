@@ -36,14 +36,17 @@ class ConfParser:
         """
         Parses the input and adds the new data to the existing.
 
-        :param input_data: The filename to parse from.
-        :param overwrite:  If True, wipes all existing Settings inside this
-                           instance and adds only the newly parsed ones. If
-                           False, adds the newly parsed data to the existing
-                           one (and overwrites already existing keys with the
-                           newly parsed values).
-        :return:           A dictionary with (lowercase) section names as keys
-                           and their Setting objects as values.
+        :param input_data:
+            The filename to parse from.
+        :param overwrite:
+            If True, wipes all existing Settings inside this
+            instance and adds only the newly parsed ones. If
+            False, adds the newly parsed data to the existing
+            one (and overwrites already existing keys with the
+            newly parsed values).
+        :return:
+            A dictionary with (lowercase) section names as keys
+            and their Setting objects as values.
         """
         if os.path.isdir(input_data):
             input_data = os.path.join(input_data, Constants.default_coafile)

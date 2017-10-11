@@ -15,8 +15,10 @@ def get_testfile_path(name):
     """
     Gets the full path to a testfile inside the same directory.
 
-    :param name: The filename of the testfile to get the full path for.
-    :return:     The full path to given testfile name.
+    :param name:
+        The filename of the testfile to get the full path for.
+    :return:
+        The full path to given testfile name.
     """
     return os.path.join(os.path.dirname(os.path.realpath(__file__)),
                         name)

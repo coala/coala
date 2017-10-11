@@ -16,7 +16,9 @@ class Root(aspectbase, metaclass=aspectclass):
 
     >>> @Root.subaspect
     ... class Formatting:
-    ...     \"""
+    ...     \
+    """
+
     ...     A parent aspect for code formatting aspects...
     ...     \"""
     ...     class docs:

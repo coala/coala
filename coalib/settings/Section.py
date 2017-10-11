@@ -22,14 +22,21 @@ def append_to_sections(sections,
     Appends the given data as a Setting to a Section with the given name. If
     the Section does not exist before it will be created empty.
 
-    :param sections:     The sections dictionary to add to.
-    :param key:          The key of the setting to add.
-    :param value:        The value of the setting to add.
-    :param origin:       The origin value of the setting to add.
-    :param section_name: The name of the section to add to.
-    :param from_cli:     Whether or not this data comes from the CLI.
-    :param to_append:    The boolean value if setting value needs to be
-                         appended to a setting in the defaults of a section.
+    :param sections:
+        The sections dictionary to add to.
+    :param key:
+        The key of the setting to add.
+    :param value:
+        The value of the setting to add.
+    :param origin:
+        The origin value of the setting to add.
+    :param section_name:
+        The name of the section to add to.
+    :param from_cli:
+        Whether or not this data comes from the CLI.
+    :param to_append:
+        The boolean value if setting value needs to be
+        appended to a setting in the defaults of a section.
     """
     if key == '' or value is None:
         return
@@ -52,9 +59,11 @@ def extract_aspects_from_section(section):
     related setting. This checking could be done by
     :meth:`coalib.settings.ConfigurationGathering.validate_aspect_config`.
 
-    :param section: Section object.
-    :return:        AspectList containing aspectclass instance with
-                    user-defined tastes.
+    :param section:
+        Section object.
+    :return:
+        AspectList containing aspectclass instance with
+        user-defined tastes.
     """
     ASPECT_TASTE_DELIMITER = ':'
     aspects = section.get('aspects')
@@ -152,8 +161,10 @@ class Section:
         Checks if this section is enabled or, if targets is not empty, if it is
         included in the targets list.
 
-        :param targets: List of target section names, all lower case.
-        :return:        True or False
+        :param targets:
+            List of target section names, all lower case.
+        :return:
+            True or False
         """
         if len(targets) == 0:
             return bool(self.get('enabled', 'true'))
@@ -202,9 +213,12 @@ class Section:
         >>> section['key'].value
         'value'
 
-        :param key:   Argument whose value is to be set
-        :param value: The value of the given key
-        :return:      Returns nothing.
+        :param key:
+            Argument whose value is to be set
+        :param value:
+            The value of the given key
+        :return:
+            Returns nothing.
         """
         if isinstance(value, Setting):
             self.append(value, custom_key=key)
@@ -256,10 +270,14 @@ class Section:
         available an appropriate Setting will be generated from your provided
         default value.
 
-        :param key:             The key of the setting to return.
-        :param default:         The default value
-        :param ignore_defaults: Whether or not to ignore the default section.
-        :return:                The setting.
+        :param key:
+            The key of the setting to return.
+        :param default:
+            The default value
+        :param ignore_defaults:
+            Whether or not to ignore the default section.
+        :return:
+            The setting.
         """
         try:
             return self.__getitem__(key, ignore_defaults)
@@ -268,7 +286,8 @@ class Section:
 
     def copy(self):
         """
-        :return: a deep copy of this object
+        :return:
+            a deep copy of this object
         """
         result = copy.copy(self)
         result.contents = copy.deepcopy(self.contents)
@@ -285,10 +304,13 @@ class Section:
         Default values from the other section override the default values from
         this only.
 
-        :param other_section:   Another Section
-        :param ignore_defaults: If set to true, do not take default values from
-                                other
-        :return:                self
+        :param other_section:
+            Another Section
+        :param ignore_defaults:
+            If set to true, do not take default values from
+            other
+        :return:
+            self
         """
         if not isinstance(other_section, Section):
             raise TypeError('other_section has to be a Section')
@@ -309,9 +331,13 @@ class Section:
                        new_value=None):
         """
         Updates a setting with new values.
-        :param key:       The old key string.
-        :param new_key:   The new key string.
-        :param new_value: The new value for the setting
+
+        :param key:
+            The old key string.
+        :param new_key:
+            The new key string.
+        :param new_value:
+            The new value for the setting
         """
         if new_key is not None:
             self.contents[key].key = new_key
@@ -327,7 +353,9 @@ class Section:
     def delete_setting(self, key):
         """
         Delete a setting
-        :param key: The key of the setting to be deleted
+
+        :param key:
+            The key of the setting to be deleted
         """
         del self.contents[key]
 
@@ -364,10 +392,12 @@ class Section:
         >>> section.defaults.name
         'Cpp'
 
-        :param sections:     A dictionary of sections.
-        :param section_name: Optional section name argument to find the default
-                             section for. If not given then use member section
-                             name.
+        :param sections:
+            A dictionary of sections.
+        :param section_name:
+            Optional section name argument to find the default
+            section for. If not given then use member section
+            name.
         """
         default_section = '.'.join(
             (section_name or self.name).split('.')[:-1]

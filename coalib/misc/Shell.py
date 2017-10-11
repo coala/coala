@@ -82,16 +82,19 @@ def run_interactive_shell_command(command, **kwargs):
     >>> stream.closed
     False
 
-    :param command: The command to run on shell. This parameter can either
-                    be a sequence of arguments that are directly passed to
-                    the process or a string. A string gets splitted beforehand
-                    using ``shlex.split()``. If providing ``shell=True`` as a
-                    keyword-argument, no ``shlex.split()`` is performed and the
-                    command string goes directly to ``subprocess.Popen()``.
-    :param kwargs:  Additional keyword arguments to pass to
-                    ``subprocess.Popen`` that are used to spawn the process.
-    :return:        A context manager yielding the process started from the
-                    command.
+    :param command:
+        The command to run on shell. This parameter can either
+        be a sequence of arguments that are directly passed to
+        the process or a string. A string gets splitted beforehand
+        using ``shlex.split()``. If providing ``shell=True`` as a
+        keyword-argument, no ``shlex.split()`` is performed and the
+        command string goes directly to ``subprocess.Popen()``.
+    :param kwargs:
+        Additional keyword arguments to pass to
+        ``subprocess.Popen`` that are used to spawn the process.
+    :return:
+        A context manager yielding the process started from the
+        command.
     """
     if not kwargs.get('shell', False) and isinstance(command, str):
         command = shlex.split(command)
@@ -133,14 +136,18 @@ def run_shell_command(command, stdin=None, **kwargs):
 
     See also ``run_interactive_shell_command()``.
 
-    :param command: The command to run on shell. This parameter can either
-                    be a sequence of arguments that are directly passed to
-                    the process or a string. A string gets splitted beforehand
-                    using ``shlex.split()``.
-    :param stdin:   Initial input to send to the process.
-    :param kwargs:  Additional keyword arguments to pass to
-                    ``subprocess.Popen`` that is used to spawn the process.
-    :return:        A tuple with ``(stdoutstring, stderrstring)``.
+    :param command:
+        The command to run on shell. This parameter can either
+        be a sequence of arguments that are directly passed to
+        the process or a string. A string gets splitted beforehand
+        using ``shlex.split()``.
+    :param stdin:
+        Initial input to send to the process.
+    :param kwargs:
+        Additional keyword arguments to pass to
+        ``subprocess.Popen`` that is used to spawn the process.
+    :return:
+        A tuple with ``(stdoutstring, stderrstring)``.
     """
     with run_interactive_shell_command(command, **kwargs) as p:
         ret = p.communicate(stdin)

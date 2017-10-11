@@ -38,7 +38,8 @@ class LogMessage:
         Makes a dictionary which has all keys and values as strings and
         contains all the data that the LogMessage has.
 
-        :return: Dictionary with keys and values as string.
+        :return:
+            Dictionary with keys and values as string.
         """
         retval = {}
 

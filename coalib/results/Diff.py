@@ -20,10 +20,13 @@ class Diff:
         """
         Creates an empty diff for the given file.
 
-        :param file_list: The original (unmodified) file as a list of its
-                          lines.
-        :param rename:    False or str containing new name of file.
-        :param delete:    True if file is set to be deleted.
+        :param file_list:
+            The original (unmodified) file as a list of its
+            lines.
+        :param rename:
+            False or str containing new name of file.
+        :param delete:
+            True if file is set to be deleted.
         """
         self._changes = {}
         self._file = list(file_list)
@@ -39,9 +42,12 @@ class Diff:
         If this Diff is applied to the original array, the second array will be
         created.
 
-        :param file_array_1: Original array
-        :param file_array_2: Array to compare
-        :param rename:       False or str containing new name of file.
+        :param file_array_1:
+            Original array
+        :param file_array_2:
+            Array to compare
+        :param rename:
+            False or str containing new name of file.
         """
         result = cls(file_array_1, rename=rename)
 
@@ -80,12 +86,15 @@ class Diff:
         the ``Diff`` object initialized from the original file is
         returned.
 
-        :param unified_diff:  Unified diff string.
-        :param original_file: The contents of the original file
-                              (line-splitted).
-        :raises RuntimeError: Raised when the context lines or the
-                              lines to be removed do not match in
-                              the original file and the unified diff.
+        :param unified_diff:
+            Unified diff string.
+        :param original_file:
+            The contents of the original file
+            (line-splitted).
+        :raises RuntimeError:
+            Raised when the context lines or the
+            lines to be removed do not match in
+            the original file and the unified diff.
         """
         patch_set = PatchSet(unified_diff.splitlines())
 
@@ -160,9 +169,12 @@ class Diff:
         """
         Creates a Diff object from a given clang fixit and the file contents.
 
-        :param fixit: A cindex.Fixit object.
-        :param file:  A list of lines in the file to apply the fixit to.
-        :return:      The corresponding Diff object.
+        :param fixit:
+            A cindex.Fixit object.
+        :param file:
+            A list of lines in the file to apply the fixit to.
+        :return:
+            The corresponding Diff object.
         """
         assert isinstance(file, (list, tuple))
 
@@ -212,7 +224,8 @@ class Diff:
     @property
     def rename(self):
         """
-        :return: string containing new name of the file.
+        :return:
+            string containing new name of the file.
         """
         return self._rename
 
@@ -220,14 +233,16 @@ class Diff:
     @enforce_signature
     def rename(self, rename: (str, False)):
         """
-        :param rename: False or string containing new name of file.
+        :param rename:
+            False or string containing new name of file.
         """
         self._rename = rename
 
     @property
     def delete(self):
         """
-        :return: True if file is set to be deleted.
+        :return:
+            True if file is set to be deleted.
         """
         return self._delete
 
@@ -235,7 +250,8 @@ class Diff:
     @enforce_signature
     def delete(self, delete: bool):
         """
-        :param delete: True if file is set to be deleted, False otherwise.
+        :param delete:
+            True if file is set to be deleted, False otherwise.
         """
         self._delete = delete
 
@@ -300,7 +316,6 @@ class Diff:
         Note that the unified diff is not deterministic and thus not suitable
         for equality comparison.
         """
-
         list_unified_diff = list(difflib.unified_diff(
             self._file,
             self._raw_modified(),
@@ -320,8 +335,10 @@ class Diff:
         Creates a list of SourceRange objects which point to the related code.
         Changes on continuous lines will be put into one SourceRange.
 
-        :param filename: The filename to associate the SourceRange's to.
-        :return:         A list of all related SourceRange objects.
+        :param filename:
+            The filename to associate the SourceRange's to.
+        :return:
+            A list of all related SourceRange objects.
         """
         return list(diff.range(filename)
                     for diff in self.split_diff(distance=0))
@@ -360,8 +377,9 @@ class Diff:
         >>> len(list(Diff([]).split_diff()))
         0
 
-        :param distance: Number of unchanged lines that are allowed in between
-                         two changed lines so they get yielded as one diff.
+        :param distance:
+            Number of unchanged lines that are allowed in between
+            two changed lines so they get yielded as one diff.
         """
         if not self:
             return
@@ -396,8 +414,10 @@ class Diff:
         >>> print(range.start.line)
         None
 
-        :param filename: The filename to associate the SourceRange with.
-        :return:         A SourceRange object.
+        :param filename:
+            The filename to associate the SourceRange with.
+        :return:
+            A SourceRange object.
         """
         if len(self._changes) == 0:
             return SourceRange.from_values(filename)
@@ -446,7 +466,8 @@ class Diff:
         >>> bool(Diff.from_string_arrays(['1'], []))
         True
 
-        :return: False if the patch has no effect at all when applied.
+        :return:
+            False if the patch has no effect at all when applied.
         """
         return (self.rename is not False or
                 self.delete is True or
@@ -479,9 +500,11 @@ class Diff:
         """
         Adds lines after the given line number.
 
-        :param line_nr_before: Line number of the line before the additions.
-                               Use 0 for insert lines before everything.
-        :param lines:          A list of lines to add.
+        :param line_nr_before:
+            Line number of the line before the additions.
+            Use 0 for insert lines before everything.
+        :param lines:
+            A list of lines to add.
         """
         if lines == []:
             return  # No action
@@ -498,9 +521,11 @@ class Diff:
         """
         Adds line after the given line number.
 
-        :param line_nr_before: Line number of the line before the addition.
-                               Use 0 to insert line before everything.
-        :param line:           Line to add.
+        :param line_nr_before:
+            Line number of the line before the addition.
+            Use 0 to insert line before everything.
+        :param line:
+            Line to add.
         """
         return self.add_lines(line_nr_before, [line])
 
@@ -559,28 +584,30 @@ class Diff:
 
     def replace(self, range, replacement):
         r"""
-        Replaces a part of text. Allows to span multiple lines.
+        rReplaces a part of text. Allows to span multiple lines.
 
-        This function uses ``add_lines`` and ``delete_lines`` accordingly, so
-        calls of those functions on lines given ``range`` affects after usage
-        or vice versa lead to ``ConflictError``.
+        rThis function uses ``add_lines`` and ``delete_lines`` accordingly, so
+        rcalls of those functions on lines given ``range`` affects after usage
+        ror vice versa lead to ``ConflictError``.
 
-        >>> from coalib.results.TextRange import TextRange
-        >>> test_text = ['hello\n', 'world\n', '4lines\n', 'done\n']
-        >>> def replace(range, text):
-        ...     diff = Diff(test_text)
-        ...     diff.replace(range, text)
-        ...     return diff.modified
-        >>> replace(TextRange.from_values(1, 5, 4, 3), '\nyeah\ncool\nno')
-        ['hell\n', 'yeah\n', 'cool\n', 'none\n']
-        >>> replace(TextRange.from_values(2, 1, 3, 5), 'b')
-        ['hello\n', 'bes\n', 'done\n']
-        >>> replace(TextRange.from_values(1, 6, 4, 3), '')
-        ['hellone\n']
+        r>>> from coalib.results.TextRange import TextRange
+        r>>> test_text = ['hello\n', 'world\n', '4lines\n', 'done\n']
+        r>>> def replace(range, text):
+        r...     diff = Diff(test_text)
+        r...     diff.replace(range, text)
+        r...     return diff.modified
+        r>>> replace(TextRange.from_values(1, 5, 4, 3), '\nyeah\ncool\nno')
+        r['hell\n', 'yeah\n', 'cool\n', 'none\n']
+        r>>> replace(TextRange.from_values(2, 1, 3, 5), 'b')
+        r['hello\n', 'bes\n', 'done\n']
+        r>>> replace(TextRange.from_values(1, 6, 4, 3), '')
+        r['hellone\n']
 
-        :param range:       The ``TextRange`` that gets replaced.
-        :param replacement: The replacement string. Can be multiline.
-        """
+        r:param range:
+        r    The ``TextRange`` that gets replaced.
+        r:param replacement:
+        r    The replacement string. Can be multiline.
+        r"""
         # Remaining parts of the lines not affected by the replace.
         first_part = (
             self._file[range.start.line - 1][:range.start.column - 1])
@@ -592,47 +619,50 @@ class Diff:
 
     def insert(self, position, text):
         r"""
-        Inserts (multiline) text at arbitrary position.
+        rInserts (multiline) text at arbitrary position.
 
-        >>> from coalib.results.TextPosition import TextPosition
-        >>> test_text = ['123\n', '456\n', '789\n']
-        >>> def insert(position, text):
-        ...     diff = Diff(test_text)
-        ...     diff.insert(position, text)
-        ...     return diff.modified
-        >>> insert(TextPosition(2, 3), 'woopy doopy')
-        ['123\n', '45woopy doopy6\n', '789\n']
-        >>> insert(TextPosition(1, 1), 'woopy\ndoopy')
-        ['woopy\n', 'doopy123\n', '456\n', '789\n']
-        >>> insert(TextPosition(2, 4), '\nwoopy\ndoopy\n')
-        ['123\n', '456\n', 'woopy\n', 'doopy\n', '\n', '789\n']
+        r>>> from coalib.results.TextPosition import TextPosition
+        r>>> test_text = ['123\n', '456\n', '789\n']
+        r>>> def insert(position, text):
+        r...     diff = Diff(test_text)
+        r...     diff.insert(position, text)
+        r...     return diff.modified
+        r>>> insert(TextPosition(2, 3), 'woopy doopy')
+        r['123\n', '45woopy doopy6\n', '789\n']
+        r>>> insert(TextPosition(1, 1), 'woopy\ndoopy')
+        r['woopy\n', 'doopy123\n', '456\n', '789\n']
+        r>>> insert(TextPosition(2, 4), '\nwoopy\ndoopy\n')
+        r['123\n', '456\n', 'woopy\n', 'doopy\n', '\n', '789\n']
 
-        :param position: The ``TextPosition`` where to insert text.
-        :param text:     The text to insert.
-        """
+        r:param position:
+        r    The ``TextPosition`` where to insert text.
+        r:param text:
+        r    The text to insert.
+        r"""
         self.replace(TextRange(position, position), text)
 
     def remove(self, range):
         r"""
-        Removes a piece of text in a given range.
+        rRemoves a piece of text in a given range.
 
-        >>> from coalib.results.TextRange import TextRange
-        >>> test_text = ['nice\n', 'try\n', 'bro\n']
-        >>> def remove(range):
-        ...     diff = Diff(test_text)
-        ...     diff.remove(range)
-        ...     return diff.modified
-        >>> remove(TextRange.from_values(1, 1, 1, 4))
-        ['e\n', 'try\n', 'bro\n']
-        >>> remove(TextRange.from_values(1, 5, 2, 1))
-        ['nicetry\n', 'bro\n']
-        >>> remove(TextRange.from_values(1, 3, 3, 2))
-        ['niro\n']
-        >>> remove(TextRange.from_values(2, 1, 2, 1))
-        ['nice\n', 'try\n', 'bro\n']
+        r>>> from coalib.results.TextRange import TextRange
+        r>>> test_text = ['nice\n', 'try\n', 'bro\n']
+        r>>> def remove(range):
+        r...     diff = Diff(test_text)
+        r...     diff.remove(range)
+        r...     return diff.modified
+        r>>> remove(TextRange.from_values(1, 1, 1, 4))
+        r['e\n', 'try\n', 'bro\n']
+        r>>> remove(TextRange.from_values(1, 5, 2, 1))
+        r['nicetry\n', 'bro\n']
+        r>>> remove(TextRange.from_values(1, 3, 3, 2))
+        r['niro\n']
+        r>>> remove(TextRange.from_values(2, 1, 2, 1))
+        r['nice\n', 'try\n', 'bro\n']
 
-        :param range: The range to delete.
-        """
+        r:param range:
+        r    The range to delete.
+        r"""
         self.replace(range, '')
 
     @staticmethod
@@ -641,9 +671,9 @@ class Diff:
         Validate that each line in lines ends with a
         newline character and appends one if that is not the case.
 
-        :param lines: A list of strings, representing lines.
+        :param lines:
+            A list of strings, representing lines.
         """
-
         return [line
                 if line.endswith('\n')
                 else line + '\n'
@@ -656,9 +686,9 @@ class Diff:
         newline character and appends one if that is not the case.
         Exception is the last line in the list.
 
-        :param lines: A list of strings, representing lines.
+        :param lines:
+            A list of strings, representing lines.
         """
-
         if lines == []:
             return []
 

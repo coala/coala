@@ -11,5 +11,6 @@ class JavaTestBear(LocalBear):
         """
         Bear to test that collecting of languages works.
 
-        :param config: An optional dummy config file.
+        :param config:
+            An optional dummy config file.
         """

@@ -8,7 +8,6 @@ class TasteError(AttributeError):
     A taste is not allowed to be accessed.
     """
 
-
 class TasteMeta(type):
     """
     Metaclass for :class:`coalib.bearlib.aspects.Taste`
@@ -45,6 +44,7 @@ class Taste(metaclass=TasteMeta):
     If no `languages` are given, they will be available for any language.
     See :class:`coalib.bearlib.aspects.Root` for further usage.
     """
+
     cast_type = str
 
     @enforce_signature
@@ -62,12 +62,16 @@ class Taste(metaclass=TasteMeta):
 
         The value cast type is defined via indexing on class level.
 
-        :param description:         Description of the taste.
-        :param suggested_values:    A tuple containing the list of possible
-                                    values for the taste.
-        :param default:             Default value of the taste.
-        :param languages:           A tuple containing list of languages, for
-                                    which the taste is defined.
+        :param description:
+            Description of the taste.
+        :param suggested_values:
+            A tuple containing the list of possible
+            values for the taste.
+        :param default:
+            Default value of the taste.
+        :param languages:
+            A tuple containing list of languages, for
+            which the taste is defined.
         """
         self.description = description
         self.suggested_values = suggested_values

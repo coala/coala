@@ -23,7 +23,6 @@ class IgnoreResultAction(ResultAction):
         For being applicable, the result has to point to a number of files
         that have to exist i.e. have not been previously deleted.
         """
-
         if len(result.affected_code) == 0:
             return 'The result is not associated with any source code.'
 

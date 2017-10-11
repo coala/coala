@@ -7,6 +7,7 @@ class Redundancy:
     """
     This aspect describes redundancy in your source code.
     """
+
     class docs:
         example = """
         int foo(int iX)
@@ -31,6 +32,7 @@ class Clone:
     Code clones are multiple pieces of source code in your
     codebase that are very similar.
     """
+
     class docs:
         example = """
         extern int array_a[];
@@ -87,6 +89,7 @@ class UnusedImport:
     >>> UnusedImport.remove_non_standard_import.default
     True
     """
+
     class docs:
         example = """
         import sys
@@ -118,6 +121,7 @@ class UnreachableCode:
     Unreachable code, sometimes called dead code, is source code that
     can never be executed during the program execution.
     """
+
     class docs:
         example = """
         def func():
@@ -145,6 +149,7 @@ class UnusedFunction:
     An unused function is a function that is never called during
     code execution.
     """
+
     class docs:
         example = """
         def func():
@@ -171,6 +176,7 @@ class UnreachableStatement:
     An unreachable statement is a statement that is never executed
     during code execution.
     """
+
     class docs:
         example = """
         def func():
@@ -197,6 +203,7 @@ class UnusedVariable:
     """
     Unused variables are declared but never used.
     """
+
     class docs:
         example = """
         a = {}
@@ -217,6 +224,7 @@ class UnusedParameter:
     """
     Unused parameters are functions arguments which are never used.
     """
+
     class docs:
         example = """
         def func(a):
@@ -237,6 +245,7 @@ class UnusedLocalVariable:
     """
     These are variable which are defined locally but never used.
     """
+
     class docs:
         example = """
         def func():
@@ -258,6 +267,7 @@ class UnusedGlobalVariable:
     """
     These are variable which have a global scope but are never used.
     """
+
     class docs:
         example = """
         a = 0

@@ -106,7 +106,6 @@ class OpenEditorAction(ResultAction):
         For being applicable, the result has to point to a number of files
         that have to exist i.e. have not been previously deleted.
         """
-
         if not len(result.affected_code) > 0:
             return 'The result is not associated with any source code.'
 
@@ -152,7 +151,8 @@ class OpenEditorAction(ResultAction):
         """
         (O)pen file
 
-        :param editor: The editor to open the file with.
+        :param editor:
+            The editor to open the file with.
         """
         try:
             editor_info = KNOWN_EDITORS[editor.strip()]

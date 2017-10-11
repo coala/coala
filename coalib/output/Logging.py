@@ -11,6 +11,7 @@ class CounterHandler(logging.Handler):
     A logging handler which counts the number of calls
     for each logging level.
     """
+
     _call_counter = Counter()
 
     @classmethod
@@ -81,7 +82,9 @@ def configure_logging(color=True):
 def configure_json_logging():
     """
     Configures logging for JSON.
-    :return: Returns a ``StringIO`` that captures the logs as JSON.
+
+    :return:
+        Returns a ``StringIO`` that captures the logs as JSON.
     """
     stream = io.StringIO()
 
@@ -117,6 +120,7 @@ class JSONFormatter(logging.Formatter):
     """
     JSON formatter for python logging.
     """
+
     @staticmethod
     def format(record):
         message = {

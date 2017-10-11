@@ -22,20 +22,27 @@ class FunctionMetadata:
         """
         Creates the FunctionMetadata object.
 
-        :param name:                The name of the function.
-        :param desc:                The description of the function.
-        :param retval_desc:         The retval description of the function.
-        :param non_optional_params: A dict containing the name of non optional
-                                    parameters as the key and a tuple of a
-                                    description and the python annotation. To
-                                    preserve the order, use OrderedDict.
-        :param optional_params:     A dict containing the name of optional
-                                    parameters as the key and a tuple
-                                    of a description, the python annotation and
-                                    the default value. To preserve the order,
-                                    use OrderedDict.
-        :param omit:                A set of parameters to omit.
-        :param deprecared_params:   A list of params that are deprecated.
+        :param name:
+            The name of the function.
+        :param desc:
+            The description of the function.
+        :param retval_desc:
+            The retval description of the function.
+        :param non_optional_params:
+            A dict containing the name of non optional
+            parameters as the key and a tuple of a
+            description and the python annotation. To
+            preserve the order, use OrderedDict.
+        :param optional_params:
+            A dict containing the name of optional
+            parameters as the key and a tuple
+            of a description, the python annotation and
+            the default value. To preserve the order,
+            use OrderedDict.
+        :param omit:
+            A set of parameters to omit.
+        :param deprecared_params:
+            A list of params that are deprecated.
         """
         if non_optional_params is None:
             non_optional_params = OrderedDict()
@@ -70,8 +77,10 @@ class FunctionMetadata:
         Filters out parameters that are to omit. This is a helper method for
         the param related properties.
 
-        :param params: The parameter dictionary to filter.
-        :return:       The filtered dictionary.
+        :param params:
+            The parameter dictionary to filter.
+        :return:
+            The filtered dictionary.
         """
         return OrderedDict(filter(lambda p: p[0] not in self.omit,
                                   tuple(params.items())))
@@ -100,9 +109,12 @@ class FunctionMetadata:
         the same metadata as the original one. If the original setting is not
         optional, the alias will default to ``None``.
 
-        :param original:  The name of the original setting.
-        :param alias:     The name of the alias for the original.
-        :raises KeyError: If the new setting doesn't exist in the metadata.
+        :param original:
+            The name of the original setting.
+        :param alias:
+            The name of the alias for the original.
+        :raises KeyError:
+            If the new setting doesn't exist in the metadata.
         """
         self.deprecated_params.add(alias)
         self._optional_params[alias] = (
@@ -115,8 +127,10 @@ class FunctionMetadata:
         Create a params dictionary for this function that holds all values the
         function needs plus optional ones that are available.
 
-        :param section:    The section to retrieve the values from.
-        :return:           The params dictionary.
+        :param section:
+            The section to retrieve the values from.
+        :return:
+            The params dictionary.
         """
         params = {}
 
@@ -153,12 +167,15 @@ class FunctionMetadata:
         an actual INSTANCE of a class; passing the method of the class isn't
         enough. Alternatively you can add "self" to the omit set.
 
-        :param func: The function. If __metadata__ of the unbound function is
-                     present it will be copied and used, otherwise it will be
-                     generated.
-        :param omit: A set of parameter names that are to be ignored.
-        :return:     The FunctionMetadata object corresponding to the given
-                     function.
+        :param func:
+            The function. If __metadata__ of the unbound function is
+            present it will be copied and used, otherwise it will be
+            generated.
+        :param omit:
+            A set of parameter names that are to be ignored.
+        :return:
+            The FunctionMetadata object corresponding to the given
+            function.
         """
         if hasattr(func, '__metadata__'):
             metadata = copy(func.__metadata__)

@@ -805,7 +805,6 @@ class ProcessingTest_PrintResult(unittest.TestCase):
         Tests that the default_actions aren't automatically applied when the
         autoapply setting overrides that.
         """
-
         self.section.append(Setting('default_actions',
                                     'somebear: PrintDebugMessageAction'))
 

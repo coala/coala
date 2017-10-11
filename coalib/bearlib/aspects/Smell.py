@@ -11,6 +11,7 @@ class Smell:
     technically incorrect and do not currently prevent the program from
     functioning.
     """
+
     class docs:
         example = """
         =begin
@@ -53,6 +54,7 @@ class ClassSmell:
     large classes or God object, data clump feature envy etc...) in your
     source code.
     """
+
     class docs:
         example = """
         class Warehouse
@@ -87,6 +89,7 @@ class MethodSmell:
     functions (too long method or functions, or functions with too many
     parameters) in your source code.
     """
+
     class docs:
         example = """
         def do_nothing(var1, var2, var3, var4, var5, var6, var7):
@@ -117,6 +120,7 @@ class MethodLength:
     defines a default value of 100 lines per method, `checkstlye`` 150 and
     60 (when comments are not considered), ``rubocop`` 10.
     """
+
     class docs:
         example = """
         def _is_positive(num):
@@ -164,6 +168,7 @@ class ParameterListLength:
     maximum number of parameter per function or method is 7; ``rubocop``
     suggests 5.
     """
+
     class docs:
         example = """
         def func(a, b, c, d, e, f, g, h, i, j, k):
@@ -192,6 +197,7 @@ class DataClump:
     """
     Identical groups of variables found in many different part of a program.
     """
+
     class docs:
         example = """
         public static void main(String args[]) {
@@ -237,6 +243,7 @@ class ClassSize:
         * the number of methods,
         * and the number of lines of code.
     """
+
     class docs:
         example = """
         // This is large class given that the `max_class_length` is 20
@@ -290,6 +297,7 @@ class ClassLength:
     """
     Number of lines of code in class' definition.
     """
+
     class docs:
         example = """
         # Here is an example of a large class (in terms of number of lines) if
@@ -328,6 +336,7 @@ class ClassConstants:
     """
     Number of constants in a class.
     """
+
     class docs:
         example = """
         // Here is an example of class with too many constants if we assume
@@ -361,6 +370,7 @@ class ClassInstanceVariables:
     """
     Number of instance variables in a class.
     """
+
     class docs:
         example = """
         # Here is an example of a class with a large number of instance
@@ -400,6 +410,7 @@ class ClassMethods:
     """
     Number of class methods a class has.
     """
+
     class docs:
         example = """
         # Here is an example of a class with too many methods
@@ -432,6 +443,7 @@ class FeatureEnvy:
     """
     Classes that excessively use methods of other classes.
     """
+
     class docs:
         example = """
         public class Phone {
@@ -475,6 +487,7 @@ class Naming:
     """
     `Naming` refers to the naming conventions to use for identifiers.
     """
+
     class docs:
         example = """
         dummyVar = None  # lowerCamelCase naming convention
@@ -512,6 +525,7 @@ class Complexity:
     """
     Complexity of a code based on different complexity metrics.
     """
+
     class docs:
         example = """
         * McCabe's complexity
@@ -544,6 +558,7 @@ class CylomaticComplexity:
     Thomas J. McCabe in 1976 and it is based on a control flow representation
     of the program.
     """
+
     class docs:
         example = """
         // The cyclomatic complexity of this program is 4.
@@ -584,6 +599,7 @@ class MaintainabilityIndex:
     * A `MI` in the range 10-19 maps to a maintainable code.
     * A `MI` in the range 20-100 maps to a code highly maintainable.
     """
+
     class docs:
         example = """
         '''

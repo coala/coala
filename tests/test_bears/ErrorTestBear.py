@@ -8,6 +8,7 @@ class ErrorTestBear:
     """
     Causes error when run due to missing executable.
     """
+
     @staticmethod
     def create_arguments(filename, file, config_file):
         return ()

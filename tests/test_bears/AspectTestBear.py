@@ -20,7 +20,8 @@ class AspectTestBear(
         """
         Bear that have aspect.
 
-        :param config: An optional dummy config file.
+        :param config:
+            An optional dummy config file.
         """
         yield Result.from_values(
             origin=self,

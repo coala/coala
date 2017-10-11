@@ -168,8 +168,8 @@ class Session:
             A callback function which is called when results are available.
             Must have following signature::
 
-                def result_callback(result):
-                    pass
+            def result_callback(result):
+            pass
         :param executor:
             Custom executor used to run the bears. If ``None``, a
             ``ProcessPoolExecutor`` is used using as many processes as cores
@@ -340,8 +340,8 @@ def run(bears, result_callback, executor=None):
         A callback function which is called when results are available. Must
         have following signature::
 
-            def result_callback(result):
-                pass
+        def result_callback(result):
+        pass
     :param executor:
         Custom executor used to run the bears. If ``None``, a
         ``ProcessPoolExecutor`` is used using as many processes as cores

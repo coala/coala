@@ -16,8 +16,10 @@ def to_camelcase(string):
     >>> to_camelcase('   string')
     '___string'
 
-    :param string: The string to convert.
-    :return:       The camel-cased string.
+    :param string:
+        The string to convert.
+    :return:
+        The camel-cased string.
     """
     string = re.sub('(\s)',
                     lambda match: '_',
@@ -45,8 +47,10 @@ def to_pascalcase(string):
     >>> to_pascalcase('   string')
     '___String'
 
-    :param string: The string to convert.
-    :return:       The pascal-cased string.
+    :param string:
+        The string to convert.
+    :return:
+        The pascal-cased string.
     """
     string = re.sub('(\s)',
                     lambda match: '_',
@@ -76,8 +80,10 @@ def to_snakecase(string):
     >>> to_snakecase('ABCde.F.G..H..IH')
     'a_b_cde.f.g..h..i_h'
 
-    :param string: The string to convert.
-    :return:       The snake-cased string.
+    :param string:
+        The string to convert.
+    :return:
+        The snake-cased string.
     """
     string = re.sub('(\s)',
                     lambda match: '_',
@@ -112,8 +118,10 @@ def to_spacecase(string):
     >>> to_spacecase('  string  ')
     'String'
 
-    :param string: The string to convert.
-    :return:       The space-cased string.
+    :param string:
+        The string to convert.
+    :return:
+        The space-cased string.
     """
     string = re.sub('(_)',
                     ' ',
@@ -149,10 +157,11 @@ def to_kebabcase(string):
     >>> to_kebabcase('ABCde.F.G..H..IH')
     'a-b-cde.f.g..h..i-h'
 
-    :param string: The string to convert.
-    :return:       The kebab-cased string.
+    :param string:
+        The string to convert.
+    :return:
+        The kebab-cased string.
     """
-
     string = re.sub('(\s)',
                     lambda match: '-',
                     string)

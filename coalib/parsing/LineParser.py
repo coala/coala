@@ -21,23 +21,29 @@ class LineParser:
         may be an "o" or you may encounter undefined behaviour with the
         escapes.
 
-        :param key_value_delimiters:        Delimiters that delimit a key from
-                                            a value.
-        :param comment_separators:          Used to initiate a comment.
-        :param key_delimiters:              Delimiters between several keys.
-        :param section_name_surroundings:   Dictionary, e.g. {"[", "]"} means a
-                                            section name is surrounded by [].
-                                            If None, {"[": "]"} is used as
-                                            default.
-        :param section_override_delimiters: Delimiter for a section override.
-                                            E.g. "." would mean that
-                                            section.key is a possible key that
-                                            puts the key into the section
-                                            "section" despite of the current
-                                            section.
-        :param key_value_append_delimiters: Delimiters to separate key and
-                                            value in setting arguments where
-                                            settings are being appended.
+        :param key_value_delimiters:
+            Delimiters that delimit a key from
+            a value.
+        :param comment_separators:
+            Used to initiate a comment.
+        :param key_delimiters:
+            Delimiters between several keys.
+        :param section_name_surroundings:
+            Dictionary, e.g. {"[", "]"} means a
+            section name is surrounded by [].
+            If None, {"[": "]"} is used as
+            default.
+        :param section_override_delimiters:
+            Delimiter for a section override.
+            E.g. "." would mean that
+            section.key is a possible key that
+            puts the key into the section
+            "section" despite of the current
+            section.
+        :param key_value_append_delimiters:
+            Delimiters to separate key and
+            value in setting arguments where
+            settings are being appended.
         """
         section_name_surroundings = (
             {'[': ']'} if section_name_surroundings is None
@@ -56,9 +62,11 @@ class LineParser:
         unescaped. This is so since the value is meant to be put into a Setting
         later thus the escapes may be needed there.
 
-        :param line: The line to parse.
-        :return:     section_name (empty string if it's no section name),
-                     [(section_override, key), ...], value, comment
+        :param line:
+            The line to parse.
+        :return:
+            section_name (empty string if it's no section name),
+            [(section_override, key), ...], value, comment
         """
         logging.warning('The parse method of LineParser is deprecated and will'
                         ' be removed. Please use `_parse` which has a new '
@@ -74,10 +82,12 @@ class LineParser:
         unescaped. This is so since the value is meant to be put into a Setting
         later thus the escapes may be needed there.
 
-        :param line: The line to parse.
-        :return:     section_name (empty string if it's no section name),
-                     [(section_override, key), ...], value, to_append (True if
-                     append delimiter is found else False), comment
+        :param line:
+            The line to parse.
+        :return:
+            section_name (empty string if it's no section name),
+            [(section_override, key), ...], value, to_append (True if
+            append delimiter is found else False), comment
         """
         for separator in self.comment_separators:
             if (re.match('[^ ]' + separator, line)
@@ -144,16 +154,21 @@ class LineParser:
         Separates a string by the first of all given delimiters. Any whitespace
         characters will be stripped away from the parts.
 
-        :param string:                      The string to separate.
-        :param delimiters:                  The delimiters.
-        :param strip_delim:                 Strips the delimiter from the
-                                            result if true.
-        :param return_second_part_nonempty: If no delimiter is found and this
-                                            is true the contents of the string
-                                            will be returned in the second part
-                                            of the tuple instead of the first
-                                            one.
-        :return:                            (first_part, second_part)
+        :param string:
+            The string to separate.
+        :param delimiters:
+            The delimiters.
+        :param strip_delim:
+            Strips the delimiter from the
+            result if true.
+        :param return_second_part_nonempty:
+            If no delimiter is found and this
+            is true the contents of the string
+            will be returned in the second part
+            of the tuple instead of the first
+            one.
+        :return:
+            (first_part, second_part)
         """
         temp_string = string.replace('\\\\', 'oo')
         i = temp_string.find('\\')
@@ -199,14 +214,18 @@ class LineParser:
         This method extracts the keys and values from the give string by
         splitting them based on the delimiters provided.
 
-        :param line:                        The input string.
-        :param delimiters:                  A list of delimiters to split the
-                                            strings on.
-        :param return_second_part_nonempty: If no delimiter is found and this
-                                            is true the contents of the string
-                                            will be returned as value
-        :return:                            The parsed keys and values from a
-                                            line.
+        :param line:
+            The input string.
+        :param delimiters:
+            A list of delimiters to split the
+            strings on.
+        :param return_second_part_nonempty:
+            If no delimiter is found and this
+            is true the contents of the string
+            will be returned as value
+        :return:
+            The parsed keys and values from a
+            line.
         """
         key_part, value = self.__separate_by_first_occurrence(
             line,

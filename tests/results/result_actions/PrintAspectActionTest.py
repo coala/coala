@@ -17,6 +17,7 @@ class PrintAspectActionTest(unittest.TestCase):
             """
             This is a test aspect
             """
+
             class docs:
                 example = 'test'
                 example_language = 'test'

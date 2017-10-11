@@ -26,9 +26,11 @@ def default_arg_parser(formatter_class=None):
     """
     This function creates an ArgParser to parse command line arguments.
 
-    :param formatter_class: Formatting the arg_parser output into a specific
-                            form. For example: In the manpage format.
+    :param formatter_class:
+        Formatting the arg_parser output into a specific
+        form. For example: In the manpage format.
     """
+
     formatter_class = (CustomFormatter if formatter_class is None
                        else formatter_class)
 
