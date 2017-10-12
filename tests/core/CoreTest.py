@@ -1,5 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor
 import logging
+import sys
 import unittest
 import unittest.mock
 
@@ -8,6 +9,8 @@ from coalib.core.Bear import Bear
 from coalib.core.Core import initialize_dependencies, run
 
 from coala_utils.decorators import generate_eq
+
+from tests.core.CoreTestBase import CoreTestBase
 
 
 # Classes are hashed by instance, so they can be placed inside a set, compared
@@ -96,6 +99,19 @@ class BearH_NeedsG(TestBearBase):
     BEAR_DEPS = {BearG_NeedsF}
 
 
+class BearI_NeedsA_NeedsBDuringRuntime(TestBearBase):
+    BEAR_DEPS = {BearA}
+
+    def __init__(self, section, filedict):
+        super().__init__(section, filedict)
+
+        self.BEAR_DEPS.add(BearB)
+
+
+class BearJ_NeedsI(TestBearBase):
+    BEAR_DEPS = {BearI_NeedsA_NeedsBDuringRuntime}
+
+
 class MultiResultBear(TestBearBase):
 
     def analyze(self, bear, section_name, file_dict):
@@ -116,6 +132,21 @@ class DynamicTaskBear(TestBearBase):
         tasks_count = sum(len(results)
                           for results in self.dependency_results.values())
         return (((i,), {}) for i in range(tasks_count))
+
+
+# Define those classes at module level to make them picklable.
+for i in range(100):
+    classname = 'NoTasksBear{}'.format(i)
+    generated_type = type(classname,
+                          (Bear,),
+                          dict(generate_tasks=lambda self: tuple()))
+
+    setattr(sys.modules[__name__], classname, generated_type)
+
+
+class DependentOnManyZeroTaskBearsTestBear(TestBearBase):
+    BEAR_DEPS = {getattr(sys.modules[__name__], 'NoTasksBear{}'.format(i))
+                 for i in range(100)} | {MultiResultBear}
 
 
 def get_next_instance(typ, iterable):
@@ -369,28 +400,13 @@ class InitializeDependenciesTest(unittest.TestCase):
         self.assertEqual(bears_to_schedule, set(bears_b))
 
 
-class CoreTest(unittest.TestCase):
+class CoreTest(CoreTestBase):
 
     def setUp(self):
         logging.getLogger().setLevel(logging.DEBUG)
 
         self.section1 = Section('test-section1')
         self.filedict1 = {'f1': []}
-
-    @staticmethod
-    def get_run_results(bears, executor=None):
-        results = []
-
-        def on_result(result):
-            results.append(result)
-
-        run(bears, on_result, executor)
-
-        return results
-
-    @classmethod
-    def execute_run(cls, bears):
-        return cls.get_run_results(bears)
 
     @staticmethod
     def get_comparable_results(results):
@@ -608,6 +624,33 @@ class CoreTest(unittest.TestCase):
         self.assertEqual(
             len(bear.dependency_results[BearA]), 1)
 
+    def test_run_many_dependency_bears_with_zero_tasks(self):
+        # The core shall not stop too early because some of the bears have
+        # offloaded no tasks, while others have not. This is a non-deterministic
+        # issue, so we can only provoke it by offloading a huge amount of bears
+        # without tasks.
+
+        # Because bear dependencies are type-bound, we need to create many new
+        # bear types doing the same so the core treats them actually as
+        # different bear dependencies. Otherwise it would merge them together
+        # into a single instance in the dependency-tree.
+        uut = DependentOnManyZeroTaskBearsTestBear(self.section1,
+                                                   self.filedict1)
+
+        results = self.execute_run({uut})
+
+        self.assertEqual(len(results), 3)
+        self.assertIn(1, results)
+        self.assertIn(2, results)
+
+        uut_result = get_next_instance(TestResult, results)
+        self.assertEqual(uut_result.bear.name, uut.name)
+        self.assertEqual(uut_result.section_name, self.section1.name)
+        self.assertEqual(uut_result.file_dict, self.filedict1)
+
+        self.assertEqual(len(uut.dependency_results), 1)
+        self.assertEqual(uut.dependency_results[MultiResultBear], [1, 2])
+
     def test_run_heavy_cpu_load(self):
         # No normal computer should expose 100 cores at once, so we can test
         # if the scheduler works properly.
@@ -620,12 +663,78 @@ class CoreTest(unittest.TestCase):
         self.assertEqual(result_set, set(range(100)))
         self.assertEqual(bear.dependency_results, {})
 
+    def test_run_empty(self):
+        self.execute_run(set())
+
+    def test_bears_with_runtime_dependencies(self):
+        bear = BearI_NeedsA_NeedsBDuringRuntime(self.section1, self.filedict1)
+
+        results = self.execute_run({bear})
+
+        self.assertTestResultsEqual(
+            results,
+            [(BearA.name, self.section1.name, self.filedict1),
+             (BearB.name, self.section1.name, self.filedict1),
+             (BearI_NeedsA_NeedsBDuringRuntime.name, self.section1.name,
+              self.filedict1)])
+
+        self.assertEqual(len(bear.dependency_results), 2)
+
+        self.assertTestResultsEqual(
+            bear.dependency_results[BearA],
+            [(BearA.name, self.section1.name, self.filedict1)])
+
+        self.assertTestResultsEqual(
+            bear.dependency_results[BearB],
+            [(BearB.name, self.section1.name, self.filedict1)])
+
+        # See whether this also works with a bear using the bear with runtime
+        # dependencies itself as a dependency.
+        bear = BearJ_NeedsI(self.section1, self.filedict1)
+
+        results = self.execute_run({bear})
+
+        self.assertTestResultsEqual(
+            results,
+            [(BearA.name, self.section1.name, self.filedict1),
+             (BearB.name, self.section1.name, self.filedict1),
+             (BearI_NeedsA_NeedsBDuringRuntime.name, self.section1.name,
+              self.filedict1),
+             (BearJ_NeedsI.name, self.section1.name, self.filedict1)])
+
+        self.assertEqual(len(bear.dependency_results), 1)
+
+        self.assertTestResultsEqual(
+            bear.dependency_results[BearI_NeedsA_NeedsBDuringRuntime],
+            [(BearI_NeedsA_NeedsBDuringRuntime.name, self.section1.name,
+              self.filedict1)])
+
 
 # Execute the same tests from CoreTest, but use a ThreadPoolExecutor instead.
 # The core shall also seamlessly work with Python threads. Also there are
 # coverage issues on Windows with ProcessPoolExecutor as coverage data isn't
 # passed properly back from the pool processes.
 class CoreOnThreadPoolExecutorTest(CoreTest):
-    @classmethod
-    def execute_run(cls, bears):
-        return cls.get_run_results(bears, ThreadPoolExecutor(max_workers=8))
+    def setUp(self):
+        super().setUp()
+        self.executor = ThreadPoolExecutor, tuple(), dict(max_workers=8)
+
+
+# This test class only runs test cases once, as the tests here rely on specific
+# executors / having the control over executors.
+class CoreOnSpecificExecutorTest(CoreTestBase):
+    def test_custom_executor_closed_after_run(self):
+        bear = MultiTaskBear(Section('test-section'),
+                             {'some-file': []},
+                             tasks_count=1)
+
+        # The executor should be closed regardless how many bears are passed.
+        for bears in [set(), {bear}]:
+            executor = ThreadPoolExecutor(max_workers=1)
+
+            self.execute_run(bears, executor)
+
+            # Submitting new tasks should raise an exception now.
+            with self.assertRaisesRegex(
+                    RuntimeError, 'cannot schedule new futures after shutdown'):
+                executor.submit(lambda: None)
