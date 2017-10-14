@@ -5,16 +5,12 @@ from coalib.bearlib.aspects import (
     get as get_aspect,
     map_setting_to_aspect,
 )
-from coalib.bears.Bear import Bear
+from coalib.bears.LocalBear import LocalBear
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 
 
-class RunDecoratedBear(Bear):
-
-    @staticmethod
-    def kind():
-        return BEAR_KIND.LOCAL
+class RunDecoratedBear(LocalBear):
 
     @map_setting_to_aspect(
         remove_unreachable_code=get_aspect('UnreachableCode'),
