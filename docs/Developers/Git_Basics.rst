@@ -40,7 +40,7 @@ Grabbing coala on your local machine
 
 Now you should clone the repository to your local machine so that you can have
 access to all the code locally and start fixing issues!
-To do this, you can use these to clone the coala/coala-bears repositories:
+To do this, you can use these to clone the coala or coala-bears repositories:
 
 ::
 
@@ -54,7 +54,7 @@ or
 
 .. note::
 
-    ``-o upstream`` sets the remote name of the original coala/coala-bears
+    ``-o upstream`` sets the remote name of the original coala or coala-bears
     repositories as ``upstream``.
 
     **upstream** is just a name we used for simplicity. You can name it
