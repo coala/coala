@@ -306,8 +306,8 @@ class MalformedComment:
         :param message:
             Contains the message about the error.
         :param line:
-            Contains the current line of the docstring where the error has
-            occured.
+            Contains the current line number of the docstring where the error
+            has occured.
         """
         self.message = message
         self.line = line
