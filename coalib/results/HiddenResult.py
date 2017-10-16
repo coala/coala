@@ -39,8 +39,9 @@ class HiddenResult(Result):
         :param origin:
             The originating bear.
         :param contents:
-            Any object that is picklable since it will be
-            transferred across processes.
+            Any object to send additional data (arbitrary python objects)
+            besides a message to the dependent bear. The data has to
+            be picklable.
         :param affected_code:
             A tuple of ``SourceRange`` objects pointing to related positions in
             the source code.
