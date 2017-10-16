@@ -20,6 +20,11 @@ directory of the coala-tutorial repository.
     If you want to wrap an already existing tool, please refer to
     :doc:`this tutorial instead<Writing_Linter_Bears>`.
 
+.. note::
+
+    Also refer https://regexone.com/references/python for understanding regex basics.
+    For further information refer https://docs.python.org/2/library/re.html
+
 What is a bear?
 ---------------
 
