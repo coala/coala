@@ -141,3 +141,7 @@ A Final Note
 ``LocalBearTestHelper`` is written to ease off testing for bears. Make sure
 that your tests have 100% coverage and zero redundancy. Use ``check_results``
 as much as possible to test your bears.
+
+Glossary
+--------
+- ``uut`` - Unit Under Test
