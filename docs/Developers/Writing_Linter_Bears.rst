@@ -106,6 +106,11 @@ In this tutorial we are going to use the ``regex`` output format. But before we
 continue with modifying our bear, we need to figure out how exactly output from
 Pylint looks like so we can parse it accordingly.
 
+.. note::
+
+    Please refer to `Python3 regex guide <https://docs.python.org/3/library/re.html>`_ for understanding regular expression.
+    For further information refer `diveintopython <http://www.diveintopython3.net/regular-expressions.html>`_ regex tutorial.
+
 We get some promising output when invoking Pylint with
 
 ::
