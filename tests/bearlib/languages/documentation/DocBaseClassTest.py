@@ -26,7 +26,7 @@ class DocBaseClassTest(unittest.TestCase):
 
         # No built-in documentation for C.
         with self.assertRaises(KeyError):
-            tuple(DocBaseClass.extract(data, 'C', 'default'))
+            tuple(DocBaseClass.extract(data, 'C', 'sphinx'))
 
         docstyle_C_doxygen = DocstyleDefinition.load('C', 'doxygen')
 
@@ -83,7 +83,7 @@ class DocBaseClassTest(unittest.TestCase):
 
         # No built-in documentation for C++.
         with self.assertRaises(KeyError):
-            tuple(DocBaseClass.extract(data, 'CPP', 'default'))
+            tuple(DocBaseClass.extract(data, 'CPP', 'sphinx'))
 
         docstyle_CPP_doxygen = DocstyleDefinition.load('CPP', 'doxygen')
 
@@ -138,7 +138,7 @@ class DocBaseClassTest(unittest.TestCase):
     def test_DocBaseClass_PYTHON3(self):
         data = load_testdata('data.py')
         docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
-                                                           'default')
+                                                           'sphinx')
         docstyle_PYTHON3_doxygen = DocstyleDefinition.load('PYTHON3',
                                                            'doxygen')
 
@@ -196,7 +196,7 @@ class DocBaseClassTest(unittest.TestCase):
                     )
 
         self.assertEqual(
-            tuple(DocBaseClass.extract(data, 'PYTHON3', 'default')),
+            tuple(DocBaseClass.extract(data, 'PYTHON3', 'sphinx')),
             expected)
         # Change only the docstyle in expected results.
         expected = list(DocumentationComment(r.documentation,
@@ -224,10 +224,10 @@ class DocBaseClassTest(unittest.TestCase):
         data = ['\n', '""" documentation in single line  """\n', 'print(1)\n']
 
         docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
-                                                           'default')
+                                                           'sphinx')
 
         self.assertEqual(
-            list(DocBaseClass.extract(data, 'PYTHON3', 'default')),
+            list(DocBaseClass.extract(data, 'PYTHON3', 'sphinx')),
             [DocumentationComment(' documentation in single line  ',
                                   docstyle_PYTHON3_default, '',
                                   docstyle_PYTHON3_default.markers[0],
@@ -252,22 +252,22 @@ class DocBaseClassTest(unittest.TestCase):
                 'This is not a docstring\n', '"""\n']
 
         docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
-                                                           'default')
+                                                           'sphinx')
 
         # Nothing is yielded as triple quote string literals are being
         # ignored.
         self.assertEqual(
-            list(DocBaseClass.extract(data, 'PYTHON3', 'default')),
+            list(DocBaseClass.extract(data, 'PYTHON3', 'sphinx')),
             [])
 
     def test_DocBaseClass_extraction_PYTHON3_5(self):
         data = ['r"""\n', 'This is a raw docstring\n', '"""\n']
 
         docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
-                                                           'default')
+                                                           'sphinx')
 
         self.assertEqual(
-            list(DocBaseClass.extract(data, 'PYTHON3', 'default')),
+            list(DocBaseClass.extract(data, 'PYTHON3', 'sphinx')),
             [DocumentationComment('\nThis is a raw docstring\n',
                                   docstyle_PYTHON3_default, 'r',
                                   docstyle_PYTHON3_default.markers[0],
@@ -282,9 +282,9 @@ class DocBaseClassTest(unittest.TestCase):
                 'print(1)']
 
         docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
-                                                           'default')
+                                                           'sphinx')
 
-        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'sphinx'):
             self.assertEqual([doc.top_padding, doc.bottom_padding],
                              [1, 2])
 
@@ -298,9 +298,9 @@ class DocBaseClassTest(unittest.TestCase):
                 'print(1)\n']
 
         docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
-                                                           'default')
+                                                           'sphinx')
 
-        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'sphinx'):
             self.assertEqual([doc.top_padding, doc.bottom_padding],
                              [2, 2])
 
@@ -317,9 +317,9 @@ class DocBaseClassTest(unittest.TestCase):
                 'print(1)']
 
         docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
-                                                           'default')
+                                                           'sphinx')
 
-        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'sphinx'):
             self.assertEqual([doc.top_padding, doc.bottom_padding],
                              [1, 0])
 
@@ -334,9 +334,9 @@ class DocBaseClassTest(unittest.TestCase):
                 'print(1)']
 
         docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
-                                                           'default')
+                                                           'sphinx')
 
-        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'sphinx'):
             self.assertEqual([doc.top_padding, doc.bottom_padding],
                              [0, 0])
 
@@ -347,9 +347,9 @@ class DocBaseClassTest(unittest.TestCase):
                 '   """\n']
 
         docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
-                                                           'default')
+                                                           'sphinx')
 
-        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'sphinx'):
             self.assertEqual(doc.docstring_type, 'class')
 
     def test_DocBaseClass_instantiate_docstring_type_PYTHON3_11(self):
@@ -359,9 +359,9 @@ class DocBaseClassTest(unittest.TestCase):
                 '   """\n']
 
         docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
-                                                           'default')
+                                                           'sphinx')
 
-        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'sphinx'):
             self.assertEqual(doc.docstring_type, 'function')
 
     def test_DocBaseClass_instantiate_docstring_type_PYTHON3_12(self):
@@ -373,9 +373,9 @@ class DocBaseClassTest(unittest.TestCase):
                 'print(1)']
 
         docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
-                                                           'default')
+                                                           'sphinx')
 
-        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'sphinx'):
             self.assertEqual(doc.docstring_type, 'others')
 
     def test_DocBaseClass_instantiate_docstring_type_PYTHON3_13(self):
@@ -413,15 +413,15 @@ class DocBaseClassTest(unittest.TestCase):
                 '    pass']
 
         docstyle_PYTHON3_default = DocstyleDefinition.load('PYTHON3',
-                                                           'default')
+                                                           'sphinx')
 
-        for doc in DocBaseClass.extract(data, 'PYTHON3', 'default'):
+        for doc in DocBaseClass.extract(data, 'PYTHON3', 'sphinx'):
             self.assertEqual(doc.docstring_type, 'function')
 
     def test_generate_diff(self):
         data_old = ['\n', '""" documentation in single line  """\n']
         for doc_comment in DocBaseClass.extract(
-                                data_old, 'PYTHON3', 'default'):
+                                data_old, 'PYTHON3', 'sphinx'):
             old_doc_comment = doc_comment
 
         old_range = TextRange.from_values(
@@ -432,7 +432,7 @@ class DocBaseClassTest(unittest.TestCase):
 
         data_new = ['\n', '"""\n documentation in single line\n"""\n']
         for doc_comment in DocBaseClass.extract(
-                                data_new, 'PYTHON3', 'default'):
+                                data_new, 'PYTHON3', 'sphinx'):
             new_doc_comment = doc_comment
 
         diff = DocBaseClass.generate_diff(
@@ -487,7 +487,7 @@ class DocBaseClassTest(unittest.TestCase):
             marker has been found, but no instance of DocComment is
             returned."""), 0]
 
-        for doc_comment in DocBaseClass.extract(data, 'JAVA', 'default'):
+        for doc_comment in DocBaseClass.extract(data, 'JAVA', 'javadoc'):
             self.assertEqual(
                 [doc_comment.message, doc_comment.line],
                 expected)

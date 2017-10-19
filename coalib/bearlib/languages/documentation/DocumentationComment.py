@@ -1,4 +1,5 @@
 from collections import namedtuple
+from logging import warning
 
 from coala_utils.decorators import generate_eq, generate_repr
 from coalib.results.TextRange import TextRange
@@ -78,13 +79,18 @@ class DocumentationComment:
             When no parsing method is present for the given language and
             docstyle.
         """
-        if self.language == 'python' and self.docstyle == 'default':
+        if self.docstyle == 'default':
+            warning('Usage of default docstyle has been deprecated')
+            docstyle_map = {'python': 'sphinx', 'java': 'javadoc'}
+            self.docstyle = docstyle_map[self.language]
+
+        if self.language == 'python' and self.docstyle == 'sphinx':
             return self._parse_documentation_with_symbols(
                 (':param ', ':'), (':raises ', ':'), ':return:')
         elif self.language == 'python' and self.docstyle == 'doxygen':
             return self._parse_documentation_with_symbols(
                 ('@param ', ' '), ('@raises ', ' '), '@return ')
-        elif self.language == 'java' and self.docstyle == 'default':
+        elif self.language == 'java' and self.docstyle == 'javadoc':
             return self._parse_documentation_with_symbols(
                 ('@param  ', ' '), ('@raises  ', ' '), '@return ')
         elif self.language == 'golang' and self.docstyle == 'golang':
@@ -216,7 +222,7 @@ class DocumentationComment:
         >>> from coalib.results.TextPosition import TextPosition
         >>> Description = DocumentationComment.Description
         >>> Parameter = DocumentationComment.Parameter
-        >>> python_default = DocstyleDefinition.load("python3", "default")
+        >>> python_default = DocstyleDefinition.load("python3", "sphinx")
         >>> parsed_doc = [Description(desc='\nDescription\n'),
         ...               Parameter(name='age', desc=' Age\n')]
         >>> str(DocumentationComment.from_metadata(

@@ -79,12 +79,12 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
     def test_from_metadata(self):
         data = load_testdata('default.py')
 
-        original = list(DocBaseClass.extract(data, 'python', 'default'))
+        original = list(DocBaseClass.extract(data, 'python', 'sphinx'))
 
         parsed_docs = [(doc.parse(), doc.marker, doc.indent, doc.position)
                        for doc in original]
 
-        docstyle_definition = DocstyleDefinition.load('python', 'default')
+        docstyle_definition = DocstyleDefinition.load('python', 'sphinx')
 
         assembled_docs = [DocumentationComment.from_metadata(
                           doc[0], docstyle_definition, doc[1], doc[2], doc[3])
@@ -104,7 +104,7 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
                               list,
                               'expected needs to be a list for this test.')
 
-        python_default = DocstyleDefinition.load('python', 'default')
+        python_default = DocstyleDefinition.load('python', 'sphinx')
 
         doc_comment = DocumentationComment(docstring, python_default,
                                            None, None, None)
@@ -147,7 +147,7 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
         data = load_testdata('default.py')
 
         parsed_docs = [doc.parse() for doc in
-                       DocBaseClass.extract(data, 'python', 'default')]
+                       DocBaseClass.extract(data, 'python', 'sphinx')]
 
         expected = [
             [self.Description(desc='\nModule description.\n\n'
@@ -240,7 +240,7 @@ class JavaDocumentationCommentTest(DocumentationCommentTest):
         data = load_testdata('default.java')
 
         parsed_docs = [doc.parse() for doc in
-                       DocBaseClass.extract(data, 'java', 'default')]
+                       DocBaseClass.extract(data, 'java', 'javadoc')]
 
         expected = [[self.Description(
                      desc='\n Returns an String that says Hello with the name'
@@ -280,7 +280,7 @@ class DocumentationAssemblyTest(unittest.TestCase):
         data = load_testdata('default.py')
         docs = ''.join(data)
 
-        for doc in DocBaseClass.extract(data, 'python', 'default'):
+        for doc in DocBaseClass.extract(data, 'python', 'sphinx'):
             self.assertIn(doc.assemble(), docs)
 
     def test_doxygen_assembly(self):
@@ -303,7 +303,7 @@ class DocumentationAssemblyTest(unittest.TestCase):
         data = ['\n', '\n', '""" documentation in single line """\n',
                 '\n', '\n', 'print(1)\n']
 
-        for doc in DocBaseClass.extract(data, 'python', 'default'):
+        for doc in DocBaseClass.extract(data, 'python', 'sphinx'):
             doc.top_padding = 1
             doc.bottom_padding = 0
             doc.assemble.cache_clear()
@@ -313,7 +313,7 @@ class DocumentationAssemblyTest(unittest.TestCase):
     def test_python_default_padding_amend_assembly_2(self):
         data = ['""" documentation in single line """\n']
 
-        for doc in DocBaseClass.extract(data, 'python', 'default'):
+        for doc in DocBaseClass.extract(data, 'python', 'sphinx'):
             doc.top_padding = 2
             doc.bottom_padding = 3
             doc.assemble.cache_clear()
