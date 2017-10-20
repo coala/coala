@@ -202,6 +202,10 @@ Now you can start working on it!
 
             corobo mark wip <full url>
 
+        * To label a PR as pending review::
+
+            corobo mark pending <full url>
+
         * To see all of the corobo commands, ::
 
             corobo help
