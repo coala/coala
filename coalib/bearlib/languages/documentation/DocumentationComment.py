@@ -300,8 +300,8 @@ class MalformedComment:
     def __init__(self, message, line):
         """
         Instantiate a MalformedComment, which contains the information about
-        the error: a message explaining the behaviour and a line no where the
-        error has occured.
+        the error: a message explaining the behaviour and a line number where
+        the error has occured.
 
         :param message:
             Contains the message about the error.
