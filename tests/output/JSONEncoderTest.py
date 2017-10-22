@@ -56,25 +56,25 @@ class JSONEncoderTest(unittest.TestCase):
     kw = {'cls': JSONEncoder, 'sort_keys': True}
 
     def test_builtins(self):
-        self.assertEquals('"test"', json.dumps('test', **self.kw))
-        self.assertEquals('1', json.dumps(1, **self.kw))
-        self.assertEquals('true', json.dumps(True, **self.kw))
-        self.assertEquals('null', json.dumps(None, **self.kw))
+        self.assertEqual('"test"', json.dumps('test', **self.kw))
+        self.assertEqual('1', json.dumps(1, **self.kw))
+        self.assertEqual('true', json.dumps(True, **self.kw))
+        self.assertEqual('null', json.dumps(None, **self.kw))
 
     def test_iter(self):
-        self.assertEquals('[0, 1]', json.dumps([0, 1], **self.kw))
-        self.assertEquals('[0, 1]', json.dumps((0, 1), **self.kw))
-        self.assertEquals('[0, 1]', json.dumps(range(2), **self.kw))
+        self.assertEqual('[0, 1]', json.dumps([0, 1], **self.kw))
+        self.assertEqual('[0, 1]', json.dumps((0, 1), **self.kw))
+        self.assertEqual('[0, 1]', json.dumps(range(2), **self.kw))
 
     def test_dict(self):
-        self.assertEquals('{"0": 1}', json.dumps({0: 1}, **self.kw))
-        self.assertEquals('{"0": 1}', json.dumps({'0': 1}, **self.kw))
-        self.assertEquals('{"0": "1"}', json.dumps({'0': '1'}, **self.kw))
+        self.assertEqual('{"0": 1}', json.dumps({0: 1}, **self.kw))
+        self.assertEqual('{"0": 1}', json.dumps({'0': 1}, **self.kw))
+        self.assertEqual('{"0": "1"}', json.dumps({'0': '1'}, **self.kw))
 
     def test_time(self):
         tf = datetime.today()
-        self.assertEquals('"' + tf.isoformat() + '"',
-                          json.dumps(tf, **self.kw))
+        self.assertEqual('"' + tf.isoformat() + '"',
+                         json.dumps(tf, **self.kw))
 
     def test_re_object(self):
         uut = re.compile('x')
@@ -83,19 +83,19 @@ class JSONEncoderTest(unittest.TestCase):
 
     def test_class1(self):
         tc1 = TestClass1()
-        self.assertEquals('{"a": 0}', json.dumps(tc1, **self.kw))
-        self.assertEquals('[{"a": 0}]', json.dumps([tc1], **self.kw))
-        self.assertEquals('{"0": {"a": 0}}', json.dumps({0: tc1}, **self.kw))
+        self.assertEqual('{"a": 0}', json.dumps(tc1, **self.kw))
+        self.assertEqual('[{"a": 0}]', json.dumps([tc1], **self.kw))
+        self.assertEqual('{"0": {"a": 0}}', json.dumps({0: tc1}, **self.kw))
 
     def test_class2(self):
         tc2 = TestClass2()
-        self.assertEquals('{"a": 0, "b": {"a": 0}}',
-                          json.dumps(tc2, **self.kw))
+        self.assertEqual('{"a": 0, "b": {"a": 0}}',
+                         json.dumps(tc2, **self.kw))
 
     def test_class3(self):
         tc3 = TestClass3()
-        self.assertEquals('{"key": "val"}',
-                          json.dumps(tc3, **self.kw))
+        self.assertEqual('{"key": "val"}',
+                         json.dumps(tc3, **self.kw))
 
     def test_propertied_class(self):
         uut = PropertiedClass()

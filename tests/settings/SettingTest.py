@@ -3,9 +3,13 @@ import re
 import unittest
 from collections import OrderedDict
 
+from coalib.bearlib.languages import Language
 from coalib.settings.Setting import (
     Setting, path, path_list, url, typed_dict, typed_list, typed_ordered_dict,
-    glob, glob_list)
+    glob, glob_list,
+    language,
+    float_list, bool_list, int_list, str_list,
+)
 from coalib.parsing.Globbing import glob_escape
 
 
@@ -72,6 +76,20 @@ class SettingTest(unittest.TestCase):
             [glob_escape(os.path.abspath(os.path.join('test (1)', '.'))),
              abspath])
 
+    def test_language(self):
+        self.uut = Setting('key', 'python 3.4')
+        result = language(self.uut)
+        self.assertIsInstance(result, Language)
+        self.assertEqual(str(result), 'Python 3.4')
+
+    def test_language_invalid(self):
+        self.uut = Setting('key', 'not a language')
+        with self.assertRaisesRegexp(
+                ValueError,
+                'Language `not a language` is not a valid language name or '
+                'not recognized by coala.'):
+            language(self.uut)
+
     def test_typed_list(self):
         self.uut = Setting('key', '1, 2, 3')
         self.assertEqual(typed_list(int)(self.uut),
@@ -80,6 +98,43 @@ class SettingTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.uut = Setting('key', '1, a, 3')
             typed_list(int)(self.uut)
+
+        self.assertEqual(repr(typed_list(int)), 'typed_list(int)')
+
+    def test_int_list(self):
+        self.uut = Setting('key', '1, 2, 3')
+        self.assertEqual(int_list(self.uut), [1, 2, 3])
+
+        with self.assertRaises(ValueError):
+            self.uut = Setting('key', '1, a, 3')
+            int_list(self.uut)
+
+        self.assertEqual(repr(int_list), 'typed_list(int)')
+
+    def test_str_list(self):
+        self.uut = Setting('key', 'a, b, c')
+        self.assertEqual(str_list(self.uut), ['a', 'b', 'c'])
+        self.assertEqual(repr(str_list), 'typed_list(str)')
+
+    def test_float_list(self):
+        self.uut = Setting('key', '0.8, 1.3, 5.87')
+        self.assertEqual(float_list(self.uut), [0.8, 1.3, 5.87])
+
+        with self.assertRaises(ValueError):
+            self.uut = Setting('key', '1.987, a, 3')
+            float_list(self.uut)
+
+        self.assertEqual(repr(float_list), 'typed_list(float)')
+
+    def test_bool_list(self):
+        self.uut = Setting('key', 'true, nope, yeah')
+        self.assertEqual(bool_list(self.uut), [True, False, True])
+
+        with self.assertRaises(ValueError):
+            self.uut = Setting('key', 'true, false, 78, 89.0')
+            bool_list(self.uut)
+
+        self.assertEqual(repr(bool_list), 'typed_list(bool)')
 
     def test_typed_dict(self):
         self.uut = Setting('key', '1, 2: t, 3')
@@ -90,6 +145,9 @@ class SettingTest(unittest.TestCase):
             self.uut = Setting('key', '1, a, 3')
             typed_dict(int, str, '')(self.uut)
 
+        self.assertEqual(repr(typed_dict(int, str, None)),
+                         'typed_dict(int, str, default=None)')
+
     def test_typed_ordered_dict(self):
         self.uut = Setting('key', '1, 2: t, 3')
         self.assertEqual(typed_ordered_dict(int, str, None)(self.uut),
@@ -98,6 +156,9 @@ class SettingTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.uut = Setting('key', '1, a, 3')
             typed_ordered_dict(int, str, '')(self.uut)
+
+        self.assertEqual(repr(typed_ordered_dict(int, str, None)),
+                         'typed_ordered_dict(int, str, default=None)')
 
     def test_inherited_conversions(self):
         self.uut = Setting('key', ' 22\n', '.', strip_whitespaces=True)

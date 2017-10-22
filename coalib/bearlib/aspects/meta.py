@@ -6,6 +6,7 @@ from coala_utils.decorators import generate_repr
 
 from .base import aspectbase
 from .docs import Documentation
+from .exceptions import AspectTypeError
 from .taste import Taste
 
 
@@ -40,6 +41,7 @@ class aspectclass(type):
         and usage.
         """
         aspectname = subcls.__name__
+        sub_qualname = '%s.%s' % (cls.__qualname__, aspectname)
 
         docs = getattr(subcls, 'docs', None)
         aspectdocs = Documentation(subcls.__doc__, **{
@@ -52,6 +54,8 @@ class aspectclass(type):
             if isinstance(member, Taste):
                 # tell the taste its own name
                 member.name = name
+                # tell its owner name
+                member.aspect_name = sub_qualname
                 subtastes[name] = member
 
         class Sub(subcls, aspectbase, metaclass=aspectclass):
@@ -67,26 +71,13 @@ class aspectclass(type):
             Sub = generate_repr(*members)(Sub)
 
         Sub.__name__ = aspectname
-        Sub.__qualname__ = '%s.%s' % (cls.__qualname__, aspectname)
+        Sub.__qualname__ = sub_qualname
         cls.subaspects[aspectname] = Sub
         setattr(cls, aspectname, Sub)
         return Sub
 
     def __repr__(cls):
         return '<%s %s>' % (type(cls).__name__, repr(cls.__qualname__))
-
-
-class aspectTypeError(TypeError):
-    """
-    This error is raised when an object is not an ``aspectclass`` or an
-    instance of ``aspectclass``
-    """
-
-    def __init__(self, item):
-        self.item = item
-        message = ('{} is not an aspectclass or an instance of an '
-                   'aspectclass'.format(repr(self.item)))
-        super().__init__(message)
 
 
 def isaspect(item):
@@ -99,11 +90,11 @@ def isaspect(item):
 
 def assert_aspect(item):
     """
-    This function raises ``aspectTypeError`` when an object is not an
+    This function raises ``AspectTypeError`` when an object is not an
     ``aspectclass`` or an instance of ``aspectclass``
     """
     if not isaspect(item):
-        raise aspectTypeError(item)
+        raise AspectTypeError(item)
     return item
 
 

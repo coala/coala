@@ -77,6 +77,15 @@ class Clone:
 class UnusedImport:
     """
     Unused imports are any kind of import/include that is not needed.
+
+    This aspect have following taste:
+
+    >>> len(UnusedImport.tastes)
+    1
+    >>> UnusedImport.remove_non_standard_import
+    <...Taste[bool] object at 0x...>
+    >>> UnusedImport.remove_non_standard_import.default
+    True
     """
     class docs:
         example = """
@@ -96,6 +105,11 @@ class UnusedImport:
         fix_suggestions = """
         Usually, unused imports can simply be removed.
         """
+
+    remove_non_standard_import = Taste[bool](
+        "Remove ALL unused import, include those not from language's "
+        'standard library.',
+        (True, False), default=True)
 
 
 @Redundancy.subaspect

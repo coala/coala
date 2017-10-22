@@ -10,6 +10,12 @@ from packaging.version import Version, InvalidVersion
 from coalib.settings.Annotations import typechain
 
 
+class UnknownLanguageError(AttributeError, KeyError):
+    """
+    This exception occurs when an unknown language is requested.
+    """
+
+
 class LanguageUberMeta(type):
     """
     This class is used to hide the `all` attribute from the Language class.
@@ -22,7 +28,7 @@ convert_int_float_str = typechain(int, float, str)
 
 def parse_lang_str(string):
     """
-    Prarses any given language `string` into name and a list of either
+    Parses any given language `string` into name and a list of either
     ``int``, ``float``, or ``str`` versions (ignores leading whitespace):
 
     >>> parse_lang_str("Python")
@@ -33,11 +39,11 @@ def parse_lang_str(string):
     ('Python', [3.6, '3.3.1'])
     >>> parse_lang_str("Objective C 3.6, 3")
     ('Objective C', [3.6, 3])
-    >>> parse_lang_str("Cobol, stupid!")  # +ELLIPSIS
+    >>> parse_lang_str("Cobol, stupid!")
     Traceback (most recent call last):
      ...
     packaging.version.InvalidVersion: Invalid version: 'stupid!'
-    >>> parse_lang_str("Cobol seems at least stupid ;)")  # +ELLIPSIS
+    >>> parse_lang_str("Cobol seems at least stupid ;)")
     ('Cobol seems at least stupid ;)', [])
     """
     name, *str_versions = re.split(r'\s*,\s*', str(string).strip())
@@ -122,7 +128,9 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
         try:
             return next(lang for lang in type(cls).all if item in lang)
         except StopIteration:
-            raise AttributeError
+            raise UnknownLanguageError(
+                'Language `{}` is not a valid language name or '
+                'not recognized by coala.'.format(item))
 
     def __getitem__(cls, item):
         if isinstance(item, cls):
@@ -133,6 +141,7 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
         name, versions = parse_lang_str(item)
 
         language = getattr(cls, name)
+
         if not versions:
             return language()
 
@@ -355,7 +364,7 @@ class Language(metaclass=LanguageMeta):
     >>> Language.Cobol
     Traceback (most recent call last):
      ...
-    AttributeError
+    UnknownLanguageError: No language found for `Cobol`
     """
 
     def __init__(self, *versions):
@@ -415,6 +424,9 @@ class Language(metaclass=LanguageMeta):
         item = Language[item]
         return (type(self) is type(item)
                 and set(item.versions).issubset(set(self.versions)))
+
+    def __reduce__(self):
+        return (Language.__getitem__, (str(self),))
 
     @property
     def attributes(self):

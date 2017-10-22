@@ -1,14 +1,19 @@
+import logging
 import os
 import pkg_resources
 import unittest
 
 from pyprint.ConsolePrinter import ConsolePrinter
 
+from testfixtures import LogCapture
+
+from coalib.bearlib.aspects import AspectList, get as get_aspect
+from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.Bear import Bear
 from coalib.collecting.Collectors import (
     collect_all_bears_from_sections, collect_bears, collect_dirs, collect_files,
     collect_registered_bears_dirs, filter_section_bears_by_languages,
-    get_all_bears, get_all_bears_names)
+    get_all_bears, get_all_bears_names, collect_bears_by_aspects)
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.settings.Section import Section
@@ -27,17 +32,18 @@ class CollectFilesTest(unittest.TestCase):
         self.assertRaises(TypeError, collect_files)
 
     def test_file_invalid(self):
-        self.assertEqual(collect_files(file_paths=['invalid_path'],
-                                       log_printer=self.log_printer,
-                                       ignored_file_paths=None,
-                                       limit_file_paths=None,
-                                       section_name='section'), [])
-        self.assertEqual([log.message for log in self.log_printer.logs],
-                         ['No files matching \'invalid_path\' were found. '
-                          'If this rule is not required, you can remove it '
-                          'from section [section] in your .coafile to '
-                          'deactivate this warning.'
-                          ])
+        with LogCapture() as capture:
+            self.assertEqual(collect_files(file_paths=['invalid_path'],
+                                           log_printer=self.log_printer,
+                                           ignored_file_paths=None,
+                                           limit_file_paths=None,
+                                           section_name='section'), [])
+        capture.check(
+            ('root', 'WARNING', 'No files matching \'invalid_path\' were '
+                                'found. If this rule is not required, you can '
+                                'remove it from section [section] in your '
+                                '.coafile to deactivate this warning.')
+        )
 
     def test_file_collection(self):
         self.assertEqual(collect_files([os.path.join(self.collectors_test_dir,
@@ -214,15 +220,17 @@ class CollectBearsTest(unittest.TestCase):
         self.assertRaises(TypeError, collect_bears)
 
     def test_bear_invalid(self):
-        self.assertEqual(collect_bears(['invalid_paths'],
-                                       ['invalid_name'],
-                                       ['invalid kind'],
-                                       self.log_printer), ([],))
-        self.assertEqual([log.message for log in self.log_printer.logs],
-                         ['No bears matching \'invalid_name\' were found. Make '
-                          'sure you have coala-bears installed or you have '
-                          'typed the name correctly.'])
-
+        with LogCapture() as capture:
+            self.assertEqual(collect_bears(['invalid_paths'],
+                                           ['invalid_name'],
+                                           ['invalid kind'],
+                                           self.log_printer), ([],))
+        capture.check(
+            ('root', 'WARNING', 'No bears matching \'invalid_name\' were '
+                                'found. Make sure you have coala-bears '
+                                'installed or you have typed the name '
+                                'correctly.')
+        )
         self.assertEqual(collect_bears(['invalid_paths'],
                                        ['invalid_name'],
                                        ['invalid kind1', 'invalid kind2'],
@@ -275,6 +283,40 @@ class CollectBearsTest(unittest.TestCase):
         self.assertEqual(len(local_bears['test_section']), 2)
         self.assertEqual(len(global_bears['test_section']), 2)
 
+    def test_aspect_bear(self):
+        with bear_test_module():
+            aspects = AspectList([
+                get_aspect('unusedglobalvariable')('py'),
+                get_aspect('unusedlocalvariable')('py'),
+            ])
+            local_bears, global_bears = collect_bears_by_aspects(
+                aspects,
+                [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL])
+
+        self.assertEqual(len(global_bears), 0)
+        self.assertEqual(len(local_bears), 1)
+        self.assertIs(local_bears[0].name, 'AspectTestBear')
+
+    def test_collect_bears_unfulfilled_aspect(self):
+        aspects = AspectList([
+            get_aspect('unusedvariable')('py'),
+        ])
+
+        logger = logging.getLogger()
+        with bear_test_module(), self.assertLogs(logger, 'WARNING') as log:
+            local_bears, global_bears = collect_bears_by_aspects(
+                aspects,
+                [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL])
+        self.assertRegex(log.output[0],
+                         'coala cannot find bear that could analyze the '
+                         'following aspects: \['
+                         "'Root\.Redundancy\.UnusedVariable\.UnusedParameter'"
+                         '\]')
+
+        self.assertEqual(global_bears, [])
+        self.assertEqual(str(local_bears),
+                         "[<class 'AspectTestBear.AspectTestBear'>]")
+
 
 class CollectorsTests(unittest.TestCase):
 
@@ -317,7 +359,13 @@ class CollectorsTests(unittest.TestCase):
                  'SpaceConsistencyTestBear',
                  'TestBear',
                  'ErrorTestBear',
-                 'RaiseTestBear'})
+                 'RaiseTestBear',
+                 'TestDepBearA',
+                 'TestDepBearBDependsA',
+                 'TestDepBearCDependsB',
+                 'TestDepBearAA',
+                 'AspectTestBear',
+                 'TestDepBearDependsAAndAA'})
 
     def test_get_all_bears_names(self):
         with bear_test_module():
@@ -332,4 +380,10 @@ class CollectorsTests(unittest.TestCase):
                  'SpaceConsistencyTestBear',
                  'TestBear',
                  'ErrorTestBear',
-                 'RaiseTestBear'})
+                 'RaiseTestBear',
+                 'TestDepBearA',
+                 'TestDepBearBDependsA',
+                 'TestDepBearCDependsB',
+                 'TestDepBearAA',
+                 'AspectTestBear',
+                 'TestDepBearDependsAAndAA'})

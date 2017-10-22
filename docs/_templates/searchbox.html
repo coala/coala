@@ -1,0 +1,18 @@
+{%- if pagename != "search" and builder != "singlehtml" %}
+<div id="searchbox" style="display: none" role="search">
+    <h3>{{ _('Quick Search') }}</h3>
+    <div><input type="text" name="q"/></div>
+</div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/2/docsearch.min.js"></script>
+<script type="text/javascript">
+    $('#searchbox').show(0);
+    docsearch({
+        apiKey: 'c3e40d186b2a255fcdaab5c9bfb121f8',
+        indexName: 'coala-api',
+        inputSelector: '#searchbox > div > input',
+        debug: false // Set debug to true if you want to inspect the dropdown
+        });
+</script>
+
+{%- endif %}

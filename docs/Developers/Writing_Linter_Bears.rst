@@ -145,8 +145,9 @@ that is printed out.
 For the exact list of named groups ``@linter`` recognizes, see the `API
 documentation <https://api.coala.io/en/latest/>`__.
 
-For more info generally on regexes, see `Python re module
-<https://docs.python.org/3/library/re.html>`_.
+Please refer to `Python3 re module <https://docs.python.org/3/library/re.html>`_
+and `Dive into python <http://www.diveintopython3.net/regular-expressions.html>`_
+for information about regular expressions.
 
 Let's brush up our ``output_regex`` a bit to use even more information:
 

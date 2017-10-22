@@ -34,10 +34,23 @@ class coalaCITest(unittest.TestCase):
             coala.main, 'coala', '--non-interactive', '-c', 'nonex', 'test')
         self.assertFalse(stdout)
         self.assertRegex(
-            stderr,
-            ".*\\[ERROR\\].*The requested coafile '.*' does not exist. .+\n")
+             stderr,
+             ".*\\[ERROR\\].*Requested coafile '.*' does not exist")
         self.assertNotEqual(retval, 0,
                             'coala must return nonzero when errors occured')
+
+        retval, stdout, stderr = execute_coala(
+            coala.main, 'coala', '-c', 'nonex',
+            '--show-bears', '--filter-by-language', 'Python')
+        self.assertNotIn(
+             stderr,
+             "Requested coafile '.coafile' does not exist")
+
+        retval, stdout, stderr = execute_coala(
+            coala.main, 'coala', '-c', 'nonex', '--show-bears')
+        self.assertIn(
+             stderr,
+             "Requested coafile '.coafile' does not exist")
 
     def test_nonexistent_debug(self):
         self.test_nonexistent(debug=True)
@@ -54,7 +67,7 @@ class coalaCITest(unittest.TestCase):
                                                    '--settings',
                                                    'use_spaces=True',
                                                    debug=debug)
-            self.assertIn('Executing section cli', stdout)
+            self.assertEqual('Executing section cli...\n', stdout)
             if not debug:
                 self.assertFalse(stderr)
             else:

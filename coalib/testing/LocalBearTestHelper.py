@@ -1,9 +1,11 @@
 import queue
 import unittest
-from contextlib import contextmanager
+from contextlib import contextmanager, ExitStack
+from unittest.mock import patch
 
 import pytest
 
+from coalib.bearlib.abstractions.LinterClass import LinterClass
 from coalib.testing.BearTestHelper import generate_skip_decorator
 from coalib.bears.LocalBear import LocalBear
 from coala_utils.ContextManagers import prepare_file
@@ -14,7 +16,32 @@ from coalib.settings.Setting import Setting
 @contextmanager
 def execute_bear(bear, *args, **kwargs):
     try:
-        bear_output_generator = bear.execute(*args, **kwargs)
+        console_output = []
+
+        # For linters provide additional information, such as
+        # stdout and stderr.
+        with ExitStack() as stack:
+            if isinstance(bear, LinterClass):
+                console_output.append('The program yielded '
+                                      'the following output:\n')
+                old_process_output = bear.process_output
+
+                def new_process_output(output, filename=None, file=None,
+                                       **process_output_kwargs):
+                    if isinstance(output, tuple):
+                        stdout, stderr = output
+                        console_output.append('Stdout:\n' + stdout)
+                        console_output.append('Stderr:\n' + stderr)
+                    else:
+                        console_output.append(output)
+                    return old_process_output(output, filename, file,
+                                              **process_output_kwargs)
+
+                stack.enter_context(patch.object(
+                    bear, 'process_output', wraps=new_process_output))
+
+            bear_output_generator = bear.execute(*args, **kwargs)
+
         assert bear_output_generator is not None, \
             'Bear returned None on execution\n'
         yield bear_output_generator
@@ -22,8 +49,8 @@ def execute_bear(bear, *args, **kwargs):
         msg = []
         while not bear.message_queue.empty():
             msg.append(bear.message_queue.get().message)
-        raise AssertionError(str(err) + ' \n' + '\n'.join(msg))
-    return list(bear_output_generator)
+        msg += console_output
+        raise AssertionError(str(err) + ''.join('\n' + m for m in msg))
 
 
 def get_results(local_bear,
@@ -33,12 +60,28 @@ def get_results(local_bear,
                 create_tempfile=True,
                 tempfile_kwargs={},
                 settings={}):
+    if local_bear.BEAR_DEPS:
+        # Get results of bear's dependencies first
+        deps_results = dict()
+        for bear in local_bear.BEAR_DEPS:
+            uut = bear(local_bear.section, queue.Queue())
+            deps_results[bear.name] = get_results(uut,
+                                                  lines,
+                                                  filename,
+                                                  force_linebreaks,
+                                                  create_tempfile,
+                                                  tempfile_kwargs,
+                                                  settings)
+    else:
+        deps_results = None
+
     with prepare_file(lines, filename,
                       force_linebreaks=force_linebreaks,
                       create_tempfile=create_tempfile,
                       tempfile_kwargs=tempfile_kwargs) as (file, fname), \
-        execute_bear(local_bear, fname, file,
-                     **settings) as bear_output:
+        execute_bear(local_bear, fname, file, dependency_results=deps_results,
+                     **local_bear.get_metadata().filter_parameters(settings)
+                     ) as bear_output:
         return bear_output
 
 
@@ -197,7 +240,6 @@ class LocalBearTestHelper(unittest.TestCase):
                                 lines,
                                 results_num,
                                 filename=None,
-                                check_order=False,
                                 force_linebreaks=True,
                                 create_tempfile=True,
                                 tempfile_kwargs={},

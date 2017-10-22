@@ -1,18 +1,27 @@
 from itertools import chain
+import logging
 import os
 import platform
 import queue
 import subprocess
 
-from coalib.collecting.Collectors import collect_files
 from coala_utils.string_processing.StringConverter import StringConverter
+from coala_utils.FileUtils import detect_encoding
+
+from coalib.collecting.Collectors import collect_files
+from coalib.misc.Exceptions import log_exception
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.BearRunning import run
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.LogPrinterThread import LogPrinterThread
 from coalib.results.Result import Result
+from coalib.results.result_actions.DoNothingAction import DoNothingAction
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
+from coalib.results.result_actions.ShowAppliedPatchesAction \
+    import ShowAppliedPatchesAction
+from coalib.results.result_actions.GeneratePatchesAction import (
+    GeneratePatchesAction)
 from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
@@ -22,10 +31,13 @@ from coalib.settings.Setting import glob_list
 from coalib.parsing.Globbing import fnmatch
 
 
-ACTIONS = [ApplyPatchAction,
+ACTIONS = [DoNothingAction,
+           ApplyPatchAction,
            PrintDebugMessageAction,
            ShowPatchAction,
-           IgnoreResultAction]
+           IgnoreResultAction,
+           ShowAppliedPatchesAction,
+           GeneratePatchesAction]
 
 
 def get_cpu_count():
@@ -95,7 +107,7 @@ def autoapply_actions(results,
                       file_dict,
                       file_diff_dict,
                       section,
-                      log_printer):
+                      log_printer=None):
     """
     Auto-applies actions like defined in the given section.
 
@@ -112,9 +124,8 @@ def autoapply_actions(results,
     default_actions, invalid_actions = get_default_actions(section)
     no_autoapply_warn = bool(section.get('no_autoapply_warn', False))
     for bearname, actionname in invalid_actions.items():
-        log_printer.warn('Selected default action {!r} for bear {!r} does '
-                         'not exist. Ignoring action.'.format(actionname,
-                                                              bearname))
+        logging.warning('Selected default action {!r} for bear {!r} does not '
+                        'exist. Ignoring action.'.format(actionname, bearname))
 
     if len(default_actions) == 0:
         # There's nothing to auto-apply.
@@ -137,7 +148,7 @@ def autoapply_actions(results,
         applicable = action.is_applicable(result, file_dict, file_diff_dict)
         if applicable is not True:
             if not no_autoapply_warn:
-                log_printer.warn('{}: {}'.format(result.origin, applicable))
+                logging.warning('{}: {}'.format(result.origin, applicable))
             not_processed_results.append(result)
             continue
 
@@ -146,17 +157,17 @@ def autoapply_actions(results,
                                         file_dict,
                                         file_diff_dict,
                                         section)
-            log_printer.info('Applied {!r} on {} from {!r}.'.format(
+            logging.info('Applied {!r} on {} from {!r}.'.format(
                 action.get_metadata().name,
                 result.location_repr(),
                 result.origin))
         except Exception as ex:
             not_processed_results.append(result)
-            log_printer.log_exception(
+            log_exception(
                 'Failed to execute action {!r} with error: {}.'.format(
                     action.get_metadata().name, ex),
                 ex)
-            log_printer.debug('-> for result ' + repr(result) + '.')
+            logging.debug('-> for result ' + repr(result) + '.')
 
     return not_processed_results
 
@@ -197,7 +208,8 @@ def print_result(results,
                  log_printer,
                  file_diff_dict,
                  ignore_ranges,
-                 console_printer):
+                 console_printer,
+                 apply_single=False):
     """
     Takes the results produced by each bear and gives them to the print_results
     method to present to the user.
@@ -215,6 +227,8 @@ def print_result(results,
                            diff objects as values.
     :param ignore_ranges:  A list of SourceRanges. Results that affect code in
                            any of those ranges will be ignored.
+    :param apply_single:   The action that should be applied for all results,
+                           If it's not selected, has a value of False.
     :param console_printer: Object to print messages on the console.
     :return:               Returns False if any results were yielded. Else
                            True.
@@ -230,45 +244,50 @@ def print_result(results,
     patched_results = autoapply_actions(results,
                                         file_dict,
                                         file_diff_dict,
-                                        section,
-                                        log_printer)
+                                        section)
 
-    print_results(log_printer,
+    print_results(None,
                   section,
                   patched_results,
                   file_dict,
                   file_diff_dict,
-                  console_printer)
+                  console_printer,
+                  apply_single)
     return retval or len(results) > 0, patched_results
 
 
-def get_file_dict(filename_list, log_printer):
+def get_file_dict(filename_list, log_printer=None, allow_raw_files=False):
     """
     Reads all files into a dictionary.
 
-    :param filename_list: List of names of paths to files to get contents of.
-    :param log_printer:   The logger which logs errors.
-    :return:              Reads the content of each file into a dictionary
-                          with filenames as keys.
+    :param filename_list:   List of names of paths to files to get contents of.
+    :param log_printer:     The logger which logs errors.
+    :param allow_raw_files: Allow the usage of raw files (non text files),
+                            disabled by default
+    :return:                Reads the content of each file into a dictionary
+                            with filenames as keys.
     """
     file_dict = {}
     for filename in filename_list:
         try:
-            with open(filename, 'r', encoding='utf-8') as _file:
+            with open(filename, 'r',
+                      encoding=detect_encoding(filename)) as _file:
                 file_dict[filename] = tuple(_file.readlines())
         except UnicodeDecodeError:
-            log_printer.warn("Failed to read file '{}'. It seems to contain "
-                             'non-unicode characters. Leaving it '
-                             'out.'.format(filename))
+            if allow_raw_files:
+                file_dict[filename] = None
+                continue
+            logging.warning("Failed to read file '{}'. It seems to contain "
+                            'non-unicode characters. Leaving it out.'
+                            .format(filename))
         except OSError as exception:
-            log_printer.log_exception("Failed to read file '{}' because of "
-                                      'an unknown error. Leaving it '
-                                      'out.'.format(filename),
-                                      exception,
-                                      log_level=LOG_LEVEL.WARNING)
+            log_exception("Failed to read file '{}' because of an unknown "
+                          'error. Leaving it out.'.format(filename),
+                          exception,
+                          log_level=LOG_LEVEL.WARNING)
 
-    log_printer.debug('Files that will be checked:\n' +
-                      '\n'.join(file_dict.keys()))
+    logging.debug('Files that will be checked:\n' +
+                  '\n'.join(file_dict.keys()))
     return file_dict
 
 
@@ -339,7 +358,8 @@ def instantiate_processes(section,
                           cache,
                           log_printer,
                           console_printer,
-                          debug=False):
+                          debug=False,
+                          use_raw_files=False):
     """
     Instantiate the number of processes that will run bears which will be
     responsible for running bears in a multiprocessing environment.
@@ -355,13 +375,14 @@ def instantiate_processes(section,
     :param debug:            Bypass multiprocessing and activate debug mode
                              for bears, not catching any exceptions on running
                              them.
+    :param use_raw_files:    Allow the usage of raw files (non text files)
     :return:                 A tuple containing a list of processes,
                              and the arguments passed to each process which are
                              the same for each object.
     """
     filename_list = collect_files(
         glob_list(section.get('files', '')),
-        log_printer,
+        None,
         ignored_file_paths=glob_list(section.get('ignore', '')),
         limit_file_paths=glob_list(section.get('limit_files', '')),
         section_name=section.name)
@@ -369,7 +390,8 @@ def instantiate_processes(section,
     # This stores all matched files irrespective of whether coala is run
     # only on changed files or not. Global bears require all the files
     complete_filename_list = filename_list
-    complete_file_dict = get_file_dict(complete_filename_list, log_printer)
+    complete_file_dict = get_file_dict(complete_filename_list,
+                                       allow_raw_files=use_raw_files)
 
     if debug:
         from . import DebugProcessing as processing
@@ -398,16 +420,17 @@ def instantiate_processes(section,
     # run only for the changed files if caching is enabled.
 
     # Start tracking all the files
-    if cache and loaded_valid_local_bears_count == loaded_local_bears_count:
+    if cache and (loaded_valid_local_bears_count == loaded_local_bears_count
+                  and not use_raw_files):
         cache.track_files(set(complete_filename_list))
         changed_files = cache.get_uncached_files(
             set(filename_list)) if cache else filename_list
 
         # If caching is enabled then the local bears should process only the
         # changed files.
-        log_printer.debug("coala is run only on changed files, bears' log "
-                          'messages from previous runs may not appear. You may '
-                          'use the `--flush-cache` flag to see them.')
+        logging.debug("coala is run only on changed files, bears' log "
+                      'messages from previous runs may not appear. You may '
+                      'use the `--flush-cache` flag to see them.')
         filename_list = changed_files
 
     # Note: the complete file dict is given as the file dict to bears and
@@ -464,6 +487,11 @@ def yield_ignore_ranges(file_dict):
         start = None
         bears = []
         stop_ignoring = False
+
+        # Do not process raw files
+        if file is None:
+            continue
+
         for line_number, line in enumerate(file, start=1):
             # Before lowering all lines ever read, first look for the biggest
             # common substring, case sensitive: I*gnor*e, start i*gnor*ing,
@@ -526,7 +554,8 @@ def process_queues(processes,
                    cache,
                    log_printer,
                    console_printer,
-                   debug=False):
+                   debug=False,
+                   apply_single=False):
     """
     Iterate the control queue and send the results received to the print_result
     method so that they can be presented to the user.
@@ -552,6 +581,9 @@ def process_queues(processes,
                                as a file cache buffer.
     :param debug:              Run in debug mode, expecting that no logger
                                thread is running.
+    :param apply_single:       The action that should be applied for all
+                               results. If it's not selected, has a value of
+                               False.
     :return:                   Return True if all bears execute successfully and
                                Results were delivered to the user. Else False.
     """
@@ -583,10 +615,12 @@ def process_queues(processes,
                                            retval,
                                            print_results,
                                            section,
-                                           log_printer,
+                                           None,
                                            file_diff_dict,
                                            ignore_ranges,
-                                           console_printer=console_printer)
+                                           console_printer=console_printer,
+                                           apply_single=apply_single
+                                           )
                 local_result_dict[index] = res
             else:
                 assert control_elem == CONTROL_ELEMENT.GLOBAL
@@ -605,10 +639,11 @@ def process_queues(processes,
                                    retval,
                                    print_results,
                                    section,
-                                   log_printer,
+                                   None,
                                    file_diff_dict,
                                    ignore_ranges,
-                                   console_printer=console_printer)
+                                   console_printer=console_printer,
+                                   apply_single=apply_single)
         global_result_dict[elem] = res
 
     # One process is the logger thread
@@ -623,10 +658,11 @@ def process_queues(processes,
                                            retval,
                                            print_results,
                                            section,
-                                           log_printer,
+                                           None,
                                            file_diff_dict,
                                            ignore_ranges,
-                                           console_printer)
+                                           console_printer,
+                                           apply_single)
                 global_result_dict[index] = res
             else:
                 assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
@@ -677,7 +713,10 @@ def execute_section(section,
                     cache,
                     log_printer,
                     console_printer,
-                    debug=False):
+                    debug=False,
+                    apply_single=False):
+    # type: (object, object, object, object, object, object, object, object,
+    # object) -> object
     """
     Executes the section with the given bears.
 
@@ -703,6 +742,8 @@ def execute_section(section,
     :param console_printer:  Object to print messages on the console.
     :param debug:            Bypass multiprocessing and run bears in debug mode,
                              not catching any exceptions.
+    :param apply_single:     The action that should be applied for all results.
+                             If it's not selected, has a value of False.
     :return:                 Tuple containing a bool (True if results were
                              yielded, False otherwise), a Manager.dict
                              containing all local results(filenames are key)
@@ -716,23 +757,39 @@ def execute_section(section,
         try:
             running_processes = int(section['jobs'])
         except ValueError:
-            log_printer.warn("Unable to convert setting 'jobs' into a number. "
-                             'Falling back to CPU count.')
+            logging.warning("Unable to convert setting 'jobs' into a number. "
+                            'Falling back to CPU count.')
             running_processes = get_cpu_count()
         except IndexError:
             running_processes = get_cpu_count()
+
+    bears = global_bear_list + local_bear_list
+    use_raw_files = set(bear.USE_RAW_FILES for bear in bears)
+
+    if len(use_raw_files) > 1:
+        logging.error("Bears that uses raw files can't be mixed with Bears "
+                      'that uses text files. Please move the following bears '
+                      'to their own section: ' +
+                      ', '.join(bear.name for bear in bears
+                                if not bear.USE_RAW_FILES))
+        return ((), {}, {}, {})
+
+    # use_raw_files is expected to be only one object.
+    # The if statement is to ensure this doesn't fail when
+    # it's running on an empty run
+    use_raw_files = use_raw_files.pop() if len(use_raw_files) > 0 else False
 
     processes, arg_dict = instantiate_processes(section,
                                                 local_bear_list,
                                                 global_bear_list,
                                                 running_processes,
                                                 cache,
-                                                log_printer,
+                                                None,
                                                 console_printer=console_printer,
-                                                debug=debug)
+                                                debug=debug,
+                                                use_raw_files=use_raw_files)
 
-    logger_thread = LogPrinterThread(arg_dict['message_queue'],
-                                     log_printer)
+    logger_thread = LogPrinterThread(arg_dict['message_queue'])
     # Start and join the logger thread along with the processes to run bears
     if not debug:
         # in debug mode the logging messages are directly processed by the
@@ -751,9 +808,10 @@ def execute_section(section,
                                print_results,
                                section,
                                cache,
-                               log_printer,
+                               None,
                                console_printer=console_printer,
-                               debug=debug),
+                               debug=debug,
+                               apply_single=apply_single),
                 arg_dict['local_result_dict'],
                 arg_dict['global_result_dict'],
                 arg_dict['file_dict'])

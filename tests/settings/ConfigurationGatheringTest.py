@@ -3,18 +3,36 @@ import re
 import tempfile
 import unittest
 import logging
+import sys
 
 from pyprint.ClosableObject import close_objects
 from pyprint.NullPrinter import NullPrinter
 import pytest
 
+from coalib.bearlib.aspects.Metadata import CommitMessage
+from coalib.bearlib.languages import Language
 from coalib.misc import Constants
+from coalib.settings.Section import Section
 from coala_utils.ContextManagers import (
     make_temp, change_directory, retrieve_stdout)
 from coalib.output.printers.LogPrinter import LogPrinter
 from coala_utils.string_processing import escape
 from coalib.settings.ConfigurationGathering import (
-    find_user_config, gather_configuration, load_configuration)
+    aspectize_sections,
+    validate_aspect_config,
+    _set_section_language,
+    find_user_config,
+    gather_configuration,
+    get_filtered_bears,
+    load_configuration,
+)
+from coalib.settings.Setting import Setting
+
+from tests.TestUtilities import (
+    bear_test_module,
+    TEST_BEARS_COUNT,
+    TEST_BEAR_NAMES,
+)
 
 
 @pytest.mark.usefixtures('disable_bears')
@@ -332,3 +350,116 @@ class ConfigurationGatheringTest(unittest.TestCase):
         with retrieve_stdout() as stdout:
             load_configuration(['--no-config'], self.log_printer)
             self.assertNotIn('WARNING', stdout.getvalue())
+
+
+class AspectConfigurationTest(unittest.TestCase):
+
+    def setUp(self):
+        self.section = Section('aspect section')
+        self.section.append(Setting('aspects', 'commitmessage'))
+        self.section.language = Language['python']
+        self.sections = {'aspect section': self.section}
+
+    def test_aspectize_sections(self):
+        no_aspect_section = Section('no aspect')
+        self.sections['no aspect'] = no_aspect_section
+        aspectize_sections(self.sections)
+        self.assertTrue(validate_aspect_config(self.section))
+        self.assertEqual(self.section.aspects[0], CommitMessage('py'))
+        self.assertIsNone(no_aspect_section.aspects)
+
+    def test_validate_aspect_config_no_aspects(self):
+        self.section['aspects'] = ''
+        self.assertFalse(validate_aspect_config(self.section))
+
+    def test_validate_aspect_config_have_bears(self):
+        self.section['bears'] = 'TestBear'
+
+        logger = logging.getLogger()
+        with self.assertLogs(logger, 'WARNING') as cm:
+            self.assertTrue(validate_aspect_config(self.section))
+            self.assertRegex(
+                cm.output[0],
+                '`aspects` and `bears` setting is detected '
+                'in section `aspect section`. Aspect-based configuration will '
+                'takes priority and will overwrite any '
+                'explicitly listed bears.')
+
+    def test_validate_aspect_no_language(self):
+        self.section.language = None
+
+        logger = logging.getLogger()
+        with self.assertLogs(logger, 'WARNING') as cm:
+            self.assertFalse(validate_aspect_config(self.section))
+            self.assertRegex(
+                cm.output[0],
+                'Setting `language` is not found in section `aspect section`. '
+                'Usage of aspect-based setting must include '
+                'language information.')
+
+
+class ValidateAndInjectLanguageTest(unittest.TestCase):
+
+    def setUp(self):
+        self.section = Section('language section')
+        self.section.append(Setting('language', 'python'))
+        self.sections = {'language section': self.section}
+        self.language = Language['python']
+
+    def test__set_section_language(self):
+        _set_section_language(self.sections)
+        self.assertIsInstance(self.section.language, Language)
+        self.assertEqual(str(self.language), str(self.section.language))
+
+    def test__set_section_language_no_language(self):
+        self.section['language'] = ''
+        _set_section_language(self.sections)
+        self.assertIsNone(self.section.language)
+
+    def test__set_section_language_wrong_language(self):
+        self.section['language'] = 'INVALID_LANGUAGE'
+
+        logger = logging.getLogger()
+        with self.assertLogs(logger, 'WARNING') as cm:
+            _set_section_language(self.sections)
+            self.assertRegex(
+                cm.output[0],
+                'Section `language section` contain invalid language setting. '
+                '\'Language `INVALID_LANGUAGE` is not a valid language name or '
+                'not recognized by coala.\'')
+            self.assertIsNone(self.section.language)
+
+
+class ConfigurationGatheringCollectionTest(unittest.TestCase):
+
+    def setUp(self):
+        self.old_argv = sys.argv
+        self.log_printer = LogPrinter(NullPrinter())
+
+    def tearDown(self):
+        close_objects(self.log_printer)
+        sys.argv = self.old_argv
+
+    def test_get_filtered_bears(self):
+        sys.argv = ['coala', '-I']
+
+        with bear_test_module():
+            local_bears, global_bears = get_filtered_bears(
+                None, self.log_printer)
+
+        self.assertEqual(len(local_bears['cli']), TEST_BEARS_COUNT)
+
+        self.assertEqual(
+            [str(bear) for bear in local_bears['cli']],
+            TEST_BEAR_NAMES)
+
+        with bear_test_module():
+            local_bears, global_bears = get_filtered_bears(
+                ['Java'], self.log_printer)
+
+        self.assertEqual(len(local_bears['cli']), 2)
+        self.assertEqual(str(local_bears['cli'][0]),
+                         "<class 'JavaTestBear.JavaTestBear'>")
+        self.assertEqual(str(local_bears['cli'][1]),
+                         "<class 'LineCountTestBear.LineCountTestBear'>")
+        self.assertEqual(len(global_bears['cli']), 0)

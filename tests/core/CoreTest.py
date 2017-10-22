@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 import logging
 import unittest
 import unittest.mock
@@ -377,15 +378,19 @@ class CoreTest(unittest.TestCase):
         self.filedict1 = {'f1': []}
 
     @staticmethod
-    def execute_run(bears):
+    def get_run_results(bears, executor=None):
         results = []
 
         def on_result(result):
             results.append(result)
 
-        run(bears, on_result)
+        run(bears, on_result, executor)
 
         return results
+
+    @classmethod
+    def execute_run(cls, bears):
+        return cls.get_run_results(bears)
 
     @staticmethod
     def get_comparable_results(results):
@@ -612,5 +617,15 @@ class CoreTest(unittest.TestCase):
 
         result_set = set(results)
         self.assertEqual(len(result_set), len(results))
-        self.assertEqual(result_set, {i for i in range(100)})
+        self.assertEqual(result_set, set(range(100)))
         self.assertEqual(bear.dependency_results, {})
+
+
+# Execute the same tests from CoreTest, but use a ThreadPoolExecutor instead.
+# The core shall also seamlessly work with Python threads. Also there are
+# coverage issues on Windows with ProcessPoolExecutor as coverage data isn't
+# passed properly back from the pool processes.
+class CoreOnThreadPoolExecutorTest(CoreTest):
+    @classmethod
+    def execute_run(cls, bears):
+        return cls.get_run_results(bears, ThreadPoolExecutor(max_workers=8))

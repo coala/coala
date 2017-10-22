@@ -103,7 +103,7 @@ class CachingTest(unittest.TestCase):
         """
         with bear_test_module(), \
                 prepare_file(['a=(5,6)'], None) as (lines, filename):
-            with simulate_console_inputs('0'):
+            with simulate_console_inputs('n'):
                 retval, stdout, stderr = execute_coala(
                     coala.main,
                     'coala',
@@ -153,7 +153,7 @@ class CachingTest(unittest.TestCase):
         """
         filename = 'tests/misc/test_caching_multi_results/'
         with bear_test_module():
-            with simulate_console_inputs('0'):
+            with simulate_console_inputs('n'):
                 retval, stdout, stderr = execute_coala(
                    coala.main,
                    'coala',

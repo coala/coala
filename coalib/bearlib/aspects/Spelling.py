@@ -1,72 +1,67 @@
-from coalib.bearlib.aspects import Root
+from coalib.bearlib.aspects import Root, Taste
 
 
 @Root.subaspect
 class Spelling:
     """
-    This aspect describes spelling of your source code.
+    How words should be written.
     """
     class docs:
         example = """
-        `Coala`, `AspectsYEAH`
+        'Tihs si surly som incoreclt speling.
+        `Coala` is always written with a lowercase `c`.
         """
-        example_language = 'All'
+        example_language = 'reStructuredText'
         importance_reason = """
-        They are words we always want to be written the way we want like the
-        name of our app eg: `coala`...
+        Words should always be written as they are supposed to be;
+        standardisation facilitates communication.
         """
         fix_suggestions = """
-        Use coala :) to detect what word is not written as expected, given
-        that there is a bear for it ;).
+        Use the correct spelling for the misspelled words.
         """
 
 
 @Spelling.subaspect
-class aspectsYEAH:
+class DictionarySpelling:
     """
-    This aspect dictates that the term ``aspects`` and ``aspect`` must have
-    all letters in lower case and the term ``aspectsYEAH`` must match the
-    exact expression.
+    Valid language's words spelling.
     """
     class docs:
         example = """
-        Valid Cases:
-        # aspects are the mother of all futures of coala
-        # ``aspectsYEAH`` project is simply awesome
-        Invalid Cases:
-        # Aspects are the mother of all futures of coala
-        # ``aspectsyeah`` project is simply awesome
+        This is toatly wonrg.
         """
-        example_language = 'All'
+        example_language = 'reStructuredText'
         importance_reason = """
-        The concepts of aspects in coala are too fundamental to contain any
-        upper-case letters.
+        Good spelling facilitates communication and avoids confusion. By
+        following the same rules for spelling words, we can all understand
+        the text we read. Poor spelling distracts the reader and they lose
+        focus.
         """
         fix_suggestions = """
-        ``aspects`` or ``aspect`` are always written with all lower-case
-        letters or the term ``aspectsYEAH`` must match the exact expression.
+        You can use a spell-checker to fix this for you or just ensure
+        yourself that things are well written.
         """
 
 
 @Spelling.subaspect
-class coalaCorrect:
+class OrgSpecificWordSpelling:
     """
-    This aspect dictates that the term ``coala`` must always be written with
-    with a lowercase `c`.
+    Organisations like coala specified words' spelling.
     """
     class docs:
         example = """
-        Valid Cases:
-        # ``coala`` is so much fun!
-        # ``coalA`` hmm... not exactly ``coala`` but it is fine ;)
-        Invalid Cases:
-        # ``Coala`` hmm... this is wrong :(
-        # ``CoalA``... @cobot please do something about this :(
+        `Coala` is always written with a lower case c, also at the beginning
+        of the sentence.
         """
-        example_language = 'All'
+        example_language = 'reStructuredText'
         importance_reason = """
-        We like it this way ;).
+        There are words you want to be written as you want, like your
+        organisation's name.
         """
         fix_suggestions = """
-        Always write ``coala`` with a lower case ``c``.
+        Simply make sure those words match with what is provided by the
+        organisation.
         """
+    specific_word = Taste[list](
+        'Represents the regex of the specific word to check.',
+        (('c[o|O][a|A][l|L][a|A]',), ), default=list())

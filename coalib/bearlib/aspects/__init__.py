@@ -6,7 +6,11 @@ from pkgutil import iter_modules
 from types import ModuleType
 
 from .base import aspectbase
-from .meta import aspectclass, aspectTypeError
+from .decorators import map_setting_to_aspect
+from .exceptions import (AspectTypeError, AspectNotFoundError,
+                         MultipleAspectFoundError)
+from .meta import aspectclass
+from .collections import AspectList
 from .taste import Taste, TasteError
 
 # already import Root here to make it available in submodules that define
@@ -16,7 +20,10 @@ from .root import Root
 
 
 __all__ = ['Root', 'Taste', 'TasteError',
-           'aspectclass', 'aspectbase', 'aspectTypeError']
+           'aspectclass', 'aspectbase', 'AspectTypeError',
+           'AspectNotFoundError', 'MultipleAspectFoundError',
+           'AspectList', 'map_setting_to_aspect',
+           ]
 
 
 class aspectsModule(ModuleType):
@@ -51,6 +58,24 @@ class aspectsModule(ModuleType):
                 subaspect = getattr(submod, submodname)
                 setattr(self, submodname, subaspect)
 
+    def get(self, aspectname):
+        """
+        Search and get an aspectclass from string of full or partial
+        qualified name of the aspect. Similiar to ``__getitem__``, but doesn't
+        raise exception for trying to search non existing aspect.
+
+        :param aspectname:
+            Name of the aspect that should be searched.
+        :raise MultipleAspectFoundError:
+            When multiple aspects with same name was found.
+        :return:
+            An aspectclass or None.
+        """
+        try:
+            return self[aspectname]
+        except AspectNotFoundError:
+            return None
+
     def __getitem__(self, aspectname):
         regex = re.compile('(^|\.)%s$' % aspectname.lower())
         matches = []
@@ -68,12 +93,10 @@ class aspectsModule(ModuleType):
 
         search([Root])
         if not matches:
-            raise LookupError('no aspect named %s' % repr(aspectname))
+            raise AspectNotFoundError(aspectname)
 
         if len(matches) > 1:
-            raise LookupError('multiple aspects named %s. choose from %s' % (
-                repr(aspectname),
-                repr(sorted(matches, key=lambda a: a.__qualname__))))
+            raise MultipleAspectFoundError(aspectname, matches)
 
         return matches[0]
 

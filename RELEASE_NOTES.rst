@@ -4,28 +4,28 @@ coala 0.10 - PolarBear
 ::
 
 
-                       `++-    -o+`                   
-                -oo:  :yhho    ohhy:  :oo.            
-                :hhhoohhh+      +hhhoohhy:            
-            ``.--shhhhhy:        /yhhhhho--..`        
-           +hhhhhhhhhhh+          ohhhhhhhhhhh/       
-           `/+/////+hhhh/        +hhhy+///////`       
-                    -yhhhs     hshhhy-                
-       .os/           hhhhy-  -yhhhh           +ss.   
-       .yhho           shhho``ohhhs          `ohhy`   
-        -yhhs`          +hhhsshhh+          `shhy-    
-      .::shhhs++/+yhy////shhhhhhs////yhy++++yhhho::-  
-     /hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh/ 
-      -::shhhs++++yhy////shhhhhhs          +shhhs::.  
-        -yhhs`          +hhhsshhh+          `shhy-    
-       .yhho`          shhho``ohhhs           ohhy.   
-       .ss+           hhhhy   -yhhhh           /so.   
-                    -yhhhs      shhhy-                
-           `///////+yhhh+        /hhhh+/////+/`       
-           /hhhhhhhhhhho          +hhhhhhhhhhh+       
-            `..--ohhhhhy/        :yhhhhhs--.``        
-                :hhhoohhh+      +hhhoohhh:            
-                -oo:  :yhho    ohhy:  :oo-            
+                       `++-    -o+`
+                -oo:  :yhho    ohhy:  :oo.
+                :hhhoohhh+      +hhhoohhy:
+            ``.--shhhhhy:        /yhhhhho--..`
+           +hhhhhhhhhhh+          ohhhhhhhhhhh/
+           `/+/////+hhhh/        +hhhy+///////`
+                    -yhhhs     hshhhy-
+       .os/           hhhhy-  -yhhhh           +ss.
+       .yhho           shhho``ohhhs          `ohhy`
+        -yhhs`          +hhhsshhh+          `shhy-
+      .::shhhs++/+yhy////shhhhhhs////yhy++++yhhho::-
+     /hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh/
+      -::shhhs++++yhy////shhhhhhs          +shhhs::.
+        -yhhs`          +hhhsshhh+          `shhy-
+       .yhho`          shhho``ohhhs           ohhy.
+       .ss+           hhhhy   -yhhhh           /so.
+                    -yhhhs      shhhy-
+           `///////+yhhh+        /hhhh+/////+/`
+           /hhhhhhhhhhho          +hhhhhhhhhhh+
+            `..--ohhhhhy/        :yhhhhhs--.``
+                :hhhoohhh+      +hhhoohhh:
+                -oo:  :yhho    ohhy:  :oo-
                        `+o-    -++`
 
 For this release we had 168 commits contributed by 66 unique contributors
@@ -95,7 +95,7 @@ and the next generation core.
   popular linux distros.
 - Diffs are able to add a single line using the ``add_line`` method now.
 - ``Language`` class ignores leading and trailing spaces in language lookups.
-- ``Language`` class should auto-complete when using languages that have 
+- ``Language`` class should auto-complete when using languages that have
   been defined.
 
 **Docs**
@@ -139,7 +139,7 @@ This bugfix release addressed the following issues:
   `coala Bears Issue #751 <https://github.com/coala/coala-bears/issues/751>`_
 - PyPrint dependency was updated to a version which does not pull in
   setuptools anymore.
-- API change: An auto-apply disable option was added to run_coala to fix 
+- API change: An auto-apply disable option was added to run_coala to fix
   issue detection by unattended services that use coala when the coafile
   contains a default_action
   `Issue #3212 <https://github.com/coala/coala/issues/3212>`_
@@ -344,7 +344,7 @@ Below are some of the important changes introduced for this release:
 
   + Native requirements (from package managers such as ``apt-get``, ``dnf``, ``pacman``, ...)
   + Conda requirements
-  + Python requirements through ``pip``
+  + Python requirements through ``pip3``
   + ``go`` requirements
   + Ruby requirements through ``gem``
   + NodeJS requirements through ``npm``
@@ -906,7 +906,7 @@ Infrastructural changes:
 -  AppVeyor (Windows CI) was added.
 -  Travis CI was added for Mac OS X.
 -  Development releases are automatically done from master and available
-   via ``pip install coala --pre``.
+   via ``pip3 install coala --pre``.
 -  Rultor is now used exclusively to push on master. Manual pushes to
    master are not longer allowed to avoid human errors. Rultor deploys
    translation strings to Zanata and the PyPI package before pushing the

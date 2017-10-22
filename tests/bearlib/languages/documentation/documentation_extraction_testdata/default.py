@@ -4,6 +4,7 @@ Module description.
 Some more foobar-like text.
 """
 
+
 def foobar_explosion(radius):
     """
     A nice and neat way of documenting code.
@@ -11,7 +12,9 @@ def foobar_explosion(radius):
     def get_55():
         """A function that returns 55."""
         return 55
+
     return get_55() * radius
+
 
 """
 Docstring with layouted text.
@@ -19,6 +22,7 @@ Docstring with layouted text.
     layouts inside docs are preserved.
 this is intended.
 """
+
 
 """ Docstring inline with triple quotes.
     Continues here. """
@@ -38,6 +42,7 @@ def best_docstring(param1, param2):
     """
     return None
 
+
 def docstring_find(filename):
     """
     This is dummy docstring find function.
@@ -49,6 +54,7 @@ def docstring_find(filename):
 
     :return: returns all possible docstrings in a file
     """
+
 
 def foobar_triangle(side_A, side_B, side_C):
     """
@@ -64,3 +70,8 @@ def foobar_triangle(side_A, side_B, side_C):
     :return: returns perimeter
     """
     return side_A + side_B + side_C
+
+    # This example of triple quote string literal is ignored.
+    triple_quote_string_literal_test = """
+This is a triple quoted string and is not a valid docstring.
+"""

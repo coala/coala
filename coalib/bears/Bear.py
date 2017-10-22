@@ -28,7 +28,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     whatever it wants with the files it gets. If you are missing some Result
     type, feel free to contact us and/or help us extending the coalib.
 
-    This is the base class for every bear. If you want to write an bear, you
+    This is the base class for every bear. If you want to write a bear, you
     will probably want to look at the GlobalBear and LocalBear classes that
     inherit from this class. In any case you'll want to overwrite at least the
     run method. You can send debug/warning/error messages through the
@@ -96,7 +96,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     ... 'Unused Code', 'Redundancy', 'Variable Misuse', 'Spelling',
     ... 'Memory Leak', 'Documentation', 'Duplication', 'Commented Code',
     ... 'Grammar', 'Missing Import', 'Unreachable Code', 'Undefined Element',
-    ... 'Code Simplification'}
+    ... 'Code Simplification', 'Statistics'}
     >>> CAN_FIX = {'Syntax', ...}
 
     Specifying something to CAN_FIX makes it obvious that it can be detected
@@ -153,13 +153,23 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     >>> class aspectsCommitBear(Bear, aspects={
     ...         'detect': [CommitMessage.Shortlog.ColonExistence],
     ...         'fix': [CommitMessage.Shortlog.TrailingPeriod],
-    ... }):
+    ... }, languages=['Python']):
     ...     pass
 
     >>> aspectsCommitBear.aspects['detect']
     [<aspectclass 'Root.Metadata.CommitMessage.Shortlog.ColonExistence'>]
     >>> aspectsCommitBear.aspects['fix']
     [<aspectclass 'Root.Metadata.CommitMessage.Shortlog.TrailingPeriod'>]
+
+    To indicate the bear uses raw files, set ``USE_RAW_FILES`` to True:
+
+    >>> class RawFileBear(Bear):
+    ...     USE_RAW_FILES = True
+    >>> RawFileBear.USE_RAW_FILES
+    True
+
+    However if ``USE_RAW_FILES`` is enabled the Bear is in charge of managing
+    the file (opening the file, closing the file, reading the file, etc).
     """
 
     LANGUAGES = set()
@@ -176,6 +186,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     ASCIINEMA_URL = ''
     SEE_MORE = ''
     BEAR_DEPS = set()
+    USE_RAW_FILES = False
 
     @classproperty
     def name(cls):
@@ -264,6 +275,11 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
 
     def run_bear_from_section(self, args, kwargs):
         try:
+            # Don't get `language` setting from `section.contents`
+            if self.section.language and (
+                    'language' in self.get_metadata()._optional_params or
+                    'language' in self.get_metadata()._non_optional_params):
+                kwargs['language'] = self.section.language
             kwargs.update(
                 self.get_metadata().create_params_from_section(self.section))
         except ValueError as err:
@@ -277,6 +293,16 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         name = self.name
         try:
             self.debug('Running bear {}...'.format(name))
+
+            # If `dependency_results` kwargs is defined but there are no
+            # dependency results (usually in Bear that has no dependency)
+            # delete the `dependency_results` kwargs, since most Bears don't
+            # define `dependency_results` kwargs in its `run()` function.
+            if ('dependency_results' in kwargs and
+                    kwargs['dependency_results'] is None and
+                    not self.BEAR_DEPS):
+                del kwargs['dependency_results']
+
             # If it's already a list it won't change it
             result = self.run_bear_from_section(args, kwargs)
             return [] if result is None else list(result)
@@ -285,13 +311,13 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
                 raise
 
             if self.kind() == BEAR_KIND.LOCAL:
-                self.warn('Bear {} failed to run on file {}. Take a look '
-                          'at debug messages (`-V`) for further '
-                          'information.'.format(name, args[0]))
+                self.err('Bear {} failed to run on file {}. Take a look '
+                         'at debug messages (`-V`) for further '
+                         'information.'.format(name, args[0]))
             else:
-                self.warn('Bear {} failed to run. Take a look '
-                          'at debug messages (`-V`) for further '
-                          'information.'.format(name))
+                self.err('Bear {} failed to run. Take a look '
+                         'at debug messages (`-V`) for further '
+                         'information.'.format(name))
             self.debug(
                 'The bear {bear} raised an exception. If you are the author '
                 'of this bear, please make sure to catch all exceptions. If '
@@ -316,7 +342,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         """
         return FunctionMetadata.from_function(
             cls.run,
-            omit={'self', 'dependency_results'})
+            omit={'self', 'dependency_results', 'language'})
 
     @classmethod
     def __json__(cls):
@@ -335,6 +361,8 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
                                     for param in non_optional_params),
             'optional_params': ({param: optional_params[param][0]}
                                 for param in optional_params)}
+        if hasattr(cls, 'languages'):
+            _dict['languages'] = (str(language) for language in cls.languages)
         return _dict
 
     @classmethod

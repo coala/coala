@@ -1,7 +1,9 @@
 from coalib.bearlib.languages import Language
+from coalib.bearlib.languages.Language import UnknownLanguageError
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.Result import Result
 from coalib.results.Diff import Diff
+from coala_utils.FileUtils import detect_encoding
 from os.path import exists
 from os.path import isfile
 import shutil
@@ -35,7 +37,7 @@ class IgnoreResultAction(ResultAction):
     def apply(self, result, original_file_dict, file_diff_dict, language: str,
               no_orig: bool=False):
         """
-        Add ignore comment
+        Add (I)gnore comment
         """
 
         ignore_comment = self.get_ignore_comment(result.origin, language)
@@ -63,7 +65,8 @@ class IgnoreResultAction(ResultAction):
         file_diff_dict[filename] = ignore_diff
 
         new_filename = ignore_diff.rename if ignore_diff.rename else filename
-        with open(new_filename, mode='w', encoding='utf-8') as file:
+        with open(new_filename, mode='w',
+                  encoding=detect_encoding(new_filename)) as file:
             file.writelines(ignore_diff.modified)
 
         return file_diff_dict
@@ -96,7 +99,7 @@ class IgnoreResultAction(ResultAction):
                 ignore_comment = (str(start_comment) + ' Ignore ' +
                                   origin + ' ' +
                                   str(end_comment) + '\n')
-            except AttributeError:
+            except UnknownLanguageError:
                 # multiline comments also not supported by language
                 logging.warning(
                     'coala does not support Ignore in "{language}". Consider'

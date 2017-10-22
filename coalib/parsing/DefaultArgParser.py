@@ -2,6 +2,7 @@ import argparse
 
 from coalib.misc import Constants
 from coalib.collecting.Collectors import get_all_bears_names
+from coalib.parsing.FilterHelper import available_filters
 
 
 class CustomFormatter(argparse.RawDescriptionHelpFormatter):
@@ -187,6 +188,13 @@ To run coala without user interaction, run the `coala --non-interactive`,
         help='filters `--show-bears` by the given languages')
 
     outputs_group.add_argument(
+        '--filter-by', action='append', nargs='+',
+        metavar=('FILTER_NAME FILTER_ARG', 'FILTER_ARG'),
+        help='filters `--show-bears` by the filter given as argument. '
+             'Available filters: {}'.format(', '.join(sorted(
+                 available_filters))))
+
+    outputs_group.add_argument(
         '-p', '--show-capabilities', nargs='+', metavar='LANG',
         help='show what coala can fix and detect for the given languages')
 
@@ -229,6 +237,10 @@ To run coala without user interaction, run the `coala --non-interactive`,
     misc_group.add_argument(
         '-n', '--no-orig', const=True, action='store_const',
         help="don't create .orig backup files before patching")
+
+    misc_group.add_argument(
+        '-A', '--single-action', const=True, action='store_const',
+        help='apply a single action for all results')
 
     misc_group.add_argument(
         '--debug', const=True, action='store_const',

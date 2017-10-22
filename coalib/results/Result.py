@@ -15,7 +15,8 @@ from coalib.results.SourceRange import SourceRange
                ('severity', RESULT_SEVERITY.reverse.get),
                'confidence',
                'message',
-               ('aspect', lambda aspect: type(aspect).__qualname__))
+               ('aspect', lambda aspect: type(aspect).__qualname__),
+               'applied_actions')
 @generate_ordering('affected_code',
                    'severity',
                    'confidence',
@@ -24,7 +25,8 @@ from coalib.results.SourceRange import SourceRange
                    'message_arguments',
                    'aspect',
                    'additional_info',
-                   'debug_msg')
+                   'debug_msg',
+                   'applied_actions')
 class Result:
     """
     A result is anything that has an origin and a message.
@@ -59,15 +61,16 @@ class Result:
                  diffs: (dict, None)=None,
                  confidence: int=100,
                  aspect: (aspectbase, None)=None,
-                 message_arguments: dict={}):
+                 message_arguments: dict={},
+                 applied_actions: dict={}):
         """
         :param origin:
             Class name or creator object of this object.
         :param message:
             Base message to show with this result.
         :param affected_code:
-            A tuple of SourceRange objects pointing to related positions in the
-            source code.
+            A tuple of ``SourceRange`` objects pointing to related positions
+            in the source code.
         :param severity:
             Severity of this result.
         :param additional_info:
@@ -90,6 +93,9 @@ class Result:
             the leafs exactly your result belongs to.)
         :param message_arguments:
             Arguments to be provided to the base message.
+        :param applied_actions:
+            A dictionary that contains the result, file_dict, file_diff_dict and
+            the section for an action.
         :raises ValueError:
             Raised when confidence is not between 0 and 100.
         :raises KeyError:
@@ -105,6 +111,7 @@ class Result:
         self.origin = origin
         self.message_base = message
         self.message_arguments = message_arguments
+        self.applied_actions = applied_actions
         if message_arguments:
             self.message_base.format(**self.message_arguments)
         self.debug_msg = debug_msg
@@ -118,6 +125,9 @@ class Result:
         self.diffs = diffs
         self.id = uuid.uuid4().int
         self.aspect = aspect
+        if self.aspect and not self.additional_info:
+            self.additional_info = '{} {}'.format(
+                aspect.docs.importance_reason, aspect.docs.fix_suggestions)
 
     @property
     def message(self):
@@ -128,6 +138,12 @@ class Result:
     @message.setter
     def message(self, value: str):
         self.message_base = value
+
+    def set_applied_actions(self, applied_actions):
+        self.applied_actions = applied_actions
+
+    def get_applied_actions(self):
+        return self.applied_actions
 
     @classmethod
     @enforce_signature

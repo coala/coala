@@ -1,5 +1,4 @@
 install:
-  - if ! pip3 -V ; then wget -O - https://bootstrap.pypa.io/get-pip.py | python3; fi
   - pip3 install -r requirements.txt
 
 docker:
@@ -10,6 +9,7 @@ merge:
   fast-forward: only
   script:
     - python3 .misc/adjust_version_number.py coalib/VERSION -b `date --utc +%Y%m%d%H%M%S`
+    - bash .misc/check_maintainership.sh
     - bash .misc/deploy.pypi.sh
 
 release:

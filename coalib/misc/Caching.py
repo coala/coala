@@ -1,8 +1,8 @@
+import logging
 import time
 import os
 
 from coala_utils.decorators import enforce_signature
-from coalib.output.printers.LogPrinter import LogPrinterMixin
 from coalib.misc.CachingUtilities import (
     pickle_load, pickle_dump, delete_files)
 
@@ -12,16 +12,13 @@ class FileCache:
     This object is a file cache that helps in collecting only the changed
     and new files since the last run. Example/Tutorial:
 
-    >>> from pyprint.NullPrinter import NullPrinter
-    >>> from coalib.output.printers.LogPrinter import LogPrinter
     >>> import logging
     >>> import copy, time
-    >>> log_printer = LogPrinter()
-    >>> log_printer.log_level = logging.CRITICAL
+    >>> logging.getLogger().setLevel(logging.CRITICAL)
 
     To initialize the cache create an instance for the project:
 
-    >>> cache = FileCache(log_printer, "test", flush_cache=True)
+    >>> cache = FileCache(None, "test", flush_cache=True)
 
     Now we can track new files by running:
 
@@ -39,7 +36,7 @@ class FileCache:
 
     Let's create a new instance to simulate a separate run:
 
-    >>> cache = FileCache(log_printer, "test", flush_cache=False)
+    >>> cache = FileCache(None, "test", flush_cache=False)
 
     >>> old_data = copy.deepcopy(cache.data)
 
@@ -69,7 +66,7 @@ class FileCache:
     @enforce_signature
     def __init__(
             self,
-            log_printer: LogPrinterMixin,
+            log_printer,
             project_dir: str,
             flush_cache: bool=False):
         """
@@ -80,19 +77,17 @@ class FileCache:
                             as a key identifier.
         :param flush_cache: Flush the cache and rebuild it.
         """
-        self.log_printer = log_printer
         self.project_dir = project_dir
         self.current_time = int(time.time())
 
-        cache_data = pickle_load(log_printer, project_dir, {})
+        cache_data = pickle_load(None, project_dir, {})
         last_time = -1
         if 'time' in cache_data:
             last_time = cache_data['time']
         if not flush_cache and last_time > self.current_time:
-            log_printer.warn('It seems like you went back in time - your '
-                             'system time is behind the last recorded run '
-                             'time on this project. The cache will '
-                             'be force flushed.')
+            logging.warning('It seems like you went back in time - your system '
+                            'time is behind the last recorded run time on this '
+                            'project. The cache will be force flushed.')
             flush_cache = True
 
         self.data = cache_data.get('files', {})
@@ -110,8 +105,8 @@ class FileCache:
         Flushes the cache and deletes the relevant file.
         """
         self.data = {}
-        delete_files(self.log_printer, [self.project_dir])
-        self.log_printer.debug('The file cache was successfully flushed.')
+        delete_files(None, [self.project_dir])
+        logging.debug('The file cache was successfully flushed.')
 
     def __enter__(self):
         return self
@@ -128,7 +123,7 @@ class FileCache:
         for file_name in self.data:
             self.data[file_name] = self.current_time
         pickle_dump(
-            self.log_printer,
+            None,
             self.project_dir,
             {'time': self.current_time, 'files': self.data})
 

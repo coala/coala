@@ -41,7 +41,7 @@ install:
 build: false  # Not a C# project, build stuff at the test step instead.
 
 test_script:
-  - "%CMD_IN_ENV% bash .misc/tests.sh"
+  - "%CMD_IN_ENV% py.test"
   - "%CMD_IN_ENV% python setup.py install"
 
 on_success:

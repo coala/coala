@@ -52,7 +52,7 @@ def deprecate_settings(**depr_args):
     >>> @deprecate_settings(new='old')
     ... def run(new):
     ...     print(new)
-    >>> # doctest: +ELLIPSIS
+    >>> # doctest:
     ... run(old="Hello!", new='coala is always written with lowercase `c`.')
     WARNING:root:The setting `old` is deprecated. Please use `new` instead.
     WARNING:root:The value of `old` and `new` are conflicting. `new` will...

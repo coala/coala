@@ -211,13 +211,13 @@ class BearTest(unittest.TestCase):
         exc = requests.exceptions.ConnectTimeout
         with requests_mock.Mocker() as reqmock:
             reqmock.get(mock_url, exc=exc)
-            with self.assertRaisesRegexp(exc, '^$'):
+            with self.assertRaisesRegex(exc, '^$'):
                 Bear.download_cached_file(
                     mock_url, 'test.html')
 
     def test_download_cached_file_status_code_error(self):
         exc = requests.exceptions.HTTPError
-        with self.assertRaisesRegexp(exc, '418 Client Error'):
+        with self.assertRaisesRegex(exc, '418 Client Error'):
             Bear.download_cached_file(
                 'http://httpbin.org/status/418', 'test.html')
 
