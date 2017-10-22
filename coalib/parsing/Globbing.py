@@ -169,11 +169,11 @@ def translate(pattern):
                 regex += '.*'
             # On Windows, '*' matches everything but the filesystem
             # separators '/' and '\'.
-            elif platform.system() == 'Windows':  # pragma: nocover (Windows)
+            elif platform.system() == 'Windows':  # pragma posix: no cover
                 regex += '[^/\\\\]*'
             # On all other (~Unix-) platforms, '*' matches everything but the
             # filesystem separator, most likely '/'.
-            else:
+            else:  # pragma nt: no cover
                 regex += '[^' + re.escape(os.sep) + ']*'
         elif char == '?':
             regex += '.'
@@ -191,7 +191,7 @@ def translate(pattern):
                 regex += '[' + sequence + ']'
         else:
             regex = regex + re.escape(char)
-    return regex + '\\Z(?ms)'
+    return '(?ms)' + regex + '\\Z'
 
 
 def fnmatch(name, globs):
@@ -309,7 +309,7 @@ def relative_flat_glob(dirname, basename):
     """
     if os.path.exists(os.path.join(dirname, basename)):
         return [basename]
-    return[]
+    return []
 
 
 def relative_recursive_glob(dirname, pattern):

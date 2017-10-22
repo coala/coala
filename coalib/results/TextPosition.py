@@ -31,3 +31,51 @@ class TextPosition:
     @property
     def column(self):
         return self._column
+
+    def __le__(self, other):
+        """
+        Test whether ``self`` is behind or equals the other
+        ``TextPosition``.
+
+        If the column in a ``TextPosition`` is ``None``, consider
+        whole line. If the line in a ``TextPosition`` is ``None``,
+        consider whole file.
+
+        :param other: ``TextPosition`` to compare with.
+        :return:      Whether this ``TextPosition`` is behind the other
+                      one or the same.
+        """
+        if self.line is None or other.line is None:
+            return True
+        if self.line == other.line:
+            return (True
+                    if self.column is None or
+                    other.column is None
+                    else
+                    self.column <= other.column)
+        else:
+            return self.line < other.line
+
+    def __ge__(self, other):
+        """
+        Test whether ``self`` is ahead of or equals the
+        other ``TextPosition``.
+
+        If the column in a ``TextPosition`` is ``None``, consider
+        whole line. If the line in a ``TextPosition`` is ``None``,
+        consider whole file.
+
+        :param other: ``TextPosition`` to compare with.
+        :return:      Whether this ``TextPosition`` is ahead of the other
+                      one or the same.
+        """
+        if self.line is None or other.line is None:
+            return True
+        if self.line == other.line:
+            return (True
+                    if self.column is None or
+                    other.column is None
+                    else
+                    self.column >= other.column)
+        else:
+            return self.line > other.line

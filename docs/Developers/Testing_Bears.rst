@@ -124,9 +124,9 @@ passed.
             self.check_results(
                 self.uut,
                 file,
-                Result.from_values("TooManyLinesBear",
-                                   "Too many lines"
-                                   settings={'max_number_of_lines': int=20}))
+                [Result.from_values('TooManyLinesBear',
+                                    'Too many lines')],
+                settings={'max_number_of_lines': int=20})
 
 ``check_results`` asserts if your bear results match the actual
 results on execution on CLI. Just like the above example, we need to ``setUp``
@@ -141,3 +141,7 @@ A Final Note
 ``LocalBearTestHelper`` is written to ease off testing for bears. Make sure
 that your tests have 100% coverage and zero redundancy. Use ``check_results``
 as much as possible to test your bears.
+
+Glossary
+--------
+- ``uut`` - Unit Under Test

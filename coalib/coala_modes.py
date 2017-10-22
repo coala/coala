@@ -1,4 +1,4 @@
-def mode_normal(console_printer, log_printer):
+def mode_normal(console_printer, log_printer, args, debug=False):
     import functools
 
     from coalib.coala_main import run_coala
@@ -14,12 +14,14 @@ def mode_normal(console_printer, log_printer):
         acquire_settings=acquire_settings,
         print_section_beginning=partial_print_sec_beg,
         nothing_done=nothing_done,
-        console_printer=console_printer)
+        console_printer=console_printer,
+        args=args,
+        debug=debug)
 
     return exitcode
 
 
-def mode_non_interactive(console_printer, args):
+def mode_non_interactive(console_printer, args, debug=False):
     import functools
 
     from coalib.coala_main import run_coala
@@ -33,12 +35,14 @@ def mode_non_interactive(console_printer, args):
         print_results=print_results_no_input,
         print_section_beginning=partial_print_sec_beg,
         force_show_patch=True,
-        console_printer=console_printer)
+        console_printer=console_printer,
+        args=args,
+        debug=debug)
 
     return exitcode
 
 
-def mode_json(args):
+def mode_json(args, debug=False):
     import json
 
     from coalib.coala_main import run_coala
@@ -46,8 +50,6 @@ def mode_json(args):
     from coalib.misc.Exceptions import get_exitcode
     from coalib.output.Logging import configure_json_logging
     from coalib.output.JSONEncoder import create_json_encoder
-    from coalib.output.printers.LogPrinter import LogPrinter
-    from coalib.settings.ConfigurationGathering import get_filtered_bears
 
     if args.log_json:
         log_stream = configure_json_logging()
@@ -57,8 +59,10 @@ def mode_json(args):
 
     if args.show_bears:
         try:
-            local_bears, global_bears = get_filtered_bears(
-                args.filter_by_language, LogPrinter())
+            from coalib.parsing.FilterHelper import apply_filter
+
+            local_bears, global_bears = apply_filter(
+                'language', args.filter_by_language)
             bears = inverse_dicts(local_bears, global_bears)
             for bear, _ in sorted(bears.items(),
                                   key=lambda bear_tuple:
@@ -67,7 +71,7 @@ def mode_json(args):
         except BaseException as exception:  # pylint: disable=broad-except
             return get_exitcode(exception)
     else:
-        results, exitcode, _ = run_coala()
+        results, exitcode, _ = run_coala(args=args, debug=debug)
 
     retval = {'bears': results} if args.show_bears else {'results': results}
 
@@ -93,10 +97,10 @@ def mode_json(args):
     return 0 if args.show_bears else exitcode
 
 
-def mode_format():
+def mode_format(args, debug=False):
     from coalib.coala_main import run_coala
     from coalib.output.ConsoleInteraction import print_results_formatted
 
     _, exitcode, _ = run_coala(
-            print_results=print_results_formatted)
+            print_results=print_results_formatted, args=args, debug=debug)
     return exitcode

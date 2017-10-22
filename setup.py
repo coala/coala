@@ -15,7 +15,10 @@ from coalib import VERSION, assert_supported_version, get_version
 from coalib.misc.BuildManPage import BuildManPage
 
 try:
-    locale.getlocale()
+    lc = locale.getlocale()
+    pf = platform.system()
+    if pf != 'Windows' and lc == (None, None):
+        locale.setlocale(locale.LC_ALL, 'C.UTF-8')
 except (ValueError, UnicodeError):
     locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 

@@ -1,7 +1,7 @@
 set -e
 set -x
 
-if [[ $CIRCLE_NODE_TOTAL < 2 ]]; then
+if [[ $CIRCLE_NODE_TOTAL != 2 ]]; then
   echo "ERROR: You must allocate 2 containers for the tests to run properly!"
   exit 1
 fi
@@ -21,7 +21,6 @@ for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
   pyenv local $dep_version
   python --version
-  source .misc/env_variables.sh
 
   pip install -r test-requirements.txt
   pip install -r requirements.txt
@@ -30,5 +29,3 @@ done
 if [ "$CIRCLE_NODE_INDEX" = "0" ] ; then
   pip install -r docs-requirements.txt
 fi
-
-bash .misc/deps.nltk.sh

@@ -72,6 +72,11 @@ The review process for coala is as follows:
     - ``reack commit_SHA`` in case the commit was acknowledged before, was
       rebased without conflicts and the rebase did not introduce logical
       problems.
+
+    .. note::
+
+        Only one acknowledgment is needed per commit i.e ``ack commit_SHA``.
+
 4. If the commits are not linearly mergeable into master, rebase and go
    to step one.
 5. All commits are acknowledged and fit linearly onto master. All
@@ -91,6 +96,8 @@ request but should ideally pass for every commit.
 For the Reviewers
 -----------------
 
+-  All the pull requests waiting to be reviewed can be found at :
+   https://coala.io/review.
 -  Generated code is not intended to be reviewed. Instead rather try to
    verify that the generation was done right. The commit message should
    expose that.

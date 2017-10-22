@@ -30,28 +30,27 @@ automatically executed by running:
 
 ::
 
-    $ py.test
+    $ pytest
 
 There's only one constraint:
 The name of the test file has to end with ``Test.py`` (for example
 ``MyCustomTest.py``, but not ``MyCustomTestSuite.py``).
 
 .. note::
-    If ``py.test`` seems to give errors, try running ``python3 -m pytest``
+    If ``pytest`` seems to give errors, try running ``python3 -m pytest``
     instead.
 
-.. note::
 
     Often you don't want to run all available tests. To run your
     specific one, type (in the coala root folder):
 
     .. code:: shell
 
-        $ py.test -k <your-test>
+        $ pytest -k <your-test>
 
     You can even give partial names or queries like "not MyCustomTest"
-    to not run a specific test. More information can be got with
-    ``py.test -h``
+    to not run a specific test. More information is shown with
+    ``pytest -h``
 
 Coming to the test file structure. Every test script starts with your
 imports. According to the coala code style (and pep8 style) we first do
@@ -129,7 +128,7 @@ So an example test that succeeds would be:
 
 
     The branch coverage can be measured locally with the
-    ``py.test --cov`` command.
+    ``pytest --cov`` command.
 
     .. seealso::
 
@@ -187,7 +186,7 @@ as a kickstart for test-writing.
 
 Put the code under the desired folder inside ``tests``,
 modify it to let it test your stuff and run the test from
-the coala root folder ``py.test``.
+the coala root folder using ``pytest``.
 
 .. code:: python
 
@@ -214,7 +213,3 @@ the coala root folder ``py.test``.
         def test_case1(self):
             # A test method. Put your test code here.
             pass
-
-Glossary
---------
-- ``uut`` - Unit Under Test

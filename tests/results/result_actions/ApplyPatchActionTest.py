@@ -115,7 +115,8 @@ class ApplyPatchActionTest(unittest.TestCase):
                       file_diff_dict)
             self.assertFalse(isfile(f_a+'.renamed.orig'))
 
-            file_dict = {f_a+'.renamed': open(f_a+'.renamed').readlines()}
+            with open(f_a+'.renamed') as fh:
+                file_dict = {f_a+'.renamed': fh.readlines()}
 
             self.assertEqual(file_dict, expected_file_dict)
             # Recreate file so that context manager make_temp() can delete it

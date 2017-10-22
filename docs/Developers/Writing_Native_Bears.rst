@@ -76,9 +76,42 @@ to find it. We can do that with the ``-d`` (``--bear-dirs``) argument:
     argument ``--flush-cache`` when running coala) if you run a new bear on a
     file which has been previously analyzed (by coala).
 
-You should now see the debug message for our sample file.
+You should now see an output like this on your command line:
 
-The Bear class also supports ``warn`` and ``err``.
+::
+
+    [WARNING][15:07:39] Default coafile '.coafile' not found!
+    Here's what you can do:
+    * add `--save` to generate a config file with your current options
+    * add `-I` to suppress any use of config files
+    [DEBUG][15:07:39] Platform Linux -- Python 3.5.2, coalib
+    0.12.0.dev20170626132008
+    [DEBUG][15:07:39] The file cache was successfully flushed.
+    [DEBUG][15:07:39] Files that will be checked:
+    /home/LordVoldemort/programs/coa_dir/coala-tutorial/src/main.c
+    [DEBUG][15:07:40] coala is run only on changed files, bears' log
+    messages from previous runs may not appear. You may use the
+    `--flush-cache` flag to see them.
+    [DEBUG][15:07:40] Running bear HelloWorldBear...
+    [DEBUG][15:07:40] Hello World! Checking file /home/LordVoldemort/
+    programs/coa_dir/coala-tutorial/src/main.c .
+
+    Notice that the last ``[DEBUG]`` message is what was coded in
+    ``HelloWorldBear.py``. All the other messages are inherited from the
+    ``LocalBear`` class or run by the code responsible for executing the
+    bear.
+
+.. note::
+
+    The first ``WARNING`` message is because our directory, does not
+    contain a ``.coafile``. If you have followed the instructions in
+    our `main tutorial`_, you will have a ``.coafile`` in your working
+    directory. Its best if you delete that file before working on this
+    tutorial, else you will see a bunch of other outputs from other bears
+    as well.
+
+The Bear class also supports ``warn`` and ``err`` to create ``WARNING`` and
+``ERROR`` messages respectively.
 
 Communicating with the User
 ---------------------------
@@ -123,8 +156,42 @@ Try executing it:
 
     coala -f=src/\*.c -d=bears -b=CommunicationBear -L=DEBUG --flush-cache
 
-Hey, we'll get asked for the user\_input! Wasn't that easy? Go ahead,
+Hey, we'll get asked for the user\_input!
+
+::
+
+    [WARNING][15:20:18] Default coafile '.coafile' not found!
+    Here's what you can do:
+    * add `--save` to generate a config file with your current options
+    * add `-I` to suppress any use of config files
+    Please enter a value for the setting "user_input" (No description given.)
+    needed by CommunicationBear for section "cli":
+
+Wasn't that easy? Go ahead,
 enter something and observe the output.
+
+::
+
+    Avada Kedavra
+    [DEBUG][15:22:55] Platform Linux -- Python 3.5.2, coalib
+    0.12.0.dev20170626132008
+    [DEBUG][15:22:55] The file cache was successfully flushed.
+    [DEBUG][15:22:55] Files that will be checked:
+    /home/LordVoldemort/programs/coa_dir/coala-tutorial/src/main.c
+    [DEBUG][15:22:55] coala is run only on changed files, bears' log messages
+    from previous runs may not appear. You may use the `--flush-cache` flag to
+    see them.
+    [DEBUG][15:22:55] Running bear CommunicationBear...
+    [DEBUG][15:22:55] Got 'Avada Kedavra' as user input of type <class 'str'>.
+
+    **** CommunicationBear [Section: cli] ****
+
+    !    ! [Severity: NORMAL]
+    !    ! A hello world result.
+    [    ] Do (N)othing
+    [    ] (O)pen file
+    [    ] Add (I)gnore comment
+    [    ] Enter number (Ctrl-D to exit):
 
 So, what did coala do here?
 
@@ -169,7 +236,7 @@ we want to run it locally. To install our NewBear:
 
 ::
 
-    pip install -U <path/to/coala-bears>
+    pip3 install -U <path/to/coala-bears>
 
 Our NewBear is installed.
 
@@ -194,6 +261,10 @@ The Setting does support some very basic types:
 -  List of strings (``list``, values will be split by comma)
 -  Dict of strings (``dict``, values will be split by comma and colon)
 
+You can use shortcuts for basic types, ``str_list`` for strings,
+``int_list`` for ints, ``float_list`` for floats and ``bool_list`` for
+boolean values.
+
 If you need another type, you can write the conversion function yourself
 and use this function as the annotation (if you cannot convert value, be
 sure to throw ``TypeError`` or ``ValueError``). We've provided a few
@@ -210,6 +281,8 @@ advanced conversions for you:
    conversion to all keys, the ``value_type`` conversion to all values
    and uses the ``default`` value for all unset keys. Use ``typed_dict``
    if the order is irrelevant for you.
+-  ``coalib.settings.Setting.language``, converts into coala ``Language``
+   object.
 
 Results
 -------
@@ -438,7 +511,8 @@ Other Metadata
 ~~~~~~~~~~~~~~
 
 Other metadata such as ``AUTHORS``, ``AUTHORS_EMAILS``, ``MAINTAINERS``,
-``MAINTAINERS_EMAILS``, ``LICENSE``, ``ASCIINEMA_URL`` can be used as follows:
+``MAINTAINERS_EMAILS``, ``LICENSE``, ``ASCIINEMA_URL``, ``SEE_MORE``
+can be used as follows:
 
 .. code:: python
 
@@ -449,6 +523,76 @@ Other metadata such as ``AUTHORS``, ``AUTHORS_EMAILS``, ``MAINTAINERS``,
         MAINTAINERS_EMAILS = {'catelyn_stark@gmail.com'}
         LICENSE = 'AGPL-3.0'
         ASCIINEMA_URL = 'https://asciinema.org/a/80761'
+        SEE_MORE = 'https://www.pylint.org'
 
+Aspect Bear
+-----------
+
+Aspect is a feature in coala that make configuring coala in project more easy
+and language agnostic. For more detail about aspect, see cEP-0005 in
+https://github.com/coala/cEPs/blob/master/cEP-0005.md.
+
+An aspect-compliant bear MUST:
+
+1. Declare list of aspect it can fix and detected. Note that the aspect MUST be
+   a leaf aspect. You can see list of supported aspect here
+   https://github.com/coala/aspect-docs.
+2. Declare list of supported language. See list of supported language
+   https://github.com/coala/coala/tree/master/coalib/bearlib/languages/definitions.
+3. Map setting to its equivalent aspect or taste using ``map_setting_to_aspect``
+   decorator.
+4. Yield result with relevant aspect.
+
+For example, let's make an aspect bear named SpellingCheckBear.
+
+.. code:: python
+
+    from coalib.bearlib.aspects import map_setting_to_aspect
+    from coalib.bearlib.aspects.Spelling import (
+        DictionarySpelling,
+        OrgSpecificWordSpelling,
+    )
+    from coalib.bears.LocalBear import LocalBear
+
+
+    class SpellingCheckBear(
+            LocalBear,
+            aspect={
+                'detect': [
+                    DictionarySpelling,
+                    OrgSpecificWordSpelling,
+                ],
+            },
+            languages=['Python']):
+
+        @map_setting_to_aspect(
+            use_standard_dictionary=DictionarySpelling,
+            additional_dictionary_words=OrgSpecificWordSpelling.specific_word,
+        )
+        def run(self,
+                filename,
+                file,
+                use_standard_dictionary: bool=True,
+                additional_dictionary_words: list=None):
+            """
+            Detect wrong spelling.
+
+            :param use_standard_dictionary:     Use standard English dictionary.
+            :param additional_dictionary_words: Additional list of word.
+            """
+            if use_standard_dictionary:
+                # Imagine this is where we save our standard dictionary.
+                dictionary_words = ['lorem', 'ipsum']
+            else:
+                dictionary_words = []
+            if additional_dictionary_words:
+                dictionary_words += additional_dictionary_words
+
+            for word in file.split():
+                if word not in dictionary_words:
+                    yield self.new_result(
+                        message='Wrong spelling in word `{}`'.format(word),
+                        aspect=DictionarySpelling('py'),
+                    )
 
 .. _main tutorial: https://docs.coala.io/en/latest/Users/Tutorial.html

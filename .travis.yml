@@ -11,10 +11,20 @@ matrix:
     # Restore matrix job entry from d2d67fab to test OSX
     - python: 2.7
       env: UNSUPPORTED=true
+      script: .misc/check_unsupported.sh
     - python: 3.3
       env: UNSUPPORTED=true
+      script: .misc/check_unsupported.sh
 
-cache: pip
+env:
+  global:
+    - PATH="$PATH:$TRAVIS_BUILD_DIR/node_modules/.bin"
+
+cache:
+  pip: true
+  directories:
+    - node_modules
+    - docs/_build
 
 addons:
   apt:
@@ -25,8 +35,6 @@ addons:
 
 before_install:
   - if [[ $TRAVIS_OS_NAME == osx ]]; then TRAVIS_PYTHON_VERSION=3.5; fi
-  - export TRAVIS_PYTHON_VERSION_MAJOR=${TRAVIS_PYTHON_VERSION%.[0-9]}
-  - export TRAVIS_PYTHON_VERSION_MINOR=${TRAVIS_PYTHON_VERSION#[0-9].}
 
   - >
     if [[ $TRAVIS_OS_NAME == osx ]]; then
@@ -35,8 +43,13 @@ before_install:
       sudo ln -sf $(which pip3) $(which pip 2>/dev/null || echo /usr/bin/pip)
     fi
 
-  # always use latest versions of pip and setuptools
-  - pip install pip setuptools -U
+  # Use pip 9, so that setuptools can be downgraded.
+  # https://github.com/coala/coala/issues/4708
+  # Apart from builds with python 2.7 and 3.5, it installs setuptools
+  # twice. So, it is required to uninstall one version manually.
+  - pip uninstall setuptools --yes
+  - pip install pip==9 setuptools==17
+  - python .misc/check_setuptools.py
 
   # https://github.com/coala/coala/issues/3183
   # Travis automatically installs the `requirements.txt` in "install" stage
@@ -48,31 +61,32 @@ before_install:
   # requirements.txt automatically.
   - if [[ $TRAVIS_OS_NAME == osx ]]; then pip install -r requirements.txt; fi
 
+  # For bears in .coafile requiring npm dependencies
+  - npm install
+
 before_script:
   # Restore the original requirements.txt
   - mv requirements.orig requirements.txt
+  - python .misc/check_setuptools.py
 
 script:
+  - py.test
+  - python setup.py bdist_wheel
+  - pip install ./dist/coala-*.whl
+  - pip install coala-bears[alldeps] --pre -U
+  # https://github.com/coala/coala-bears/issues/1037
   - >
-    if [[ $TRAVIS_PYTHON_VERSION_MINOR < 4 || $TRAVIS_PYTHON_VERSION_MAJOR == 2 ]]; then
-      coverage run setup.py install | grep -q 'coala supports only python 3.4 or later'
-    else
-      set -e
-      bash .misc/tests.sh
-      python setup.py bdist_wheel
-      pip install ./dist/coala-*.whl
-      pip install coala-bears[alldeps] --pre -U
-      # https://github.com/coala/coala-bears/issues/1037
-      if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
-        python3 -m nltk.downloader punkt maxent_treebank_pos_tagger averaged_perceptron_tagger
-      else
-        sed -i.bak '/bears = GitCommitBear/d' .coafile
-      fi
-      coala --non-interactive
-      make -C docs clean
-      python setup.py docs
+    if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
+      sed -i.bak '/bears = GitCommitBear/d' .coafile
     fi
-  - bash .misc/deploy.coverage.sh
+  - coala --non-interactive
+  - python setup.py docs
+
+after_success:
+  - codecov
+
+after_failure:
+  - codecov
 
 notifications:
   email: false

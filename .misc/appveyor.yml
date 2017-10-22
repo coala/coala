@@ -9,41 +9,46 @@ environment:
     - PYTHON: "C:\\Python34"
       PYTHON_VERSION: "3.4"
       PYTHON_ARCH: "32"
+      LLVM_VERSION: 3.4.1
 
     - PYTHON: "C:\\Python34-x64"
       PYTHON_VERSION: "3.4"
       PYTHON_ARCH: "64"
+      LLVM_VERSION: 3.4.1
 
 cache:
-  - "C:\\wheels"
+  - "C:\\pip_cache"
 
-branches:  # Only build official branches, PRs are built anyway.
-  only:
-    - master
-    - /release.*/
+branches:
+  except:
+    - /^sils\/.*/
 
 install:
   # Prepend newly installed Python to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
-  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - set PATH=C:\LLVM\bin;%PYTHON%;%PYTHON%\Scripts;%PATH%;C:\Program Files\Git\mingw64\bin
 
   # Check that we have the expected version and architecture for Python
   - "python --version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
 
-  - "%CMD_IN_ENV% pip -q install wheel"
-  # Create c:/wheels if it does not exist.
-  - ps: If ( -not (Test-Path C:\\wheels) )  { mkdir C:\\wheels }
-  - ECHO "Cached wheels:"
-  - ps: "ls \"C:\\wheels\""
-  - "%CMD_IN_ENV% pip -q wheel --use-wheel --wheel-dir C:\\wheels --find-links C:\\wheels -r test-requirements.txt"
-  - "%CMD_IN_ENV% pip -q wheel --use-wheel --wheel-dir C:\\wheels --find-links C:\\wheels -r requirements.txt"
-  - "%CMD_IN_ENV% pip -q install --find-links=C:\\wheels -r test-requirements.txt"
-  - "%CMD_IN_ENV% pip -q install --find-links=C:\\wheels -r requirements.txt"
+  - "%CMD_IN_ENV% pip install --cache-dir=C:\\pip_cache -r requirements.txt -r test-requirements.txt"
+
+  - curl -fsSL http://llvm.org/releases/%LLVM_VERSION%/LLVM-%LLVM_VERSION%-win32.exe -o LLVM.exe
+  - 7z x LLVM.exe -oC:\LLVM
 
 build: false  # Not a C# project, build stuff at the test step instead.
 
 test_script:
-  - "%CMD_IN_ENV% python -m pytest --cov"
+  - "%CMD_IN_ENV% py.test"
   - "%CMD_IN_ENV% python setup.py install"
+
+on_success:
+  - codecov
+
+on_failure:
+  - codecov
+
+matrix:
+  fast_finish: true

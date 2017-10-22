@@ -84,12 +84,12 @@ class ResultTest(unittest.TestCase):
             'f_b': ['1', '2', '3']
         }
         expected_file_dict = {
-            'f_a': ['1', '3_changed'],
+            'f_a': ['1\n', '3_changed'],
             'f_b': ['1', '2', '3']
         }
         diff = Diff(file_dict['f_a'])
         diff.delete_line(2)
-        diff.change_line(3, '3', '3_changed')
+        diff.modify_line(3, '3_changed')
 
         uut = Result('origin', 'msg', diffs={'f_a': diff})
         uut.apply(file_dict)
@@ -103,8 +103,8 @@ class ResultTest(unittest.TestCase):
             'f_c': ['1', '2', '3']
         }
         expected_file_dict = {
-            'f_a': ['1', '3_changed'],
-            'f_b': ['1', '2', '3_changed'],
+            'f_a': ['1\n', '3_changed'],
+            'f_b': ['1\n', '2\n', '3_changed'],
             'f_c': ['1', '2', '3']
         }
 
@@ -113,11 +113,11 @@ class ResultTest(unittest.TestCase):
         uut1 = Result('origin', 'msg', diffs={'f_a': diff})
 
         diff = Diff(file_dict['f_a'])
-        diff.change_line(3, '3', '3_changed')
+        diff.modify_line(3, '3_changed')
         uut2 = Result('origin', 'msg', diffs={'f_a': diff})
 
         diff = Diff(file_dict['f_b'])
-        diff.change_line(3, '3', '3_changed')
+        diff.modify_line(3, '3_changed')
         uut3 = Result('origin', 'msg', diffs={'f_b': diff})
 
         uut1 += uut2 + uut3
@@ -135,6 +135,20 @@ class ResultTest(unittest.TestCase):
                                  column=1,
                                  end_line=2,
                                  end_column=2)
+        self.assertTrue(uut.overlaps(overlapping_range))
+        self.assertTrue(uut.overlaps([overlapping_range]))
+        self.assertFalse(uut.overlaps(nonoverlapping_range))
+
+        overlapping_range = SourceRange.from_values('file1', 1, None, 1, None)
+        nonoverlapping_range = SourceRange.from_values(
+            'file2', 1, None, 1, None)
+        uut = Result.from_values('origin',
+                                 'message',
+                                 file='file1',
+                                 line=1,
+                                 column=1,
+                                 end_line=1,
+                                 end_column=20)
         self.assertTrue(uut.overlaps(overlapping_range))
         self.assertTrue(uut.overlaps([overlapping_range]))
         self.assertFalse(uut.overlaps(nonoverlapping_range))
@@ -163,13 +177,17 @@ class ResultTest(unittest.TestCase):
         }
         diff = Diff(file_dict['f_a'])
         diff.delete_line(2)
-        diff.change_line(3, '3', '3_changed')
+        diff.modify_line(3, '3_changed')
         uut = Result('origin', 'msg', diffs={'f_a': diff}).__json__(True)
         self.assertEqual(uut['diffs']['f_a'].__json__(), '--- \n'
                                                          '+++ \n'
                                                          '@@ -1,3 +1,2 @@\n'
-                                                         ' 1-2-3+3_changed')
+                                                         ' 1\n'
+                                                         '-2\n'
+                                                         '-3\n'
+                                                         '+3_changed')
         JSONEncoder = create_json_encoder(use_relpath=True)
         json_dump = json.dumps(diff, cls=JSONEncoder, sort_keys=True)
         self.assertEqual(
-            json_dump, '"--- \\n+++ \\n@@ -1,3 +1,2 @@\\n 1-2-3+3_changed"')
+            json_dump,
+            '"--- \\n+++ \\n@@ -1,3 +1,2 @@\\n 1\\n-2\\n-3\\n+3_changed"')

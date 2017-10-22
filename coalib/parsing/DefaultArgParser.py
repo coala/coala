@@ -2,6 +2,7 @@ import argparse
 
 from coalib.misc import Constants
 from coalib.collecting.Collectors import get_all_bears_names
+from coalib.parsing.FilterHelper import available_filters
 
 
 class CustomFormatter(argparse.RawDescriptionHelpFormatter):
@@ -100,7 +101,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
              '"Message: {message}"; possible placeholders: '
              'id, origin, file, line, end_line, column, end_column, '
              'severity, severity_str, message, message_base, '
-             'message_arguments, affected_code')
+             'message_arguments, affected_code, source_lines')
 
     config_group = arg_parser.add_argument_group('Configuration')
 
@@ -166,7 +167,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
     outputs_group.add_argument(
         '-L', '--log-level', nargs=1,
         choices=['ERROR', 'INFO', 'WARNING', 'DEBUG'], metavar='ENUM',
-        help='set log output level to ERROR/INFO/WARNING/DEBUG, '
+        help='set log output level to DEBUG/INFO/WARNING/ERROR, '
              'defaults to INFO')
 
     outputs_group.add_argument(
@@ -185,6 +186,13 @@ To run coala without user interaction, run the `coala --non-interactive`,
     outputs_group.add_argument(
         '-l', '--filter-by-language', nargs='+', metavar='LANG',
         help='filters `--show-bears` by the given languages')
+
+    outputs_group.add_argument(
+        '--filter-by', action='append', nargs='+',
+        metavar=('FILTER_NAME FILTER_ARG', 'FILTER_ARG'),
+        help='filters `--show-bears` by the filter given as argument. '
+             'Available filters: {}'.format(', '.join(sorted(
+                 available_filters))))
 
     outputs_group.add_argument(
         '-p', '--show-capabilities', nargs='+', metavar='LANG',
@@ -230,11 +238,23 @@ To run coala without user interaction, run the `coala --non-interactive`,
         '-n', '--no-orig', const=True, action='store_const',
         help="don't create .orig backup files before patching")
 
-    try:  # pragma: no cover
+    misc_group.add_argument(
+        '-A', '--single-action', const=True, action='store_const',
+        help='apply a single action for all results')
+
+    misc_group.add_argument(
+        '--debug', const=True, action='store_const',
+        help='run coala in debug mode, starting ipdb, '
+             'which must be separately installed, '
+             'on unexpected internal exceptions '
+             '(implies --verbose)')
+
+    try:
         # Auto completion should be optional, because of somewhat complicated
         # setup.
         import argcomplete
         argcomplete.autocomplete(arg_parser)
-    except ImportError:
+    except ImportError:  # pragma: no cover
         pass
+
     return arg_parser

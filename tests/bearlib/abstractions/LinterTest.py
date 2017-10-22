@@ -5,7 +5,6 @@ import re
 import sys
 import unittest
 from unittest.mock import ANY, Mock
-from unittest.case import skipIf
 
 from coalib.bearlib.abstractions.Linter import linter
 from coalib.results.Diff import Diff
@@ -13,6 +12,8 @@ from coalib.results.Result import Result
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Section import Section
+
+WINDOWS = platform.system() == 'Windows'
 
 
 def get_testfile_name(name):
@@ -29,7 +30,7 @@ def get_testfile_name(name):
 
 class LinterComponentTest(unittest.TestCase):
 
-    PARAM_TYPE_ERROR_RE = '[a-z_]+ must be an instance'
+    PARAM_TYPE_ERROR_RE = '[A-Za-z_]+ must be an instance of one of .*'
 
     # Using `object` instead of an empty class results in inheritance problems
     # inside the linter decorator.
@@ -38,15 +39,18 @@ class LinterComponentTest(unittest.TestCase):
 
     class RootDirTestLinter:
 
+        ROOT_DIR = 'C:\\' if WINDOWS else '/'
+        WRONG_DIR_MSG = ('The linter doesn\'t run the command in '
+                         'the right directory!')
+
         def create_arguments(self, *args, **kwargs):
-            return tuple()
+            return ('/c', 'cd') if WINDOWS else tuple()
 
         def get_config_dir(self):
             return '/'
 
         def process_output(self, output, *args, **kwargs):
-            assert output == '/\n', ("The linter doesn't run the command in "
-                                     'the right directory!')
+            assert output == '{}\n'.format(self.ROOT_DIR), self.WRONG_DIR_MSG
 
     class ManualProcessingTestLinter:
 
@@ -57,92 +61,105 @@ class LinterComponentTest(unittest.TestCase):
         self.section = Section('TEST_SECTION')
 
     def test_decorator_invalid_parameters(self):
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid keyword arguments provided: '
+                                    "'ABC', 'invalid_arg'"):
             linter('some-executable', invalid_arg=88,
                    ABC=2000)(self.EmptyTestLinter)
-        self.assertEqual(
-            str(cm.exception),
-            "Invalid keyword arguments provided: 'ABC', 'invalid_arg'")
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid keyword arguments provided: '
+                                    "'diff_severity'"):
             linter('some-executable',
                    diff_severity=RESULT_SEVERITY.MAJOR)(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         "Invalid keyword arguments provided: 'diff_severity'")
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid keyword arguments provided: '
+                                    "'result_message'"):
             linter('some-executable',
                    result_message='Custom message')(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         'Invalid keyword arguments provided: '
-                         "'result_message'")
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid keyword arguments provided: '
+                                    "'output_regex'"):
             linter('some-executable',
                    output_format='corrected',
                    output_regex='.*')(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         "Invalid keyword arguments provided: 'output_regex'")
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid keyword arguments provided: '
+                                    "'severity_map'"):
             linter('some-executable',
                    output_format='corrected',
                    severity_map={})(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         "Invalid keyword arguments provided: 'severity_map'")
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid keyword arguments provided: '
+                                    "'output_regex'"):
+            linter('some-executable',
+                   output_format='unified-diff',
+                   output_regex='.*')(self.EmptyTestLinter)
+
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid keyword arguments provided: '
+                                    "'severity_map'"):
+            linter('some-executable',
+                   output_format='unified-diff',
+                   severity_map={})(self.EmptyTestLinter)
+
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid keyword arguments provided: '
+                                    "'prerequisite_check_fail_message'"):
             linter('some-executable',
                    prerequisite_check_fail_message='some_message'
                    )(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         'Invalid keyword arguments provided: '
-                         "'prerequisite_check_fail_message'")
+
+        with self.assertRaisesRegex(ValueError,
+                                    'Incompatible arguments provided:'
+                                    "'use_stdin' and 'global_bear' can't both"
+                                    ' be True.'):
+            linter('some-executable',
+                   global_bear=True,
+                   use_stdin=True)(self.EmptyTestLinter)
 
     def test_decorator_invalid_states(self):
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'No output streams provided at all.'):
             linter('some-executable', use_stdout=False,
                    use_stderr=False)(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         'No output streams provided at all.')
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Invalid `output_format` specified.'):
             linter('some-executable',
                    output_format='INVALID')(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         'Invalid `output_format` specified.')
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    '`output_regex` needed when specified'
+                                    " output-format 'regex'."):
             linter('some-executable',
                    output_format='regex')(self.EmptyTestLinter)
-        self.assertEqual(
-            str(cm.exception),
-            "`output_regex` needed when specified output-format 'regex'.")
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Provided `severity_map` but named group '
+                                    '`severity` is not used '
+                                    'in `output_regex`.'):
             linter('some-executable',
                    output_format='regex',
                    output_regex='',
                    severity_map={})(self.EmptyTestLinter)
-        self.assertEqual(
-            str(cm.exception),
-            'Provided `severity_map` but named group `severity` is not used '
-            'in `output_regex`.')
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    '`process_output` not provided by given '
+                                    "class 'object'."):
             linter('some-executable')(object)
-        self.assertEqual(
-            str(cm.exception),
-            "`process_output` not provided by given class 'object'.")
 
-        with self.assertRaises(ValueError) as cm:
+        with self.assertRaisesRegex(ValueError,
+                                    'Found `process_output` already defined '
+                                    "by class 'ManualProcessingTestLinter', "
+                                    "but 'regex' output-format is "
+                                    'specified.'):
             (linter('some-executable', output_format='regex', output_regex='')
              (self.ManualProcessingTestLinter))
-        self.assertEqual(
-            str(cm.exception),
-            'Found `process_output` already defined by class '
-            "'ManualProcessingTestLinter', but 'regex' output-format is "
-            'specified.')
 
     def test_decorator_generated_default_interface(self):
         uut = linter('some-executable')(self.ManualProcessingTestLinter)
@@ -163,24 +180,24 @@ class LinterComponentTest(unittest.TestCase):
                    output_regex='(?P<severity>)',
                    severity_map={3: 0})(self.EmptyTestLinter)
 
-        with self.assertRaises(TypeError) as cm:
+        with self.assertRaisesRegex(TypeError,
+                                    "The value 'invalid' for key 'critical' "
+                                    'inside given severity-map is no valid '
+                                    'severity value.'):
             linter('some-executable',
                    output_format='regex',
                    output_regex='(?P<severity>)',
                    severity_map={'critical': 'invalid'})(self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         "The value 'invalid' for key 'critical' inside given "
-                         'severity-map is no valid severity value.')
 
-        with self.assertRaises(TypeError) as cm:
+        with self.assertRaisesRegex(TypeError,
+                                    'Invalid severity value 389274234 for key '
+                                    '\'critical-error\' inside given severity-'
+                                    'map.'):
             linter('some-executable',
                    output_format='regex',
                    output_regex='(?P<severity>)',
                    severity_map={'critical-error': 389274234})(
                    self.EmptyTestLinter)
-        self.assertEqual(str(cm.exception),
-                         'Invalid severity value 389274234 for key '
-                         "'critical-error' inside given severity-map.")
 
         # Other type-error test cases.
 
@@ -195,12 +212,24 @@ class LinterComponentTest(unittest.TestCase):
                    output_format='corrected',
                    result_message=list())(self.EmptyTestLinter)
 
-        with self.assertRaises(TypeError) as cm:
+        with self.assertRaisesRegex(TypeError,
+                                    'Invalid value for `diff_severity`: '
+                                    '999888777'):
             linter('some-executable',
                    output_format='corrected',
                    diff_severity=999888777)(self.EmptyTestLinter)
+
+        with self.assertRaisesRegex(TypeError, self.PARAM_TYPE_ERROR_RE):
+            linter('some-executable',
+                   output_format='unified-diff',
+                   result_message=list())(self.EmptyTestLinter)
+
+        with self.assertRaises(TypeError) as cm:
+            linter('some-executable',
+                   output_format='unified-diff',
+                   diff_severity=123456789)(self.EmptyTestLinter)
         self.assertEqual(str(cm.exception),
-                         'Invalid value for `diff_severity`: 999888777')
+                         'Invalid value for `diff_severity`: 123456789')
 
         with self.assertRaisesRegex(TypeError, self.PARAM_TYPE_ERROR_RE):
             linter('some-executable',
@@ -324,6 +353,107 @@ class LinterComponentTest(unittest.TestCase):
                (self.section, None))
 
         results = list(uut.process_output(fixed_string,
+                                          'some-file.c',
+                                          original))
+        self.assertEqual(len(results), 2)
+
+    def test_process_output_unified_diff_simple_modifications(self):
+        uut = (linter(sys.executable, output_format='unified-diff')
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        original = ['void main()  {', 'return 09;', '}']
+
+        diff = ['--- a/some-file.c',
+                '+++ b/some-file.c',
+                '@@ -1,3 +1,4 @@',
+                '-void main()  {',
+                '-return 09;',
+                '+void main()'
+                '+{',
+                '+       return 9;',
+                ' }']
+
+        diff_string = '\n'.join(diff)
+
+        results = list(uut.process_output(diff_string,
+                                          'some-file.c',
+                                          original))
+
+        diffs = list(Diff.from_unified_diff(diff_string, original).split_diff())
+
+        expected = [Result.from_values(uut,
+                                       'Inconsistency found.',
+                                       'some-file.c',
+                                       1, None, 2, None,
+                                       RESULT_SEVERITY.NORMAL,
+                                       diffs={'some-file.c': diffs[0]})]
+
+        self.assertEqual(results, expected)
+
+        uut = (linter(sys.executable,
+                      output_format='unified-diff',
+                      diff_distance=-1)
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        results = list(uut.process_output(diff_string,
+                                          'some-file.c',
+                                          original))
+        self.assertEqual(len(results), 2)
+
+    def test_process_output_unified_diff_incomplete_hunk(self):
+        uut = (linter(sys.executable, output_format='unified-diff')
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        original = ['void main()  {',
+                    '// This comment is missing',
+                    '// in the unified diff',
+                    'return 09;',
+                    '}']
+
+        diff = ['--- a/some-file.c',
+                '+++ b/some-file.c',
+                '@@ -1,1 +1,2 @@',
+                '-void main()  {',
+                '+void main()',
+                '+{',
+                '@@ -4,2 +5,2 @@',
+                '-return 09;',
+                '+       return 9;',
+                ' }']
+
+        diff_string = '\n'.join(diff)
+
+        results = list(uut.process_output(diff_string,
+                                          'some-file.c',
+                                          original))
+
+        diffs = list(Diff.from_unified_diff(diff_string, original).split_diff())
+
+        expected = [Result.from_values(uut,
+                                       'Inconsistency found.',
+                                       'some-file.c',
+                                       1, None, 1, None,
+                                       RESULT_SEVERITY.NORMAL,
+                                       diffs={'some-file.c': diffs[0]}),
+                    Result.from_values(uut,
+                                       'Inconsistency found.',
+                                       'some-file.c',
+                                       4, None, 4, None,
+                                       RESULT_SEVERITY.NORMAL,
+                                       diffs={'some-file.c': diffs[1]})]
+
+        self.assertEqual(results, expected)
+
+        uut = (linter(sys.executable,
+                      output_format='unified-diff',
+                      diff_distance=-1)
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        results = list(uut.process_output(diff_string,
                                           'some-file.c',
                                           original))
         self.assertEqual(len(results), 2)
@@ -601,21 +731,18 @@ class LinterComponentTest(unittest.TestCase):
             '<ManualProcessingTestLinter linter object \\(wrapping ' +
             re.escape(repr(sys.executable)) + '\\) at 0x[a-fA-F0-9]+>')
 
-    @skipIf(platform.system() == 'Windows',
-            '`pwd` does not exist in Windows-cmd and `cd` is a built-in '
-            'command which fails the executable-existence check from @linter.')
     def test_process_directory(self):
         """
         The linter shall run the process in the right directory so tools can
         use the current working directory to resolve import like things.
         """
-        uut = (linter('pwd')
+        uut = (linter('cmd' if WINDOWS else 'pwd')
                (self.RootDirTestLinter)
                (self.section, None))
         uut.run('', [])  # Does an assert in the output processing
 
 
-class LinterReallifeTest(unittest.TestCase):
+class LocalLinterReallifeTest(unittest.TestCase):
 
     def setUp(self):
         self.section = Section('REALLIFE_TEST_SECTION')
@@ -888,3 +1015,137 @@ class LinterReallifeTest(unittest.TestCase):
             "'not_supported_name' used. Is this a typo? If not, consider "
             "removing the capturing group to improve coala's "
             'performance.'])
+
+
+class GlobalLinterReallifeTest(unittest.TestCase):
+
+    def setUp(self):
+        self.section = Section('REALLIFE_TEST_SECTION')
+
+        self.test_program_path = get_testfile_name('test_linter.py')
+        self.test_program_regex = (
+            r'(?P<severity>\S+?): (?P<message>.*)')
+        self.test_program_severity_map = {'MAJOR': RESULT_SEVERITY.MAJOR}
+
+    def test_global_linter_bear(self):
+        create_arguments_mock = Mock()
+
+        class Handler:
+
+            @staticmethod
+            def create_arguments(config_file):
+                create_arguments_mock(config_file)
+                return ['MAJOR: Test Message']
+
+        uut = (linter('echo',
+                      global_bear=True,
+                      output_format='regex',
+                      output_regex=self.test_program_regex,
+                      severity_map=self.test_program_severity_map)
+               (Handler)
+               ({}, self.section, None))
+
+        results = list(uut.run())
+
+        expected = [Result(uut,
+                           'Test Message',
+                           severity=RESULT_SEVERITY.MAJOR)]
+
+        self.assertEqual(results, expected)
+        create_arguments_mock.assert_called_once_with(None)
+
+    def test_global_linter_bear_with_filename(self):
+        create_arguments_mock = Mock()
+
+        class Handler:
+
+            @staticmethod
+            def create_arguments(config_file):
+                create_arguments_mock(config_file)
+                return ['test.txt:MAJOR: Test Message']
+
+        output_regex = (
+            r'(?P<filename>\S+?):(?P<severity>\S+?): (?P<message>.*)'
+        )
+
+        uut = (linter('echo',
+                      global_bear=True,
+                      output_format='regex',
+                      output_regex=output_regex,
+                      severity_map=self.test_program_severity_map)
+               (Handler)
+               ({}, self.section, None))
+
+        results = list(uut.run())
+
+        expected = [
+            Result.from_values(
+                uut,
+                'Test Message',
+                'test.txt',
+                severity=RESULT_SEVERITY.MAJOR,
+            )
+        ]
+
+        self.assertEqual(results, expected)
+        create_arguments_mock.assert_called_once_with(None)
+
+    def test_global_linter_bear_use_stderr(self):
+        create_arguments_mock = Mock()
+
+        class Handler:
+
+            @staticmethod
+            def create_arguments(config_file):
+                create_arguments_mock(config_file)
+                return ['MAJOR: Test Message\nasd']
+
+        uut = (linter('echo',
+                      global_bear=True,
+                      output_format='regex',
+                      use_stderr=True,
+                      output_regex=self.test_program_regex,
+                      severity_map=self.test_program_severity_map)
+               (Handler)
+               ({}, self.section, None))
+
+        results = list(uut.run())
+        expected = [Result(uut,
+                           'Test Message',
+                           severity=RESULT_SEVERITY.MAJOR)]
+
+        self.assertEqual(results, expected)
+        create_arguments_mock.assert_called_once_with(None)
+
+    def test_create_arguments_not_implemented(self):
+        class Handler:
+            pass
+
+        uut = (linter('echo',
+                      global_bear=True,
+                      output_format='regex',
+                      output_regex=self.test_program_regex,
+                      severity_map=self.test_program_severity_map)
+               (Handler)
+               ({}, self.section, None))
+
+        with self.assertRaises(NotImplementedError):
+            list(uut.run())
+
+    def test_create_arguments_not_iterable(self):
+        class Handler:
+
+            @staticmethod
+            def create_arguments(config_file):
+                return None
+
+        uut = (linter('echo',
+                      global_bear=True,
+                      output_format='regex',
+                      output_regex=self.test_program_regex,
+                      severity_map=self.test_program_severity_map)
+               (Handler)
+               ({}, self.section, None))
+
+        with self.assertRaises(TypeError):
+            list(uut.run())

@@ -33,14 +33,14 @@ class CliParserTest(unittest.TestCase):
              'SECTION2.key2a=k2a',
              'invalid.=shouldnt_be_shown',
              '.=not_either',
-             '.key=only_in_default',
+             '.key=only_in_cli',
              'default_key1,default_key2=single_value',
              'default_key3=first_value,second_value'],
             arg_parser=self.test_arg_parser)
         expected_dict = {
-            'default': {
+            'cli': {
                 ('test', 'taken'),
-                ('key', 'only_in_default'),
+                ('key', 'only_in_cli'),
                 ('default_key1', 'single_value'),
                 ('default_key2', 'single_value'),
                 ('default_key3', 'first_value,second_value')},
@@ -49,7 +49,7 @@ class CliParserTest(unittest.TestCase):
             'section2': {
                 ('key2', 'only_this_value'),
                 ('key2a', 'k2a')}}
-        self.assertEqual(parsed_sections['default'].name, 'Default')
+        self.assertEqual(parsed_sections['cli'].name, 'cli')
         self.assertEqual(self.dict_from_sections(parsed_sections),
                          expected_dict)
 

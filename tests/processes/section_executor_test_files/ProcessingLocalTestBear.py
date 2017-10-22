@@ -4,7 +4,7 @@ from coalib.bears.LocalBear import LocalBear
 from coalib.results.Result import Result
 
 
-class ProcessingLocalTestBear(LocalBear):  # pragma: no cover
+class ProcessingLocalTestBear(LocalBear):
 
     def run(self, filename, file):
         # we need to test that the SectionExecutor holds back the global

@@ -44,3 +44,10 @@ coala-Links
 -   `coala Chat <https://gitter.im/coala/coala>`_
 -   :doc:`coala Newcomers' Guide<Newcomers_Guide>`
 -   :doc:`coala Review Process<Review>`
+
+Regex-Links
+-----------
+
+-   `Regex Overview/Tutorial <https://ryanstutorials.net/regular-expressions-tutorial/>`_
+-   `Regex Interactive Exercises <https://regexone.com/>`_
+-   `Python Regex Module Documentation <https://docs.python.org/3.6/library/re.html>`_

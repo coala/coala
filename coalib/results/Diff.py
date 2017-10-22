@@ -2,6 +2,8 @@ import copy
 import difflib
 import logging
 
+from unidiff import PatchSet
+
 from coalib.results.LineDiff import LineDiff, ConflictError
 from coalib.results.SourceRange import SourceRange
 from coalib.results.TextRange import TextRange
@@ -24,7 +26,8 @@ class Diff:
         :param delete:    True if file is set to be deleted.
         """
         self._changes = {}
-        self._file = file_list
+        self._file = list(file_list)
+        self._original = self._generate_linebreaks(self._file)
         self.rename = rename
         self.delete = delete
 
@@ -59,8 +62,7 @@ class Diff:
                     result.add_lines(a_index_1,
                                      file_array_2[b_index_1:b_index_2])
                 elif tag == 'replace':
-                    result.change_line(a_index_1+1,
-                                       file_array_1[a_index_1],
+                    result.modify_line(a_index_1+1,
                                        file_array_2[b_index_1])
                     result.add_lines(a_index_1+1,
                                      file_array_2[b_index_1+1:b_index_2])
@@ -68,6 +70,90 @@ class Diff:
                         result.delete_line(index)
 
         return result
+
+    @classmethod
+    def from_unified_diff(cls, unified_diff, original_file):
+        """
+        Creates a ``Diff`` object from given unified diff.
+
+        If the provided unified diff does not contain any patch,
+        the ``Diff`` object initialized from the original file is
+        returned.
+
+        :param unified_diff:  Unified diff string.
+        :param original_file: The contents of the original file
+                              (line-splitted).
+        :raises RuntimeError: Raised when the context lines or the
+                              lines to be removed do not match in
+                              the original file and the unified diff.
+        """
+        patch_set = PatchSet(unified_diff.splitlines())
+
+        diff = Diff(original_file)
+
+        if not patch_set:
+            return diff
+
+        # FIXME Handle patches consisting of changes in more than one file
+        file = patch_set[0]
+
+        for hunk in file:
+            file_line = hunk.source_start
+            hunk_iterator = iter(hunk)
+
+            try:
+                while True:
+                    line = next(hunk_iterator)
+                    source_code = str(line)[1:]
+                    if line.is_added:
+                        add_set = []
+                        # As ``Diff`` does not allow line additions to a
+                        # position more than one time, add all the
+                        # consecutive '+' lines at once.
+                        try:
+                            while line.is_added:
+                                add_set.append(source_code)
+                                line = next(hunk_iterator)
+                                source_code = str(line)[1:]
+
+                            diff.add_lines(file_line-1, add_set)
+
+                        except StopIteration:
+                            diff.add_lines(file_line-1, add_set)
+                            break
+
+                    original_line = original_file[file_line-1].rstrip('\n')
+
+                    if line.is_removed:
+                        if source_code != original_line:
+                            raise RuntimeError(
+                                'The line to delete does not match with '
+                                'the line in the original file. '
+                                'Line to delete: {!r}, '
+                                'Original line #{!r}: {!r}'.format(
+                                    source_code,
+                                    file_line,
+                                    original_line)
+                                )
+                        diff.delete_line(file_line)
+
+                    else:
+                        if source_code != original_line:
+                            raise RuntimeError(
+                                'Context lines do not match. '
+                                'Line from unified diff: {!r}, '
+                                'Original line #{!r}: {!r}'.format(
+                                    source_code,
+                                    file_line,
+                                    original_line)
+                                )
+
+                    file_line += 1
+
+            except StopIteration:
+                pass
+
+        return diff
 
     @classmethod
     def from_clang_fixit(cls, fixit, file):
@@ -97,7 +183,7 @@ class Diff:
         if not isinstance(line_nr, int):
             raise TypeError('line_nr needs to be an integer.')
         if line_nr < min_line:
-            raise ValueError('The given line number is not allowed.')
+            raise IndexError('The given line number is not allowed.')
 
         return self._changes.get(line_nr, LineDiff())
 
@@ -158,10 +244,9 @@ class Diff:
         """
         Retrieves the original file.
         """
-        return self._file
+        return self._original
 
-    @property
-    def modified(self):
+    def _raw_modified(self):
         """
         Calculates the modified file, after applying the Diff to the original.
         """
@@ -192,17 +277,36 @@ class Diff:
         return result
 
     @property
+    def modified(self):
+        """
+        Calculates the modified file, after applying the Diff to the original.
+
+        This property also adds linebreaks at the end of each line.
+        If no newline was present at the end of file before, this state will
+        be preserved, except if the last line is deleted.
+        """
+        return self._generate_linebreaks(self._raw_modified())
+
+    @property
     def unified_diff(self):
         """
         Generates a unified diff corresponding to this patch.
 
+        Each change will be displayed on its own line. Additionally, the
+        unified diff preserves the EOF-state of the original file. This
+        means that the ``Diff`` will only have a linebreak on the last line,
+        if that was also present in the original file.
+
         Note that the unified diff is not deterministic and thus not suitable
         for equality comparison.
         """
-        return ''.join(difflib.unified_diff(
-            self.original,
-            self.modified,
+
+        list_unified_diff = list(difflib.unified_diff(
+            self._file,
+            self._raw_modified(),
             tofile=self.rename if isinstance(self.rename, str) else ''))
+
+        return ''.join(self._generate_linebreaks(list_unified_diff))
 
     def __json__(self):
         """
@@ -327,7 +431,7 @@ class Diff:
             if change.add_after is not False:
                 result.add_lines(line_nr, change.add_after)
             if change.change is not False:
-                result.change_line(line_nr, change.change[0], change.change[1])
+                result.modify_line(line_nr, change.change[1])
 
         return result
 
@@ -346,12 +450,17 @@ class Diff:
         """
         return (self.rename is not False or
                 self.delete is True or
-                len(self._changes) > 0)
+                self.modified != self.original)
 
     def delete_line(self, line_nr):
         """
         Mark the given line nr as deleted. The first line is line number 1.
+
+        Raises an exception if line number doesn't exist in the diff.
         """
+        if line_nr > len(self._file):
+            raise IndexError('The given line number is out of bounds.')
+
         linediff = self._get_change(line_nr)
         linediff.delete = True
         self._changes[line_nr] = linediff
@@ -359,6 +468,9 @@ class Diff:
     def delete_lines(self, line_nr_start, line_nr_end):
         """
         Delete lines in a specified range, inclusively.
+
+        The range must be valid, i.e. lines must exist in diff, else an
+        exception is raised.
         """
         for line_nr in range(line_nr_start, line_nr_end + 1):
             self.delete_line(line_nr)
@@ -419,8 +531,7 @@ class Diff:
         However, if we change something that has been changed before, we'll get
         a conflict:
 
-        >>> diff.modify_line(1,  # +ELLIPSIS
-        ...                  'Hello. This is not ok. Gorgeous.\n')
+        >>> diff.modify_line(1, 'Hello. This is not ok. Gorgeous.\n')
         Traceback (most recent call last):
          ...
         coalib.results.LineDiff.ConflictError: ...
@@ -430,11 +541,12 @@ class Diff:
             if len(replacement) == len(linediff.change[1]) == 1:
                 raise ConflictError('Cannot merge the given line changes.')
 
+            # The following diffs are created from strings, instead of lists.
             orig_diff = Diff.from_string_arrays(linediff.change[0],
                                                 linediff.change[1])
             new_diff = Diff.from_string_arrays(linediff.change[0],
                                                replacement)
-            replacement = ''.join((orig_diff + new_diff).modified)
+            replacement = ''.join((orig_diff + new_diff)._raw_modified())
 
         linediff.change = (self._file[line_nr-1], replacement)
         self._changes[line_nr] = linediff
@@ -471,8 +583,8 @@ class Diff:
         """
         # Remaining parts of the lines not affected by the replace.
         first_part = (
-            self.original[range.start.line - 1][:range.start.column - 1])
-        last_part = self.original[range.end.line - 1][range.end.column - 1:]
+            self._file[range.start.line - 1][:range.start.column - 1])
+        last_part = self._file[range.end.line - 1][range.end.column - 1:]
 
         self.delete_lines(range.start.line, range.end.line)
         self.add_lines(range.start.line - 1,
@@ -522,3 +634,32 @@ class Diff:
         :param range: The range to delete.
         """
         self.replace(range, '')
+
+    @staticmethod
+    def _add_linebreaks(lines):
+        """
+        Validate that each line in lines ends with a
+        newline character and appends one if that is not the case.
+
+        :param lines: A list of strings, representing lines.
+        """
+
+        return [line
+                if line.endswith('\n')
+                else line + '\n'
+                for line in lines]
+
+    @staticmethod
+    def _generate_linebreaks(lines):
+        """
+        Validate that each line in lines ends with a
+        newline character and appends one if that is not the case.
+        Exception is the last line in the list.
+
+        :param lines: A list of strings, representing lines.
+        """
+
+        if lines == []:
+            return []
+
+        return Diff._add_linebreaks(lines[:-1]) + [lines[-1]]

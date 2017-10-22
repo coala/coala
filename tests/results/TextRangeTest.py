@@ -87,6 +87,31 @@ class TextRangeTest(unittest.TestCase):
         self.assertTrue(uut1.overlaps(uut2))
         self.assertTrue(uut2.overlaps(uut1))
 
+        uut1 = TextRange.from_values(1, None, 1, None)
+        uut2 = TextRange.from_values(1, 1, 1, 80)
+        self.assertTrue(uut1.overlaps(uut2))
+        self.assertTrue(uut2.overlaps(uut1))
+
+        uut1 = TextRange.from_values(1, None, 1, None)
+        uut2 = TextRange.from_values(2, None, 2, None)
+        self.assertFalse(uut1.overlaps(uut2))
+        self.assertFalse(uut2.overlaps(uut1))
+
+        uut1 = TextRange.from_values(None, None, None, None)
+        uut2 = TextRange.from_values(1, 1, 1, 80)
+        self.assertTrue(uut1.overlaps(uut2))
+        self.assertTrue(uut2.overlaps(uut1))
+
+        uut1 = TextRange.from_values(None, None, 1, None)
+        uut2 = TextRange.from_values(2, 1, 3, None)
+        self.assertFalse(uut1.overlaps(uut2))
+        self.assertFalse(uut2.overlaps(uut1))
+
+        uut1 = TextRange.from_values(None, None, None, None)
+        uut2 = TextRange.from_values(None, None, None)
+        self.assertTrue(uut1.overlaps(uut2))
+        self.assertTrue(uut2.overlaps(uut1))
+
     def test_contains(self):
         range_a = TextRange.from_values(1, 1, 1, 19)
         range_b = TextRange.from_values(1, 1, 1, 20)

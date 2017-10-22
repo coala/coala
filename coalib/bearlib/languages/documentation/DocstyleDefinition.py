@@ -16,11 +16,21 @@ class DocstyleDefinition:
     etc.).
     """
     Metadata = namedtuple('Metadata', ('param_start', 'param_end',
+                                       'exception_start', 'exception_end',
                                        'return_sep'))
+    ClassPadding = namedtuple('ClassPadding',
+                              ('top_padding', 'bottom_padding'))
+    FunctionPadding = namedtuple('FunctionPadding',
+                                 ('top_padding', 'bottom_padding'))
+    DocstringTypeRegex = namedtuple('DocstringTypeRegex',
+                                    ('class_sign', 'func_sign'))
 
     @enforce_signature
     def __init__(self, language: str, docstyle: str, markers: (Iterable, str),
-                 metadata: Metadata):
+                 metadata: Metadata, class_padding: ClassPadding,
+                 function_padding: FunctionPadding,
+                 docstring_type_regex: DocstringTypeRegex,
+                 docstring_position: str):
         """
         Instantiates a new DocstyleDefinition.
 
@@ -38,6 +48,18 @@ class DocstyleDefinition:
                          e.g. ``param_start`` defining the start symbol of
                          the parameter fields and ``param_end`` defining the
                          end.
+        :param class_padding: A namedtuple consisting of values about
+                         blank lines before and after the documentation of
+                         ``docstring_type`` class.
+        :param function_padding: A namedtuple consisting of values about
+                         blank lines before and after the documentation of
+                         ``docstring_type`` function.
+        :param docstring_type_regex: A namedtuple consisting of regex
+                         about ``class`` and ``function`` of a language, which
+                         is used to determine ``docstring_type`` of
+                         DocumentationComment.
+        :param docstring_position: Defines the position where the regex of
+                         docstring type is present(i.e. ``top`` or ``bottom``).
         """
         self._language = language.lower()
         self._docstyle = docstyle.lower()
@@ -57,6 +79,10 @@ class DocstyleDefinition:
                                  'actually {}).'.format(length))
 
         self._metadata = metadata
+        self._class_padding = class_padding
+        self._function_padding = function_padding
+        self._docstring_type_regex = docstring_type_regex
+        self._docstring_position = docstring_position
 
     @property
     def language(self):
@@ -126,6 +152,48 @@ class DocstyleDefinition:
         """
         return self._metadata
 
+    @property
+    def class_padding(self):
+        """
+        A namedtuple ``ClassPadding`` consisting of values about blank lines
+        before and after the documentation of ``docstring_type`` class.
+
+        These values are official standard of following blank lines before and
+        after the documentation of ``docstring_type`` class.
+        """
+        return self._class_padding
+
+    @property
+    def function_padding(self):
+        """
+        A namedtuple ``FunctionPadding`` consisting of values about blank
+        lines before and after the documentation of ``docstring_type``
+        function.
+
+        These values are official standard of following blank lines before and
+        after the documentation of ``docstring_type`` function.
+        """
+        return self._function_padding
+
+    @property
+    def docstring_type_regex(self):
+        """
+        A namedtuple ``DocstringTypeRegex`` consisting of regex about ``class``
+        and ``function`` of a language, which is used to determine
+        ``docstring_type`` of DocumentationComment.
+        """
+        return self._docstring_type_regex
+
+    @property
+    def docstring_position(self):
+        """
+        Defines the position, where the regex of docstring type is present.
+        Depending on different languages the docstrings are present below or
+        above the defined class or function. This expicitly defines where the
+        class regex or function regex is present(i.e. ``top`` or ``bottom``).
+        """
+        return self._docstring_position
+
     @classmethod
     @enforce_signature
     def load(cls, language: str, docstyle: str, coalang_dir=None):
@@ -178,18 +246,51 @@ class DocstyleDefinition:
             raise KeyError('Language {!r} is not defined for docstyle {!r}.'
                            .format(language, docstyle))
 
-        metadata_settings = ('param_start', 'param_end', 'return_sep')
+        metadata_settings = ('param_start', 'param_end',
+                             'exception_start', 'exception_end',
+                             'return_sep')
 
         metadata = cls.Metadata(*(str(docstyle_settings.get(req_setting, ''))
                                   for req_setting in metadata_settings))
 
+        try:
+            class_padding = cls.ClassPadding(
+                *(int(padding) for padding in tuple(
+                    docstyle_settings['class_padding'])))
+        except IndexError:
+            class_padding = cls.ClassPadding('', '')
+
+        try:
+            function_padding = cls.FunctionPadding(
+                *(int(padding) for padding in tuple(
+                    docstyle_settings['function_padding'])))
+        except IndexError:
+            function_padding = cls.FunctionPadding('', '')
+
+        try:
+            docstring_type_regex = cls.DocstringTypeRegex(
+                *(str(sign) for sign in tuple(
+                    docstyle_settings['docstring_type_regex'])))
+        except IndexError:
+            docstring_type_regex = cls.DocstringTypeRegex('', '')
+
+        try:
+            docstring_position = docstyle_settings['docstring_position'].value
+        except IndexError:
+            docstring_position = ''
+
+        ignore_keys = (('class_padding', 'function_padding',
+                        'docstring_type_regex', 'docstring_position') +
+                       metadata_settings)
+
         marker_sets = (tuple(value)
                        for key, value in
                        docstyle_settings.contents.items()
-                       if key not in metadata_settings and
+                       if key not in ignore_keys and
                        not key.startswith('comment'))
 
-        return cls(language, docstyle, marker_sets, metadata)
+        return cls(language, docstyle, marker_sets, metadata, class_padding,
+                   function_padding, docstring_type_regex, docstring_position)
 
     @staticmethod
     def get_available_definitions():
@@ -199,12 +300,12 @@ class DocstyleDefinition:
 
         :return: A sequence of pairs with ``(docstyle, language)``.
         """
-        language_config_parser = ConfParser(remove_empty_iter_elements=False)
         pattern = os.path.join(os.path.dirname(__file__), '*.coalang')
 
         for coalang_file in iglob(pattern):
             docstyle = os.path.splitext(os.path.basename(coalang_file))[0]
             # Ignore files that are not lowercase, as coalang files have to be.
             if docstyle.lower() == docstyle:
-                for language in language_config_parser.parse(coalang_file):
+                parser = ConfParser(remove_empty_iter_elements=False)
+                for language in parser.parse(coalang_file):
                     yield docstyle, language.lower()

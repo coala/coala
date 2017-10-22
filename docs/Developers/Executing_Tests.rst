@@ -34,10 +34,10 @@ You can then execute our tests with
 
 ::
 
-    $ py.test
+    $ pytest
 
 .. note::
-    If ``py.test`` seems to give errors, try running ``python3 -m pytest``
+    If ``pytest`` seems to give errors, try running ``python3 -m pytest``
     instead.
 
 and report any errors you get!
@@ -48,11 +48,11 @@ To run our tests, you can also use ``python3 setup.py test``
 
     If you need to customize test running, you can get more options
     about allowing skipped tests, getting code coverage displayed
-    or omitting/selecting tests using ``py.test`` directly.
+    or omitting/selecting tests using ``pytest`` directly.
 
     ::
 
-        $ py.test --help
+        $ pytest --help
 
 .. note::
 
@@ -66,12 +66,12 @@ To get coverage information, you can run:
 
 ::
 
-    $ py.test --cov
+    $ pytest --cov
 
 You can view the coverage report as html by running:
 
 ::
 
-    $ py.test --cov --cov-report html
+    $ pytest --cov --cov-report html
 
 The html report will be saved ``.htmlreport`` inside the coala repository.
