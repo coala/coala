@@ -180,6 +180,9 @@ class Session:
             available on the system. Note that a passed custom executor is
             closed after the core has finished.
         """
+        self._cancelled = False
+        self._internal_exception = None
+
         self.bears = bears
         self.result_callback = result_callback
 
@@ -198,6 +201,9 @@ class Session:
         """
         Runs the coala session.
         """
+        if self._cancelled:
+            raise RuntimeError("Can't run session that was stopped.")
+
         try:
             if self.bears:
                 self._schedule_bears(self.bears_to_schedule)
@@ -207,6 +213,33 @@ class Session:
                     self.event_loop.close()
         finally:
             self.executor.shutdown()
+
+            if self._internal_exception is not None:
+                raise self._internal_exception
+
+    def stop(self):
+        """
+        Stops the current session if it's running. A not-running session causes
+        this function to return immediately.
+
+        A once stopped session can't be run again (regardless whether stopped
+        before or during a run).
+        """
+        self._cancelled = True
+
+        # Use the internal dependency tracker to stop the session, by clearing
+        # it completely. This will prevent scheduling new bears.
+        self.dependency_tracker.clear()
+
+        # Cancel scheduled tasks. Running tasks can't be cancelled,
+        # so we have to wait for them to complete and check inside the
+        # done-callbacks if a cancellation is in-progress.
+        for task in self.running_tasks.values():
+            task.cancel()
+
+    def _raise_internal_exception(self, exception):
+        self._internal_exception = exception
+        self.stop()
 
     def _schedule_bears(self, bears):
         """
@@ -220,11 +253,11 @@ class Session:
         for bear in bears:
             if self.dependency_tracker.get_dependencies(
                     bear):  # pragma: no cover
-                logging.warning(
+
+                self._raise_internal_exception(RuntimeError(
                     'Dependencies for {!r} not yet resolved, holding back. '
                     'This should not happen, the dependency tracking system '
-                    'should be smarter. Please report this to the developers.'
-                    .format(bear))
+                    'should be smarter.'.format(bear)))
             else:
                 tasks = {
                     self.event_loop.run_in_executor(
@@ -281,12 +314,11 @@ class Session:
             # dependencies.
             resolved = self.dependency_tracker.are_dependencies_resolved
             if not resolved:  # pragma: no cover
-                logging.warning(
+                self._raise_internal_exception(RuntimeError(
                     'Core finished with run, but it seems some dependencies '
-                    'were unresolved: {}. Ignoring them, but this is a bug, '
-                    'please report it to the developers.'.format(', '.join(
+                    'were unresolved: {}. Ignoring them.'.format(', '.join(
                         repr(dependant) + ' depends on ' + repr(dependency)
-                        for dependency, dependant in self.dependency_tracker)))
+                        for dependency, dependant in self.dependency_tracker))))
 
             self.event_loop.stop()
 
@@ -311,8 +343,11 @@ class Session:
             # FIXME Try to display only the relevant traceback of the bear if
             # FIXME   error occurred there, not the complete event-loop
             # FIXME   traceback.
-            logging.error('An exception was thrown during bear execution.',
-                          exc_info=ex)
+            # Only print the message if we don't cancel the session on purpose
+            # using stop().
+            if not isinstance(ex, concurrent.futures.CancelledError):
+                logging.error('An exception was thrown during bear execution.',
+                              exc_info=ex)
 
             results = None
 

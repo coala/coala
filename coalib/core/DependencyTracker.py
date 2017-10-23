@@ -49,6 +49,21 @@ class DependencyTracker:
     def __init__(self):
         self._dependency_dict = {}
 
+    def clear(self):
+        """
+        Removes all dependency relations stored in this instance.
+
+        >>> tracker = DependencyTracker()
+        >>> tracker.add(0, 1)
+        >>> tracker.add(0, 2)
+        >>> tracker.get_dependants(0)
+        {1, 2}
+        >>> tracker.clear()
+        >>> tracker.get_dependants(0)
+        set()
+        """
+        self._dependency_dict.clear()
+
     def get_dependants(self, dependency):
         """
         Returns all immediate dependants for the given dependency.
