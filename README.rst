@@ -38,3 +38,24 @@ coala supports popular programming languages including **Python**, **C/C++**, **
 .. image:: https://graphs.waffle.io/coala/coala/throughput.svg
  :target: https://waffle.io/coala/coala/metrics/throughput
  :alt: 'Throughput Graph'
+
+Using ``default_coafile``
+
+* ``default_coafile`` is a normal coala configuration
+  file with system wide effect.
+
+* It can be used to define the type of files you definitely
+  don't want to lint like minified files
+  and backup files ( e.g. ``*.min.js``, ``*.orig``).
+
+* Any modifications made in the ``default_coafile`` will be
+  applied system wide.
+
+* ``default_coafile`` is present in ``/coala/coalib``,
+  ``/coala/tests/settings/section_manager_test_files``.
+
+* To state ignore files append syntax is to be followed
+  example: ``ignore+=x.js``.
+
+* Modification made in ``/coala/coalib/default_coafile``
+  will be reflected system wide.
