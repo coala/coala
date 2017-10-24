@@ -79,6 +79,39 @@ follow the following instructions.
    ci.appveyor.com/project/<username>/<repository>.
    You can also start a build by yourself by clicking on "New Build"
 
+Codecov
+-------
+
+We require 100% test coverage, and to test that we use
+`codecov.io <https://codecov.io>`_ which takes data from all other
+CI to confirm its coverage.
+Here are two example reports from coala and coala-bears repository :
+https://codecov.io/gh/coala/coala/ and
+https://codecov.io/gh/coala/coala-bears/. Once you follow the
+instructions here, you will have identical reports for your forked
+repository.
+
+1. Go to `codecov.io <https://codecov.io>`_ and sign up using your
+   GitHub account.
+2. Click on your username, and that will take you to a page where
+   the repositories that use codecov are listed.
+3. Click on "Add new repository" and it will take you to a page that
+   lists all your repositories. Choose the forked repository for
+   which you want to enable codecov.
+4. Like other CI, this also has a configuration file, .codecov.yml
+   file which your forked repository will already have. e.g
+   `coala's .codecov.yml
+   <https://github.com/coala/coala/blob/master/.codecov.yml>`_
+   The CI uploads the test reports to codecov, which then creates
+   an overall coverage report.
+5. You can watch the reports at codecov.io/gh/<username>/<repository>
+
+.. note::
+
+    Please refrain from enabling CircleCI on your fork since they use
+    shared build pools. You can use TravisCI instead if you need access
+    to private builds.
+
 Circle CI
 ---------
 
@@ -107,30 +140,3 @@ to your forked repositories follow the instructions here.
 7. In project settings go to Build Environments under Build Settings.
    You will see by default the OS used for builds is Trusty one,
    however we recommend using Precise as its faster.
-
-Codecov
--------
-
-We require 100% test coverage, and to test that we use
-`codecov.io <https://codecov.io>`_ which takes data from all other
-CI to confirm its coverage.
-Here are two example reports from coala and coala-bears repository :
-https://codecov.io/gh/coala/coala/ and
-https://codecov.io/gh/coala/coala-bears/. Once you follow the
-instructions here, you will have identical reports for your forked
-repository.
-
-1. Go to `codecov.io <https://codecov.io>`_ and sign up using your
-   GitHub account.
-2. Click on your username, and that will take you to a page where
-   the repositories that use codecov are listed.
-3. Click on "Add new repository" and it will take you to a page that
-   lists all your repositories. Choose the forked repository for
-   which you want to enable codecov.
-4. Like other CI, this also has a configuration file, .codecov.yml
-   file which your forked repository will already have. e.g
-   `coala's .codecov.yml
-   <https://github.com/coala/coala/blob/master/.codecov.yml>`_
-   The CI uploads the test reports to codecov, which then creates
-   an overall coverage report.
-5. You can watch the reports at codecov.io/gh/<username>/<repository>
