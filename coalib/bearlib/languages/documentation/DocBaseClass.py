@@ -25,23 +25,30 @@ class DocBaseClass:
         For more information about how documentation comments are
         identified and extracted, see DocstyleDefinition.doctypes enumeration.
 
-        :param content:            The source-code-string where to extract
-                                   documentation from. Needs to be a list
-                                   or tuple where each string item is a
-                                   single line(including ending whitespaces
-                                   like ``\\n``).
-        :param language:           The programming language used.
-        :param docstyle:           The documentation style/tool used
-                                   (e.g. doxygen).
-        :raises FileNotFoundError: Raised when the docstyle definition file
-                                   was not found.
-        :raises KeyError:          Raised when the given language is not
-                                   defined in given docstyle.
-        :raises ValueError:        Raised when a docstyle definition setting
-                                   has an invalid format.
-        :return:                   An iterator returning instances of
-                                   DocumentationComment or MalformedComment
-                                   found in the content.
+        :param content:
+            The source-code-string where to extract
+            documentation from. Needs to be a list
+            or tuple where each string item is a
+            single line(including ending whitespaces
+            like ``\\n``).
+        :param language:
+            The programming language used.
+        :param docstyle:
+            The documentation style/tool used
+            (e.g. doxygen).
+        :raises FileNotFoundError:
+            Raised when the docstyle definition file
+            was not found.
+        :raises KeyError:
+            Raised when the given language is not
+            defined in given docstyle.
+        :raises ValueError:
+            Raised when a docstyle definition setting
+            has an invalid format.
+        :return:
+            An iterator returning instances of
+            DocumentationComment or MalformedComment
+            found in the content.
         """
         docstyle_definition = DocstyleDefinition.load(language, docstyle)
         return extract_documentation_with_markers(

@@ -36,6 +36,7 @@ class BuildManPage(Command):
         output = <appname>.1
         parser = <path_to_your_parser>
     """
+
     user_options = [
         ('output=', 'O', 'output file'),
         ('parser=', None, 'module path to an ArgumentParser instance'

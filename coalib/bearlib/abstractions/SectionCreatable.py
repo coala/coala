@@ -45,9 +45,11 @@ class SectionCreatable:
         """
         Creates the object from a section object.
 
-        :param section: A section object containing at least the settings
-                        specified by get_non_optional_settings()
-        :param kwargs:  Additional keyword arguments
+        :param section:
+            A section object containing at least the settings
+            specified by get_non_optional_settings()
+        :param kwargs:
+            Additional keyword arguments
         """
         kwargs.update(cls.get_metadata().create_params_from_section(section))
 
@@ -63,8 +65,9 @@ class SectionCreatable:
         Retrieves the minimal set of settings that need to be defined in order
         to use this object.
 
-        :return: a dictionary of needed settings as keys and help texts as
-                 values
+        :return:
+            a dictionary of needed settings as keys and help texts as
+            values
         """
         return cls.get_metadata().non_optional_params
 
@@ -74,7 +77,8 @@ class SectionCreatable:
         Retrieves the settings needed IN ADDITION to the ones of
         get_non_optional_settings to use this object without internal defaults.
 
-        :return: a dictionary of needed settings as keys and help texts as
-                 values
+        :return:
+            a dictionary of needed settings as keys and help texts as
+            values
         """
         return cls.get_metadata().optional_params

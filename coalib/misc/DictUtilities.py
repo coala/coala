@@ -10,11 +10,13 @@ def inverse_dicts(*dicts):
     {1: [1, 2], 2: [1, 3], 3: [1, 2, 4], 4: [2, 4], 5: [2]}.
     No order is preserved.
 
-    :param dicts: The dictionaries to invert.
-    :type dicts:  dict
-    :return:      The inversed dictionary which merges all dictionaries into
-                  one.
-    :rtype: defaultdict
+    :param dicts:
+        The dictionaries to invert.
+        :type dicts:  dict
+    :return:
+        The inversed dictionary which merges all dictionaries into
+        one.
+        :rtype: defaultdict
     """
     inverse = defaultdict(list)
 

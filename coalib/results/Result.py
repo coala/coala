@@ -47,7 +47,6 @@ class Result:
     >>> r.message_arguments = {'arg1': 'spam', 'arg2': 'eggs'}
     >>> r.message
     'spam and eggs'
-
     """
 
     @enforce_signature
@@ -229,7 +228,8 @@ class Result:
         FIXME: Only the first SourceRange of affected_code is serialized. If
         there are more, this data is currently missing.
 
-        :return: Dictionary with keys and values as string.
+        :return:
+            Dictionary with keys and values as string.
         """
         retval = {}
 
@@ -263,8 +263,9 @@ class Result:
         Applies all contained diffs to the given file_dict. This operation will
         be done in-place.
 
-        :param file_dict: A dictionary containing all files with filename as
-                          key and all lines a value. Will be modified.
+        :param file_dict:
+            A dictionary containing all files with filename as
+            key and all lines a value. Will be modified.
         """
         for filename, diff in self.diffs.items():
             file_dict[filename] = diff.modified
@@ -273,7 +274,8 @@ class Result:
         """
         Joins those patches to one patch.
 
-        :param other: The other patch.
+        :param other:
+            The other patch.
         """
         assert isinstance(self.diffs, dict)
         assert isinstance(other.diffs, dict)
@@ -290,8 +292,10 @@ class Result:
         """
         Determines if the result overlaps with source ranges provided.
 
-        :param ranges: A list SourceRange objects to check for overlap.
-        :return:       True if the ranges overlap with the result.
+        :param ranges:
+            A list SourceRange objects to check for overlap.
+        :return:
+            True if the ranges overlap with the result.
         """
         if isinstance(ranges, SourceRange):
             ranges = [ranges]
@@ -308,10 +312,10 @@ class Result:
         Retrieves a string, that briefly represents
         the affected code of the result.
 
-        :return: A string containing all of the affected files
-                 separated by a comma.
+        :return:
+            A string containing all of the affected files
+            separated by a comma.
         """
-
         if not self.affected_code:
             return 'the whole project'
 

@@ -92,8 +92,9 @@ def deprecate_settings(**depr_args):
     >>> list(run.__metadata__.optional_params.keys())
     ['old', 'older']
 
-    :param depr_args: A dictionary of settings as keys and their deprecated
-                      names as values.
+    :param depr_args:
+        A dictionary of settings as keys and their deprecated
+        names as values.
     """
     def _deprecate_decorator(func):
 
@@ -177,9 +178,11 @@ def deprecate_bear(bear):
     WARNING:root:The bear SomeOldBear is deprecated. Use SomeBear instead!
     I'm running!
 
-    :param bear: An old bear class that inherits from the new one (so it gets
-                 its methods and can just contain a pass.)
-    :return: A bear class that warns about deprecation on use.
+    :param bear:
+        An old bear class that inherits from the new one (so it gets
+        its methods and can just contain a pass.)
+    :return:
+        A bear class that warns about deprecation on use.
     """
     bear.old_run = bear.run
 

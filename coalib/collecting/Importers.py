@@ -62,9 +62,12 @@ def object_defined_in(obj, file_path):
     >>> object_defined_in(False, __file__)
     False
 
-    :param obj:       The object to check.
-    :param file_path: The path it might be defined in.
-    :return:          True if the object is defined in the file.
+    :param obj:
+        The object to check.
+    :param file_path:
+        The path it might be defined in.
+    :return:
+        True if the object is defined in the file.
     """
     try:
         source = inspect.getfile(obj)
@@ -101,16 +104,24 @@ def _iimport_objects(file_paths, names, types, supers, attributes, local):
     """
     Import all objects from the given modules that fulfill the requirements
 
-    :param file_paths: File path(s) from which objects will be imported
-    :param names:      Name(s) an objects need to have one of
-    :param types:      Type(s) an objects need to be out of
-    :param supers:     Class(es) objects need to be a subclass of
-    :param attributes: Attribute(s) an object needs to (all) have
-    :param local:      if True: Objects need to be defined in the file they
-                       appear in to be collected
-    :return:           iterator that yields all matching python objects
-    :raises Exception: Any exception that is thrown in module code or an
-                       ImportError if paths are erroneous.
+    :param file_paths:
+        File path(s) from which objects will be imported
+    :param names:
+        Name(s) an objects need to have one of
+    :param types:
+        Type(s) an objects need to be out of
+    :param supers:
+        Class(es) objects need to be a subclass of
+    :param attributes:
+        Attribute(s) an object needs to (all) have
+    :param local:
+        if True: Objects need to be defined in the file they
+        appear in to be collected
+    :return:
+        iterator that yields all matching python objects
+    :raises Exception:
+        Any exception that is thrown in module code or an
+        ImportError if paths are erroneous.
     """
     if not file_paths:
         return
@@ -165,16 +176,24 @@ def import_objects(file_paths, names=None, types=None, supers=None,
     """
     Import all objects from the given modules that fulfill the requirements
 
-    :param file_paths: File path(s) from which objects will be imported
-    :param names:      Name(s) an objects need to have one of
-    :param types:      Type(s) an objects need to be out of
-    :param supers:     Class(es) objects need to be a subclass of
-    :param attributes: Attribute(s) an object needs to (all) have
-    :param local:      if True: Objects need to be defined in the file they
-                       appear in to be collected
-    :return:           list of all matching python objects
-    :raises Exception: Any exception that is thrown in module code or an
-                       ImportError if paths are erroneous.
+    :param file_paths:
+        File path(s) from which objects will be imported
+    :param names:
+        Name(s) an objects need to have one of
+    :param types:
+        Type(s) an objects need to be out of
+    :param supers:
+        Class(es) objects need to be a subclass of
+    :param attributes:
+        Attribute(s) an object needs to (all) have
+    :param local:
+        if True: Objects need to be defined in the file they
+        appear in to be collected
+    :return:
+        list of all matching python objects
+    :raises Exception:
+        Any exception that is thrown in module code or an
+        ImportError if paths are erroneous.
     """
     return list(iimport_objects(file_paths, names, types, supers, attributes,
                                 local, verbose))

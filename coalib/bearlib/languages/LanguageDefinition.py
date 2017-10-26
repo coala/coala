@@ -66,12 +66,15 @@ class LanguageDefinition(SectionCreatable):
         """
         Creates a new LanguageDefinition object from file.
 
-        :param language:           The actual language (e.g. C++).
-        :param coalang_dir:        Path to directory with coalang language
-                                   definition files. This replaces the default
-                                   path if given.
-        :raises FileNotFoundError: Raised when no definition is available for
-                                   the given language.
+        :param language:
+            The actual language (e.g. C++).
+        :param coalang_dir:
+            Path to directory with coalang language
+            definition files. This replaces the default
+            path if given.
+        :raises FileNotFoundError:
+            Raised when no definition is available for
+            the given language.
         """
         logging.debug('LanguageDefinition has been deprecated! '
                       'Use `coalib.bearlib.languages.Language` instead.')

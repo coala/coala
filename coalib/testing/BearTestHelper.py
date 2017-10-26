@@ -7,8 +7,10 @@ def generate_skip_decorator(bear):
 
     `check_prerequisites` is used to determine a test skip.
 
-    :param bear: The bear whose prerequisites determine the test skip.
-    :return:     A decorator that skips the test if appropriate.
+    :param bear:
+        The bear whose prerequisites determine the test skip.
+    :return:
+        A decorator that skips the test if appropriate.
     """
     result = bear.check_prerequisites()
 

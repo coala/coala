@@ -14,17 +14,23 @@ def send_msg(message_queue, timeout, log_level, *args, delimiter=' ', end=''):
     """
     Puts message into message queue for a LogPrinter to present to the user.
 
-    :param message_queue: The queue to put the message into and which the
-                          LogPrinter reads.
-    :param timeout:       The queue blocks at most timeout seconds for a free
-                          slot to execute the put operation on. After the
-                          timeout it returns queue Full exception.
-    :param log_level:     The log_level i.e Error,Debug or Warning.It is sent
-                          to the LogPrinter depending on the message.
-    :param args:          This includes the elements of the message.
-    :param delimiter:     It is the value placed between each arg. By default
-                          it is a ' '.
-    :param end:           It is the value placed at the end of the message.
+    :param message_queue:
+        The queue to put the message into and which the
+        LogPrinter reads.
+    :param timeout:
+        The queue blocks at most timeout seconds for a free
+        slot to execute the put operation on. After the
+        timeout it returns queue Full exception.
+    :param log_level:
+        The log_level i.e Error,Debug or Warning.It is sent
+        to the LogPrinter depending on the message.
+    :param args:
+        This includes the elements of the message.
+    :param delimiter:
+        It is the value placed between each arg. By default
+        it is a ' '.
+    :param end:
+        It is the value placed at the end of the message.
     """
     output = str(delimiter).join(str(arg) for arg in args) + str(end)
     message_queue.put(LogMessage(log_level, output),
@@ -39,18 +45,25 @@ def validate_results(message_queue, timeout, result_list, name, args, kwargs):
     the message_queue to present the irregularity to the user. Each result_list
     belongs to an execution of a bear.
 
-    :param message_queue: A queue that contains messages of type
-                          errors/warnings/debug statements to be printed in the
-                          Log.
-    :param timeout:       The queue blocks at most timeout seconds for a free
-                          slot to execute the put operation on. After the
-                          timeout it returns queue Full exception.
-    :param result_list:   The list of results to validate.
-    :param name:          The name of the bear executed.
-    :param args:          The args with which the bear was executed.
-    :param kwargs:        The kwargs with which the bear was executed.
-    :return:              Returns None if the result_list is invalid. Else it
-                          returns the result_list itself.
+    :param message_queue:
+        A queue that contains messages of type
+        errors/warnings/debug statements to be printed in the
+        Log.
+    :param timeout:
+        The queue blocks at most timeout seconds for a free
+        slot to execute the put operation on. After the
+        timeout it returns queue Full exception.
+    :param result_list:
+        The list of results to validate.
+    :param name:
+        The name of the bear executed.
+    :param args:
+        The args with which the bear was executed.
+    :param kwargs:
+        The kwargs with which the bear was executed.
+    :return:
+        Returns None if the result_list is invalid. Else it
+        returns the result_list itself.
     """
     if result_list is None:
         return None
@@ -83,18 +96,24 @@ def run_bear(message_queue, timeout, bear_instance, *args, debug=False,
     reports or logs errors if any occur during the execution of that bear
     instance.
 
-    :param message_queue: A queue that contains messages of type
-                          errors/warnings/debug statements to be printed in the
-                          Log.
-    :param timeout:       The queue blocks at most timeout seconds for a free
-                          slot to execute the put operation on. After the
-                          timeout it returns queue Full exception.
-    :param bear_instance: The instance of the bear to be executed.
-    :param args:          The arguments that are to be passed to the bear.
-    :param kwargs:        The keyword arguments that are to be passed to the
-                          bear.
-    :return:              Returns a valid list of objects of the type Result
-                          if the bear executed successfully. None otherwise.
+    :param message_queue:
+        A queue that contains messages of type
+        errors/warnings/debug statements to be printed in the
+        Log.
+    :param timeout:
+        The queue blocks at most timeout seconds for a free
+        slot to execute the put operation on. After the
+        timeout it returns queue Full exception.
+    :param bear_instance:
+        The instance of the bear to be executed.
+    :param args:
+        The arguments that are to be passed to the bear.
+    :param kwargs:
+        The keyword arguments that are to be passed to the
+        bear.
+    :return:
+        Returns a valid list of objects of the type Result
+        if the bear executed successfully. None otherwise.
     """
     if kwargs.get('dependency_results', True) is None:
         del kwargs['dependency_results']
@@ -135,13 +154,16 @@ def get_local_dependency_results(local_result_list, bear_instance):
     This method gets all the results originating from the dependencies of a
     bear_instance. Each bear_instance may or may not have dependencies.
 
-    :param local_result_list: The list of results out of which the dependency
-                              results are picked.
-    :param bear_instance:     The instance of a local bear to get the
-                              dependencies from.
-    :return:                  Return none if there are no dependencies for the
-                              bear. Else return a dictionary containing
-                              dependency results.
+    :param local_result_list:
+        The list of results out of which the dependency
+        results are picked.
+    :param bear_instance:
+        The instance of a local bear to get the
+        dependencies from.
+    :return:
+        Return none if there are no dependencies for the
+        bear. Else return a dictionary containing
+        dependency results.
     """
     deps = bear_instance.BEAR_DEPS
     if not deps:
@@ -172,19 +194,26 @@ def run_local_bear(message_queue,
     Runs an instance of a local bear. Checks if bear_instance is of type
     LocalBear and then passes it to the run_bear to execute.
 
-    :param message_queue:     A queue that contains messages of type
-                              errors/warnings/debug statements to be printed in
-                              the Log.
-    :param timeout:           The queue blocks at most timeout seconds for a
-                              free slot to execute the put operation on. After
-                              the timeout it returns queue Full exception.
-    :param local_result_list: Its a list that stores the results of all local
-                              bears.
-    :param file_dict:         Dictionary containing contents of file.
-    :param bear_instance:     Instance of LocalBear the run.
-    :param filename:          Name of the file to run it on.
-    :return:                  Returns a list of results generated by the passed
-                              bear_instance.
+    :param message_queue:
+        A queue that contains messages of type
+        errors/warnings/debug statements to be printed in
+        the Log.
+    :param timeout:
+        The queue blocks at most timeout seconds for a
+        free slot to execute the put operation on. After
+        the timeout it returns queue Full exception.
+    :param local_result_list:
+        Its a list that stores the results of all local
+        bears.
+    :param file_dict:
+        Dictionary containing contents of file.
+    :param bear_instance:
+        Instance of LocalBear the run.
+    :param filename:
+        Name of the file to run it on.
+    :return:
+        Returns a list of results generated by the passed
+        bear_instance.
     """
     if (not isinstance(bear_instance, LocalBear) or
             bear_instance.kind() != BEAR_KIND.LOCAL):
@@ -218,19 +247,24 @@ def run_global_bear(message_queue,
     Runs an instance of a global bear. Checks if bear_instance is of type
     GlobalBear and then passes it to the run_bear to execute.
 
-    :param message_queue:        A queue that contains messages of type
-                                 errors/warnings/debug statements to be printed
-                                 in the Log.
-    :param timeout:              The queue blocks at most timeout seconds for a
-                                 free slot to execute the put operation on.
-                                 After the timeout it returns queue Full
-                                 exception.
-    :param global_bear_instance: Instance of GlobalBear to run.
-    :param dependency_results:   The results of all the bears on which the
-                                 instance of the passed bear to be run depends
-                                 on.
-    :return:                     Returns a list of results generated by the
-                                 passed bear_instance.
+    :param message_queue:
+        A queue that contains messages of type
+        errors/warnings/debug statements to be printed
+        in the Log.
+    :param timeout:
+        The queue blocks at most timeout seconds for a
+        free slot to execute the put operation on.
+        After the timeout it returns queue Full
+        exception.
+    :param global_bear_instance:
+        Instance of GlobalBear to run.
+    :param dependency_results:
+        The results of all the bears on which the
+        instance of the passed bear to be run depends
+        on.
+    :return:
+        Returns a list of results generated by the
+        passed bear_instance.
     """
     if (not isinstance(global_bear_instance, GlobalBear)
             or global_bear_instance.kind() != BEAR_KIND.GLOBAL):
@@ -263,23 +297,30 @@ def run_local_bears_on_file(message_queue,
     """
     This method runs a list of local bears on one file.
 
-    :param message_queue:     A queue that contains messages of type
-                              errors/warnings/debug statements to be printed
-                              in the Log.
-    :param timeout:           The queue blocks at most timeout seconds for a
-                              free slot to execute the put operation on. After
-                              the timeout it returns queue Full exception.
-    :param file_dict:         Dictionary that contains contents of files.
-    :param local_bear_list:   List of local bears to run on file.
-    :param local_result_dict: A Manager.dict that will be used to store local
-                              bear results. A list of all local bear results
-                              will be stored with the filename as key.
-    :param control_queue:     If any result gets written to the result_dict a
-                              tuple containing a CONTROL_ELEMENT (to indicate
-                              what kind of event happened) and either a bear
-                              name(for global results) or a file name to
-                              indicate the result will be put to the queue.
-    :param filename:          The name of file on which to run the bears.
+    :param message_queue:
+        A queue that contains messages of type
+        errors/warnings/debug statements to be printed
+        in the Log.
+    :param timeout:
+        The queue blocks at most timeout seconds for a
+        free slot to execute the put operation on. After
+        the timeout it returns queue Full exception.
+    :param file_dict:
+        Dictionary that contains contents of files.
+    :param local_bear_list:
+        List of local bears to run on file.
+    :param local_result_dict:
+        A Manager.dict that will be used to store local
+        bear results. A list of all local bear results
+        will be stored with the filename as key.
+    :param control_queue:
+        If any result gets written to the result_dict a
+        tuple containing a CONTROL_ELEMENT (to indicate
+        what kind of event happened) and either a bear
+        name(for global results) or a file name to
+        indicate the result will be put to the queue.
+    :param filename:
+        The name of file on which to run the bears.
     """
     if filename not in file_dict:
         send_msg(message_queue,
@@ -316,11 +357,13 @@ def get_global_dependency_results(global_result_dict, bear_instance):
     This method gets all the results originating from the dependencies of a
     bear_instance. Each bear_instance may or may not have dependencies.
 
-    :param global_result_dict: The list of results out of which the dependency
-                               results are picked.
-    :return:                   None if bear has no dependencies, False if
-                               dependencies are not met, the dependency dict
-                               otherwise.
+    :param global_result_dict:
+        The list of results out of which the dependency
+        results are picked.
+    :return:
+        None if bear has no dependencies, False if
+        dependencies are not met, the dependency dict
+        otherwise.
     """
     try:
         deps = bear_instance.BEAR_DEPS
@@ -349,17 +392,22 @@ def get_next_global_bear(timeout,
     """
     Retrieves the next global bear.
 
-    :param timeout:            The queue blocks at most timeout seconds for a
-                               free slot to execute the put operation on. After
-                               the timeout it returns queue Full exception.
-    :param global_bear_queue:  queue (read, write) of indexes of global bear
-                               instances in the global_bear_list.
-    :param global_bear_list:   A list containing all global bears to be
-                               executed.
-    :param global_result_dict: A Manager.dict that will be used to store global
-                               results. The list of results of one global bear
-                               will be stored with the bear name as key.
-    :return:                   (bear, bearname, dependency_results)
+    :param timeout:
+        The queue blocks at most timeout seconds for a
+        free slot to execute the put operation on. After
+        the timeout it returns queue Full exception.
+    :param global_bear_queue:
+        queue (read, write) of indexes of global bear
+        instances in the global_bear_list.
+    :param global_bear_list:
+        A list containing all global bears to be
+        executed.
+    :param global_result_dict:
+        A Manager.dict that will be used to store global
+        results. The list of results of one global bear
+        will be stored with the bear name as key.
+    :return:
+        (bear, bearname, dependency_results)
     """
     dependency_results = False
 
@@ -380,7 +428,8 @@ def task_done(obj):
     Invokes task_done if the given queue provides this operation. Otherwise
     passes silently.
 
-    :param obj: Any object.
+    :param obj:
+        Any object.
     """
     if hasattr(obj, 'task_done'):
         obj.task_done()
@@ -397,24 +446,31 @@ def run_local_bears(filename_queue,
     """
     Run local bears on all the files given.
 
-    :param filename_queue:    queue (read) of file names to check with
-                              local bears.
-    :param message_queue:     A queue that contains messages of type
-                              errors/warnings/debug statements to be printed
-                              in the Log.
-    :param timeout:           The queue blocks at most timeout seconds for a
-                              free slot to execute the put operation on. After
-                              the timeout it returns queue Full exception.
-    :param file_dict:         Dictionary that contains contents of files.
-    :param local_bear_list:   List of local bears to run.
-    :param local_result_dict: A Manager.dict that will be used to store local
-                              bear results. A list of all local bear results
-                              will be stored with the filename as key.
-    :param control_queue:     If any result gets written to the result_dict a
-                              tuple containing a CONTROL_ELEMENT (to indicate
-                              what kind of event happened) and either a bear
-                              name(for global results) or a file name to
-                              indicate the result will be put to the queue.
+    :param filename_queue:
+        queue (read) of file names to check with
+        local bears.
+    :param message_queue:
+        A queue that contains messages of type
+        errors/warnings/debug statements to be printed
+        in the Log.
+    :param timeout:
+        The queue blocks at most timeout seconds for a
+        free slot to execute the put operation on. After
+        the timeout it returns queue Full exception.
+    :param file_dict:
+        Dictionary that contains contents of files.
+    :param local_bear_list:
+        List of local bears to run.
+    :param local_result_dict:
+        A Manager.dict that will be used to store local
+        bear results. A list of all local bear results
+        will be stored with the filename as key.
+    :param control_queue:
+        If any result gets written to the result_dict a
+        tuple containing a CONTROL_ELEMENT (to indicate
+        what kind of event happened) and either a bear
+        name(for global results) or a file name to
+        indicate the result will be put to the queue.
     """
     try:
         while True:
@@ -442,23 +498,29 @@ def run_global_bears(message_queue,
     """
     Run all global bears.
 
-    :param message_queue:      A queue that contains messages of type
-                               errors/warnings/debug statements to be printed
-                               in the Log.
-    :param timeout:            The queue blocks at most timeout seconds for a
-                               free slot to execute the put operation on. After
-                               the timeout it returns queue Full exception.
-    :param global_bear_queue:  queue (read, write) of indexes of global bear
-                               instances in the global_bear_list.
-    :param global_bear_list:   list of global bear instances
-    :param global_result_dict: A Manager.dict that will be used to store global
-                               results. The list of results of one global bear
-                               will be stored with the bear name as key.
-    :param control_queue:      If any result gets written to the result_dict a
-                               tuple containing a CONTROL_ELEMENT (to indicate
-                               what kind of event happened) and either a bear
-                               name(for global results) or a file name to
-                               indicate the result will be put to the queue.
+    :param message_queue:
+        A queue that contains messages of type
+        errors/warnings/debug statements to be printed
+        in the Log.
+    :param timeout:
+        The queue blocks at most timeout seconds for a
+        free slot to execute the put operation on. After
+        the timeout it returns queue Full exception.
+    :param global_bear_queue:
+        queue (read, write) of indexes of global bear
+        instances in the global_bear_list.
+    :param global_bear_list:
+        list of global bear instances
+    :param global_result_dict:
+        A Manager.dict that will be used to store global
+        results. The list of results of one global bear
+        will be stored with the bear name as key.
+    :param control_queue:
+        If any result gets written to the result_dict a
+        tuple containing a CONTROL_ELEMENT (to indicate
+        what kind of event happened) and either a bear
+        name(for global results) or a file name to
+        indicate the result will be put to the queue.
     """
     try:
         while True:
@@ -506,39 +568,49 @@ def run(file_name_queue,
     If the queues raise any exception not specified here the user will get
     an 'unknown error' message. So beware of that.
 
-    :param file_name_queue:    queue (read) of file names to check with local
-                               bears. Each invocation of the run method needs
-                               one such queue which it checks with all the
-                               local bears. The queue could be empty.
-                               (Repeat until queue empty.)
-    :param local_bear_list:    List of local bear instances.
-    :param global_bear_list:   List of global bear instances.
-    :param global_bear_queue:  queue (read, write) of indexes of global bear
-                               instances in the global_bear_list.
-    :param file_dict:          dict of all files as {filename:file}, file as in
-                               file.readlines().
-    :param local_result_dict:  A Manager.dict that will be used to store local
-                               results. A list of all local results.
-                               will be stored with the filename as key.
-    :param global_result_dict: A Manager.dict that will be used to store global
-                               results. The list of results of one global bear
-                               will be stored with the bear name as key.
-    :param message_queue:      queue (write) for debug/warning/error
-                               messages (type LogMessage)
-    :param control_queue:      queue (write). If any result gets written to the
-                               result_dict a tuple containing a CONTROL_ELEMENT
-                               (to indicate what kind of event happened) and
-                               either a bear name (for global results) or a
-                               file name to indicate the result will be put to
-                               the queue. If the run method finished all its
-                               local bears it will put
-                               (CONTROL_ELEMENT.LOCAL_FINISHED, None) to the
-                               queue, if it finished all global ones,
-                               (CONTROL_ELEMENT.GLOBAL_FINISHED, None) will
-                               be put there.
-    :param timeout:            The queue blocks at most timeout seconds for a
-                               free slot to execute the put operation on. After
-                               the timeout it returns queue Full exception.
+    :param file_name_queue:
+        queue (read) of file names to check with local
+        bears. Each invocation of the run method needs
+        one such queue which it checks with all the
+        local bears. The queue could be empty.
+        (Repeat until queue empty.)
+    :param local_bear_list:
+        List of local bear instances.
+    :param global_bear_list:
+        List of global bear instances.
+    :param global_bear_queue:
+        queue (read, write) of indexes of global bear
+        instances in the global_bear_list.
+    :param file_dict:
+        dict of all files as {filename:file}, file as in
+        file.readlines().
+    :param local_result_dict:
+        A Manager.dict that will be used to store local
+        results. A list of all local results.
+        will be stored with the filename as key.
+    :param global_result_dict:
+        A Manager.dict that will be used to store global
+        results. The list of results of one global bear
+        will be stored with the bear name as key.
+    :param message_queue:
+        queue (write) for debug/warning/error
+        messages (type LogMessage)
+    :param control_queue:
+        queue (write). If any result gets written to the
+        result_dict a tuple containing a CONTROL_ELEMENT
+        (to indicate what kind of event happened) and
+        either a bear name (for global results) or a
+        file name to indicate the result will be put to
+        the queue. If the run method finished all its
+        local bears it will put
+        (CONTROL_ELEMENT.LOCAL_FINISHED, None) to the
+        queue, if it finished all global ones,
+        (CONTROL_ELEMENT.GLOBAL_FINISHED, None) will
+        be put there.
+    :param timeout:
+        The queue blocks at most timeout seconds for a
+        free slot to execute the put operation on. After
+        the timeout it returns queue Full exception.
     """
     try:
         run_local_bears(file_name_queue,

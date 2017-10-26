@@ -33,9 +33,12 @@ class LocalBear(Bear):
         """
         Handles the given file.
 
-        :param filename: The filename of the file
-        :param file:     The file contents as string array
-        :return:         A list of Result
+        :param filename:
+            The filename of the file
+        :param file:
+            The file contents as string array
+        :return:
+            A list of Result
         """
         raise NotImplementedError('This function has to be implemented for a '
                                   'runnable bear.')

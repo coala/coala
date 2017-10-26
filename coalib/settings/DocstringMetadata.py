@@ -11,11 +11,14 @@ class DocstringMetadata:
         """
         Represents a docstring of a python class or function.
 
-        :param desc:        A description as string.
-        :param param_dict:  A dictionary containing parameter names as key and
-                            their description as value. To preserve the order,
-                            use OrderedDict.
-        :param retval_desc: A string describing the return value.
+        :param desc:
+            A description as string.
+        :param param_dict:
+            A dictionary containing parameter names as key and
+            their description as value. To preserve the order,
+            use OrderedDict.
+        :param retval_desc:
+            A string describing the return value.
         """
         self.desc = desc
         self.param_dict = param_dict

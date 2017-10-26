@@ -126,24 +126,26 @@ class BuildManPageTest(unittest.TestCase):
 
             today = datetime.date.today().strftime('%Y\\-%m\\-%d')
             self.assertEqual(result,
-                             """.TH {0} 1 {1}
-.SH NAME
-{0}
-.SH SYNOPSIS
- \\fB{0}\\fR [-h] [-a A] arg1
+                             """
+                             .TH {0} 1 {1}
 
 
-.SH DESCRIPTION
-UNKNOWN
-.SH OPTIONS
-  arg1
 
-  \\fB-h\\fR, \\fB--help\\fR
-                        show this help message and exit
-  \\fB-a\\fR \\fIA\\fR
-.SH LICENSE
- UNKNOWN
-.SH MAINTAINER(S)
- UNKNOWN
-.SH SEE ALSO
- Online documentation: UNKNOWN""".format(app_name, today))
+                             \\fB{0}\\fR [-h] [-a A] arg1
+
+
+
+
+
+
+
+
+                             show this help message and exit
+
+
+
+
+
+
+                             N
+                             """.format(app_name, today))

@@ -13,6 +13,7 @@ class DocumentationComment:
     The DocumentationComment holds information about a documentation comment
     inside source-code, like position etc.
     """
+
     Parameter = namedtuple('Parameter', 'name, desc')
     ExceptionValue = namedtuple('ExceptionValue', 'name, desc')
     ReturnValue = namedtuple('ReturnValue', 'desc')
@@ -204,41 +205,41 @@ class DocumentationComment:
     def from_metadata(cls, doccomment, docstyle_definition,
                       marker, indent, position):
         r"""
-        Assembles a list of parsed documentation comment metadata.
+        rAssembles a list of parsed documentation comment metadata.
 
-        This function just assembles the documentation comment
-        itself, without the markers and indentation.
+        rThis function just assembles the documentation comment
+        ritself, without the markers and indentation.
 
-        >>> from coalib.bearlib.languages.documentation.DocumentationComment \
-        ...     import DocumentationComment
-        >>> from coalib.bearlib.languages.documentation.DocstyleDefinition \
-        ...     import DocstyleDefinition
-        >>> from coalib.results.TextPosition import TextPosition
-        >>> Description = DocumentationComment.Description
-        >>> Parameter = DocumentationComment.Parameter
-        >>> python_default = DocstyleDefinition.load("python3", "default")
-        >>> parsed_doc = [Description(desc='\nDescription\n'),
-        ...               Parameter(name='age', desc=' Age\n')]
-        >>> str(DocumentationComment.from_metadata(
-        ...         parsed_doc, python_default,
-        ...         python_default.markers[0], '    ',
-        ...         TextPosition(0, 0)))
-        '\nDescription\n:param age: Age\n'
+        r>>> from coalib.bearlib.languages.documentation.DocumentationComment \
+        r...     import DocumentationComment
+        r>>> from coalib.bearlib.languages.documentation.DocstyleDefinition \
+        r...     import DocstyleDefinition
+        r>>> from coalib.results.TextPosition import TextPosition
+        r>>> Description = DocumentationComment.Description
+        r>>> Parameter = DocumentationComment.Parameter
+        r>>> python_default = DocstyleDefinition.load("python3", "default")
+        r>>> parsed_doc = [Description(desc='\nDescription\n'),
+        r...               Parameter(name='age', desc=' Age\n')]
+        r>>> str(DocumentationComment.from_metadata(
+        r...         parsed_doc, python_default,
+        r...         python_default.markers[0], '    ',
+        r...         TextPosition(0, 0)))
+        r'\nDescription\n:param age: Age\n'
 
-        :param doccomment:
-            The list of parsed documentation comment metadata.
-        :param docstyle_definition:
-            The ``DocstyleDefinition`` instance that defines what docstyle is
-            being used in a documentation comment.
-        :param marker:
-            The markers to be used in the documentation comment.
-        :param indent:
-            The indentation to be used in the documentation comment.
-        :param position:
-            The starting position of the documentation comment.
-        :return:
-            A ``DocumentationComment`` instance of the assembled documentation.
-        """
+        r:param doccomment:
+        r    The list of parsed documentation comment metadata.
+        r:param docstyle_definition:
+        r    The ``DocstyleDefinition`` instance that defines what docstyle is
+        r    being used in a documentation comment.
+        r:param marker:
+        r    The markers to be used in the documentation comment.
+        r:param indent:
+        r    The indentation to be used in the documentation comment.
+        r:param position:
+        r    The starting position of the documentation comment.
+        r:return:
+        r    A ``DocumentationComment`` instance of the assembled documentation.
+        r"""
         assembled_doc = ''
         for section in doccomment:
             section_desc = section.desc.splitlines(keepends=True)

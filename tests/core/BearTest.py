@@ -32,9 +32,12 @@ class BearWithAnalysis(Bear):
         """
         Analyzes stuff.
 
-        :param x: First value.
-        :param y: Second value.
-        :param z: Third value.
+        :param x:
+            First value.
+        :param y:
+            Second value.
+        :param z:
+            Third value.
         """
         yield x
         yield y
@@ -48,8 +51,10 @@ class BearWithMoreAnalysis(Bear):
         """
         Analyzes even more stuff.
 
-        :param y: Second value, but better.
-        :param w: Fourth value.
+        :param y:
+            Second value, but better.
+        :param w:
+            Fourth value.
         """
         yield y
         yield w

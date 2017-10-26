@@ -28,8 +28,10 @@ def resolve(bears):
     Collects all dependencies of the given bears. This will also remove
     duplicates.
 
-    :param bears: The given bears. Will not be modified.
-    :return:      The new list of bears, sorted so that it can be executed
-                  sequentially without dependency issues.
+    :param bears:
+        The given bears. Will not be modified.
+    :return:
+        The new list of bears, sorted so that it can be executed
+        sequentially without dependency issues.
     """
     return _resolve(bears, [], [])

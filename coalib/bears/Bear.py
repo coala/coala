@@ -191,38 +191,43 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     @classproperty
     def name(cls):
         """
-        :return: The name of the bear
+        :return:
+            The name of the bear
         """
         return cls.__name__
 
     @classproperty
     def can_detect(cls):
         """
-        :return: A set that contains everything a bear can detect, gathering
-                 information from what it can fix too.
+        :return:
+            A set that contains everything a bear can detect, gathering
+            information from what it can fix too.
         """
         return cls.CAN_DETECT | cls.CAN_FIX
 
     @classproperty
     def source_location(cls):
         """
-        :return: The file path where the bear was fetched from.
+        :return:
+            The file path where the bear was fetched from.
         """
         return inspect.getfile(cls)
 
     @classproperty
     def maintainers(cls):
         """
-        :return: A set containing ``MAINTAINERS`` if specified, else takes
-                 ``AUTHORS`` by default.
+        :return:
+            A set containing ``MAINTAINERS`` if specified, else takes
+            ``AUTHORS`` by default.
         """
         return cls.AUTHORS if cls.MAINTAINERS == set() else cls.MAINTAINERS
 
     @classproperty
     def maintainers_emails(cls):
         """
-        :return: A set containing ``MAINTAINERS_EMAILS`` if specified, else
-                 takes ``AUTHORS_EMAILS`` by default.
+        :return:
+            A set containing ``MAINTAINERS_EMAILS`` if specified, else
+            takes ``AUTHORS_EMAILS`` by default.
         """
         return (cls.AUTHORS_EMAILS if cls.MAINTAINERS_EMAILS == set()
                 else cls.MAINTAINERS_EMAILS)
@@ -235,13 +240,18 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         """
         Constructs a new bear.
 
-        :param section:       The section object where bear settings are
-                              contained.
-        :param message_queue: The queue object for messages. Can be ``None``.
-        :param timeout:       The time the bear is allowed to run. To set no
-                              time limit, use 0.
-        :raises TypeError:    Raised when ``message_queue`` is no queue.
-        :raises RuntimeError: Raised when bear requirements are not fulfilled.
+        :param section:
+            The section object where bear settings are
+            contained.
+        :param message_queue:
+            The queue object for messages. Can be ``None``.
+        :param timeout:
+            The time the bear is allowed to run. To set no
+            time limit, use 0.
+        :raises TypeError:
+            Raised when ``message_queue`` is no queue.
+        :raises RuntimeError:
+            Raised when bear requirements are not fulfilled.
         """
         Printer.__init__(self)
 
@@ -329,16 +339,18 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     @staticmethod
     def kind():
         """
-        :return: The kind of the bear
+        :return:
+            The kind of the bear
         """
         raise NotImplementedError
 
     @classmethod
     def get_metadata(cls):
         """
-        :return: Metadata for the run function. However parameters like
-                 ``self`` or parameters implicitly used by coala (e.g.
-                 filename for local bears) are already removed.
+        :return:
+            Metadata for the run function. However parameters like
+            ``self`` or parameters implicitly used by coala (e.g.
+            filename for local bears) are already removed.
         """
         return FunctionMetadata.from_function(
             cls.run,
@@ -370,9 +382,11 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         """
         Checks if the given list contains all dependencies.
 
-        :param lst: A list of all already resolved bear classes (not
-                    instances).
-        :return:    A set of missing dependencies.
+        :param lst:
+            A list of all already resolved bear classes (not
+            instances).
+        :return:
+            A set of missing dependencies.
         """
         return set(cls.BEAR_DEPS) - set(lst)
 
@@ -388,9 +402,11 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         recursive manner. Though circular dependency chains are a challenge to
         achieve, this function would never return on them!
 
-        :param recurse: Get the settings recursively from its dependencies.
-        :return:        A dictionary of needed settings as keys and a tuple of
-                        help text and annotation as values.
+        :param recurse:
+            Get the settings recursively from its dependencies.
+        :return:
+            A dictionary of needed settings as keys and a tuple of
+            help text and annotation as values.
         """
         non_optional_settings = {}
 
@@ -410,7 +426,6 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         dependencies (via download_cached_file or arbitrary other means) in an
         OS independent way.
         """
-
     @classmethod
     def check_prerequisites(cls):
         """
@@ -439,8 +454,9 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         >>> anotherBear.check_prerequisites()
         'bad_package 0.0.1 is not installed. You can install it using ...'
 
-        :return: True if prerequisites are satisfied, else False or a string
-                 that serves a more detailed description of what's missing.
+        :return:
+            True if prerequisites are satisfied, else False or a string
+            that serves a more detailed description of what's missing.
         """
         for requirement in cls.REQUIREMENTS:
             if not requirement.is_installed():
@@ -453,7 +469,8 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         """
         Gives the directory where the configuration file is.
 
-        :return: Directory of the config file.
+        :return:
+            Directory of the config file.
         """
         return get_config_directory(self.section)
 
@@ -480,9 +497,12 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         >>> newfile == file
         True
 
-        :param url:      The URL to download the file from.
-        :param filename: The filename it should get, e.g. "test.txt".
-        :return:         A full path to the file ready for you to use!
+        :param url:
+            The URL to download the file from.
+        :param filename:
+            The filename it should get, e.g. "test.txt".
+        :return:
+            A full path to the file ready for you to use!
         """
         filename = join(self.data_dir, filename)
         if exists(filename):

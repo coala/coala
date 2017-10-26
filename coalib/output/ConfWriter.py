@@ -120,13 +120,17 @@ class ConfWriter(ClosableObject):
         This method helps in grouping keys with common appendable values and
         writing all keys to the file.
 
-        :param append_keys: The keys that have to be written with an append
-                            delimiter.
-        :param other_keys:  The keys that have to be written with a normal
-                            delimiter.
-        :param val:         The value to be written for the keys.
-        :param defaults:    The defaults of the section the keys and value are
-                            to be written to.
+        :param append_keys:
+            The keys that have to be written with an append
+            delimiter.
+        :param other_keys:
+            The keys that have to be written with a normal
+            delimiter.
+        :param val:
+            The value to be written for the keys.
+        :param defaults:
+            The defaults of the section the keys and value are
+            to be written to.
         """
         if append_keys:
             append_keys = sorted(append_keys,

@@ -28,8 +28,10 @@ def aspectize_sections(sections):
     Search for aspects related setting in a section, initialize it, and then
     embed the aspects information as AspectList object into the section itself.
 
-    :param sections:  List of section that potentially contain aspects setting.
-    :return:          The new sections.
+    :param sections:
+        List of section that potentially contain aspects setting.
+    :return:
+        The new sections.
     """
     for _, section in sections.items():
         if validate_aspect_config(section):
@@ -43,9 +45,11 @@ def validate_aspect_config(section):
     """
     Validate if a section contain required setting to run in aspects mode.
 
-    :param section: The section that potentially contain aspect
-                    setting.
-    :return:        The validity of section.
+    :param section:
+        The section that potentially contain aspect
+        setting.
+    :return:
+        The validity of section.
     """
     aspects = section.get('aspects')
 
@@ -70,7 +74,8 @@ def _set_section_language(sections):
     """
     Validate ``language`` setting and inject them to section if valid.
 
-    :param sections: List of sections that potentially contain ``language``.
+    :param sections:
+        List of sections that potentially contain ``language``.
     """
     for section_name, section in sections.items():
         section_language = section.get('language')
@@ -90,10 +95,13 @@ def merge_section_dicts(lower, higher):
     precedence over the ones of lower. Lower will hold the modified dict in
     the end.
 
-    :param lower:  A section.
-    :param higher: A section which values will take precedence over the ones
-                   from the other.
-    :return:       The merged dict.
+    :param lower:
+        A section.
+    :param higher:
+        A section which values will take precedence over the ones
+        from the other.
+    :return:
+        The merged dict.
     """
     for name in higher:
         if name in lower:
@@ -113,13 +121,17 @@ def load_config_file(filename, log_printer=None, silent=False):
 
     It assumes that the cli_sections are available.
 
-    :param filename:    The file to load settings from.
-    :param log_printer: The log printer to log the warning/error to (in case).
-    :param silent:      Whether or not to warn the user/exit if the file
-                        doesn't exist.
-    :raises SystemExit: Exits when the given filename is invalid and is not the
-                        default coafile. Only raised when ``silent`` is
-                        ``False``.
+    :param filename:
+        The file to load settings from.
+    :param log_printer:
+        The log printer to log the warning/error to (in case).
+    :param silent:
+        Whether or not to warn the user/exit if the file
+        doesn't exist.
+    :raises SystemExit:
+        Exits when the given filename is invalid and is not the
+        default coafile. Only raised when ``silent`` is
+        ``False``.
     """
     filename = os.path.abspath(filename)
 
@@ -146,7 +158,8 @@ def save_sections(sections):
     """
     Saves the given sections if they are to be saved.
 
-    :param sections: A section dict.
+    :param sections:
+        A section dict.
     """
     default_section = sections['cli']
     try:
@@ -167,9 +180,12 @@ def warn_nonexistent_targets(targets, sections, log_printer=None):
     Prints out a warning on the given log printer for all targets that are
     not existent within the given sections.
 
-    :param targets:     The targets to check.
-    :param sections:    The sections to search. (Dict.)
-    :param log_printer: The log printer to warn to.
+    :param targets:
+        The targets to check.
+    :param sections:
+        The sections to search. (Dict.)
+    :param log_printer:
+        The log printer to warn to.
     """
     for target in targets:
         if target not in sections:
@@ -190,12 +206,16 @@ def warn_config_absent(sections, argument, log_printer=None):
     Checks if at least 1 of the given arguments is present somewhere in the
     sections and emits a warning that code analysis can not be run without it.
 
-    :param sections:    A dictionary of sections.
-    :param argument:    An argument OR a list of arguments that at least 1
-                        should present.
-    :param log_printer: A log printer to emit the warning to.
-    :return:            Returns a boolean True if the given argument
-                        is present in the sections, else returns False.
+    :param sections:
+        A dictionary of sections.
+    :param argument:
+        An argument OR a list of arguments that at least 1
+        should present.
+    :param log_printer:
+        A log printer to emit the warning to.
+    :return:
+        Returns a boolean True if the given argument
+        is present in the sections, else returns False.
     """
     if isinstance(argument, str):
         argument = [argument]
@@ -218,16 +238,22 @@ def load_configuration(arg_list,
     Parses the CLI args and loads the config file accordingly, taking
     default_coafile and the users .coarc into account.
 
-    :param arg_list:    The list of CLI arguments.
-    :param log_printer: The LogPrinter object for logging.
-    :param arg_parser:  An ``argparse.ArgumentParser`` instance used for
-                        parsing the CLI arguments.
-    :param args:        Alternative pre-parsed CLI arguments.
-    :param silent:      Whether or not to display warnings, ignored if ``save``
-                        is enabled.
-    :return:            A tuple holding (log_printer: LogPrinter, sections:
-                        dict(str, Section), targets: list(str)). (Types
-                        indicated after colon.)
+    :param arg_list:
+        The list of CLI arguments.
+    :param log_printer:
+        The LogPrinter object for logging.
+    :param arg_parser:
+        An ``argparse.ArgumentParser`` instance used for
+        parsing the CLI arguments.
+    :param args:
+        Alternative pre-parsed CLI arguments.
+    :param silent:
+        Whether or not to display warnings, ignored if ``save``
+        is enabled.
+    :return:
+        A tuple holding (log_printer: LogPrinter, sections:
+        dict(str, Section), targets: list(str)). (Types
+        indicated after colon.)
     """
     cli_sections = parse_cli(arg_list=arg_list, arg_parser=arg_parser,
                              args=args)
@@ -311,9 +337,12 @@ def find_user_config(file_path, max_trials=10):
     Uses the filepath to find the most suitable user config file for the file
     by going down one directory at a time and finding config files there.
 
-    :param file_path:  The path of the file whose user config needs to be found
-    :param max_trials: The maximum number of directories to go down to.
-    :return:           The config file's path, empty string if none was found
+    :param file_path:
+        The path of the file whose user config needs to be found
+    :param max_trials:
+        The maximum number of directories to go down to.
+    :return:
+        The config file's path, empty string if none was found
     """
     file_path = os.path.normpath(os.path.abspath(os.path.expanduser(
         file_path)))
@@ -384,8 +413,10 @@ def get_config_directory(section):
     - the directory of the origin of the ``files`` setting
     - the current directory
 
-    :param section: The section to inspect.
-    :return: The directory where the project is lying.
+    :param section:
+        The section to inspect.
+    :return:
+        The directory where the project is lying.
     """
     if section is None:
         return os.getcwd()
@@ -399,11 +430,15 @@ def get_config_directory(section):
 
 def get_all_bears(log_printer=None, arg_parser=None, silent=True):
     """
-    :param log_printer: The log_printer to handle logging.
-    :param arg_parser:  An ``ArgParser`` object.
-    :param silent:      Whether or not to display warnings.
-    :return:            Tuple containing dictionaries of local bears
-                        and global bears.
+    :param log_printer:
+        The log_printer to handle logging.
+    :param arg_parser:
+        An ``ArgParser`` object.
+    :param silent:
+        Whether or not to display warnings.
+    :return:
+        Tuple containing dictionaries of local bears
+        and global bears.
     """
     sections, _ = load_configuration(arg_list=None,
                                      arg_parser=arg_parser,
@@ -418,12 +453,17 @@ def get_filtered_bears(languages,
                        arg_parser=None,
                        silent=True):
     """
-    :param languages:   List of languages.
-    :param log_printer: The log_printer to handle logging.
-    :param arg_parser:  An ``ArgParser`` object.
-    :param silent:      Whether or not to display warnings.
-    :return:            Tuple containing dictionaries of local bears
-                        and global bears.
+    :param languages:
+        List of languages.
+    :param log_printer:
+        The log_printer to handle logging.
+    :param arg_parser:
+        An ``ArgParser`` object.
+    :param silent:
+        Whether or not to display warnings.
+    :return:
+        Tuple containing dictionaries of local bears
+        and global bears.
     """
     local_bears, global_bears = get_all_bears(arg_parser=arg_parser,
                                               silent=silent)
@@ -458,25 +498,31 @@ def gather_configuration(acquire_settings,
     -  Writes back the new sections to the configuration file if needed
     -  Gives all information back to caller
 
-    :param acquire_settings: The method to use for requesting settings. It will
-                             get a parameter which is a dictionary with the
-                             settings name as key and a list containing a
-                             description in [0] and the names of the bears
-                             who need this setting in all following indexes.
-    :param log_printer:      The log printer to use for logging. The log level
-                             will be adjusted to the one given by the section.
-    :param arg_list:         CLI args to use
-    :param arg_parser:       Instance of ArgParser that is used to parse
-                             none-setting arguments.
-    :param args:             Alternative pre-parsed CLI arguments.
-    :return:                 A tuple with the following contents:
+    :param acquire_settings:
+        The method to use for requesting settings. It will
+        get a parameter which is a dictionary with the
+        settings name as key and a list containing a
+        description in [0] and the names of the bears
+        who need this setting in all following indexes.
+    :param log_printer:
+        The log printer to use for logging. The log level
+        will be adjusted to the one given by the section.
+    :param arg_list:
+        CLI args to use
+    :param arg_parser:
+        Instance of ArgParser that is used to parse
+        none-setting arguments.
+    :param args:
+        Alternative pre-parsed CLI arguments.
+    :return:
+        A tuple with the following contents:
 
-                             -  A dictionary with the sections
-                             -  Dictionary of list of local bears for each
-                                section
-                             -  Dictionary of list of global bears for each
-                                section
-                             -  The targets list
+        -  A dictionary with the sections
+        -  Dictionary of list of local bears for each
+        section
+        -  Dictionary of list of global bears for each
+        section
+        -  The targets list
     """
     if args is None:
         # Note: arg_list can also be []. Hence we cannot use

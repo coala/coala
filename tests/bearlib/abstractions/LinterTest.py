@@ -20,8 +20,10 @@ def get_testfile_name(name):
     """
     Gets the full path to a testfile inside ``linter_test_files`` directory.
 
-    :param name: The filename of the testfile to get the full path for.
-    :return:     The full path to given testfile name.
+    :param name:
+        The filename of the testfile to get the full path for.
+    :return:
+        The full path to given testfile name.
     """
     return os.path.join(os.path.dirname(os.path.realpath(__file__)),
                         'linter_test_files',
@@ -563,7 +565,8 @@ class LinterComponentTest(unittest.TestCase):
             @staticmethod
             def generate_config(filename, file, superparam):
                 """
-                :param superparam: A superparam!
+                :param superparam:
+                    A superparam!
                 """
                 return None
 

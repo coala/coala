@@ -9,7 +9,8 @@ class SpacingHelper(SectionCreatable):
         """
         Creates a helper object for spacing operations.
 
-        :param tab_width: The number of spaces which visually equals a tab.
+        :param tab_width:
+            The number of spaces which visually equals a tab.
         """
         SectionCreatable.__init__(self)
         if not isinstance(tab_width, int):
@@ -22,8 +23,10 @@ class SpacingHelper(SectionCreatable):
         """
         Checks the lines indentation.
 
-        :param line: A string to check for indentation.
-        :return:     The indentation count in spaces.
+        :param line:
+            A string to check for indentation.
+        :return:
+            The indentation count in spaces.
         """
         count = 0
         for char in line:
@@ -47,8 +50,10 @@ class SpacingHelper(SectionCreatable):
         Example: " \t" will be converted to "    ", assuming the tab_width is
         set to 4.
 
-        :param line: The string with tabs to replace.
-        :return:     A string with no tabs.
+        :param line:
+            The string with tabs to replace.
+        :return:
+            A string with no tabs.
         """
         for t_position, t_length in sorted(self.yield_tab_lengths(line),
                                            reverse=True):
@@ -61,7 +66,8 @@ class SpacingHelper(SectionCreatable):
         """
         Yields position and size of tabs in a input string.
 
-        :param input: The string with tabs.
+        :param input:
+            The string with tabs.
         """
         tabless_position = 0
         for index, char in enumerate(input):
@@ -83,8 +89,10 @@ class SpacingHelper(SectionCreatable):
         Example: " \t   a_text   another" will be converted to
         "\t   a_text\tanother", assuming the tab_width is set to 4.
 
-        :param line: The string with spaces to replace.
-        :return:     The converted string.
+        :param line:
+            The string with spaces to replace.
+        :return:
+            The converted string.
         """
         currspaces = 0
         result = ''

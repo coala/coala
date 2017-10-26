@@ -15,11 +15,11 @@ class UnknownLanguageError(AttributeError, KeyError):
     This exception occurs when an unknown language is requested.
     """
 
-
 class LanguageUberMeta(type):
     """
     This class is used to hide the `all` attribute from the Language class.
     """
+
     all = []
 
 

@@ -22,7 +22,8 @@ class ApplyPatchAction(ResultAction):
         """
         (A)pply patch
 
-        :param no_orig: Whether or not to create .orig backup files
+        :param no_orig:
+            Whether or not to create .orig backup files
         """
         for filename in result.diffs:
             pre_patch_filename = filename

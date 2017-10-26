@@ -10,12 +10,15 @@ def get_data_path(log_printer, identifier):
     """
     Get the full path of ``identifier`` present in the user's data directory.
 
-    :param log_printer: A LogPrinter object to use for logging.
-    :param identifier:  The file whose path needs to be expanded.
-    :return:            Full path of the file, assuming it's present in the
-                        user's config directory.
-                        Returns ``None`` if there is a ``PermissionError``
-                        in creating the directory.
+    :param log_printer:
+        A LogPrinter object to use for logging.
+    :param identifier:
+        The file whose path needs to be expanded.
+    :return:
+        Full path of the file, assuming it's present in the
+        user's config directory.
+        Returns ``None`` if there is a ``PermissionError``
+        in creating the directory.
     """
     try:
         os.makedirs(Constants.USER_DATA_DIR, exist_ok=True)
@@ -31,10 +34,13 @@ def delete_files(log_printer, identifiers):
     """
     Delete the given identifiers from the user's coala data directory.
 
-    :param log_printer: A LogPrinter object to use for logging.
-    :param identifiers: The list of files to be deleted.
-    :return:            True if all the given files were successfully deleted.
-                        False otherwise.
+    :param log_printer:
+        A LogPrinter object to use for logging.
+    :param identifiers:
+        The list of files to be deleted.
+    :return:
+        True if all the given files were successfully deleted.
+        False otherwise.
     """
     error_files = []
     result = True
@@ -74,13 +80,17 @@ def pickle_load(log_printer, identifier, fallback=None):
     >>> pickle_load(None, 'nonexistent_project', fallback=42)
     42
 
-    :param log_printer: A LogPrinter object to use for logging.
-    :param identifier:  The name of the file present in the user config
-                        directory.
-    :param fallback:    Return value to fallback to in case the file doesn't
-                        exist.
-    :return:            Data that is present in the file, if the file exists.
-                        Otherwise the ``default`` value is returned.
+    :param log_printer:
+        A LogPrinter object to use for logging.
+    :param identifier:
+        The name of the file present in the user config
+        directory.
+    :param fallback:
+        Return value to fallback to in case the file doesn't
+        exist.
+    :return:
+        Data that is present in the file, if the file exists.
+        Otherwise the ``default`` value is returned.
     """
     file_path = get_data_path(None, identifier)
     if file_path is None or not os.path.isfile(file_path):
@@ -99,13 +109,17 @@ def pickle_dump(log_printer, identifier, data):
     Write ``data`` into the file ``filename`` present in the user
     config directory.
 
-    :param log_printer: A LogPrinter object to use for logging.
-    :param identifier:  The name of the file present in the user config
-                        directory.
-    :param data:        Data to be serialized and written to the file using
-                        pickle.
-    :return:            True if the write was successful.
-                        False if there was a permission error in writing.
+    :param log_printer:
+        A LogPrinter object to use for logging.
+    :param identifier:
+        The name of the file present in the user config
+        directory.
+    :param data:
+        Data to be serialized and written to the file using
+        pickle.
+    :return:
+        True if the write was successful.
+        False if there was a permission error in writing.
     """
     file_path = get_data_path(None, identifier)
     if file_path is None:
@@ -120,8 +134,10 @@ def hash_id(text):
     """
     Hashes the given text.
 
-    :param text: String to to be hashed
-    :return:     A MD5 hash of the given string
+    :param text:
+        String to to be hashed
+    :return:
+        A MD5 hash of the given string
     """
     return hashlib.md5(text.encode('utf-8')).hexdigest()
 
@@ -132,11 +148,15 @@ def get_settings_hash(sections,
     """
     Compute and return a unique hash for the settings.
 
-    :param sections:        A dict containing the settings for each section.
-    :param targets:         The list of sections that are enabled.
-    :param ignore_settings: Setting keys to remove from sections before
-                            hashing.
-    :return:                A MD5 hash that is unique to the settings used.
+    :param sections:
+        A dict containing the settings for each section.
+    :param targets:
+        The list of sections that are enabled.
+    :param ignore_settings:
+        Setting keys to remove from sections before
+        hashing.
+    :return:
+        A MD5 hash that is unique to the settings used.
     """
     settings = []
     for section in sections:
@@ -157,10 +177,13 @@ def settings_changed(log_printer, settings_hash):
     """
     Determine if the settings have changed since the last run with caching.
 
-    :param log_printer:   A LogPrinter object to use for logging.
-    :param settings_hash: A MD5 hash that is unique to the settings used.
-    :return:              Return True if the settings hash has changed
-                          Return False otherwise.
+    :param log_printer:
+        A LogPrinter object to use for logging.
+    :param settings_hash:
+        A MD5 hash that is unique to the settings used.
+    :return:
+        Return True if the settings hash has changed
+        Return False otherwise.
     """
     project_hash = hash_id(os.getcwd())
 
@@ -183,8 +206,10 @@ def update_settings_db(log_printer, settings_hash):
     """
     Update the config file last modification date.
 
-    :param log_printer:   A LogPrinter object to use for logging.
-    :param settings_hash: A MD5 hash that is unique to the settings used.
+    :param log_printer:
+        A LogPrinter object to use for logging.
+    :param settings_hash:
+        A MD5 hash that is unique to the settings used.
     """
     project_hash = hash_id(os.getcwd())
 

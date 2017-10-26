@@ -57,15 +57,20 @@ class LogPrinterMixin:
         only the message. If it is DEBUG or lower, it shows the message
         along with the traceback of the exception.
 
-        :param message:   The message to print.
-        :param exception: The exception to print.
-        :param log_level: The log_level of this message (not used when
-                          logging the traceback. Tracebacks always have
-                          a level of DEBUG).
-        :param timestamp: The time at which this log occurred. Defaults to
-                          the current time.
-        :param kwargs:    Keyword arguments to be passed when logging the
-                          message (not used when logging the traceback).
+        :param message:
+            The message to print.
+        :param exception:
+            The exception to print.
+        :param log_level:
+            The log_level of this message (not used when
+            logging the traceback. Tracebacks always have
+            a level of DEBUG).
+        :param timestamp:
+            The time at which this log occurred. Defaults to
+            the current time.
+        :param kwargs:
+            Keyword arguments to be passed when logging the
+            message (not used when logging the traceback).
         """
         if not isinstance(exception, BaseException):
             raise TypeError('log_exception can only log derivatives of '
@@ -110,13 +115,16 @@ class LogPrinter(LogPrinterMixin):
         """
         Creates a new log printer from an existing Printer.
 
-        :param printer:          The underlying Printer where log messages
-                                 shall be written to. If you inherit from
-                                 LogPrinter, set it to self.
-        :param log_level:        The minimum log level, everything below will
-                                 not be logged.
-        :param timestamp_format: The format string for the
-                                 datetime.today().strftime(format) method.
+        :param printer:
+            The underlying Printer where log messages
+            shall be written to. If you inherit from
+            LogPrinter, set it to self.
+        :param log_level:
+            The minimum log level, everything below will
+            not be logged.
+        :param timestamp_format:
+            The format string for the
+            datetime.today().strftime(format) method.
         """
         self.logger = logging.getLogger()
 

@@ -5,6 +5,7 @@ class RaiseTestBear(LocalBear):
     """
     Just raises a ``RuntimeError`` when run.
     """
+
     @staticmethod
     def create_arguments(filename, file, config_file):
         return ()

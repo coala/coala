@@ -257,8 +257,9 @@ class Bear:
         recursive manner. Though circular dependency chains are a challenge to
         achieve, this function would never return on them!
 
-        :return: A dictionary of needed settings as keys and a tuple of help
-                 text and annotation as values
+        :return:
+            A dictionary of needed settings as keys and a tuple of help
+            text and annotation as values
         """
         non_optional_settings = {}
 
@@ -304,7 +305,6 @@ class Bear:
         dependencies (via download_cached_file or arbitrary other means) in an
         OS independent way.
         """
-
     @classmethod
     def check_prerequisites(cls):
         """
@@ -328,8 +328,9 @@ class Bear:
         >>> SomeOtherBear.check_prerequisites()
         'Following requirements are not installed: really_bad_package (...)'
 
-        :return: True if prerequisites are satisfied, else False or a string
-                 that serves a more detailed description of what's missing.
+        :return:
+            True if prerequisites are satisfied, else False or a string
+            that serves a more detailed description of what's missing.
         """
         not_installed_requirements = [requirement
                                       for requirement in cls.REQUIREMENTS

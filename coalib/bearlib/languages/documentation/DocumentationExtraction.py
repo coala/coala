@@ -22,15 +22,20 @@ def _extract_doc_comment_simple(content, line, column, markers):
     The property of the simple layout is that there's no each-line marker. This
     applies e.g. for python docstrings.
 
-    :param content: Presplitted lines of the source-code-string.
-    :param line:    Line where the documentation comment starts (behind the
-                    start marker). Zero-based.
-    :param column:  Column where the documentation comment starts (behind the
-                    start marker). Zero-based.
-    :param markers: The documentation identifying markers.
-    :return:        If the comment matched layout a triple with end-of-comment
-                    line, column and the extracted documentation. If not
-                    matched, returns None.
+    :param content:
+        Presplitted lines of the source-code-string.
+    :param line:
+        Line where the documentation comment starts (behind the
+        start marker). Zero-based.
+    :param column:
+        Column where the documentation comment starts (behind the
+        start marker). Zero-based.
+    :param markers:
+        The documentation identifying markers.
+    :return:
+        If the comment matched layout a triple with end-of-comment
+        line, column and the extracted documentation. If not
+        matched, returns None.
     """
     align_column = column - len(markers[0])
 
@@ -71,15 +76,20 @@ def _extract_doc_comment_continuous(content, line, column, markers):
         #
         #  detailed
 
-    :param content: Presplitted lines of the source-code-string.
-    :param line:    Line where the documentation comment starts (behind the
-                    start marker). Zero-based.
-    :param column:  Column where the documentation comment starts (behind the
-                    start marker). Zero-based.
-    :param markers: The documentation identifying markers.
-    :return:        If the comment matched layout a triple with end-of-comment
-                    line, column and the extracted documentation. If not
-                    matched, returns None.
+    :param content:
+        Presplitted lines of the source-code-string.
+    :param line:
+        Line where the documentation comment starts (behind the
+        start marker). Zero-based.
+    :param column:
+        Column where the documentation comment starts (behind the
+        start marker). Zero-based.
+    :param markers:
+        The documentation identifying markers.
+    :return:
+        If the comment matched layout a triple with end-of-comment
+        line, column and the extracted documentation. If not
+        matched, returns None.
     """
     marker_len = len(markers[1])
 
@@ -115,15 +125,20 @@ def _extract_doc_comment_standard(content, line, column, markers):
          * documentation
          */
 
-    :param content: Presplitted lines of the source-code-string.
-    :param line:    Line where the documentation comment starts (behind the
-                    start marker). Zero-based.
-    :param column:  Column where the documentation comment starts (behind the
-                    start marker). Zero-based.
-    :param markers: The documentation identifying markers.
-    :return:        If the comment matched layout a triple with end-of-comment
-                    line, column and the extracted documentation. If not
-                    matched, returns None.
+    :param content:
+        Presplitted lines of the source-code-string.
+    :param line:
+        Line where the documentation comment starts (behind the
+        start marker). Zero-based.
+    :param column:
+        Column where the documentation comment starts (behind the
+        start marker). Zero-based.
+    :param markers:
+        The documentation identifying markers.
+    :return:
+        If the comment matched layout a triple with end-of-comment
+        line, column and the extracted documentation. If not
+        matched, returns None.
     """
     pos = content[line].find(markers[2], column)
     if pos != -1:
@@ -160,15 +175,20 @@ def _extract_doc_comment(content, line, column, markers):
     """
     Delegates depending on the given markers to the right extraction method.
 
-    :param content: Presplitted lines of the source-code-string.
-    :param line:    Line where the documentation comment starts (behind the
-                    start marker). Zero-based.
-    :param column:  Column where the documentation comment starts (behind the
-                    start marker). Zero-based.
-    :param markers: The documentation identifying markers.
-    :return:        If the comment matched layout a triple with end-of-comment
-                    line, column and the extracted documentation. If not
-                    matched, returns None.
+    :param content:
+        Presplitted lines of the source-code-string.
+    :param line:
+        Line where the documentation comment starts (behind the
+        start marker). Zero-based.
+    :param column:
+        Column where the documentation comment starts (behind the
+        start marker). Zero-based.
+    :param markers:
+        The documentation identifying markers.
+    :return:
+        If the comment matched layout a triple with end-of-comment
+        line, column and the extracted documentation. If not
+        matched, returns None.
     """
     if markers[1] == '':
         # Extract and align to start marker.
@@ -184,8 +204,10 @@ def _compile_multi_match_regex(strings):
     """
     Compiles a regex object that matches each of the given strings.
 
-    :param strings: The strings to match.
-    :return:        A regex object.
+    :param strings:
+        The strings to match.
+    :return:
+        A regex object.
     """
     return re.compile('|'.join(re.escape(s) for s in strings))
 

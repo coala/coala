@@ -27,8 +27,10 @@ def glob(obj, *args, **kwargs):
     Creates a path in which all special glob characters in all the
     parent directories in the given setting are properly escaped.
 
-    :param obj: The ``Setting`` object from which the key is obtained.
-    :return:    Returns a path in which special glob characters are escaped.
+    :param obj:
+        The ``Setting`` object from which the key is obtained.
+    :return:
+        Returns a path in which special glob characters are escaped.
     """
     return obj.__glob__(*args, **kwargs)
 
@@ -38,9 +40,11 @@ def glob_list(obj, *args, **kwargs):
     Creates a list of paths in which all special glob characters in all the
     parent directories of all paths in the given setting are properly escaped.
 
-    :param obj: The ``Setting`` object from which the key is obtained.
-    :return:    Returns a list of paths in which special glob characters are
-                escaped.
+    :param obj:
+        The ``Setting`` object from which the key is obtained.
+    :return:
+        Returns a list of paths in which special glob characters are
+        escaped.
     """
     return obj.__glob_list__(*args, **kwargs)
 
@@ -49,9 +53,12 @@ def language(name):
     """
     Convert a string into ``Language`` object.
 
-    :param name:        String containing language name.
-    :return:            ``Language`` object.
-    :raises ValueError: If the ``name`` contain invalid language name.
+    :param name:
+        String containing language name.
+    :return:
+        ``Language`` object.
+    :raises ValueError:
+        If the ``name`` contain invalid language name.
     """
     try:
         return Language[name]
@@ -64,11 +71,12 @@ def typed_list(conversion_func):
     Creates a class that converts a setting into a list of elements each
     converted with the given conversion function.
 
-    :param conversion_func: The conversion function that converts a string into
-                            your desired list item object.
-    :return:                An instance of the created conversion class.
+    :param conversion_func:
+        The conversion function that converts a string into
+        your desired list item object.
+    :return:
+        An instance of the created conversion class.
     """
-
     class Converter:
 
         def __call__(self, setting):
@@ -97,12 +105,15 @@ def typed_dict(key_type, value_type, default):
     """
     Creates a class that converts a setting into a dict with the given types.
 
-    :param key_type:   The type conversion function for the keys.
-    :param value_type: The type conversion function for the values.
-    :param default:    The default value to use if no one is given by the user.
-    :return:           An instance of the created conversion class.
+    :param key_type:
+        The type conversion function for the keys.
+    :param value_type:
+        The type conversion function for the values.
+    :param default:
+        The default value to use if no one is given by the user.
+    :return:
+        An instance of the created conversion class.
     """
-
     class Converter:
 
         def __call__(self, setting):
@@ -123,12 +134,15 @@ def typed_ordered_dict(key_type, value_type, default):
     Creates a class that converts a setting into an ordered dict with the
     given types.
 
-    :param key_type:   The type conversion function for the keys.
-    :param value_type: The type conversion function for the values.
-    :param default:    The default value to use if no one is given by the user.
-    :return:           An instance of the created conversion class.
+    :param key_type:
+        The type conversion function for the keys.
+    :param value_type:
+        The type conversion function for the values.
+    :param default:
+        The default value to use if no one is given by the user.
+    :return:
+        An instance of the created conversion class.
     """
-
     class Converter:
 
         def __call__(self, setting):
@@ -164,26 +178,34 @@ class Setting(StringConverter):
         """
         Initializes a new Setting,
 
-        :param key:                        The key of the Setting.
-        :param value:                      The value, if you apply conversions
-                                           to this object these will be applied
-                                           to this value.
-        :param origin:                     The originating file. This will be
-                                           used for path conversions and the
-                                           last part will be stripped of. If
-                                           you want to specify a directory as
-                                           origin be sure to end it with a
-                                           directory separator.
-        :param strip_whitespaces:          Whether to strip whitespaces from
-                                           the value or not
-        :param list_delimiters:            Delimiters for list conversion
-        :param from_cli:                   True if this setting was read by the
-                                           CliParser.
-        :param remove_empty_iter_elements: Whether to remove empty elements in
-                                           iterable values.
-        :param to_append:                  The boolean value if setting value
-                                           needs to be appended to a setting in
-                                           the defaults of a section.
+        :param key:
+            The key of the Setting.
+        :param value:
+            The value, if you apply conversions
+            to this object these will be applied
+            to this value.
+        :param origin:
+            The originating file. This will be
+            used for path conversions and the
+            last part will be stripped of. If
+            you want to specify a directory as
+            origin be sure to end it with a
+            directory separator.
+        :param strip_whitespaces:
+            Whether to strip whitespaces from
+            the value or not
+        :param list_delimiters:
+            Delimiters for list conversion
+        :param from_cli:
+            True if this setting was read by the
+            CliParser.
+        :param remove_empty_iter_elements:
+            Whether to remove empty elements in
+            iterable values.
+        :param to_append:
+            The boolean value if setting value
+            needs to be appended to a setting in
+            the defaults of a section.
         """
         self.to_append = to_append
 
@@ -205,16 +227,20 @@ class Setting(StringConverter):
         Note: You can also use this function on strings, in that case the
         origin argument will be taken in every case.
 
-        :param origin:             The origin file to take if no origin is
-                                   specified for the given setting. If you
-                                   want to provide a directory, make sure it
-                                   ends with a directory separator.
-        :param glob_escape_origin: When this is set to true, the origin of
-                                   this setting will be escaped with
-                                   ``glob_escape``.
-        :return:                   An absolute path.
-        :raises ValueError:        If no origin is specified in the setting
-                                   nor the given origin parameter.
+        :param origin:
+            The origin file to take if no origin is
+            specified for the given setting. If you
+            want to provide a directory, make sure it
+            ends with a directory separator.
+        :param glob_escape_origin:
+            When this is set to true, the origin of
+            this setting will be escaped with
+            ``glob_escape``.
+        :return:
+            An absolute path.
+        :raises ValueError:
+            If no origin is specified in the setting
+            nor the given origin parameter.
         """
         strrep = str(self).strip()
         if os.path.isabs(strrep):
@@ -240,14 +266,17 @@ class Setting(StringConverter):
         Determines the path of this setting with proper escaping of its
         parent directories.
 
-        :param origin:      The origin file to take if no origin is specified
-                            for the given setting. If you want to provide a
-                            directory, make sure it ends with a directory
-                            separator.
-        :return:            An absolute path in which the parent directories
-                            are escaped.
-        :raises ValueError: If no origin is specified in the setting nor the
-                            given origin parameter.
+        :param origin:
+            The origin file to take if no origin is specified
+            for the given setting. If you want to provide a
+            directory, make sure it ends with a directory
+            separator.
+        :return:
+            An absolute path in which the parent directories
+            are escaped.
+        :raises ValueError:
+            If no origin is specified in the setting nor the
+            given origin parameter.
         """
         return Setting.__path__(self, origin, glob_escape_origin=True)
 
@@ -256,7 +285,8 @@ class Setting(StringConverter):
         Splits the value into a list and creates a path out of each item taking
         the origin of the setting into account.
 
-        :return: A list of absolute paths.
+        :return:
+            A list of absolute paths.
         """
         return [Setting.__path__(elem, self.origin) for elem in self]
 
@@ -265,8 +295,9 @@ class Setting(StringConverter):
         Splits the value into a list and creates a path out of each item in
         which the special glob characters in origin are escaped.
 
-        :return: A list of absolute paths in which the special characters in
-                 the parent directories of the setting are escaped.
+        :return:
+            A list of absolute paths in which the special characters in
+            the parent directories of the setting are escaped.
         """
         return [Setting.__glob__(elem, self.origin) for elem in self]
 

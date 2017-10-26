@@ -44,10 +44,13 @@ def get_subaspect(parent, subaspect):
     ...
     AttributeError: Cannot search an aspect instance using another ...
 
-    :param parent:    The parent aspect that should be searched.
-    :param subaspect: An subaspect that we want to find in an
-                      aspectclass.
-    :return:          An aspectclass. Return None if not found.
+    :param parent:
+        The parent aspect that should be searched.
+    :param subaspect:
+        An subaspect that we want to find in an
+        aspectclass.
+    :return:
+        An aspectclass. Return None if not found.
     """
     # Avoid circular import
     from .meta import isaspect, issubaspect
@@ -79,8 +82,10 @@ def _get_leaf_aspects(aspect):
     """
     Explode an aspect into list of its leaf aspects.
 
-    :param aspect:    An aspect class or instance.
-    :return:          List of leaf aspects.
+    :param aspect:
+        An aspect class or instance.
+    :return:
+        List of leaf aspects.
     """
     # Avoid circular import
     from .collections import AspectList

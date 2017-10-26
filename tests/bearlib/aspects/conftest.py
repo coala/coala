@@ -69,6 +69,7 @@ def SubAspect(RootAspect, SubAspect_docs, SubAspect_tastes):
         """
         Definition
         """
+
         docs = SubAspect_docs
 
         salty = SubAspect_tastes['salty']
@@ -130,6 +131,7 @@ def SubSubAspect(SubAspect, SubSubAspect_docs, SubAspect_tastes):
         """
         Definition
         """
+
         docs = SubAspect_docs
 
         salty = SubAspect_tastes['salty']

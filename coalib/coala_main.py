@@ -65,38 +65,51 @@ def run_coala(console_printer=None,
     This is a main method that should be usable for almost all purposes and
     reduces executing coala to one function call.
 
-    :param console_printer:         Object to print messages on the console.
-    :param log_printer:             A LogPrinter object to use for logging.
-    :param print_results:           A callback that takes a LogPrinter, a
-                                    section, a list of results to be printed,
-                                    the file dict and the mutable file diff
-                                    dict.
-    :param acquire_settings:        The method to use for requesting settings.
-                                    It will get a parameter which is a
-                                    dictionary with the settings name as key
-                                    and a list containing a description in [0]
-                                    and the names of the bears who need this
-                                    setting in all following indexes.
-    :param print_section_beginning: A callback that will be called with a
-                                    section name string whenever analysis of a
-                                    new section is started.
-    :param nothing_done:            A callback that will be called with only a
-                                    log printer that shall indicate that
-                                    nothing was done.
-    :param autoapply:               Set this to false to not autoapply any
-                                    actions. If you set this to `False`,
-                                    `force_show_patch` will be ignored.
-    :param force_show_patch:        If set to True, a patch will be always
-                                    shown. (Using ApplyPatchAction.)
-    :param arg_parser:              Instance of ArgParser that is used to parse
-                                    non-setting arguments.
-    :param arg_list:                The CLI argument list.
-    :param args:                    Alternative pre-parsed CLI arguments.
-    :param debug:                   Run in debug mode, bypassing
-                                    multiprocessing, and not catching any
-                                    exceptions.
-    :return:                        A dictionary containing a list of results
-                                    for all analyzed sections as key.
+    :param console_printer:
+        Object to print messages on the console.
+    :param log_printer:
+        A LogPrinter object to use for logging.
+    :param print_results:
+        A callback that takes a LogPrinter, a
+        section, a list of results to be printed,
+        the file dict and the mutable file diff
+        dict.
+    :param acquire_settings:
+        The method to use for requesting settings.
+        It will get a parameter which is a
+        dictionary with the settings name as key
+        and a list containing a description in [0]
+        and the names of the bears who need this
+        setting in all following indexes.
+    :param print_section_beginning:
+        A callback that will be called with a
+        section name string whenever analysis of a
+        new section is started.
+    :param nothing_done:
+        A callback that will be called with only a
+        log printer that shall indicate that
+        nothing was done.
+    :param autoapply:
+        Set this to false to not autoapply any
+        actions. If you set this to `False`,
+        `force_show_patch` will be ignored.
+    :param force_show_patch:
+        If set to True, a patch will be always
+        shown. (Using ApplyPatchAction.)
+    :param arg_parser:
+        Instance of ArgParser that is used to parse
+        non-setting arguments.
+    :param arg_list:
+        The CLI argument list.
+    :param args:
+        Alternative pre-parsed CLI arguments.
+    :param debug:
+        Run in debug mode, bypassing
+        multiprocessing, and not catching any
+        exceptions.
+    :return:
+        A dictionary containing a list of results
+        for all analyzed sections as key.
     """
     all_actions_possible = provide_all_actions()
     apply_single = None

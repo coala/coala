@@ -6,6 +6,7 @@ class Formatting:
     """
     The visual appearance of source code.
     """
+
     class docs:
         example = """
         # Here is an example of Python code with lots of
@@ -34,6 +35,7 @@ class Length:
     """
     Hold sub-aspects for file and line length.
     """
+
     class docs:
         example = """
         # We assume that the maximum number of characters per line is 10
@@ -59,6 +61,7 @@ class LineLength:
     """
     Number of characters found in a line of code.
     """
+
     class docs:
         example = """
         print('The length of this line is 38')
@@ -82,6 +85,7 @@ class FileLength:
     """
     Number of lines found in a file.
     """
+
     class docs:
         example = """
         # This file would be a large file if we assume that the max number of
@@ -114,6 +118,7 @@ class Spacing:
     """
     All whitespace found between non-whitespace characters.
     """
+
     class docs:
         example = """
         # Here is an example of code with spacing issues including
@@ -142,6 +147,7 @@ class TrailingSpace:
     character on the line until the newline. This includes tabs "\\\\t",
     blank lines, blanks etc.
     """
+
     class docs:
         example = """
         def func( a ):
@@ -165,6 +171,7 @@ class BlankLine:
     """
     A line with zero characters.
     """
+
     class docs:
         example = """
         name = input('What is your name?')
@@ -190,6 +197,7 @@ class BlankLineAfterDeclaration:
     """
     Those found after declarations.
     """
+
     class docs:
         example = """
         #include <stdio.h>
@@ -224,6 +232,7 @@ class BlankLineAfterProcedure:
     """
     Those found after procedures or functions.
     """
+
     class docs:
         example = """
         #include <stdio.h>
@@ -254,6 +263,7 @@ class BlankLineAfterClass:
     """
     Those found after classes' definitions.
     """
+
     class docs:
         example = """
         class SomeClass:
@@ -281,6 +291,7 @@ class NewlineAtEOF:
     """
     Newline character (usually '\\\\n', aka CR) found at the end of file.
     """
+
     class docs:
         example = """
         def do_nothing():
@@ -310,6 +321,7 @@ class SpacesAroundOperator:
     """
     Spacing around operators.
     """
+
     class docs:
         example = """
         def f(a, x):
@@ -340,6 +352,7 @@ class Quotation:
     """
     Quotation mark used for strings and docstrings.
     """
+
     class docs:
         example = """
         # Here is an example of code where both '' and "" quotation mark

@@ -63,8 +63,6 @@ class TestAction(ResultAction):
         """
         Test (A)ction
         """
-
-
 class TestBear(Bear):
 
     CAN_DETECT = {'Formatting'}
@@ -75,8 +73,10 @@ class TestBear(Bear):
         """
         Test bear Description.
 
-        :param setting1: Required Setting.
-        :param setting2: Optional Setting.
+        :param setting1:
+            Required Setting.
+        :param setting2:
+            Optional Setting.
         """
         return None
 
@@ -89,7 +89,8 @@ class TestBear2(Bear):
         """
         Test bear 2 description.
 
-        :param setting1: Required Setting.
+        :param setting1:
+            Required Setting.
         """
         return None
 
@@ -108,7 +109,9 @@ class SomeOtherBear(Bear):
     def run(self, setting: int=None):
         """
         This is a Bear.
-        :param setting: This is an optional setting.
+
+        :param setting:
+            This is an optional setting.
         """
         return None
 
@@ -614,9 +617,8 @@ class ConsoleInteractionTest(unittest.TestCase):
                 self.assertEqual(generator.last_input, -1)
                 self.assertEqual(stdout.getvalue(),
                                  """
-Project wide:
-**** origin [Section: someSection | Severity: NORMAL] ****
-!    ! {}\n""".format(highlight_text(self.no_color,
+                                 **** origin [Section: someSection | Severity: NORMAL] ****
+                                 """(self.no_color,
                                      'message', style=BackgroundMessageStyle)))
 
     def test_print_section_beginning(self):

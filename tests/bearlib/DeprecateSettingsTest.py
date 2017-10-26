@@ -8,8 +8,6 @@ def func(new):
     """
     This docstring will not be lost.
     """
-
-
 class DeprecateSettingsTest(unittest.TestCase):
 
     def test_docstring(self):

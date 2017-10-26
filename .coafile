@@ -47,6 +47,11 @@ ignore_length_regex = ^.*https?://
 
 default_actions = SpaceConsistencyBear: ApplyPatchAction 
 
+[docs2]
+bears = DocumentationStyleBear
+language = Python
+expand_one_liners = true
+
 [languagetool]
 enabled = False
 

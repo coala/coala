@@ -22,9 +22,10 @@ class GlobalBear(Bear):
         """
         Constructs a new GlobalBear.
 
-        :param file_dict: The dictionary of {filename: file contents}.
+        :param file_dict:
+            The dictionary of {filename: file contents}.
 
-        See :class:`coalib.bears.Bear` for other parameters.
+            See :class:`coalib.bears.Bear` for other parameters.
         """
         Bear.__init__(self, section, message_queue, timeout)
         self.file_dict = file_dict
@@ -40,11 +41,13 @@ class GlobalBear(Bear):
         """
         Handles all files in file_dict.
 
-        :param dependency_results: The dictionary of {bear name:
-                                   result list}.
-        :return: A list of Result type.
+        :param dependency_results:
+            The dictionary of {bear name:
+            result list}.
+        :return:
+            A list of Result type.
 
-        See :class:`coalib.bears.Bear` for `run` method description.
+            See :class:`coalib.bears.Bear` for `run` method description.
         """
         raise NotImplementedError(
             'This function has to be implemented for a runnable bear.')
