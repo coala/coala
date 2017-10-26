@@ -32,10 +32,9 @@ install:
   # Check that we have the expected version and architecture for Python
   - "python --version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
-  - "pip --version"
-  - "pip list"
-  - "pip freeze"
-  - "pip install setuptools>=19"
+  - "%CMD_IN_ENV% pip --version"
+  - "%CMD_IN_ENV% pip list"
+  - "%CMD_IN_ENV% pip freeze"
 
   - "%CMD_IN_ENV% pip install --cache-dir=C:\\pip_cache -r requirements.txt -r test-requirements.txt"
 
