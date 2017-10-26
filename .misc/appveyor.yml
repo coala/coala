@@ -35,6 +35,7 @@ install:
   - "%CMD_IN_ENV% pip --version"
   - "%CMD_IN_ENV% pip list"
   - "%CMD_IN_ENV% pip freeze"
+  - "%CMD_IN_ENV% pip install setuptools>=19.0"
 
   - "%CMD_IN_ENV% pip install --cache-dir=C:\\pip_cache -r requirements.txt -r test-requirements.txt"
 
