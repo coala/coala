@@ -64,7 +64,7 @@ def mode_json(args, debug=False):
 
     if args.output:
         filename = str(args.output[0])
-        with open(filename, 'w+') as fp:
+        with open(filename, 'w') as fp:
             json.dump(retval, fp,
                       cls=JSONEncoder,
                       sort_keys=True,

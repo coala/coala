@@ -956,7 +956,7 @@ def print_bears(bears,
                                            separators=(',', ': '))
         if args.output:
             filename = args.output[0]
-            with open(filename, 'w+') as fp:
+            with open(filename, 'w') as fp:
                 fp.write(json_formatted_output)
         else:
             print(json_formatted_output)
