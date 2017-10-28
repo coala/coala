@@ -63,11 +63,7 @@ class DocstyleDefinition:
         :param docstring_type_regex:
             A namedtuple consisting of regex
             about ``class`` and ``function`` of a language, which
-<<<<<<< HEAD
-            is used to determine ``docstring_type``  of
-=======
             is used to determine ``docstring_type`` of
->>>>>>> 4481241a74ff9653f1373802c565dba2991f345c
             DocumentationComment.
         :param docstring_position:
             Defines the position where the regex of
