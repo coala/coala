@@ -19,7 +19,7 @@ preferred_quotation = '
 default_actions = *: ApplyPatchAction
 
 [flakes]
-# Do not set default_action to ApplyPatchAction as it may lead to some 
+# Do not set default_action to ApplyPatchAction as it may lead to some
 # required imports being removed that might result in coala behaving weirdly.
 
 default_action: *: ShowPatchAction
@@ -45,7 +45,7 @@ files = docs/**/*.rst, CONTRIBUTING.rst, README.rst
 ignore = docs/API/**
 ignore_length_regex = ^.*https?://
 
-default_actions = SpaceConsistencyBear: ApplyPatchAction 
+default_actions = SpaceConsistencyBear: ApplyPatchAction
 
 [languagetool]
 enabled = False
@@ -117,7 +117,7 @@ bears = reSTLintBear
 files = README.rst
 
 [text]
-bears = SpaceConsistencyBear
+bears = SpaceConsistencyBear, YAMLLintBear
 files =
     LICENSE, ISSUE_TEMPLATE, PULL_REQUEST_TEMPLATE.md, MANIFEST.in,
     **.sh, .travis.yml, circle.yml, setup.cfg, ./docs/_static/custom.css
