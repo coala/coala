@@ -116,8 +116,13 @@ files = docs/_static/**.css
 bears = reSTLintBear
 files = README.rst
 
+[yml]
+bears = YAMLLintBear
+files = .codecov.yml, .rultor.yml, .travis.yml, circle.yml,
+    .misc/appveyor.yml
+
 [text]
-bears = SpaceConsistencyBear, YAMLLintBear
+bears = SpaceConsistencyBear
 files =
     LICENSE, ISSUE_TEMPLATE, PULL_REQUEST_TEMPLATE.md, MANIFEST.in,
     **.sh, .travis.yml, circle.yml, setup.cfg, ./docs/_static/custom.css
