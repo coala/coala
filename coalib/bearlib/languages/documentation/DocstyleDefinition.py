@@ -34,32 +34,40 @@ class DocstyleDefinition:
         """
         Instantiates a new DocstyleDefinition.
 
-        :param language: The case insensitive programming language of the
-                         documentation comment, e.g. ``"CPP"`` for C++ or
-                         ``"PYTHON3"``.
-        :param docstyle: The case insensitive documentation style/tool used
-                         to document code, e.g. ``"default"`` or ``"doxygen"``.
-        :param markers:  An iterable of marker/delimiter string iterables
-                         or a single marker/delimiter string iterable that
-                         identify a documentation comment. See ``markers``
-                         property for more details on markers.
-        :param metadata: A namedtuple consisting of certain attributes that
-                         form the layout of the certain documentation comment
-                         e.g. ``param_start`` defining the start symbol of
-                         the parameter fields and ``param_end`` defining the
-                         end.
-        :param class_padding: A namedtuple consisting of values about
-                         blank lines before and after the documentation of
-                         ``docstring_type`` class.
-        :param function_padding: A namedtuple consisting of values about
-                         blank lines before and after the documentation of
-                         ``docstring_type`` function.
-        :param docstring_type_regex: A namedtuple consisting of regex
-                         about ``class`` and ``function`` of a language, which
-                         is used to determine ``docstring_type`` of
-                         DocumentationComment.
-        :param docstring_position: Defines the position where the regex of
-                         docstring type is present(i.e. ``top`` or ``bottom``).
+        :param language:
+            The case insensitive programming language of the
+            documentation comment, e.g. ``"CPP"`` for C++ or
+            ``"PYTHON3"``.
+        :param docstyle:
+            The case insensitive documentation style/tool used
+            to document code, e.g. ``"default"`` or ``"doxygen"``.
+        :param markers:
+            An iterable of marker/delimiter string iterables
+            or a single marker/delimiter string iterable that
+            identify a documentation comment. See ``markers``
+            property for more details on markers.
+        :param metadata:
+            A namedtuple consisting of certain attributes that
+            form the layout of the certain documentation comment
+            e.g. ``param_start`` defining the start symbol of
+            the parameter fields and ``param_end`` defining the
+            end.
+        :param class_padding:
+            A namedtuple consisting of values about
+            blank lines before and after the documentation of
+            ``docstring_type`` class.
+        :param function_padding:
+            A namedtuple consisting of values about
+            blank lines before and after the documentation of
+            ``docstring_type`` function.
+        :param docstring_type_regex:
+            A namedtuple consisting of regex
+            about ``class`` and ``function`` of a language, which
+            is used to determine ``docstring_type``  of
+            DocumentationComment.
+        :param docstring_position:
+            Defines the position where the regex of
+            docstring type is present(i.e. ``top`` or ``bottom``).
         """
         self._language = language.lower()
         self._docstyle = docstyle.lower()
