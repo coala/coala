@@ -165,45 +165,37 @@ def acquire_actions_and_apply(console_printer,
     cli_actions = CLI_ACTIONS if cli_actions is None else cli_actions
     failed_actions = set()
     applied_actions = {}
+
     while True:
-        actions = []
-        for action in cli_actions:
-            if action.is_applicable(result, file_dict, file_diff_dict) is True:
-                actions.append(action)
-
-        if actions == []:
-            return
-
         action_dict = {}
         metadata_list = []
-        for action in actions:
-            metadata = action.get_metadata()
-            action_dict[metadata.name] = action
-            metadata_list.append(metadata)
+
+        for action in cli_actions:
+            if action.is_applicable(result,
+                                    file_dict,
+                                    file_diff_dict,
+                                    tuple(applied_actions.keys())) is True:
+                metadata = action.get_metadata()
+                action_dict[metadata.name] = action
+                metadata_list.append(metadata)
+
+        if not metadata_list:
+            return
 
         # User can always choose no action which is guaranteed to succeed
-        if apply_single:
-            ask_for_action_and_apply(console_printer,
-                                     section,
-                                     metadata_list,
-                                     action_dict,
-                                     failed_actions,
-                                     result,
-                                     file_diff_dict,
-                                     file_dict,
-                                     applied_actions,
-                                     apply_single=apply_single)
-            break
-        elif not ask_for_action_and_apply(console_printer,
-                                          section,
-                                          metadata_list,
-                                          action_dict,
-                                          failed_actions,
-                                          result,
-                                          file_diff_dict,
-                                          file_dict,
-                                          applied_actions,
-                                          apply_single=apply_single):
+        continue_interaction = ask_for_action_and_apply(
+            console_printer,
+            section,
+            metadata_list,
+            action_dict,
+            failed_actions,
+            result,
+            file_diff_dict,
+            file_dict,
+            applied_actions,
+            apply_single=apply_single
+        )
+        if not continue_interaction:
             break
 
 
@@ -768,6 +760,7 @@ def ask_for_action_and_apply(console_printer,
     :return:                Returns a boolean value. True will be returned, if
                             it makes sense that the user may choose to execute
                             another action, False otherwise.
+                            If apply_single ist set, always return False.
     """
     actions_desc, actions_name = choose_action(console_printer, metadata_list,
                                                apply_single)
@@ -791,6 +784,7 @@ def ask_for_action_and_apply(console_printer,
                                     file_diff_dict,
                                     file_dict,
                                     applied_actions)
+        return False
     else:
         for action_choice, action_choice_name in zip(actions_desc,
                                                      actions_name):
