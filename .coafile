@@ -116,6 +116,10 @@ files = docs/_static/**.css
 bears = reSTLintBear
 files = README.rst
 
+[yml]
+bears = YAMLLintBear
+files = *.yml
+
 [text]
 bears = SpaceConsistencyBear
 files =
