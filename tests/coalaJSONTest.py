@@ -138,6 +138,7 @@ class coalaJSONTest(unittest.TestCase):
 
         with open('file.json') as fp:
             data = json.load(fp)
+        os.remove('file.json')
 
         output = json.loads(stdout1)
         self.assertFalse(stderr1)
@@ -150,7 +151,6 @@ class coalaJSONTest(unittest.TestCase):
         self.assertFalse(retval2)
         self.assertFalse(stdout2)
         self.assertFalse(stderr2)
-        os.remove('file.json')
 
     def test_show_language_bears_output_file(self):
         with bear_test_module():
