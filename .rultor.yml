@@ -3,12 +3,14 @@ install:
 
 docker:
   as_root: true
-  image: "coala/rultor-python"
+  image: 'coala/rultor-python'
 
 merge:
   fast-forward: only
   script:
-    - python3 .misc/adjust_version_number.py coalib/VERSION -b `date --utc +%Y%m%d%H%M%S`
+    - >
+      python3 .misc/adjust_version_number.py
+      coalib/VERSION -b `date --utc +%Y%m%d%H%M%S`
     - bash .misc/check_maintainership.sh
     - bash .misc/deploy.pypi.sh
 
@@ -16,4 +18,4 @@ release:
   script: bash .misc/release.sh
 
 decrypt:
-  rultor_secrets.sh: "repo/.misc/rultor_secrets.sh.asc"
+  rultor_secrets.sh: 'repo/.misc/rultor_secrets.sh.asc'
