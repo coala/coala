@@ -3,26 +3,46 @@ import os
 import sys
 import unittest.mock
 
-from coalib.misc.ContextManagers import retrieve_stdout, retrieve_stderr
+from coala_utils.ContextManagers import retrieve_stdout, retrieve_stderr
+
+TEST_BEARS_COUNT = 14
+
+# This list is sorted by filename of the bears, then name within the modules
+TEST_BEAR_NAMES = [
+    "<class 'AspectTestBear.AspectTestBear'>",
+    "<ErrorTestBear linter class (wrapping 'I_do_not_exist')>",
+    "<class 'JavaTestBear.JavaTestBear'>",
+    "<class 'LineCountTestBear.LineCountTestBear'>",
+    "<EchoBear linter class (wrapping 'echo')>",
+    "<class 'RaiseTestBear.RaiseTestBear'>",
+    "<class 'TestBear.TestBear'>",
+    "<class 'TestBearDep.TestDepBearA'>",
+    "<class 'TestBearDep.TestDepBearAA'>",
+    "<class 'TestBearDep.TestDepBearBDependsA'>",
+    "<class 'TestBearDep.TestDepBearCDependsB'>",
+    "<class 'TestBearDep.TestDepBearDependsAAndAA'>",
+    "<class 'DependentBear.DependentBear'>",
+    "<class 'SpaceConsistencyTestBear.SpaceConsistencyTestBear'>",
+]
 
 
-def execute_coala(func, binary, *args, stdout_only=False):
+def execute_coala(func, binary, *args, debug=False):
     """
     Executes the main function with the given argument string from given module.
 
     :param function:    A main function from coala_json, coala_ci module etc.
     :param binary:      A binary to execute coala test
-    :param stdout_only: Get the stdout output only, discard stderr
-    :return:            A tuple holding a return value first and
-                        a stdout output as second element.
+    :param debug:       Run main function with ``debug=True`` and re-raise any
+                        exception coming back.
+    :return:            A tuple holding a return value as first element,
+                        a stdout output as second element and a stderr output
+                        as third element if stdout_only is False.
     """
     sys.argv = [binary] + list(args)
     with retrieve_stdout() as stdout:
         with retrieve_stderr() as stderr:
-            retval = func()
-            return (retval,
-                    stdout.getvalue() if stdout_only else
-                    stdout.getvalue() + '\n' + stderr.getvalue())
+            retval = func(debug=debug)
+            return (retval, stdout.getvalue(), stderr.getvalue())
 
 
 @contextmanager

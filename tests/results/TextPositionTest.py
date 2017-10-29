@@ -30,3 +30,29 @@ class TextPositionTest(unittest.TestCase):
         uut = TextPosition(8, 39)
         self.assertEqual(uut.line, 8)
         self.assertEqual(uut.column, 39)
+
+    def test_comparison(self):
+        uut1 = TextPosition(None, None)
+        uut2 = TextPosition(None, None)
+        self.assertTrue(uut1 >= uut2)
+        self.assertTrue(uut1 <= uut2)
+
+        uut1 = TextPosition(1, 2)
+        uut2 = TextPosition(1, 3)
+        self.assertFalse(uut1 >= uut2)
+        self.assertTrue(uut1 <= uut2)
+
+        uut1 = TextPosition(2, None)
+        uut2 = TextPosition(3, None)
+        self.assertFalse(uut1 >= uut2)
+        self.assertTrue(uut1 <= uut2)
+
+        uut1 = TextPosition(None, None)
+        uut2 = TextPosition(4, 5)
+        self.assertTrue(uut1 >= uut2)
+        self.assertTrue(uut1 <= uut2)
+
+        uut1 = TextPosition(4, 8)
+        uut2 = TextPosition(4, 8)
+        self.assertTrue(uut1 >= uut2)
+        self.assertTrue(uut2 <= uut1)

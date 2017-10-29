@@ -1,6 +1,6 @@
 import unittest
 
-from coalib.misc.ContextManagers import retrieve_stdout
+from coala_utils.ContextManagers import retrieve_stdout
 from coalib.results.Result import Result
 from coalib.results.result_actions.PrintMoreInfoAction import (
     PrintMoreInfoAction)
@@ -16,8 +16,12 @@ class PrintMoreInfoActionTest(unittest.TestCase):
             additional_info='A lot of additional information can be found here')
 
     def test_is_applicable(self):
-        self.assertFalse(self.uut.is_applicable(1, None, None))
-        self.assertFalse(self.uut.is_applicable(Result('o', 'm'), None, None))
+        with self.assertRaises(TypeError):
+            self.uut.is_applicable(1, None, None)
+        self.assertEqual(
+            self.uut.is_applicable(Result('o', 'm'), None, None),
+            'There is no additional info.'
+        )
         self.assertTrue(self.uut.is_applicable(self.test_result, None, None))
 
     def test_apply(self):

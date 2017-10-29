@@ -2,7 +2,7 @@ import unittest
 import os
 from os.path import isfile
 
-from coalib.misc.ContextManagers import make_temp
+from coala_utils.ContextManagers import make_temp
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -115,7 +115,8 @@ class ApplyPatchActionTest(unittest.TestCase):
                       file_diff_dict)
             self.assertFalse(isfile(f_a+'.renamed.orig'))
 
-            file_dict = {f_a+'.renamed': open(f_a+'.renamed').readlines()}
+            with open(f_a+'.renamed') as fh:
+                file_dict = {f_a+'.renamed': fh.readlines()}
 
             self.assertEqual(file_dict, expected_file_dict)
             # Recreate file so that context manager make_temp() can delete it
@@ -156,14 +157,24 @@ class ApplyPatchActionTest(unittest.TestCase):
 
         conflict_result = Result('', '', diffs={'f': diff})
         # Applying the same diff twice will result in a conflict
-        self.assertFalse(
-            ApplyPatchAction.is_applicable(conflict_result, {}, {'f': diff}))
+        self.assertIn(
+            'Two or more patches conflict with each other: ',
+            ApplyPatchAction.is_applicable(conflict_result, {}, {'f': diff})
+        )
 
     def test_is_applicable_empty_patch(self):
-        empty_patch_result = Result('', '', diffs={})
-        self.assertFalse(
-            ApplyPatchAction.is_applicable(empty_patch_result, {}, {}))
+        diff = Diff([], rename='new_name')
+        result = Result('', '', diffs={'f': diff})
+
+        # Two renames donot result in any change
+        self.assertEqual(
+            ApplyPatchAction.is_applicable(result, {}, {'f': diff}),
+            'The given patches do not change anything anymore.'
+        )
 
     def test_is_applicable_without_patch(self):
         result = Result('', '')
-        self.assertFalse(ApplyPatchAction.is_applicable(result, {}, {}))
+        self.assertEqual(
+            ApplyPatchAction.is_applicable(result, {}, {}),
+            'This result has no patch attached.'
+        )

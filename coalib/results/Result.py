@@ -3,7 +3,7 @@ from os.path import relpath
 
 from coala_utils.decorators import (
     enforce_signature, generate_ordering, generate_repr, get_public_members)
-from coalib.bearlib.aspects import Aspect, Root
+from coalib.bearlib.aspects import aspectbase
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 
@@ -15,20 +15,39 @@ from coalib.results.SourceRange import SourceRange
                ('severity', RESULT_SEVERITY.reverse.get),
                'confidence',
                'message',
-               'aspect')
+               ('aspect', lambda aspect: type(aspect).__qualname__),
+               'applied_actions')
 @generate_ordering('affected_code',
                    'severity',
                    'confidence',
                    'origin',
-                   'message',
+                   'message_base',
+                   'message_arguments',
                    'aspect',
                    'additional_info',
-                   'debug_msg')
+                   'debug_msg',
+                   'applied_actions')
 class Result:
     """
     A result is anything that has an origin and a message.
 
     Optionally it might affect a file.
+
+    Result messages can also have arguments. The message is python
+    style formatted with these arguments.
+
+    >>> r = Result('origin','{arg1} and {arg2}', \
+           message_arguments={'arg1': 'foo', 'arg2': 'bar'})
+    >>> r.message
+    'foo and bar'
+
+    Message arguments may be changed later. The result message
+    will also reflect these changes.
+
+    >>> r.message_arguments = {'arg1': 'spam', 'arg2': 'eggs'}
+    >>> r.message
+    'spam and eggs'
+
     """
 
     @enforce_signature
@@ -41,15 +60,17 @@ class Result:
                  debug_msg='',
                  diffs: (dict, None)=None,
                  confidence: int=100,
-                 aspect: Aspect=Root):
+                 aspect: (aspectbase, None)=None,
+                 message_arguments: dict={},
+                 applied_actions: dict={}):
         """
         :param origin:
             Class name or creator object of this object.
         :param message:
-            Message to show with this result.
+            Base message to show with this result.
         :param affected_code:
-            A tuple of SourceRange objects pointing to related positions in the
-            source code.
+            A tuple of ``SourceRange`` objects pointing to related positions
+            in the source code.
         :param severity:
             Severity of this result.
         :param additional_info:
@@ -60,18 +81,26 @@ class Result:
             A message which may help the user find out why this result was
             yielded.
         :param diffs:
-            A dictionary with filenames as key and a sequence of ``Diff``
-            objects associated with them as values.
+            A dictionary with filename as key and ``Diff`` object
+            associated with it as value.
         :param confidence:
             A number between 0 and 100 describing the likelihood of this result
             being a real issue.
         :param aspect:
-            An Aspect object which this result is associated to. Note that this
-            should be a leaf of the aspect tree! (If you have a node, spend
-            some time figuring out which of the leafs exactly your result
-            belongs to.)
+            An aspectclass instance which this result is associated to.
+            Note that this should be a leaf of the aspect tree!
+            (If you have a node, spend some time figuring out which of
+            the leafs exactly your result belongs to.)
+        :param message_arguments:
+            Arguments to be provided to the base message.
+        :param applied_actions:
+            A dictionary that contains the result, file_dict, file_diff_dict and
+            the section for an action.
         :raises ValueError:
             Raised when confidence is not between 0 and 100.
+        :raises KeyError:
+            Raised when message_base can not be formatted with
+            message_arguments.
         """
         origin = origin or ''
         if not isinstance(origin, str):
@@ -80,7 +109,11 @@ class Result:
             raise ValueError('severity is not a valid RESULT_SEVERITY')
 
         self.origin = origin
-        self.message = message
+        self.message_base = message
+        self.message_arguments = message_arguments
+        self.applied_actions = applied_actions
+        if message_arguments:
+            self.message_base.format(**self.message_arguments)
         self.debug_msg = debug_msg
         self.additional_info = additional_info
         # Sorting is important for tuple comparison
@@ -92,6 +125,25 @@ class Result:
         self.diffs = diffs
         self.id = uuid.uuid4().int
         self.aspect = aspect
+        if self.aspect and not self.additional_info:
+            self.additional_info = '{} {}'.format(
+                aspect.docs.importance_reason, aspect.docs.fix_suggestions)
+
+    @property
+    def message(self):
+        if not self.message_arguments:
+            return self.message_base
+        return self.message_base.format(**self.message_arguments)
+
+    @message.setter
+    def message(self, value: str):
+        self.message_base = value
+
+    def set_applied_actions(self, applied_actions):
+        self.applied_actions = applied_actions
+
+    def get_applied_actions(self):
+        return self.applied_actions
 
     @classmethod
     @enforce_signature
@@ -108,15 +160,18 @@ class Result:
                     debug_msg='',
                     diffs: (dict, None)=None,
                     confidence: int=100,
-                    aspect: Aspect=Root):
+                    aspect: (aspectbase, None)=None,
+                    message_arguments: dict={}):
         """
         Creates a result with only one SourceRange with the given start and end
         locations.
 
-        origin:
+        :param origin:
             Class name or creator object of this object.
         :param message:
-            Message to show with this result.
+            Base message to show with this result.
+        :param message_arguments:
+            Arguments to be provided to the base message
         :param file:
             The related file.
         :param line:
@@ -137,8 +192,8 @@ class Result:
             A message which may help the user find out why this result was
             yielded.
         :param diffs:
-            A dictionary with filenames as key and a sequence of ``Diff``
-            objects associated with them as values.
+            A dictionary with filename as key and ``Diff`` object
+            associated with it as value.
         :param confidence:
             A number between 0 and 100 describing the likelihood of this result
             being a real issue.
@@ -162,7 +217,8 @@ class Result:
                    debug_msg=debug_msg,
                    diffs=diffs,
                    confidence=confidence,
-                   aspect=aspect)
+                   aspect=aspect,
+                   message_arguments=message_arguments)
 
     def to_string_dict(self):
         """
@@ -181,6 +237,8 @@ class Result:
                    'additional_info',
                    'debug_msg',
                    'message',
+                   'message_base',
+                   'message_arguments',
                    'origin',
                    'confidence']
 
@@ -208,8 +266,8 @@ class Result:
         :param file_dict: A dictionary containing all files with filename as
                           key and all lines a value. Will be modified.
         """
-        for filename in self.diffs:
-            file_dict[filename] = self.diffs[filename].modified
+        for filename, diff in self.diffs.items():
+            file_dict[filename] = diff.modified
 
     def __add__(self, other):
         """
@@ -269,5 +327,5 @@ class Result:
         if use_relpath and _dict['diffs']:
             _dict['diffs'] = {relpath(file): diff
                               for file, diff in _dict['diffs'].items()}
-        _dict['aspect'] = self.aspect.__qualname__
+        _dict['aspect'] = type(self.aspect).__qualname__
         return _dict

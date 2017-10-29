@@ -4,7 +4,6 @@ import json
 import unittest
 
 from coalib.bearlib.abstractions.ExternalBearWrap import external_bear_wrap
-from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.settings.Section import Section
 from coalib.results.SourceRange import SourceRange

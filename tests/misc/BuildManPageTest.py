@@ -6,7 +6,7 @@ from distutils.errors import DistutilsOptionError
 from setuptools.dist import Distribution
 
 from coalib.misc.BuildManPage import BuildManPage, ManPageFormatter
-from coalib.misc.ContextManagers import make_temp
+from coala_utils.ContextManagers import make_temp
 
 app_name = 'name'
 app_description = ('short description ' * 2).strip()

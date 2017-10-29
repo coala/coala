@@ -30,6 +30,13 @@ class ResultTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             Result('o', 'm', confidence=101)
 
+    def test_message_arguments(self):
+        uut = Result('origin', '{msg}', message_arguments={'msg': 'msg'})
+        self.assertEqual(uut.message, 'msg')
+
+        with self.assertRaises(KeyError):
+            Result('origin', '{msg}', message_arguments={'message': 'msg'})
+
     def test_string_dict(self):
         uut = Result(None, '')
         output = uut.to_string_dict()
@@ -41,10 +48,13 @@ class ResultTest(unittest.TestCase):
                                   'severity': 'NORMAL',
                                   'debug_msg': '',
                                   'additional_info': '',
-                                  'confidence': '100'})
+                                  'confidence': '100',
+                                  'message_base': '',
+                                  'message_arguments': '{}'})
 
         uut = Result.from_values(origin='origin',
-                                 message='msg',
+                                 message='{test} msg',
+                                 message_arguments={'test': 'test'},
                                  file='file',
                                  line=2,
                                  severity=RESULT_SEVERITY.INFO,
@@ -54,13 +64,15 @@ class ResultTest(unittest.TestCase):
         output = uut.to_string_dict()
         self.assertEqual(output, {'id': str(uut.id),
                                   'origin': 'origin',
-                                  'message': 'msg',
+                                  'message': 'test msg',
                                   'file': abspath('file'),
                                   'line_nr': '2',
                                   'severity': 'INFO',
                                   'debug_msg': 'dbg',
                                   'additional_info': 'hi!',
-                                  'confidence': '50'})
+                                  'confidence': '50',
+                                  'message_base': '{test} msg',
+                                  'message_arguments': '{\'test\': \'test\'}'})
 
         uut = Result.from_values(origin='o', message='m', file='f', line=5)
         output = uut.to_string_dict()
@@ -72,12 +84,12 @@ class ResultTest(unittest.TestCase):
             'f_b': ['1', '2', '3']
         }
         expected_file_dict = {
-            'f_a': ['1', '3_changed'],
+            'f_a': ['1\n', '3_changed'],
             'f_b': ['1', '2', '3']
         }
         diff = Diff(file_dict['f_a'])
         diff.delete_line(2)
-        diff.change_line(3, '3', '3_changed')
+        diff.modify_line(3, '3_changed')
 
         uut = Result('origin', 'msg', diffs={'f_a': diff})
         uut.apply(file_dict)
@@ -91,8 +103,8 @@ class ResultTest(unittest.TestCase):
             'f_c': ['1', '2', '3']
         }
         expected_file_dict = {
-            'f_a': ['1', '3_changed'],
-            'f_b': ['1', '2', '3_changed'],
+            'f_a': ['1\n', '3_changed'],
+            'f_b': ['1\n', '2\n', '3_changed'],
             'f_c': ['1', '2', '3']
         }
 
@@ -101,11 +113,11 @@ class ResultTest(unittest.TestCase):
         uut1 = Result('origin', 'msg', diffs={'f_a': diff})
 
         diff = Diff(file_dict['f_a'])
-        diff.change_line(3, '3', '3_changed')
+        diff.modify_line(3, '3_changed')
         uut2 = Result('origin', 'msg', diffs={'f_a': diff})
 
         diff = Diff(file_dict['f_b'])
-        diff.change_line(3, '3', '3_changed')
+        diff.modify_line(3, '3_changed')
         uut3 = Result('origin', 'msg', diffs={'f_b': diff})
 
         uut1 += uut2 + uut3
@@ -123,6 +135,20 @@ class ResultTest(unittest.TestCase):
                                  column=1,
                                  end_line=2,
                                  end_column=2)
+        self.assertTrue(uut.overlaps(overlapping_range))
+        self.assertTrue(uut.overlaps([overlapping_range]))
+        self.assertFalse(uut.overlaps(nonoverlapping_range))
+
+        overlapping_range = SourceRange.from_values('file1', 1, None, 1, None)
+        nonoverlapping_range = SourceRange.from_values(
+            'file2', 1, None, 1, None)
+        uut = Result.from_values('origin',
+                                 'message',
+                                 file='file1',
+                                 line=1,
+                                 column=1,
+                                 end_line=1,
+                                 end_column=20)
         self.assertTrue(uut.overlaps(overlapping_range))
         self.assertTrue(uut.overlaps([overlapping_range]))
         self.assertFalse(uut.overlaps(nonoverlapping_range))
@@ -151,13 +177,17 @@ class ResultTest(unittest.TestCase):
         }
         diff = Diff(file_dict['f_a'])
         diff.delete_line(2)
-        diff.change_line(3, '3', '3_changed')
+        diff.modify_line(3, '3_changed')
         uut = Result('origin', 'msg', diffs={'f_a': diff}).__json__(True)
         self.assertEqual(uut['diffs']['f_a'].__json__(), '--- \n'
                                                          '+++ \n'
                                                          '@@ -1,3 +1,2 @@\n'
-                                                         ' 1-2-3+3_changed')
+                                                         ' 1\n'
+                                                         '-2\n'
+                                                         '-3\n'
+                                                         '+3_changed')
         JSONEncoder = create_json_encoder(use_relpath=True)
         json_dump = json.dumps(diff, cls=JSONEncoder, sort_keys=True)
         self.assertEqual(
-            json_dump, '"--- \\n+++ \\n@@ -1,3 +1,2 @@\\n 1-2-3+3_changed"')
+            json_dump,
+            '"--- \\n+++ \\n@@ -1,3 +1,2 @@\\n 1\\n-2\\n-3\\n+3_changed"')

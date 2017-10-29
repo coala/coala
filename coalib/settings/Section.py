@@ -3,6 +3,7 @@ import os
 import sys
 from collections import OrderedDict
 
+from coalib.bearlib.aspects import AspectList
 from coalib.collecting.Collectors import collect_registered_bears_dirs
 from coala_utils.decorators import enforce_signature, generate_repr
 from coalib.misc.DictUtilities import update_ordered_dict_key
@@ -15,7 +16,8 @@ def append_to_sections(sections,
                        value,
                        origin,
                        section_name=None,
-                       from_cli=False):
+                       from_cli=False,
+                       to_append=False):
     """
     Appends the given data as a Setting to a Section with the given name. If
     the Section does not exist before it will be created empty.
@@ -26,6 +28,8 @@ def append_to_sections(sections,
     :param origin:       The origin value of the setting to add.
     :param section_name: The name of the section to add to.
     :param from_cli:     Whether or not this data comes from the CLI.
+    :param to_append:    The boolean value if setting value needs to be
+                         appended to a setting in the defaults of a section.
     """
     if key == '' or value is None:
         return
@@ -36,14 +40,81 @@ def append_to_sections(sections,
     if not section_name.lower() in sections:
         sections[section_name.lower()] = Section(section_name)
 
-    sections[section_name.lower()].append(
-        Setting(key, str(value), origin, from_cli=from_cli))
+    sections[section_name.lower()].append(Setting(
+        key, str(value), origin, from_cli=from_cli, to_append=to_append))
+
+
+def extract_aspects_from_section(section):
+    """
+    Extract aspects settings from a section into an AspectList.
+
+    Note that the section is assumed to already have valid and complete aspects
+    related setting. This checking could be done by
+    :meth:`coalib.settings.ConfigurationGathering.validate_aspect_config`.
+
+    :param section: Section object.
+    :return:        AspectList containing aspectclass instance with
+                    user-defined tastes.
+    """
+    ASPECT_TASTE_DELIMITER = ':'
+    aspects = section.get('aspects')
+    language = section.language
+
+    aspect_instances = AspectList(exclude=section.get('excludes'))
+
+    for aspect in AspectList(aspects):
+        # Search all related tastes in section.
+        tastes = {name.split(ASPECT_TASTE_DELIMITER)[-1]: value
+                  for name, value in section.contents.items()
+                  if name.lower().startswith(aspect.__name__.lower())}
+        aspect_instances.append(aspect(language, **tastes))
+
+    return aspect_instances
 
 
 @generate_repr()
 class Section:
     """
     This class holds a set of settings.
+
+    To add settings and sections to a dictionary of sections we can use
+    ``append_to_sections``:
+
+    >>> sections = {}
+    >>> append_to_sections(sections,
+    ...                    'test1',
+    ...                    'val',
+    ...                    'origin',
+    ...                    section_name='all')
+    >>> 'all' in sections
+    True
+    >>> len(sections)
+    1
+    >>> str(sections)
+    "{'all': <Section object(... contents=OrderedDict([('test1', ..."
+
+    We can also add settings that can be appended to other settings. Basically
+    it takes the default value of the setting which resides in the defaults of
+    the section and appends the value of the setting in the second and returns
+    the value of the setting:
+
+    >>> append_to_sections(sections,
+    ...                    'test1',
+    ...                    'val2',
+    ...                    'origin',
+    ...                    section_name='all.python',
+    ...                    to_append=True)
+
+    When the section has no defaults:
+
+    >>> str(sections['all.python']['test1'])
+    'val2'
+
+    After assigning defaults:
+
+    >>> sections['all.python'].set_default_section(sections)
+    >>> str(sections['all.python']['test1'])
+    'val, val2'
     """
 
     @staticmethod
@@ -61,6 +132,8 @@ class Section:
         self.name = str(name)
         self.defaults = defaults
         self.contents = OrderedDict()
+        self.aspects = None
+        self.language = None
 
     def bear_dirs(self):
         bear_dirs = path_list(self.get('bear_dirs', ''))
@@ -113,7 +186,8 @@ class Section:
 
         if self.__contains__(key, ignore_defaults=True) and allow_appending:
             val = self[key]
-            val.value = str(val.value) + '\n' + setting.value
+            val.value = str(val._value) + '\n' + setting._value
+            self.append(val, custom_key=key)
         else:
             self.append(setting, custom_key=key)
 
@@ -159,8 +233,11 @@ class Section:
         if key == '':
             raise IndexError('Empty keys are invalid.')
 
-        res = self.contents.get(key, None)
+        res = copy.deepcopy(self.contents.get(key, None))
         if res is not None:
+            if res.to_append and self.defaults and res.key in self.defaults:
+                res.value = self.defaults[key]._value + ', ' + res._value
+            res.to_append = False
             return res
 
         if self.defaults is None or ignore_defaults:
@@ -169,7 +246,7 @@ class Section:
         return self.defaults[key]
 
     def __str__(self):
-        value_list = ', '.join(key + ' : ' + repr(str(self.contents[key]))
+        value_list = ', '.join(key + ' : ' + repr(str(self[key]))
                                for key in self.contents)
         return self.name + ' {' + value_list + '}'
 
@@ -253,3 +330,54 @@ class Section:
         :param key: The key of the setting to be deleted
         """
         del self.contents[key]
+
+    def set_default_section(self, sections, section_name=None):
+        """
+        Find and set the defaults of a section from a dictionary of sections.
+        The defaults are found on the basis of '.' in section names:
+
+        >>> sections = {'all': Section('all')}
+        >>> section = Section('all.python')
+        >>> section.set_default_section(sections)
+        >>> section.defaults.name
+        'all'
+        >>> section = Section('all.python.syntax')
+        >>> section.set_default_section(sections)
+        >>> section.defaults.name
+        'all'
+
+        This works case insensitive. The key of the sections dict
+        is expected to be lowered though!
+
+        >>> sections = {'c': Section('C'), 'cpp': Section('Cpp'),
+        ...             'c.something': Section('C.something')}
+        >>> section = Section('C.something')
+        >>> section.set_default_section(sections)
+        >>> section.defaults.name
+        'C'
+        >>> section = Section('C.SOMETHING.else')
+        >>> section.set_default_section(sections)
+        >>> section.defaults.name
+        'C.something'
+        >>> section = Section('Cpp.SOMETHING.else')
+        >>> section.set_default_section(sections)
+        >>> section.defaults.name
+        'Cpp'
+
+        :param sections:     A dictionary of sections.
+        :param section_name: Optional section name argument to find the default
+                             section for. If not given then use member section
+                             name.
+        """
+        default_section = '.'.join(
+            (section_name or self.name).split('.')[:-1]
+        ).lower()
+
+        if default_section:
+            if default_section in sections:
+                self.defaults = sections[default_section]
+            else:
+                self.set_default_section(sections, default_section)
+        elif 'cli' in sections and self.name.lower() != 'cli':
+            # CLI section is now default
+            self.defaults = sections['cli']

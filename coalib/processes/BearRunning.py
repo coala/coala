@@ -76,7 +76,8 @@ def validate_results(message_queue, timeout, result_list, name, args, kwargs):
     return result_list
 
 
-def run_bear(message_queue, timeout, bear_instance, *args, **kwargs):
+def run_bear(message_queue, timeout, bear_instance, *args, debug=False,
+             **kwargs):
     """
     This method is responsible for executing the instance of a bear. It also
     reports or logs errors if any occur during the execution of that bear
@@ -101,8 +102,11 @@ def run_bear(message_queue, timeout, bear_instance, *args, **kwargs):
     name = bear_instance.name
 
     try:
-        result_list = bear_instance.execute(*args, **kwargs)
-    except:
+        result_list = bear_instance.execute(*args, debug=debug, **kwargs)
+    except (Exception, SystemExit) as exc:
+        if debug and not isinstance(exc, SystemExit):
+            raise
+
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.ERROR,
@@ -162,7 +166,8 @@ def run_local_bear(message_queue,
                    local_result_list,
                    file_dict,
                    bear_instance,
-                   filename):
+                   filename,
+                   debug=False):
     """
     Runs an instance of a local bear. Checks if bear_instance is of type
     LocalBear and then passes it to the run_bear to execute.
@@ -194,7 +199,8 @@ def run_local_bear(message_queue,
 
     kwargs = {'dependency_results':
               get_local_dependency_results(local_result_list,
-                                           bear_instance)}
+                                           bear_instance),
+              'debug': debug}
     return run_bear(message_queue,
                     timeout,
                     bear_instance,
@@ -206,7 +212,8 @@ def run_local_bear(message_queue,
 def run_global_bear(message_queue,
                     timeout,
                     global_bear_instance,
-                    dependency_results):
+                    dependency_results,
+                    debug=False):
     """
     Runs an instance of a global bear. Checks if bear_instance is of type
     GlobalBear and then passes it to the run_bear to execute.
@@ -237,7 +244,8 @@ def run_global_bear(message_queue,
 
         return None
 
-    kwargs = {'dependency_results': dependency_results}
+    kwargs = {'dependency_results': dependency_results,
+              'debug': debug}
     return run_bear(message_queue,
                     timeout,
                     global_bear_instance,
@@ -250,7 +258,8 @@ def run_local_bears_on_file(message_queue,
                             local_bear_list,
                             local_result_dict,
                             control_queue,
-                            filename):
+                            filename,
+                            debug=False):
     """
     This method runs a list of local bears on one file.
 
@@ -293,7 +302,8 @@ def run_local_bears_on_file(message_queue,
                                 local_result_list,
                                 file_dict,
                                 bear_instance,
-                                filename)
+                                filename,
+                                debug=debug)
         if result is not None:
             local_result_list.extend(result)
 
@@ -382,7 +392,8 @@ def run_local_bears(filename_queue,
                     file_dict,
                     local_bear_list,
                     local_result_dict,
-                    control_queue):
+                    control_queue,
+                    debug=False):
     """
     Run local bears on all the files given.
 
@@ -414,7 +425,8 @@ def run_local_bears(filename_queue,
                                     local_bear_list,
                                     local_result_dict,
                                     control_queue,
-                                    filename)
+                                    filename,
+                                    debug=debug)
             task_done(filename_queue)
     except queue.Empty:
         return
@@ -425,7 +437,8 @@ def run_global_bears(message_queue,
                      global_bear_queue,
                      global_bear_list,
                      global_result_dict,
-                     control_queue):
+                     control_queue,
+                     debug=False):
     """
     Run all global bears.
 
@@ -455,7 +468,8 @@ def run_global_bears(message_queue,
                                      global_bear_list,
                                      global_result_dict))
             bearname = bear.__class__.__name__
-            result = run_global_bear(message_queue, timeout, bear, dep_results)
+            result = run_global_bear(message_queue, timeout, bear, dep_results,
+                                     debug=debug)
             if result:
                 global_result_dict[bearname] = result
                 control_queue.put((CONTROL_ELEMENT.GLOBAL, bearname))
@@ -475,7 +489,8 @@ def run(file_name_queue,
         global_result_dict,
         message_queue,
         control_queue,
-        timeout=0):
+        timeout=0,
+        debug=False):
     """
     This is the method that is actually runs by processes.
 
@@ -532,7 +547,8 @@ def run(file_name_queue,
                         file_dict,
                         local_bear_list,
                         local_result_dict,
-                        control_queue)
+                        control_queue,
+                        debug=debug)
         control_queue.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
 
         run_global_bears(message_queue,
@@ -540,7 +556,9 @@ def run(file_name_queue,
                          global_bear_queue,
                          global_bear_list,
                          global_result_dict,
-                         control_queue)
+                         control_queue,
+                         debug=debug)
         control_queue.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
     except (OSError, KeyboardInterrupt):  # pragma: no cover
-        pass
+        if debug:
+            raise

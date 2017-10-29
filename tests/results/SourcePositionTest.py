@@ -2,7 +2,7 @@ import unittest
 from os.path import relpath
 
 from coalib.results.SourcePosition import SourcePosition
-from coalib.misc.ContextManagers import prepare_file
+from coala_utils.ContextManagers import prepare_file
 
 
 class SourcePositionTest(unittest.TestCase):
@@ -24,13 +24,13 @@ class SourcePositionTest(unittest.TestCase):
         self.assertRegex(
             repr(uut),
             "<SourcePosition object\\(file='.*filename', line=1, "
-                'column=None\\) at 0x[0-9a-fA-F]+>')
+            'column=None\\) at 0x[0-9a-fA-F]+>')
 
         uut = SourcePosition('None', None)
         self.assertRegex(
             repr(uut),
             "<SourcePosition object\\(file='.*None', line=None, column=None\\) "
-                'at 0x[0-9a-fA-F]+>')
+            'at 0x[0-9a-fA-F]+>')
 
     def test_json(self):
         with prepare_file([''], None) as (_, filename):

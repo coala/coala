@@ -1,5 +1,3 @@
-import os.path
-from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import patch
 
@@ -10,44 +8,81 @@ from coalib.bearlib.languages.documentation.DocstyleDefinition import (
 class DocstyleDefinitionTest(unittest.TestCase):
 
     Metadata = DocstyleDefinition.Metadata
-    dummy_metadata = Metadata(':param ', ':', ':return:')
+    ClassPadding = DocstyleDefinition.ClassPadding
+    FunctionPadding = DocstyleDefinition.FunctionPadding
+    DocstringTypeRegex = DocstyleDefinition.DocstringTypeRegex
+    dummy_metadata = Metadata(':param ', ':', ':raises ', ':', ':return:')
+    dummy_class_padding = ClassPadding(1, 1)
+    dummy_function_padding = FunctionPadding(0, 1)
+    dummy_docstring_type_regex = DocstringTypeRegex('class', 'def')
+    dummy_docstring_position = 'top'
 
     def test_fail_instantation(self):
         with self.assertRaises(ValueError):
             DocstyleDefinition('PYTHON', 'doxyGEN',
-                               (('##', '#'),), self.dummy_metadata)
+                               (('##', '#'),), self.dummy_metadata,
+                               self.dummy_class_padding,
+                               self.dummy_function_padding,
+                               self.dummy_docstring_type_regex,
+                               self.dummy_docstring_position)
 
         with self.assertRaises(ValueError):
             DocstyleDefinition('WEIRD-PY',
                                'schloxygen',
                                (('##+', 'x', 'y', 'z'),),
-                               self.dummy_metadata)
+                               self.dummy_metadata,
+                               self.dummy_class_padding,
+                               self.dummy_function_padding,
+                               self.dummy_docstring_type_regex,
+                               self.dummy_docstring_position)
 
         with self.assertRaises(ValueError):
             DocstyleDefinition('PYTHON',
                                'doxygen',
                                (('##', '', '#'), ('"""', '"""')),
-                               self.dummy_metadata)
+                               self.dummy_metadata,
+                               self.dummy_class_padding,
+                               self.dummy_function_padding,
+                               self.dummy_docstring_type_regex,
+                               self.dummy_docstring_position)
 
         with self.assertRaises(TypeError):
             DocstyleDefinition(123, ['doxygen'], (('"""', '"""')),
-                               self.dummy_metadata)
+                               self.dummy_metadata,
+                               self.dummy_class_padding,
+                               self.dummy_function_padding,
+                               self.dummy_docstring_type_regex,
+                               self.dummy_docstring_position)
 
         with self.assertRaises(TypeError):
             DocstyleDefinition('language', ['doxygen'], (('"""', '"""')),
-                               'metdata')
+                               'metdata', 'clpading', 'dfpadding', 'kind')
 
     def test_properties(self):
         uut = DocstyleDefinition('C', 'doxygen',
-                                 (('/**', '*', '*/'),), self.dummy_metadata)
+                                 (('/**', '*', '*/'),), self.dummy_metadata,
+                                 self.dummy_class_padding,
+                                 self.dummy_function_padding,
+                                 self.dummy_docstring_type_regex,
+                                 self.dummy_docstring_position)
 
         self.assertEqual(uut.language, 'c')
         self.assertEqual(uut.docstyle, 'doxygen')
         self.assertEqual(uut.markers, (('/**', '*', '*/'),))
         self.assertEqual(uut.metadata, self.dummy_metadata)
+        self.assertEqual(uut.class_padding, self.dummy_class_padding)
+        self.assertEqual(uut.function_padding, self.dummy_function_padding)
+        self.assertEqual(uut.docstring_type_regex,
+                         self.dummy_docstring_type_regex)
+        self.assertEqual(uut.docstring_position,
+                         self.dummy_docstring_position)
 
         uut = DocstyleDefinition('PYTHON', 'doxyGEN',
-                                 [('##', '', '#')], self.dummy_metadata)
+                                 [('##', '', '#')], self.dummy_metadata,
+                                 self.dummy_class_padding,
+                                 self.dummy_function_padding,
+                                 self.dummy_docstring_type_regex,
+                                 self.dummy_docstring_position)
 
         self.assertEqual(uut.language, 'python')
         self.assertEqual(uut.docstyle, 'doxygen')
@@ -57,7 +92,11 @@ class DocstyleDefinitionTest(unittest.TestCase):
         uut = DocstyleDefinition('I2C',
                                  'my-custom-tool',
                                  (['~~', '/~', '/~'], ('>!', '>>', '>>')),
-                                 self.dummy_metadata)
+                                 self.dummy_metadata,
+                                 self.dummy_class_padding,
+                                 self.dummy_function_padding,
+                                 self.dummy_docstring_type_regex,
+                                 self.dummy_docstring_position)
 
         self.assertEqual(uut.language, 'i2c')
         self.assertEqual(uut.docstyle, 'my-custom-tool')
@@ -65,7 +104,11 @@ class DocstyleDefinitionTest(unittest.TestCase):
         self.assertEqual(uut.metadata, self.dummy_metadata)
 
         uut = DocstyleDefinition('Cpp', 'doxygen',
-                                 ('~~', '/~', '/~'), self.dummy_metadata)
+                                 ('~~', '/~', '/~'), self.dummy_metadata,
+                                 self.dummy_class_padding,
+                                 self.dummy_function_padding,
+                                 self.dummy_docstring_type_regex,
+                                 self.dummy_docstring_position)
 
         self.assertEqual(uut.language, 'cpp')
         self.assertEqual(uut.docstyle, 'doxygen')
@@ -130,17 +173,3 @@ class DocstyleDefinitionTest(unittest.TestCase):
 
         self.assertEqual(list(DocstyleDefinition.get_available_definitions()),
                          [('xlang', 'x')])
-
-    def test_load_external_coalang(self):
-        empty_metadata = self.Metadata('', '', '')
-        with TemporaryDirectory() as directory:
-            coalang_file = os.path.join(directory, 'custom.coalang')
-            with open(coalang_file, 'w') as file:
-                file.write('[COOL]\ndoc-markers = @@,@@,@@\n')
-
-            result = DocstyleDefinition.load(
-                'cool', 'custom', coalang_dir=directory)
-            self.assertEqual(result.language, 'cool')
-            self.assertEqual(result.docstyle, 'custom')
-            self.assertEqual(result.markers, (('@@', '@@', '@@'),))
-            self.assertEqual(result.metadata, empty_metadata)

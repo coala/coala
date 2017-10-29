@@ -17,7 +17,7 @@ class ResultAction:
         """
         Checks whether the Action is valid for the result type.
 
-        Returns ``True`` by default.
+        Returns ``True`` or a string containing the not_applicable message.
 
         :param result:             The result from the coala run to check if an
                                    Action is applicable.
@@ -58,7 +58,7 @@ class ResultAction:
                                    need to use the return value.
         :param section:            The section where to retrieve the additional
                                    information.
-        :return                    The modified file_diff_dict.
+        :return:                   The modified file_diff_dict.
         """
         params = self.get_metadata().create_params_from_section(section)
         return self.apply(result, original_file_dict, file_diff_dict, **params)

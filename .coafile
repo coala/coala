@@ -12,14 +12,25 @@ use_spaces = True
 # will be executed sequentially; also we need the LineLengthBear to double
 # check the line length because PEP8Bear sometimes isn't able to correct the
 # linelength.
-bears = SpaceConsistencyBear, PyUnusedCodeBear, QuotesBear
+bears = SpaceConsistencyBear, QuotesBear
 language = Python
 preferred_quotation = '
 
 default_actions = *: ApplyPatchAction
 
+[flakes]
+# Do not set default_action to ApplyPatchAction as it may lead to some 
+# required imports being removed that might result in coala behaving weirdly.
+
+default_action: *: ShowPatchAction
+
+bears = PyUnusedCodeBear
+language = Python
+remove_all_unused_imports = true
+
 [autopep8]
-bears = PEP8Bear
+bears = PEP8Bear, PycodestyleBear
+pycodestyle_ignore = E303, E121, E123, E126, E133, E226, E241, E242, E704, W503
 
 default_actions = PEP8Bear: ApplyPatchAction
 
@@ -33,7 +44,8 @@ bears = SpaceConsistencyBear, LineLengthBear
 files = docs/**/*.rst, CONTRIBUTING.rst, README.rst
 ignore = docs/API/**
 ignore_length_regex = ^.*https?://
-default_actions = SpaceConsistencyBear: ApplyPatchAction
+
+default_actions = SpaceConsistencyBear: ApplyPatchAction 
 
 [languagetool]
 enabled = False
@@ -61,7 +73,7 @@ languagetool_disable_rules =
 [commit]
 bears = GitCommitBear
 shortlog_trailing_period = False
-shortlog_regex = ([^:]*|[^:]+: [A-Z0-9*].*)
+shortlog_regex = ([^:]*|[^:]+[^ ]: [A-Z0-9*].*)
 
 [Pylint]
 enabled = False
@@ -96,11 +108,32 @@ files = docs/**/*.rst
 ignore = docs/API
 bears = InvalidLinkBear
 
+[css]
+bears = CSSLintBear
+files = docs/_static/**.css
+
+[rst]
+bears = reSTLintBear
+files = README.rst
+
+[text]
+bears = SpaceConsistencyBear
+files =
+    LICENSE, ISSUE_TEMPLATE, PULL_REQUEST_TEMPLATE.md, MANIFEST.in,
+    **.sh, .travis.yml, circle.yml, setup.cfg, ./docs/_static/custom.css
+ignore = node_modules/**
+
 [TODOS]
 enabled = False
 
 bears = KeywordBear
-language = python3
+language = python 3
 
 ci_keywords, keywords = \#TODO, \# TODO, \#FIXME, \# FIXME
 cs_keywords =
+
+[urllib]
+# Encourage usage of requests library by blacklisting usage of urlopen()
+bears = KeywordBear
+language = python 3
+keywords = urlopen

@@ -120,11 +120,88 @@ class SourceRange(TextRange):
                                        tr.end.line,
                                        tr.end.column)
 
+    @enforce_signature
+    def affected_source(self, file_dict: dict):
+        r"""
+        Tells which lines are affected in a specified file within a given range.
+
+        >>> from os.path import abspath
+        >>> sr = SourceRange.from_values('file_name', start_line=2, end_line=2)
+        >>> sr.affected_source({
+        ...     abspath('file_name'): ('def fun():\n', '    x = 2  \n')
+        ... })
+        ('    x = 2  \n',)
+
+        If more than one line is affected.
+
+        >>> sr = SourceRange.from_values('file_name', start_line=2, end_line=3)
+        >>> sr.affected_source({
+        ...     abspath('file_name'): ('def fun():\n',
+        ...                            '    x = 2  \n', '    print(x)  \n')
+        ... })
+        ('    x = 2  \n', '    print(x)  \n')
+
+        If the file indicated at the source range is not in the `file_dict` or
+        the lines are not given, this will return `None`:
+
+        >>> sr = SourceRange.from_values('file_name_not_present',
+        ...     start_line=2, end_line=2)
+        >>> sr.affected_source({abspath('file_name'):
+        ...     ('def fun():\n', '    x = 2  \n')})
+
+        :param file_dict:
+            It is a dictionary where the file names are the keys and
+            the contents of the files are the values(which is of type tuple).
+        :return:
+            A tuple of affected lines in the specified file.
+            If the file is not affected or the file is not present in
+            ``file_dict`` return ``None``.
+        """
+        if self.start.file in file_dict and self.start.line and self.end.line:
+            # line number starts from 1, index starts from 0
+            return file_dict[self.start.file][self.start.line - 1:self.end.line]
+
     def __json__(self, use_relpath=False):
         _dict = get_public_members(self)
         if use_relpath:
             _dict['file'] = relpath(_dict['file'])
         return _dict
+
+    def __str__(self):
+        """
+        Creates a string representation of the SourceRange object.
+
+        If the whole file is affected, then just the filename is shown.
+
+        >>> str(SourceRange.from_values('test_file', None, None, None, None))
+        '...test_file'
+
+        If the whole line is affected, then just the filename with starting
+        line number and ending line number is shown.
+
+        >>> str(SourceRange.from_values('test_file', 1, None, 2, None))
+        '...test_file: L1 : L2'
+
+        This is the general case where particular column and line are
+        specified. It shows the starting line and column and ending line
+        and column, with filename in the beginning.
+
+        >>> str(SourceRange.from_values('test_file', 1, 1, 2, 1))
+        '...test_file: L1 C1 : L2 C1'
+        """
+        if self.start.line is None and self.end.line is None:
+            format_str = '{0.start.file}'
+        elif self.start.column is None and self.end.column is None:
+            format_str = '{0.start.file}: L{0.start.line} : L{0.end.line}'
+        else:
+            format_str = ('{0.start.file}: L{0.start.line} C{0.start.column}' +
+                          ' : L{0.end.line} C{0.end.column}')
+
+        return format_str.format(self)
+
+    def overlaps(self, other):
+        return (self.start.file == other.start.file
+                and super().overlaps(other))
 
     def __contains__(self, item):
         return (super().__contains__(item) and

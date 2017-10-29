@@ -3,8 +3,8 @@ import re
 import sys
 import unittest
 
-from coalib import coala_ci
-from coalib.misc.ContextManagers import prepare_file
+from coalib import coala, coala_ci
+from coala_utils.ContextManagers import prepare_file
 from tests.TestUtilities import bear_test_module, execute_coala
 
 
@@ -18,56 +18,122 @@ class coalaCITest(unittest.TestCase):
     def tearDown(self):
         sys.argv = self.old_argv
 
-    def test_nonexistent(self):
-        retval, output = execute_coala(
-            coala_ci.main, 'coala-ci', '-c', 'nonex', 'test')
-        self.assertRegex(
-            output,
-            ".*\\[ERROR\\].*The requested coafile '.*' does not exist. .+\n")
+    def test_log(self, debug=False):
+        retval, stdout, stderr = execute_coala(
+            coala_ci.main, 'coala-ci', '--help', debug=debug)
+        self.assertIn('usage: coala', stdout)
+        self.assertIn('Use of `coala-ci` executable is deprecated', stderr)
+        self.assertEqual(retval, 0,
+                         'coala must return zero when successful')
 
-    def test_find_no_issues(self):
+    def test_log_debug(self):
+        self.test_log(debug=True)
+
+    def test_nonexistent(self, debug=False):
+        retval, stdout, stderr = execute_coala(
+            coala.main, 'coala', '--non-interactive', '-c', 'nonex', 'test')
+        self.assertFalse(stdout)
+        self.assertRegex(
+             stderr,
+             ".*\\[ERROR\\].*Requested coafile '.*' does not exist")
+        self.assertNotEqual(retval, 0,
+                            'coala must return nonzero when errors occured')
+
+        retval, stdout, stderr = execute_coala(
+            coala.main, 'coala', '-c', 'nonex',
+            '--show-bears', '--filter-by-language', 'Python')
+        self.assertNotIn(
+             stderr,
+             "Requested coafile '.coafile' does not exist")
+
+        retval, stdout, stderr = execute_coala(
+            coala.main, 'coala', '-c', 'nonex', '--show-bears')
+        self.assertIn(
+             stderr,
+             "Requested coafile '.coafile' does not exist")
+
+    def test_nonexistent_debug(self):
+        self.test_nonexistent(debug=True)
+
+    def test_find_no_issues(self, debug=False):
         with bear_test_module(), \
                 prepare_file(['#include <a>'], None) as (lines, filename):
-            retval, output = execute_coala(coala_ci.main, 'coala-ci',
-                                           '-c', os.devnull,
-                                           '-f', re.escape(filename),
-                                           '-b', 'SpaceConsistencyTestBear',
-                                           '--settings', 'use_spaces=True')
-            self.assertIn('Executing section Default', output)
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull,
+                                                   '-f', re.escape(filename),
+                                                   '-b',
+                                                   'SpaceConsistencyTestBear',
+                                                   '--settings',
+                                                   'use_spaces=True',
+                                                   debug=debug)
+            self.assertEqual('Executing section cli...\n', stdout)
+            if not debug:
+                self.assertFalse(stderr)
+            else:
+                # in debug mode, log_level is also set to DEBUG, causing
+                # stderr output
+                self.assertTrue(stderr)
             self.assertEqual(retval, 0,
-                             'coala-ci must return zero when successful')
+                             'coala must return zero when successful')
 
-    def test_find_issues(self):
+    def test_find_no_issues_debug(self):
+        self.test_find_no_issues(debug=True)
+
+    def test_find_issues(self, debug=False):
         with bear_test_module(), \
                 prepare_file(['#fixme'], None) as (lines, filename):
-            retval, output = execute_coala(coala_ci.main, 'coala-ci',
-                                           '-c', os.devnull,
-                                           '-b', 'LineCountTestBear',
-                                           '-f', re.escape(filename))
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull,
+                                                   '-b', 'LineCountTestBear',
+                                                   '-f', re.escape(filename),
+                                                   debug=debug)
             self.assertIn('This file has 1 lines.',
-                          output,
+                          stdout,
                           'The output should report count as 1 lines')
+            self.assertIn('This result has no patch attached.', stderr)
             self.assertNotEqual(retval, 0,
-                                'coala-ci was expected to return non-zero')
+                                'coala must return nonzero when errors occured')
 
-    def test_show_patch(self):
+    def test_find_issues_debug(self):
+        self.test_find_issues(debug=True)
+
+    def test_show_patch(self, debug=False):
         with bear_test_module(), \
              prepare_file(['\t#include <a>'], None) as (lines, filename):
-            retval, output = execute_coala(
-                coala_ci.main, 'coala-ci',
+            retval, stdout, stderr = execute_coala(
+                coala.main, 'coala', '--non-interactive',
                 '-c', os.devnull,
                 '-f', re.escape(filename),
                 '-b', 'SpaceConsistencyTestBear',
-                '--settings', 'use_spaces=True')
-            self.assertIn('Line contains ', output)  # Result message is shown
-            self.assertIn("Applied 'ShowPatchAction'", output)
+                '--settings', 'use_spaces=True',
+                debug=debug)
+            self.assertIn('Line contains ', stdout)  # Result message is shown
+            self.assertIn("Applied 'ShowPatchAction'", stderr)
             self.assertEqual(retval, 5,
-                             'coala-ci must return exitcode 5 when it '
+                             'coala must return exitcode 5 when it '
                              'autofixes the code.')
 
-    def test_fail_acquire_settings(self):
+    def test_show_patch_debug(self):
+        self.test_show_patch(debug=True)
+
+    def test_fail_acquire_settings(self, debug=False):
         with bear_test_module():
-            retval, output = execute_coala(coala_ci.main, 'coala-ci',
-                                           '-b', 'SpaceConsistencyTestBear',
-                                           '-c', os.devnull)
-            self.assertIn('During execution, we found that some', output)
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive', '-b',
+                                                   'SpaceConsistencyTestBear',
+                                                   '-c', os.devnull,
+                                                   debug=debug)
+            self.assertFalse(stdout)
+            self.assertIn('During execution, we found that some', stderr)
+            self.assertNotEqual(retval, 0,
+                                'coala was expected to return non-zero')
+
+    def test_fail_acquire_settings_debug(self):
+        with self.assertRaisesRegex(
+                AssertionError,
+                r'During execution, we found that some required settings '
+                r'were not provided.'
+        ):
+            self.test_fail_acquire_settings(debug=True)

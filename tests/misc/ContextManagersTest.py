@@ -4,7 +4,7 @@ import sys
 from tempfile import TemporaryDirectory
 import unittest
 
-from coalib.misc.ContextManagers import (
+from coala_utils.ContextManagers import (
     change_directory, make_temp, prepare_file, retrieve_stdout,
     retrieve_stderr, simulate_console_inputs, subprocess_timeout,
     suppress_stdout)

@@ -4,7 +4,7 @@ import os
 import re
 
 from coalib import coala_delete_orig
-from coalib.misc.ContextManagers import retrieve_stderr
+from coala_utils.ContextManagers import retrieve_stderr
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 

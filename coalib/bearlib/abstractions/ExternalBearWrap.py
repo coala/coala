@@ -6,10 +6,8 @@ from collections import OrderedDict
 from coalib.bears.LocalBear import LocalBear
 from coala_utils.decorators import enforce_signature
 from coalib.misc.Shell import run_shell_command
-from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.SourceRange import SourceRange
-from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.settings.FunctionMetadata import FunctionMetadata
 
 
@@ -32,7 +30,7 @@ def _prepare_options(options):
             'Invalid keyword arguments provided: ' +
             ', '.join(repr(s) for s in sorted(superfluous_options)))
 
-    if not 'settings' in options:
+    if 'settings' not in options:
         options['settings'] = {}
 
 

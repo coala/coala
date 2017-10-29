@@ -1,32 +1,36 @@
 #!/usr/bin/env python3
 
-# Start ignoring PyImportSortBear as imports below may yield syntax errors
-from coalib import assert_supported_version, VERSION, get_version
-
-assert_supported_version()
-# Stop ignoring
-
 import datetime
 import locale
+import platform
 import sys
 from os import getenv
 from subprocess import call
 
 import setuptools.command.build_py
-from coalib.misc.BuildManPage import BuildManPage
 from setuptools import find_packages, setup
 from setuptools.command.test import test as TestCommand
 
+from coalib import VERSION, assert_supported_version, get_version
+from coalib.misc.BuildManPage import BuildManPage
+
 try:
-    locale.getlocale()
+    lc = locale.getlocale()
+    pf = platform.system()
+    if pf != 'Windows' and lc == (None, None):
+        locale.setlocale(locale.LC_ALL, 'C.UTF-8')
 except (ValueError, UnicodeError):
     locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+
+
+assert_supported_version()
 
 
 class BuildPyCommand(setuptools.command.build_py.build_py):
 
     def run(self):
-        self.run_command('build_manpage')
+        if platform.system() != 'Windows':
+            self.run_command('build_manpage')
         setuptools.command.build_py.build_py.run(self)
 
 
@@ -43,15 +47,16 @@ class BuildDocsCommand(setuptools.command.build_py.build_py):
     apidoc_command = (
         'sphinx-apidoc', '-f', '-o', 'docs', '--no-toc', 'coalib'
     )
-    doc_command = ('make', '-C', 'docs', 'html')
+    doc_command = ('make', '-C', 'docs', 'html', 'SPHINXOPTS=-W')
 
     def run(self):
-        call(self.apidoc_command)
-        call(self.doc_command)
+        errOne = call(self.apidoc_command)
+        errTwo = call(self.doc_command)
+        sys.exit(errOne or errTwo)
 
 
-# Generate API documentation only if we are running on readthedocs.org
-on_rtd = getenv('READTHEDOCS', None) != None
+# Generate API documentation only if we are running on readthedocs.io
+on_rtd = getenv('READTHEDOCS', None) is not None
 if on_rtd:
     call(BuildDocsCommand.apidoc_command)
     if 'dev' in VERSION:
@@ -71,11 +76,14 @@ with open('README.rst') as readme:
 
 
 if __name__ == '__main__':
-    data_files = [('.', ['coala.1'])]
+    if platform.system() != 'Windows':
+        data_files = [('.', ['coala.1'])]
+    else:
+        data_files = [('.', [])]
 
     setup(name='coala',
           version=VERSION,
-          description='Code Analysis Application (coala)',
+          description='Linting and Fixing Code for All Languages',
           author='The coala developers',
           author_email='coala.analyzer@gmail.com',
           maintainer='Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger'
@@ -89,7 +97,6 @@ if __name__ == '__main__':
           install_requires=required,
           tests_require=test_required,
           package_data={'coalib': ['default_coafile', 'VERSION',
-                                   'bearlib/languages/definitions/*.coalang',
                                    'bearlib/languages/documentation/*.coalang']
                         },
           license='AGPL-3.0',

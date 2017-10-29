@@ -1,3 +1,15 @@
+[cli]
 bears = ProcessingGlobalTestBear, ProcessingLocalTestBear
+files = testcode.c
+bear_dirs = .
+
+[mixed]
+bears = ProcessingGlobalTestBear, ProcessingLocalTestBear,
+        ProcessingGlobalTestRawFileBear, ProcessingLocalTestRawFileBear
 files = testcode.c, unreadable
+bear_dirs = .
+
+[raw]
+bears = ProcessingGlobalTestRawFileBear, ProcessingLocalTestRawFileBear
+files = unreadable
 bear_dirs = .

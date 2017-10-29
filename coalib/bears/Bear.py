@@ -1,10 +1,9 @@
+import inspect
 import traceback
 from functools import partial
 from os import makedirs
 from os.path import join, abspath, exists
-from shutil import copyfileobj
-from urllib.request import urlopen
-
+import requests
 from appdirs import user_data_dir
 
 from pyprint.Printer import Printer
@@ -12,23 +11,24 @@ from pyprint.Printer import Printer
 from coala_utils.decorators import (enforce_signature, classproperty,
                                     get_public_members)
 
-from coalib.bears.requirements.PackageRequirement import PackageRequirement
-from coalib.bears.requirements.PipRequirement import PipRequirement
+from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.output.printers.LogPrinter import LogPrinterMixin
 from coalib.results.Result import Result
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 from coalib.settings.ConfigurationGathering import get_config_directory
 
+from .meta import bearclass
 
-class Bear(Printer, LogPrinterMixin):
+
+class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     """
     A bear contains the actual subroutine that is responsible for checking
     source code for certain specifications. However it can actually do
     whatever it wants with the files it gets. If you are missing some Result
     type, feel free to contact us and/or help us extending the coalib.
 
-    This is the base class for every bear. If you want to write an bear, you
+    This is the base class for every bear. If you want to write a bear, you
     will probably want to look at the GlobalBear and LocalBear classes that
     inherit from this class. In any case you'll want to overwrite at least the
     run method. You can send debug/warning/error messages through the
@@ -37,15 +37,15 @@ class Bear(Printer, LogPrinterMixin):
     err(), you are expected to also terminate the bear run-through
     immediately.
 
-    If you need some setup or teardown for your bear, feel free to overwrite
-    the set_up() and tear_down() functions. They will be invoked
-    before/after every run invocation.
-
     Settings are available at all times through self.section.
 
     To indicate which languages your bear supports, just give it the
     ``LANGUAGES`` value which should be a set of string(s):
 
+    >>> from dependency_management.requirements.PackageRequirement import (
+    ... PackageRequirement)
+    >>> from dependency_management.requirements.PipRequirement import (
+    ... PipRequirement)
     >>> class SomeBear(Bear):
     ...     LANGUAGES = {'C', 'CPP','C#', 'D'}
 
@@ -96,7 +96,7 @@ class Bear(Printer, LogPrinterMixin):
     ... 'Unused Code', 'Redundancy', 'Variable Misuse', 'Spelling',
     ... 'Memory Leak', 'Documentation', 'Duplication', 'Commented Code',
     ... 'Grammar', 'Missing Import', 'Unreachable Code', 'Undefined Element',
-    ... 'Code Simplification'}
+    ... 'Code Simplification', 'Statistics'}
     >>> CAN_FIX = {'Syntax', ...}
 
     Specifying something to CAN_FIX makes it obvious that it can be detected
@@ -126,6 +126,50 @@ class Bear(Printer, LogPrinterMixin):
     ...     BEAR_DEPS = {SomeBear}
     >>> SomeOtherBear.BEAR_DEPS
     {<class 'coalib.bears.Bear.SomeBear'>}
+
+    Every bear resides in some directory which is specified by the
+    source_location attribute:
+
+    >>> class SomeBear(Bear): pass
+    >>> SomeBear.source_location
+    '...Bear.py'
+
+    Every linter bear makes use of an executable tool for its operations.
+    The SEE_MORE attribute provides a link to the main page of the linter
+    tool:
+
+    >>> class PyLintBear(Bear):
+    ...     SEE_MORE = 'https://www.pylint.org/'
+    >>> PyLintBear.SEE_MORE
+    'https://www.pylint.org/'
+
+    In the future, bears will not survive without aspects. aspects are defined
+    as part of the ``class`` statement's parameter list. According to the
+    classic ``CAN_DETECT`` and ``CAN_FIX`` attributes, aspects can either be
+    only ``'detect'``-able or also ``'fix'``-able:
+
+    >>> from coalib.bearlib.aspects.Metadata import CommitMessage
+
+    >>> class aspectsCommitBear(Bear, aspects={
+    ...         'detect': [CommitMessage.Shortlog.ColonExistence],
+    ...         'fix': [CommitMessage.Shortlog.TrailingPeriod],
+    ... }, languages=['Python']):
+    ...     pass
+
+    >>> aspectsCommitBear.aspects['detect']
+    [<aspectclass 'Root.Metadata.CommitMessage.Shortlog.ColonExistence'>]
+    >>> aspectsCommitBear.aspects['fix']
+    [<aspectclass 'Root.Metadata.CommitMessage.Shortlog.TrailingPeriod'>]
+
+    To indicate the bear uses raw files, set ``USE_RAW_FILES`` to True:
+
+    >>> class RawFileBear(Bear):
+    ...     USE_RAW_FILES = True
+    >>> RawFileBear.USE_RAW_FILES
+    True
+
+    However if ``USE_RAW_FILES`` is enabled the Bear is in charge of managing
+    the file (opening the file, closing the file, reading the file, etc).
     """
 
     LANGUAGES = set()
@@ -140,7 +184,9 @@ class Bear(Printer, LogPrinterMixin):
     CAN_DETECT = set()
     CAN_FIX = set()
     ASCIINEMA_URL = ''
+    SEE_MORE = ''
     BEAR_DEPS = set()
+    USE_RAW_FILES = False
 
     @classproperty
     def name(cls):
@@ -158,6 +204,13 @@ class Bear(Printer, LogPrinterMixin):
         return cls.CAN_DETECT | cls.CAN_FIX
 
     @classproperty
+    def source_location(cls):
+        """
+        :return: The file path where the bear was fetched from.
+        """
+        return inspect.getfile(cls)
+
+    @classproperty
     def maintainers(cls):
         """
         :return: A set containing ``MAINTAINERS`` if specified, else takes
@@ -172,7 +225,7 @@ class Bear(Printer, LogPrinterMixin):
                  takes ``AUTHORS_EMAILS`` by default.
         """
         return (cls.AUTHORS_EMAILS if cls.MAINTAINERS_EMAILS == set()
-                else cls.MAINTAINERS)
+                else cls.MAINTAINERS_EMAILS)
 
     @enforce_signature
     def __init__(self,
@@ -222,6 +275,11 @@ class Bear(Printer, LogPrinterMixin):
 
     def run_bear_from_section(self, args, kwargs):
         try:
+            # Don't get `language` setting from `section.contents`
+            if self.section.language and (
+                    'language' in self.get_metadata()._optional_params or
+                    'language' in self.get_metadata()._non_optional_params):
+                kwargs['language'] = self.section.language
             kwargs.update(
                 self.get_metadata().create_params_from_section(self.section))
         except ValueError as err:
@@ -231,16 +289,35 @@ class Bear(Printer, LogPrinterMixin):
 
         return self.run(*args, **kwargs)
 
-    def execute(self, *args, **kwargs):
+    def execute(self, *args, debug=False, **kwargs):
         name = self.name
         try:
             self.debug('Running bear {}...'.format(name))
+
+            # If `dependency_results` kwargs is defined but there are no
+            # dependency results (usually in Bear that has no dependency)
+            # delete the `dependency_results` kwargs, since most Bears don't
+            # define `dependency_results` kwargs in its `run()` function.
+            if ('dependency_results' in kwargs and
+                    kwargs['dependency_results'] is None and
+                    not self.BEAR_DEPS):
+                del kwargs['dependency_results']
+
             # If it's already a list it won't change it
             result = self.run_bear_from_section(args, kwargs)
             return [] if result is None else list(result)
-        except:
-            self.warn('Bear {} failed to run. Take a look at debug messages'
-                      ' (`-V`) for further information.'.format(name))
+        except (Exception, SystemExit) as exc:
+            if debug and not isinstance(exc, SystemExit):
+                raise
+
+            if self.kind() == BEAR_KIND.LOCAL:
+                self.err('Bear {} failed to run on file {}. Take a look '
+                         'at debug messages (`-V`) for further '
+                         'information.'.format(name, args[0]))
+            else:
+                self.err('Bear {} failed to run. Take a look '
+                         'at debug messages (`-V`) for further '
+                         'information.'.format(name))
             self.debug(
                 'The bear {bear} raised an exception. If you are the author '
                 'of this bear, please make sure to catch all exceptions. If '
@@ -265,7 +342,7 @@ class Bear(Printer, LogPrinterMixin):
         """
         return FunctionMetadata.from_function(
             cls.run,
-            omit={'self', 'dependency_results'})
+            omit={'self', 'dependency_results', 'language'})
 
     @classmethod
     def __json__(cls):
@@ -284,6 +361,8 @@ class Bear(Printer, LogPrinterMixin):
                                     for param in non_optional_params),
             'optional_params': ({param: optional_params[param][0]}
                                 for param in optional_params)}
+        if hasattr(cls, 'languages'):
+            _dict['languages'] = (str(language) for language in cls.languages)
         return _dict
 
     @classmethod
@@ -298,17 +377,31 @@ class Bear(Printer, LogPrinterMixin):
         return set(cls.BEAR_DEPS) - set(lst)
 
     @classmethod
-    def get_non_optional_settings(cls):
+    def get_non_optional_settings(cls, recurse=True):
         """
         This method has to determine which settings are needed by this bear.
         The user will be prompted for needed settings that are not available
         in the settings file so don't include settings where a default value
         would do.
 
-        :return: A dictionary of needed settings as keys and a tuple of help
-                 text and annotation as values
+        Note: This function also queries settings from bear dependencies in
+        recursive manner. Though circular dependency chains are a challenge to
+        achieve, this function would never return on them!
+
+        :param recurse: Get the settings recursively from its dependencies.
+        :return:        A dictionary of needed settings as keys and a tuple of
+                        help text and annotation as values.
         """
-        return cls.get_metadata().non_optional_params
+        non_optional_settings = {}
+
+        if recurse:
+            for dependency in cls.BEAR_DEPS:
+                non_optional_settings.update(
+                    dependency.get_non_optional_settings())
+
+        non_optional_settings.update(cls.get_metadata().non_optional_params)
+
+        return non_optional_settings
 
     @staticmethod
     def setup_dependencies():
@@ -323,21 +416,44 @@ class Bear(Printer, LogPrinterMixin):
         """
         Checks whether needed runtime prerequisites of the bear are satisfied.
 
-        This function gets executed at construction and returns True by
-        default.
+        This function gets executed at construction.
 
         Section value requirements shall be checked inside the ``run`` method.
+        >>> from dependency_management.requirements.PipRequirement import (
+        ... PipRequirement)
+        >>> class SomeBear(Bear):
+        ...     REQUIREMENTS = {PipRequirement('pip')}
+
+        >>> SomeBear.check_prerequisites()
+        True
+
+        >>> class SomeOtherBear(Bear):
+        ...     REQUIREMENTS = {PipRequirement('really_bad_package')}
+
+        >>> SomeOtherBear.check_prerequisites()
+        'really_bad_package is not installed. You can install it using ...'
+
+        >>> class anotherBear(Bear):
+        ...     REQUIREMENTS = {PipRequirement('bad_package', '0.0.1')}
+
+        >>> anotherBear.check_prerequisites()
+        'bad_package 0.0.1 is not installed. You can install it using ...'
 
         :return: True if prerequisites are satisfied, else False or a string
                  that serves a more detailed description of what's missing.
         """
+        for requirement in cls.REQUIREMENTS:
+            if not requirement.is_installed():
+                return str(requirement) + ' is not installed. You can ' + (
+                    'install it using ') + (
+                    ' '.join(requirement.install_command()))
         return True
 
     def get_config_dir(self):
         """
-        Gives the directory where the configuration file is
+        Gives the directory where the configuration file is.
 
-        :return: Directory of the config file
+        :return: Directory of the config file.
         """
         return get_config_directory(self.section)
 
@@ -356,11 +472,11 @@ class Bear(Printer, LogPrinterMixin):
         >>> from os import remove
         >>> if exists(join(bear.data_dir, "a_file")):
         ...     remove(join(bear.data_dir, "a_file"))
-        >>> file = bear.download_cached_file("http://gitmate.com/", "a_file")
+        >>> file = bear.download_cached_file("https://github.com/", "a_file")
 
         If we download it again, it'll be much faster as no download occurs:
 
-        >>> newfile = bear.download_cached_file("http://gitmate.com/", "a_file")
+        >>> newfile = bear.download_cached_file("https://github.com/", "a_file")
         >>> newfile == file
         True
 
@@ -375,8 +491,12 @@ class Bear(Printer, LogPrinterMixin):
         self.info('Downloading {filename!r} for bear {bearname} from {url}.'
                   .format(filename=filename, bearname=self.name, url=url))
 
-        with urlopen(url) as response, open(filename, 'wb') as out_file:
-            copyfileobj(response, out_file)
+        response = requests.get(url, stream=True, timeout=20)
+        response.raise_for_status()
+
+        with open(filename, 'wb') as file:
+            for chunk in response.iter_content(chunk_size=16 * 1024):
+                file.write(chunk)
         return filename
 
     @classproperty

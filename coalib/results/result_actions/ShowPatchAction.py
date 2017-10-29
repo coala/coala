@@ -7,13 +7,14 @@ from coalib.results.Diff import ConflictError
 from coalib.results.Result import Result
 from coalib.results.result_actions.ResultAction import ResultAction
 
+from coala_utils.decorators import enforce_signature
 
-def format_line(line, real_nr='', sign='|', mod_nr='', symbol='', ):
-    return '|{:>4}{}{:>4}|{:1}{}'.format(real_nr,
-                                         sign,
-                                         mod_nr,
-                                         symbol,
-                                         line.rstrip('\n'))
+
+def format_line(line, real_nr='', sign=']', mod_nr='', symbol='', ):
+    return '[{:>4}{}{:1}{}'.format(real_nr,
+                                   sign,
+                                   symbol,
+                                   line.rstrip('\n'))
 
 
 def print_from_name(printer, line):
@@ -21,7 +22,7 @@ def print_from_name(printer, line):
 
 
 def print_to_name(printer, line):
-    printer.print(format_line(line, mod_nr='++++'), color='green')
+    printer.print(format_line(line, real_nr='++++'), color='green')
 
 
 def print_beautified_diff(difflines, printer):
@@ -38,22 +39,15 @@ def print_beautified_diff(difflines, printer):
         elif line.startswith('+++'):
             print_to_name(printer, line[4:])
         elif line.startswith('+'):
-            printer.print(format_line(line[1:],
-                                      mod_nr=current_line_added,
-                                      symbol='+'),
+            printer.print(format_line(line[1:], real_nr=current_line_added),
                           color='green')
             current_line_added += 1
         elif line.startswith('-'):
             printer.print(format_line(line[1:],
-                                      real_nr=current_line_subtracted,
-                                      symbol='-'),
+                                      real_nr=current_line_subtracted),
                           color='red')
             current_line_subtracted += 1
         else:
-            printer.print(format_line(line[1:],
-                                      real_nr=current_line_subtracted,
-                                      mod_nr=current_line_added,
-                                      symbol=' '))
             current_line_subtracted += 1
             current_line_added += 1
 
@@ -63,9 +57,11 @@ class ShowPatchAction(ResultAction):
     SUCCESS_MESSAGE = 'Displayed patch successfully.'
 
     @staticmethod
-    def is_applicable(result, original_file_dict, file_diff_dict):
-        if not isinstance(result, Result) or not result.diffs:
-            return False
+    @enforce_signature
+    def is_applicable(result: Result, original_file_dict, file_diff_dict):
+
+        if not result.diffs:
+            return 'This result has no patch attached.'
 
         try:
             # Needed so the addition is run for all patches -> ConflictError
@@ -76,26 +72,30 @@ class ShowPatchAction(ResultAction):
                              file_diff_dict[filename]):
                     nonempty_patches = True
 
-            return nonempty_patches
-        except ConflictError:
-            return False
+            if nonempty_patches:
+                return True
+            return 'The given patches do not change anything anymore.'
+
+        except ConflictError as ce:
+            return ('Two or more patches conflict with '
+                    'each other: {}'.format(str(ce)))
 
     def apply(self,
               result,
               original_file_dict,
               file_diff_dict,
-              colored: bool=True,
+              no_color: bool=False,
               show_result_on_top: bool=False):
         """
-        Show patch
+        (S)how patch
 
-        :param colored:
+        :param no_color:
             Whether or not to use colored output.
         :param show_result_on_top:
             Set this to True if you want to show the result info on top.
             (Useful for e.g. coala_ci.)
         """
-        printer = ConsolePrinter(colored)
+        printer = ConsolePrinter(not no_color)
 
         if show_result_on_top:
             from coalib.output.ConsoleInteraction import print_result

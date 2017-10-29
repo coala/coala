@@ -1,10 +1,18 @@
+"""
+Language and docstyle independent extraction of documenation comments.
+
+Each of the functions is built upon one another, and at the last,
+exposes a single function :func:`extract_documentation_with_markers`
+which is used by :class:`.DocBaseClass`, to extract documentation.
+"""
+
 import re
 
-from coalib.bearlib.languages.documentation.DocstyleDefinition import (
-    DocstyleDefinition)
 from coalib.bearlib.languages.documentation.DocumentationComment import (
-    DocumentationComment)
+    DocumentationComment, MalformedComment)
+from coalib.results.TextPosition import TextPosition
 from coalib.results.TextRange import TextRange
+from textwrap import dedent
 
 
 def _extract_doc_comment_simple(content, line, column, markers):
@@ -36,7 +44,10 @@ def _extract_doc_comment_simple(content, line, column, markers):
     while line < len(content):
         pos = content[line].find(markers[2])
         if pos == -1:
+            line_column = len(content[line])-len(content[line].lstrip())
             doc_comment += ('\n' if content[line][align_column:] == ''
+                            else content[line].strip()+'\n'
+                            if line_column < align_column
                             else content[line][align_column:])
         else:
             doc_comment += content[line][align_column:pos]
@@ -54,13 +65,11 @@ def _extract_doc_comment_continuous(content, line, column, markers):
 
     The property of the continuous layout is that the each-line-marker and the
     end-marker do equal. Documentation is extracted until no further marker is
-    found. Applies e.g. for doxygen style python documentation:
+    found. Applies e.g. for doxygen style python documentation::
 
-    ```
-    ## main
-    #
-    #  detailed
-    ```
+        ## main
+        #
+        #  detailed
 
     :param content: Presplitted lines of the source-code-string.
     :param line:    Line where the documentation comment starts (behind the
@@ -100,13 +109,11 @@ def _extract_doc_comment_standard(content, line, column, markers):
     Extract a documentation that starts at given beginning with standard
     layout.
 
-    The standard layout applies e.g. for C doxygen-style documentation:
+    The standard layout applies e.g. for C doxygen-style documentation::
 
-    ```
-    /**
-     * documentation
-     */
-    ```
+        /**
+         * documentation
+         */
 
     :param content: Presplitted lines of the source-code-string.
     :param line:    Line where the documentation comment starts (behind the
@@ -195,14 +202,20 @@ def _extract_doc_comment_from_line(content, line, column, regex,
             if doc_comment is not None:
                 end_line, end_column, documentation = doc_comment
 
-                rng = TextRange.from_values(line + 1,
-                                            begin_match.start() + 1,
-                                            end_line + 1,
-                                            end_column + 1)
+                position = TextPosition(line + 1, len(indent) + 1)
                 doc = DocumentationComment(documentation, docstyle_definition,
-                                           indent, marker, rng)
+                                           indent, marker, position)
 
-                return end_line, end_column, doc
+                break
+
+        if doc_comment:
+            return end_line, end_column, doc
+        else:
+            malformed_comment = MalformedComment(dedent("""\
+                Please check the docstring for faulty markers. A starting
+                marker has been found, but no instance of DocComment is
+                returned."""), line)
+            return line + 1, 0, malformed_comment
 
     return line + 1, 0, None
 
@@ -211,14 +224,15 @@ def extract_documentation_with_markers(content, docstyle_definition):
     """
     Extracts all documentation texts inside the given source-code-string.
 
-    :param content: The source-code-string where to extract documentation from.
-                    Needs to be a list or tuple where each string item is a
-                    single line (including ending whitespaces like ``\\n``).
-    :param markers: The list/tuple of marker-sets that identify a
-                    documentation-comment. Low-index markers have higher
-                    priority than high-index markers.
-    :return:        An iterator returning each DocumentationComment found in
-                    the content.
+    :param content:
+        The source-code-string where to extract documentation from.
+        Needs to be a list or tuple where each string item is a single
+        line (including ending whitespaces like ``\\n``).
+    :param docstyle_definition:
+        The ``DocstyleDefinition`` instance that defines what docstyle is
+        being used in the documentation.
+    :return:
+        An iterator returning each DocumentationComment found in the content.
     """
     # Prepare marker-tuple dict that maps a begin pattern to the corresponding
     # marker_set(s). This makes it faster to retrieve a marker-set from a
@@ -249,35 +263,77 @@ def extract_documentation_with_markers(content, docstyle_definition):
             begin_regex,
             marker_dict,
             docstyle_definition)
-        if doc:
+
+        if doc and isinstance(doc, MalformedComment):
             yield doc
+        elif doc:
+            # Ignore string literals
+            ignore_regex = re.compile(
+                '^\s*r?(?P<marker>' +
+                ('|'.join(re.escape(s) for s in doc.marker[0])) +
+                ')')
+            # Starting line of doc_string where marker is present
+            start_line = doc.range.start.line - 1
+            ignore_string_match = ignore_regex.search(content[start_line])
 
+            # Instantiate padding
+            top_padding = 0
+            bottom_padding = 0
+            # minus 2 because we want to check the line before the marker.
+            start_index = doc.range.start.line - 2
+            end_index = doc.range.end.line
+            while start_index >= 0 and not content[start_index].strip():
+                top_padding += 1
+                start_index -= 1
+            # If the end_index is instantiated above the len(content) i.e.
+            # In case where ending marker of docstring is at the last line.
+            # Then the doc.bottom_padding will be default to 0. This will also
+            # prevent IndexError raised by content[end_index].
+            while end_index < len(content) and not content[end_index].strip():
+                # This condition will take place if theres an inline docstring
+                # following documentation.
+                if ((doc.marker[2]+'\n') != content[end_index-1][-4:]
+                        and bottom_padding == 0):
+                    break
+                bottom_padding += 1
+                end_index += 1
 
-def extract_documentation(content, language, docstyle):
-    """
-    Extracts all documentation texts inside the given source-code-string using
-    the coala docstyle definition files.
+            class_regex = re.compile(
+                doc.docstyle_definition.docstring_type_regex.class_sign)
+            function_regex = re.compile(
+                doc.docstyle_definition.docstring_type_regex.func_sign)
 
-    The documentation texts are sorted by their order appearing in ``content``.
+            # End line differs when mid marker and end marker is different
+            if doc.marker[1] == doc.marker[2]:
+                end_index = end_index - 1
 
-    For more information about how documentation comments are identified and
-    extracted, see DocstyleDefinition.doctypes enumeration.
+            # Check for docstring_position and then check for class regex
+            # and function regex to define the type of docstring.
+            if doc.docstyle_definition.docstring_position == 'top':
+                if class_regex.search(content[start_index]):
+                    doc.docstring_type = 'class'
+                elif function_regex.search(content[start_index]):
+                    doc.docstring_type = 'function'
+            elif doc.docstyle_definition.docstring_position == 'bottom':
+                if (end_index < len(content) and
+                        class_regex.search(content[end_index])):
+                    doc.docstring_type = 'class'
+                elif (end_index < len(content) and
+                        function_regex.search(content[end_index])):
+                    doc.docstring_type = 'function'
 
-    :param content:            The source-code-string where to extract
-                               documentation from. Needs to be a list or tuple
-                               where each string item is a single line
-                               (including ending whitespaces like ``\\n``).
-    :param language:           The programming language used.
-    :param docstyle:           The documentation style/tool used
-                               (e.g. doxygen).
-    :raises FileNotFoundError: Raised when the docstyle definition file was not
-                               found.
-    :raises KeyError:          Raised when the given language is not defined in
-                               given docstyle.
-    :raises ValueError:        Raised when a docstyle definition setting has an
-                               invalid format.
-    :return:                   An iterator returning each DocumentationComment
-                               found in the content.
-    """
-    docstyle_definition = DocstyleDefinition.load(language, docstyle)
-    return extract_documentation_with_markers(content, docstyle_definition)
+            # Disabled automatic padding for docstring_type='others' as this
+            # will cause overlapping of range in consecutive docstrings. Which
+            # diff.replace() is unable to handle.
+            if doc.docstring_type != 'others':
+                doc.top_padding = top_padding
+                doc.bottom_padding = bottom_padding
+
+                doc.range = TextRange.from_values(
+                    start_index + 2,
+                    1 if top_padding > 0 else doc.range.start.column,
+                    end_index,
+                    1 if bottom_padding > 0 else doc.range.end.column)
+
+            if ignore_string_match:
+                yield doc

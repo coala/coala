@@ -4,7 +4,7 @@ import os
 import platform
 import sys
 
-from coalib.misc.ContextManagers import suppress_stdout
+from coala_utils.ContextManagers import suppress_stdout
 from coala_utils.decorators import arguments_to_lists, yield_once
 
 
