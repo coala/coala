@@ -109,7 +109,7 @@ language_definitions = os.path.join(coalib_root,
                                     'languages',
                                     'definitions')
 
-system_coafile = os.path.join(coalib_root, 'default_coafile')
+system_coafile = os.path.join(coalib_root, 'system_coafile')
 
 user_coafile = os.path.join(os.path.expanduser('~'), '.coarc')
 
