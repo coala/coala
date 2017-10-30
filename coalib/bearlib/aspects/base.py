@@ -164,7 +164,9 @@ class aspectbase:
         self.__dict__['subaspects'] = instanced_child
 
     def __eq__(self, other):
-        return type(self) is type(other) and self.tastes == other.tastes
+        return (type(self) is type(other) and
+                self.tastes == other.tastes and
+                self.language == other.language)
 
     @property
     def tastes(self):
