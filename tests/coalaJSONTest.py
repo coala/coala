@@ -152,6 +152,29 @@ class coalaJSONTest(unittest.TestCase):
         self.assertFalse(stdout2)
         self.assertFalse(stderr2)
 
+    def test_output_file_overwriting(self):
+        with prepare_file(['#todo this is todo'], None) as (lines, filename):
+            args = (coala.main, 'coala', '--json', '-c', os.devnull, '-b',
+                    'LineCountTestBear', '-f', re.escape(filename),
+                    '--log-json', '-o', 'file.json')
+            execute_coala(*args)
+
+            with open('file.json') as fp:
+                data = json.load(fp)
+
+            execute_coala(*args)
+
+            with open('file.json') as fp:
+                new_data = json.load(fp)
+
+        os.remove('file.json')
+
+        for log_index in range(len(data['logs'])):
+            del data['logs'][log_index]['timestamp']
+            del new_data['logs'][log_index]['timestamp']
+
+        self.assertEqual(data, new_data)
+
     def test_show_language_bears_output_file(self):
         with bear_test_module():
             retval, stdout, stderr = execute_coala(
