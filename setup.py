@@ -13,6 +13,7 @@ from setuptools.command.test import test as TestCommand
 
 from coalib import VERSION, assert_supported_version, get_version
 from coalib.misc.BuildManPage import BuildManPage
+from coalib.misc import Constants
 
 try:
     lc = locale.getlocale()
@@ -96,7 +97,7 @@ if __name__ == '__main__':
           packages=find_packages(exclude=['build.*', 'tests', 'tests.*']),
           install_requires=required,
           tests_require=test_required,
-          package_data={'coalib': ['system_coafile', 'VERSION',
+          package_data={'coalib': [Constants.system_coafile, 'VERSION',
                                    'bearlib/languages/documentation/*.coalang']
                         },
           license='AGPL-3.0',
