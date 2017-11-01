@@ -1,7 +1,7 @@
 Testing
 =======
 
-You can help us testing coala in several ways.
+You can help us test coala in several ways.
 
 Executing our Tests
 -------------------
