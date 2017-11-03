@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<html ng-app="coala">
+<head>
+
+    <title>coala</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="vendors/jquery/jquery.min.js"></script>
+    <script src="components/angular/angular.min.js"></script>
+    <script src="components/angular/angular-route.min.js"></script>
+    <script src="vendors/materialize/js/materialize.min.js"></script>
+    <script src="resources/js/config.js"></script>
+    <script src="resources/js/snippets.js"></script>
+    <script src="resources/js/exts.js"></script>
+    <script src="vendors/angular-sanitize/angular-sanitize.js"></script>
+    <script src="vendors/showdown/showdown.js"></script>
+    <script src="vendors/markdown/markdown.js"></script>
+    <script src="resources/js/app.js"></script>
+    <script src="resources/js/analytics.js"></script>
+    <script src="resources/js/Directives/homeDirective.js"></script>
+    <script src="resources/js/Directives/aboutDirective.js"></script>
+    <script src="resources/js/Directives/languagesDirective.js"></script>
+    <script src="resources/js/Directives/getinvolvedDirective.js"></script>
+    <script src="resources/js/Directives/coalaOnlineDirective.js"></script>
+    <script src="resources/js/Directives/peopleDirective.js"></script>
+    <script src="https://cdn.rawgit.com/nodeca/js-yaml/master/dist/js-yaml.min.js"></script>
+    <link rel="stylesheet" href="vendors/materialize/css/materialize.css">
+
+    <link rel="stylesheet" href="https://rawgit.com/coala/coalaCSS/master/coala.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,700,900|Roboto:100,200,300,400,500,600,700,800,900|Ubuntu+Mono" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <script src="components/ngstorage/ngStorage.min.js"></script>
+
+</head>
+<body>
+<main>
+<div ng-controller="TabController as tc">
+    <div class="tab-container">
+        <div class="row">
+        <nav>
+            <div class="col s12 nav-wrapper">
+              <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+
+                <ul class="tabs hide-on-med-and-down">
+                  <li class="tab"><a ng-click="tc.setTab('/home')" ng-class="{active:tc.isSet('/home')}">Home</a></li>
+                  <li class="tab"><a ng-click="tc.setTab('/about')" ng-class="{active:tc.isSet('/about')}">About</a></li>
+                  <li class="tab"><a ng-click="tc.setTab('/languages')" ng-class="{active:tc.isSet('/languages')}">Languages</a></li>
+                  <li class="tab"><a ng-click="tc.setTab('/getinvolved')" ng-class="{active:tc.isSet('/getinvolved')}">Get Involved</a></li>
+                  <li class="tab"><a ng-click="tc.setTab('/coalaonline')" ng-class="{active:tc.isSet('/coalaonline')}"><span class="lowercase">c</span>OALA Online<span class="new badge" data-badge-caption="">beta</span></a></li>
+                </ul>
+                <ul class="side-nav" id="mobile-demo">
+                  <li class="tab col s12"><a ng-click="tc.setTab('/home')" ng-class="{active:tc.isSet('/home')}">Home</a></li>
+                  <li class="tab col s12"><a ng-click="tc.setTab('/about')" ng-class="{active:tc.isSet('/about')}">About</a></li>
+                  <li class="tab col s12"><a ng-click="tc.setTab('/languages')" ng-class="{active:tc.isSet('/languages')}">Languages</a></li>
+                  <li class="tab col s12"><a ng-click="tc.setTab('/getinvolved')" ng-class="{active:tc.isSet('/getinvolved')}">Get Involved</a></li>
+                  <li class="tab col s12"><a ng-click="tc.setTab('/coalaonline')" ng-class="{active:tc.isSet('/coalaonline')}"><span class="lowercase">c</span>OALA Online<span class="new badge" data-badge-caption="">beta</span></a></li>
+                </ul>
+
+            </div>
+            </nav>
+        </div>
+    </div>
+
+<div ng-view=""></div>
+
+</div>
+</main>
+<ng-include src="'includes/footer.html'" scope="" onload=""></ng-include>
+
+</body>
+</html>
+
+<script>
+$(document).ready(function () {
+            $('select').material_select();
+            //$('ul.tabs').tabs();
+            $(".button-collapse").sideNav();
+            $('.github-card').html('<img src="http://placehold.it/100x100" />')
+})
+</script>

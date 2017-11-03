@@ -1,0 +1,274 @@
+<div class="coala-online">
+
+  <div class="row">
+    <div class="col m8 offset-m2 s12">
+      <ul class="tabs">
+        <li class="tab col s6"><a ng-click="set_state('instant')" ng-class="{active:(state == 'instant')}" href="#instant">INSTANT</a></li>
+        <li class="tab col s6"><a ng-click="set_state('git')" ng-class="{active:(state == 'git')}" href="#git">GIT REPOSITORY</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col m8 offset-m2 s12">
+      <form id="instant" class="coa-form black pre z-depth-3">
+        <textarea placeholder="Write some code here" id="file-data" class="black no-border file-data no-outline pre small prettyprint linenums" name="file_data">print( a + b )
+</textarea>  <!-- DONT EVER INDENT THIS, it ends up in the textarea -->
+      </form>
+      <div id="git">
+        <input placeholder="Paste link to git repository or clone url and Press Enter" class="black pre z-depth-3 git-link no-borders" type="text">
+      </div>
+    </div>
+  </div>
+
+  <div ng-show="state=='instant'" class="row">
+    <div class="col m8 offset-m2 s12">
+      <select id="lang" ng-model="lang_sel" ng-options="lang for lang in toc.LANGUAGES">
+        <option value="" disabled>Choose a Language</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col m12 s12 center" ng-show="loading_coajson">
+      <div class="preloader-wrapper small active">
+        <div class="spinner-layer spinner-blue">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+        <div class="spinner-layer spinner-red">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+        <div class="spinner-layer spinner-yellow">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+        <div class="spinner-layer spinner-green">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row coajson">
+    <div class="col offset-m2 m8 s12" ng-show="sections">
+      <div class="blue-grey lighten-5 coalasection" ng-repeat="(section,value) in sections">
+        <div class="section-title blue-grey darken-4 white-text z-depth-1">
+          <span class="section-name">{{ section }}</span>
+          <span>
+            <a class="waves-light">
+              <i ng-click="remove_sections(section)" class="fa fa-minus-circle white-text bears-icon" aria-hidden="true">
+              </i>
+            </a>
+          </span>
+        </div>
+        <div class="row">
+          <div class="col m3 s12">
+            <!-- Ignore HTML Linter because it only allows hyphens and lowercase in id attr -->
+             <!-- Ignore HTMLLintBear -->
+            <input type="text" id="sections[section]['files']" value="sections[section]['files']"
+            ng-model="sections[section]['files']" class="section-name">
+            <label for="sections[section]['files']">Files</label>
+          </div>
+        </div>
+        <div ng-repeat="(bear, val) in sections[section]['bears']" class="row">
+          <div class="col m3">
+            <div ng-if="bear.length>0" class="card-panel">{{bear}}</div>
+            <div ng-if="bear.length == 0" class="card-panel input-field">
+              <input type="text" id="autocomplete-input" class="autocomplete">
+            </div>
+          </div>
+          <div class="col m7">
+            <ul class="left no-margin">
+              <li ng-repeat="(k,v) in val['nop']">
+                <div class="input-field no-margin">
+                  <input type="text" ng-model="sections[section]['bears'][bear]['nop'][k]">
+                  <label>{{k}}</label>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="col m2">
+            <i ng-click="add_optional_settings(section, bear)" class="fa fa-sliders black-text bears-icon left" aria-hidden="true">
+            </i>
+            <i ng-click="remove_bears(section, bear)" class="fa fa-minus-circle black-text bears-icon right" aria-hidden="true">
+            </i>
+          </div>
+          <!-- Modal Structure -->
+          <div id="settingmodal" class="modal bottom-sheet">
+            <div class="modal-content col m12">
+              <h4>Optional Settings</h4>
+              <p>{{ current_bear }}</p>
+              <div class="parent-wrapper">
+                <div class="parent">
+                  <div class="child" ng-repeat="(k,v) in sections[section_settings]['bears'][current_bear]['op']">
+                    <div class="input-field no-margin">
+                      <input type="text" ng-model="sections[section_settings]['bears'][current_bear]['op'][k]">
+                      <label>{{k}}</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+          </div>
+        </div>
+        <div class="row blue-grey darken-4 white-text z-depth-1 no-margin">
+          <span>
+            <a class="waves-effect grey-text text-lighten-2">
+              <i ng-click="add_bears(section)" class="fa fa-plus-circle bears-icon-small" aria-hidden="true"> &nbsp;ADD BEAR
+              </i>
+            </a>
+          </span>
+        </div>
+      </div>
+
+      <div class="row blue-grey lighten-5 black-text new-section z-depth-1">
+        <div class="col m3 offset-m3">
+          <input type="text" placeholder="Give a section name!" class="no-margins" id="new-section">
+        </div>
+        <div class="col m6">
+            <a ng-click="add_sections()" class="btn waves-effect">
+              <span class="footer-btn-text">NEW SECTION</span>
+              <i class="fa fa-plus white-text bears-icon" aria-hidden="true"></i>
+            </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div ng-show="sections" class="row">
+    <div class="col m12 s12 center">
+      <div>
+        <a ng-click="run_coala()" class="center run-coala waves-effect waves-light btn">RUN
+          <img src="https://api.coala.io/en/latest/_static/images/coala_logo.svg">
+        </a>
+      </div>
+      <br>
+      <div ng-show="running_coala" class="preloader-wrapper small active">
+        <div class="spinner-layer spinner-blue">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+        <div class="spinner-layer spinner-red">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+        <div class="spinner-layer spinner-yellow">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+        <div class="spinner-layer spinner-green">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br><br>
+
+  <div class="row">
+    <div class="col m6 s12" ng-show="results">
+      <div class="result">
+        <h6 class="uppercase"><strong>Results</strong></h6>
+        <div class="results-data card">
+            <div class="origin-diff" ng-show="toc.error_on_run">{{toc.error_message}}
+            </div>
+            <div class="" ng-repeat="(k,v) in results">
+              <div ng-repeat="data in v" class="results card blue-grey lighten-4">
+                <span class="severity">{{k}}</span>
+                <span class="origin">{{data.origin}}</span>
+                <span class="severity">Severity : {{data.severity}}</span>
+                <span class="origin blue-grey darken-4 white-text">
+                  <span ng-show="data.affected_code[0].start.line !=
+                  data.affected_code[0].end.line">
+                  Between lines {{ data.affected_code[0].start.line }}
+                  and {{ data.affected_code[0].end.line }}
+                  </span>
+                  <span ng-show="data.affected_code[0].start.line ==
+                  data.affected_code[0].end.line">
+                  On Line {{ data.affected_code[0].start.line }}
+                </span>
+                </span>
+                <div ng-show="state=='git'" class="label blue-grey darken-3 white-text">
+                  <!-- slice(6) : As 6 is the depth of repository folder server side -->
+                  <span>{{data.affected_code[0].file.split('/').slice(6).join('/') }}</span>
+                </div>
+                <div class="label">Message :
+                  <span>{{data.message}}</span>
+                </div>
+                <div ng-repeat="(diff,val) in data.diffs">
+                  <pre>{{val}}</pre>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+     <div ng-if="coafile" class="col m6 s12">
+      <h6 class="uppercase"><strong><span class="lowercase">c</span>OAFILE</strong></h6>
+       <div class="card coafile">
+        {{coafile}}
+       </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,126 @@
+ <div class="home">
+    <div class="row">
+        <div class="col m6 s12">
+            <center>
+                <img class="logo center" src="https://api.coala.io/en/latest/_static/images/coala_logo.svg">
+            </center>
+        </div>
+
+        <div class="col m6 s12">
+            <div class="title flow-text">coala</div>
+            <ul class="center row flow-text no-margin">
+                <li class="col m4 col s4"><a class="chip" href="https://docs.coala.io/"><i class="fa fa-book" aria-hidden="true"></i>DOCS</a></li>
+                <li class="col m4 col s4"><a class="chip" href="https://github.com/coala/coala/"><i class="fa fa-code" aria-hidden="true"></i>SOURCE</a></li>
+                <li class="col m4 col s4"><a class="chip" href="https://coala.io/chat"><i class="fa fa-commenting-o" aria-hidden="true"></i>CHAT</a></li>
+            </ul>
+            <h4 class="center light">linting and fixing code for all languages</h4>
+        </div>
+    </div>
+</div>
+
+<section id="installation">
+    <div class="container">
+        <div class="install-tip">
+            <h2 class="fine">install coala</h2>
+
+            <div class="thin-row-small row no-border">
+                <div class="col m6 s12">
+                    <h5 class="light">simply install coala</h5>
+                    <p>If any kind of dependency errors occur, use a virtualenv!</p>
+                    <p>
+                        For the full installation documentation, check
+                        <a href="https://coala.io/install">coala.io/install</a>
+                    </p>
+                </div>
+                <div class="col m6 s12">
+                    <pre class="card card-content">$ pip3 install coala-bears</pre>
+                    <p>You can append --pre to that command to get the latest prerelease straight from master!</p>
+                    <p>Consider using a virtualenv:</p>
+<pre class="card card-content">
+$ pip3 install virtualenv
+$ virtualenv venv        # On Linux
+$ venv\scripts\activate  # On Windows
+</pre>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="thin-row-small row">
+                <div class="col m6 s12">
+                    <h5 class="light">get it in docker</h5>
+                    <p>The most simple way to get the full functionality if you use docker.</p>
+                </div>
+                <div class="col m6 s12">
+                    <pre class="card card-content">$ docker run -ti -v $(pwd):/app --workdir=/app coala/base coala --version</pre>
+                    <p>
+                        For more information, check out
+                        <a href="https://coala.io/install#using-coala-with-docker">
+                            our docker documentation
+                        </a>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="thin-row-small row">
+                <div class="col m6 s12">
+                    <h5 class="light">coala is available in a lot of editors!</h5>
+                </div>
+                <div class="col m6 s12">
+                    <h5>
+                    <a href="https://github.com/coala/coala-atom/">Atom</a> |
+                    <a href="https://github.com/coala/coala-sublime/">Sublime Text</a> |
+                    <a href="https://github.com/coala/coala-vim/">Vim</a> |
+                    <a href="https://github.com/coala/coala-vs-code/">VS Code</a> |
+                    <a href="https://github.com/coala/coala-emacs/">Emacs</a>
+                    </h5>
+                </div>
+            </div>
+        </div>
+        <div class="center">
+        Please give us feedback at <a href="http://coala.io/usability">coala.io/usability</a>.<br>
+        For commercial support, contact <a href="mailto:support@coala.io">support@coala.io</a>.
+        </div>
+    </div>
+</section>
+
+<section ng-controller="SnippetController as sc">
+    <div class="container">
+        <div class="examples">
+            <h2 class="fine">get started</div>
+
+            <div class="row">
+                <div class="col m4 s12">
+                    <br>
+                    <select ng-init="sc.lang_selected='Python'" ng-model="sc.lang_selected" ng-options="lang for lang in sc.languages">
+                        <option value="" disabled>Choose a Language</option>
+                    </select>
+                    <p>
+                        Need more info?
+                        <a href="https://coala.io/tutorial">
+                            Read the full tutorial!
+                        </a>
+                    </p>
+                    <p>
+                        Your favourite language is missing?
+                        <a href="https://github.com/coala/landing-frontend/blob/master/resources/js/snippets.js">
+                            Submit an example on GitHub!
+                        </a>
+                    </p>
+                </div>
+
+                <div class="col m8 s12">
+                    <div btf-markdown ng-include="'data/snippets/' + sc.snip[sc.lang_selected]" class="card card-content"></div>
+                    <p>
+                        Need more powerful analysis?
+                        <a href="https://coala.io/#/languages/">
+                            Check the available bears!
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

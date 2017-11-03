@@ -1,0 +1,23 @@
+{
+  "name": "landing",
+  "homepage": "https://github.com/coala/landing",
+  "authors": [
+    "Lasse Schuirmann <lasse.schuirmann@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "AGPLv3.0",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ngstorage": "^0.3.11",
+    "angular": "^1.6.0",
+    "jquery": "^3.1.1"
+  }
+}

@@ -1,0 +1,132 @@
+<div class="container">
+    <div class="row">
+        <div class="col m8 offset-m2">
+            <h2 class="fine center">about</h2>
+        </div>
+    </div>
+    <div class="thin-row-medium row">
+      <div class="col m8 s12">
+        <div class="card small">
+          <div class="card-content">
+            <span class="card-title">coala</span>
+            <p>coala provides a unified interface for linting and fixing code
+              with a single configuration file, regardless of the programming
+              languages used. You can use coala from within your favorite
+              editor, integrate it with your CI, get the results as JSON, or
+              customize it to your needs with its flexible configuration syntax.
+            </p>
+            <p>coala has a set of official bears (plugins) for several languages,
+               including popular languages such as C/C++, Python, JavaScript,
+               CSS, Java and many more, in addition to some generic language
+               independent algorithms. To learn more about the different
+               languages supported and the bears themselves, click below.</p>
+          </div>
+          <div class="card-action">
+            <a href="http://coala.io/#/languages">Bears Documentation</a>
+            <a href="https://github.com/coala/coala-bears/">Bears Source</a>
+          </div>
+        </div>
+      </div>
+      <div class="col m4 s12">
+        <div class="card small">
+          <div class="card-content">
+            <ul class="browser-default">
+              <li>Out-of-the-box support for various popular language with
+                built-in check routines.</li>
+              <li>User-friendly interfaces such as JSON, interactive CLI or any
+                custom format.</li>
+              <li>Optimized performace with multi-threading to parallelize the
+                routines.</li>
+              <li>File caching support - run only on changed files.</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="row thin-row-medium">
+      <div class="col m12 s12">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">Usage</span>
+            <p>There are two options to run coala:</p>
+            <ul class="browser-default">
+              <li>using a .coafile, a project specific configuration file that
+                will store all your settings for coala
+              <li>using command-line arguments
+            </ul>
+
+          </div>
+          <div class="card-tabs">
+            <ul class="tabs tabs-fixed-width">
+              <li class="tab">
+                <a class="active" href="#test4">Using a .coafile</a>
+              </li>
+              <li class="tab">
+                <a href="#test6">Using Command Line Arguments</a>
+              </li>
+            </ul>
+          </div>
+          <div class="card-content grey lighten-4">
+            <div id="test4">
+              A sample .coafile will look something like this:
+<pre>[Spacing]
+files = src/**/*.py
+bears = SpaceConsistencyBear
+use_spaces = True</pre>
+            <ul class="browser-default">
+              <li> The <code>files</code> key tells coala which files to lint -
+                here we're linting all python files inside the <code>src/</code>
+                directory by using a glob expression.
+              <li> The <code>bears</code> key specifies which bears (plugins)
+                you want to use. We support a huge number of languages and you can
+                find the whole list
+                <a href="https://github.com/coala/bear-docs/blob/master/README.rst">here</a>
+                If you don't find your language there, we've got some
+                bears that work for all <a href="https://github.com/coala/bear-docs/blob/master/README.rst#all">languages</a>. Or you can file an issue and we would create a bear for you!
+              <li><code>use_spaces</code> enforces spaces over tabs in the codebase.
+                <code>use_spaces</code> is a
+                setting for the <code>SpaceConsistencyBear</code> defined
+                <a href="https://github.com/coala/bear-docs/blob/master/docs/SpaceConsistencyBear.rst">here</a>.
+            </ul>
+
+            <code>[Spacing]</code> is a *section*. Sections are executed in the
+            order you define them.
+            <br>
+            Store the file in the project's root directory and run coala:
+<pre>$ coala</pre>
+
+            Please read our
+            <a href="http://docs.coala.io/en/latest/Users/coafile.html">
+              coafile specification
+            </a>
+            to learn more.
+            </div>
+            <div id="test6">
+              However, if you don't want to save your settings, you can also run coala with
+              command line arguments:
+
+  <pre>$ coala --files=setup.py --bears=SpaceConsistencyBear -S use_spaces=True</pre>
+
+  Note that this command does the same thing as having a coafile and running
+  <code>coala</code>. The advantage of having a coafile is that you don't need to enter the
+  settings as arguments everytime.
+  <br><br>
+  To get the complete list of arguments and their meaning, run:
+
+  <pre>$ coala --help</pre>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</div>
+<script>
+$(document).ready(function(){
+  $('ul.tabs').tabs();
+});
+
+</script>

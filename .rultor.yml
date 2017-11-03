@@ -1,3 +1,12 @@
+<<<<<<< HEAD
+merge:
+  fast-forward: only
+  script:
+    - bash .ci/check_maintainership.sh
+
+decrypt:
+  rultor_github_secrets.sh: "repo/.ci/rultor_github_secrets.sh.asc"
+=======
 install:
   - pip3 install -r requirements.txt
 
@@ -17,3 +26,4 @@ release:
 
 decrypt:
   rultor_secrets.sh: "repo/.misc/rultor_secrets.sh.asc"
+>>>>>>> 4e6287480116edad9821ee0bfcd1b4222e1987bb
