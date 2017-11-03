@@ -1,7 +1,3 @@
-from coalib.parsing.filters.Filter import filter
-
-
-@filter
 def can_fix_filter(bear, args):
     """
     Filters the bears by ``CAN_FIX``.
