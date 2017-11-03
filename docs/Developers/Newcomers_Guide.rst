@@ -35,9 +35,9 @@ Then you'll be able to call yourself a coala developer!
 
 .. note::
 
-    **Don't just fix a newcomer issue!** Supervising newcomers is really a lot
-    of work. We're all volunteers and we can't keep this up if you don't help
-    us in other areas as well!
+    **Don't just resolve a newcomer issue!** Supervising newcomers is really a
+    lot of work. We're all volunteers and we can't keep this up if you don't
+    help us in other areas as well!
 
 Of course, the order of the steps above is not important, although we
 recommend that you start with a ``newcomer`` issue, end with a ``low`` issue,
@@ -177,7 +177,7 @@ The easy issues that will help you get started are labeled as
 ``difficulty/newcomer`` and are only there to give you a glimpse of what
 it's like to work with us and what the workflow is like.
 
-Now pick an issue which isn't assigned and which you would like to fix.
+Now pick an issue which isn't assigned and which you would like to resolve.
 Leave a comment that you would like to be assigned to the issue. This way
 we don't have multiple people working on the same issue at the same time.
 Now you can start working on it!
@@ -312,7 +312,7 @@ Step 4. Sending Your Changes
    Your current branch will have an asterisk (\*) next to it. Ensure that there
    is no asterisk next to the master branch.
 
-Now that you've fixed the issue, you've tested it, and you think it is ready
+Now that you've resolved the issue, you've tested it, and you think it is ready
 to be merged, create a commit and push it to your fork, using:
 
 ::
@@ -341,6 +341,12 @@ and clicking ``New Pull Request``.
     developers to follow that issue. If there is a typo or a task list to be
     updated, you can edit your comment instead. If you need to add new
     information, make a new comment.
+
+    If you are generating a pull request for a particular issue, you need to
+    specify the issue number that your pull request resolves. If an issue is
+    labeled as a ``bug``, use ``Fixes <full-issue-url>`` and if it's not labeled as
+    ``bug``, use ``Closes <full-issue-url>``. For additional details, refer to
+	`Writing good commits <http://coala.io/commit>`_.
 
 If you know you have more work to do on this ``Pull Request`` before it is
 ready to be accepted, you can indicate this to other
@@ -446,8 +452,8 @@ go for `a low issue <https://coala.io/low>`__ - they are really rewarding!
 
 .. note::
 
-    **Do not just fix a newcomer issue!** It is highly recommended that you
-    fix one newcomer issue to get familiar with the workflow at coala and
+    **Do not just resolve a newcomer issue!** It is highly recommended that you
+    resolve one newcomer issue to get familiar with the workflow at coala and
     then proceed to a ``difficulty/low`` issue.
 
     However, those who are familiar with opensource projects can start with
