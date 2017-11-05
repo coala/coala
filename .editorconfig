@@ -8,7 +8,6 @@ max_line_length = 80
 
 # Set default charset and indentation for python files
 [{*.py,coalib/**/*.py,./coala,tests/**/*.py}]
-charset = utf-8
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true

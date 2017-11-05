@@ -152,6 +152,7 @@ class coalaJSONTest(unittest.TestCase):
         self.assertFalse(stdout2)
         self.assertFalse(stderr2)
 
+<<<<<<< HEAD
     def test_output_file_overwriting(self):
         with prepare_file(['#todo this is todo'], None) as (lines, filename):
             args = (coala.main, 'coala', '--json', '-c', os.devnull, '-b',
@@ -175,6 +176,8 @@ class coalaJSONTest(unittest.TestCase):
 
         self.assertEqual(data, new_data)
 
+=======
+>>>>>>> Add .editorconfig file
     def test_show_language_bears_output_file(self):
         with bear_test_module():
             retval, stdout, stderr = execute_coala(
