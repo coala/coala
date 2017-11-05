@@ -230,19 +230,21 @@ class Session:
 
                 self.running_tasks[bear] = tasks
 
+                # Cleanup bears without tasks after all bears had the chance to
+                # schedule their tasks. Not doing so might stop the run too
+                # early, as the cleanup is also responsible for stopping the
+                # event-loop when no more tasks do exist.
+                if not tasks:
+                    logging.debug('{!r} scheduled no tasks.'.format(bear))
+                    bears_without_tasks.append(bear)
+                    continue
+
                 for task in tasks:
                     task.add_done_callback(functools.partial(
                         self._finish_task, bear))
 
                 logging.debug('Scheduled {!r} (tasks: {})'.format(bear,
                                                                   len(tasks)))
-
-                # Cleanup bears without tasks after all bears had the chance to
-                # schedule their tasks. Not doing so might stop the run too
-                # early, as the cleanup is also responsible for stopping the
-                # event-loop when no more tasks do exist.
-                if not tasks:
-                    bears_without_tasks.append(bear)
 
         for bear in bears_without_tasks:
             self._cleanup_bear(bear)
