@@ -85,7 +85,7 @@ class Bear:
     ... 'Smell', 'Unused Code', 'Redundancy', 'Variable Misuse', 'Spelling',
     ... 'Memory Leak', 'Documentation', 'Duplication', 'Commented Code',
     ... 'Grammar', 'Missing Import', 'Unreachable Code', 'Undefined Element',
-    ... 'Code Simplification'}
+    ... 'Code Simplification', 'License'}
     >>> CAN_FIX = {'Syntax', ...}
 
     Specifying something to ``CAN_FIX`` makes it obvious that it can be
