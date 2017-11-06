@@ -1,0 +1,19 @@
+root = true
+
+[**]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+max_line_length = 80
+
+# Set default charset and indentation for python files
+[{*.py,coalib/**/*.py,./coala,tests/**/*.py}]
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+
+# 2 space indentation for yml fies and package.json
+[{package.json,*.yml}]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
