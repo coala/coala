@@ -64,7 +64,7 @@ class IgnoreResultActionTest(unittest.TestCase):
                       file_dict, file_diff_dict, 'c')
             self.assertEqual(
                 file_diff_dict[f_a].modified,
-                ['1\n', '2  // Ignore origin\n', '3\n'])
+                ['1\n', '2// Ignore origin\n', '3\n'])
             with open(f_a, 'r') as f:
                 self.assertEqual(file_diff_dict[f_a].modified, f.readlines())
             self.assertTrue(exists(f_a + '.orig'))
@@ -74,7 +74,7 @@ class IgnoreResultActionTest(unittest.TestCase):
                       file_dict, file_diff_dict, 'css')
             self.assertEqual(
                 file_diff_dict[f_a].modified,
-                ['1  /* Ignore else */\n', '2  // Ignore origin\n', '3\n'])
+                ['1/* Ignore else */\n', '2// Ignore origin\n', '3\n'])
             with open(f_a, 'r') as f:
                 self.assertEqual(file_diff_dict[f_a].modified, f.readlines())
 
