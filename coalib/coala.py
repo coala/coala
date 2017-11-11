@@ -54,8 +54,7 @@ def main(debug=False):
         configure_logging(not args.no_color)
 
         if args.show_bears:
-            from coalib.settings.ConfigurationGathering import (
-                get_all_bears)
+            from coalib.settings.ConfigurationGathering import get_all_bears
             kwargs = {}
             if args.bears:
                 kwargs['bear_globs'] = args.bears
