@@ -1,7 +1,7 @@
 import logging
 
 
-def fail_acquire_settings(log_printer, settings_names_dict, section):
+def fail_acquire_settings(log_printer, settings_names_dict, section=None):
     """
     This method throws an exception if any setting needs to be acquired.
 
@@ -10,10 +10,16 @@ def fail_acquire_settings(log_printer, settings_names_dict, section):
                                 a list containing a description in [0] and the
                                 name of the bears who need this setting in [1]
                                 and following.
+    :param section:             This parameter is deprecated and is no longer
+                                required.
     :raises AssertionError:     If any setting is required.
     :raises TypeError:          If ``settings_names_dict`` is not a
                                 dictionary.
     """
+    if section is not None:
+        logging.warning('fail_acquire_settings: section parameter is '
+                        'deprecated.')
+
     if not isinstance(settings_names_dict, dict):
         raise TypeError('The settings_names_dict parameter has to be a '
                         'dictionary.')
