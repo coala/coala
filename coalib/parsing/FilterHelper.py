@@ -1,4 +1,4 @@
-from coalib.parsing.InvalidFilterException import InvalidFilterException
+from coalib.parsing.BearFilterError import BearFilterError
 
 from coalib.parsing.filters.LanguageFilter import language_filter
 from coalib.parsing.filters.CanDetectFilter import can_detect_filter
@@ -20,8 +20,8 @@ def apply_filter(filter_name, filter_args, all_bears=None):
             get_all_bears)
         all_bears = get_all_bears()
     if not is_valid_filter(filter_name):
-        raise InvalidFilterException('{!r} is an invalid filter. '
-                                     'Available filters: {}'.format(
+        raise BearFilterError('{!r} is an invalid filter. '
+                              'Available filters: {}'.format(
                                          filter_name,
                                          ', '.join(sorted(
                                              available_filters))))
