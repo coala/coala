@@ -18,5 +18,4 @@ class InteractionsTest(unittest.TestCase):
                           fail_acquire_settings,
                           log_printer,
                           {'setting': ['description', 'bear']}, section)
-        self.assertEqual(fail_acquire_settings(log_printer, {}, section), None,
-                         section)
+        self.assertEqual(fail_acquire_settings(log_printer, {}, section), None)
