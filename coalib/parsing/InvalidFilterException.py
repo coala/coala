@@ -1,2 +1,2 @@
-class InvalidFilterException(Exception):
+class FilterError(LookupError):
     pass
