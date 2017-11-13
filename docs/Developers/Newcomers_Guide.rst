@@ -29,9 +29,9 @@ Request merged successfully, fill out our
 `survey form <http://coala.io/newform>`_. By doing so, you can help us make your
 experience better!
 
-Once you have achieved all these, just ask to be promoted on the chat
-(see step 1 below) and provide links to your reviews and merged Pull Requests.
-Then you'll be able to call yourself a coala developer!
+Once you've completed all five tasks, please fill our
+`promotion request form <https://docs.google.com/forms/d/e/1FAIpQLSevrkrJga23GySFUdngrTEo0CdjXcqjHBHqX2z_JF2Z61YNmw/viewform?usp=sf_link>`
+to get promoted to the role of developer.
 
 .. note::
 
