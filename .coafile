@@ -118,7 +118,7 @@ files = README.rst
 
 [yml]
 bears = YAMLLintBear
-files = **.yml
+files = *.yml
 
 [text]
 bears = SpaceConsistencyBear
