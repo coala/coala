@@ -165,45 +165,37 @@ def acquire_actions_and_apply(console_printer,
     cli_actions = CLI_ACTIONS if cli_actions is None else cli_actions
     failed_actions = set()
     applied_actions = {}
+
     while True:
-        actions = []
-        for action in cli_actions:
-            if action.is_applicable(result, file_dict, file_diff_dict) is True:
-                actions.append(action)
-
-        if actions == []:
-            return
-
         action_dict = {}
         metadata_list = []
-        for action in actions:
-            metadata = action.get_metadata()
-            action_dict[metadata.name] = action
-            metadata_list.append(metadata)
+
+        for action in cli_actions:
+            if action.is_applicable(result,
+                                    file_dict,
+                                    file_diff_dict,
+                                    tuple(applied_actions.keys())) is True:
+                metadata = action.get_metadata()
+                action_dict[metadata.name] = action
+                metadata_list.append(metadata)
+
+        if not metadata_list:
+            return
 
         # User can always choose no action which is guaranteed to succeed
-        if apply_single:
-            ask_for_action_and_apply(console_printer,
-                                     section,
-                                     metadata_list,
-                                     action_dict,
-                                     failed_actions,
-                                     result,
-                                     file_diff_dict,
-                                     file_dict,
-                                     applied_actions,
-                                     apply_single=apply_single)
-            break
-        elif not ask_for_action_and_apply(console_printer,
-                                          section,
-                                          metadata_list,
-                                          action_dict,
-                                          failed_actions,
-                                          result,
-                                          file_diff_dict,
-                                          file_dict,
-                                          applied_actions,
-                                          apply_single=apply_single):
+        continue_interaction = ask_for_action_and_apply(
+            console_printer,
+            section,
+            metadata_list,
+            action_dict,
+            failed_actions,
+            result,
+            file_diff_dict,
+            file_dict,
+            applied_actions,
+            apply_single=apply_single
+        )
+        if not continue_interaction:
             break
 
 
@@ -405,6 +397,16 @@ def print_results_formatted(log_printer,
             log_exception(
                 'Unable to print the result with the given format string.',
                 exception)
+
+
+def print_bears_formatted(bears, format=None):
+    format_str = format or ('name:{name}:can_detect:{can_detect}:'
+                            'can_fix:{can_fix}:description:{description}')
+    print('\n\n'.join(format_str.format(name=bear.name,
+                                        can_detect=bear.CAN_DETECT,
+                                        can_fix=bear.CAN_FIX,
+                                        description=bear.get_metadata().desc)
+                      for bear in bears))
 
 
 def print_affected_files(console_printer,
@@ -768,6 +770,7 @@ def ask_for_action_and_apply(console_printer,
     :return:                Returns a boolean value. True will be returned, if
                             it makes sense that the user may choose to execute
                             another action, False otherwise.
+                            If apply_single ist set, always return False.
     """
     actions_desc, actions_name = choose_action(console_printer, metadata_list,
                                                apply_single)
@@ -791,6 +794,7 @@ def ask_for_action_and_apply(console_printer,
                                     file_diff_dict,
                                     file_dict,
                                     applied_actions)
+        return False
     else:
         for action_choice, action_choice_name in zip(actions_desc,
                                                      actions_name):
@@ -911,7 +915,8 @@ def show_bear(bear,
 def print_bears(bears,
                 show_description,
                 show_params,
-                console_printer):
+                console_printer,
+                args=None):
     """
     Presents all bears being used in a stylized manner.
 
@@ -922,6 +927,7 @@ def print_bears(bears,
     :param show_params:      True if the parameters and their description
                              should be shown.
     :param console_printer:  Object to print messages on the console.
+    :param args:             Args passed to coala command.
     """
     if not bears:
         console_printer.print('No bears to show. Did you forget to install '
@@ -929,20 +935,41 @@ def print_bears(bears,
                               'coala-bears`.')
         return
 
-    for bear, sections in sorted(bears.items(),
-                                 key=lambda bear_tuple:
-                                 bear_tuple[0].name.lower()):
-        show_bear(bear,
-                  show_description,
-                  show_params,
-                  console_printer)
+    results = [bear for bear, _ in sorted(bears.items(),
+                                          key=lambda bear_tuple:
+                                          bear_tuple[0].name.lower())]
+    if args and args.json:
+        from coalib.output.JSONEncoder import create_json_encoder
+        JSONEncoder = create_json_encoder(use_relpath=args.relpath)
+        json_output = {'bears': results}
+        import json
+        json_formatted_output = json.dumps(json_output,
+                                           cls=JSONEncoder,
+                                           sort_keys=True,
+                                           indent=2,
+                                           separators=(',', ': '))
+        if args.output:
+            filename = args.output[0]
+            with open(filename, 'w') as fp:
+                fp.write(json_formatted_output)
+        else:
+            print(json_formatted_output)
+    elif args and args.format:
+        print_bears_formatted(results)
+    else:
+        for bear in results:
+            show_bear(bear,
+                      show_description,
+                      show_params,
+                      console_printer)
 
 
 def show_bears(local_bears,
                global_bears,
                show_description,
                show_params,
-               console_printer):
+               console_printer,
+               args=None):
     """
     Extracts all the bears from each enabled section or the sections in the
     targets and passes a dictionary to the show_bears_callback method.
@@ -956,10 +983,11 @@ def show_bears(local_bears,
     :param show_params:      True if the parameters and their description
                              should be shown.
     :param console_printer:  Object to print messages on the console.
+    :param args:             Args passed to coala command.
     """
     bears = inverse_dicts(local_bears, global_bears)
 
-    print_bears(bears, show_description, show_params, console_printer)
+    print_bears(bears, show_description, show_params, console_printer, args)
 
 
 def show_language_bears_capabilities(language_bears_capabilities,

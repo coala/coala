@@ -13,7 +13,10 @@ class ResultAction:
     SUCCESS_MESSAGE = 'The action was executed successfully.'
 
     @staticmethod
-    def is_applicable(result, original_file_dict, file_diff_dict):
+    def is_applicable(result,
+                      original_file_dict,
+                      file_diff_dict,
+                      applied_actions=()):
         """
         Checks whether the Action is valid for the result type.
 
@@ -28,6 +31,9 @@ class ResultAction:
                                    original_file_dict to the current state.
                                    This dict will be altered so you do not
                                    need to use the return value.
+        :applied_actions:          List of actions names that have already been
+                                   applied for the current result. Action names
+                                   are stored in order of application.
         """
         return True
 
