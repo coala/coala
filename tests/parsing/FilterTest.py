@@ -103,11 +103,9 @@ class FilterTest(unittest.TestCase):
             retval, stdout, stderr = execute_coala(
                 coala.main, 'coala', '-B', '--filter-by', 'unknown', 'arg1')
             self.assertEqual(retval, 2)
-            self.assertRaisesRegex(InvalidFilterException,
-                                   '{!r} is an invalid filter. Available '
-                                   'filters: {}'.format(
-                                       filter,
-                                       ', '.join(sorted(available_filters))))
+            self.assertIn("'unknown' is an invalid filter. Available "
+                          'filters: ' + ', '.join(sorted(available_filters)),
+                          stdout)
 
     def test_filter_by_can_fix_null(self):
         with bear_test_module():

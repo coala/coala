@@ -122,6 +122,11 @@ keep in mind.
     may be signed into, you might even wake someone on the other side of the
     world up. Also it discourages other people to answer the question,
     so you might wait longer for an answer.
+  * Do not mention users unrelated to a particular issue/question. This also
+    means you should not mention the person that was last online. For example,
+    mentioning someone on a Github issue will subscribe them to that issue,
+    even if they don't want to be a part of the discussion. However, mentioning
+    someone is okay if they really need to see your message.
   * Don't use /all if you are a newcomer or do not have a critical reason.
   * Don't repeatedly @-mention people in an ongoing conversation.
   * You should ask someone before mentioning them.
