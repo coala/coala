@@ -419,7 +419,7 @@ class ConsoleInteractionTest(unittest.TestCase):
 
             ApplyPatchAction.is_applicable = old_applypatch_is_applicable
 
-    def test_acquire_actions_and_apply(self):
+    def test_acquire_actions_and_apply_single(self):
         with make_temp() as testfile_path:
             file_dict = {testfile_path: ['1\n', '2\n', '3\n']}
             diff = Diff(file_dict[testfile_path])
