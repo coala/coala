@@ -277,7 +277,7 @@ def load_configuration(arg_list,
                             'It may have been generated into your coafile '
                             'while running coala with `--save`. The settings '
                             'in that section will inherit implicitly to all '
-                            'sections as defaults just like CLI args do.'
+                            'sections as defaults just like CLI args do. '
                             'Please change the name of that section in your '
                             'coafile to avoid any unexpected behavior.')
 
