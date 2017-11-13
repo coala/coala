@@ -28,8 +28,8 @@ install:
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
   - >
-    set PATH=C:\LLVM\bin;%PYTHON%;%PYTHON%\Scripts;%PATH%;
-    C:\Program Files\Git\mingw64\bin
+    "set PATH=C:\LLVM\bin;%PYTHON%;%PYTHON%\Scripts;%PATH%;
+    C:\Program Files\Git\mingw64\bin"
 
   # Check that we have the expected version and architecture for Python
   - "python --version"
