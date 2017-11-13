@@ -35,7 +35,9 @@ install:
   - "python --version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
 
-  - "%CMD_IN_ENV% pip install --cache-dir=C:\\pip_cache -r requirements.txt -r test-requirements.txt"
+  - >
+    "%CMD_IN_ENV% pip install --cache-dir=C:\\pip_cache -r requirements.txt
+    -r test-requirements.txt"
 
   - >
     curl -fsSL
