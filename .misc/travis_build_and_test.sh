@@ -2,7 +2,10 @@
 
 set -e
 
-py.test
+if [[ ${UNSUPPORTED} == "false" || ${TRAVIS_BRANCH} == "master" ]]; then
+    py.test
+fi
+
 python setup.py bdist_wheel
 pip install ./dist/coala-*.whl
 pip install coala-bears[alldeps] --pre -U
