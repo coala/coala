@@ -24,6 +24,7 @@ from coalib.output.ConsoleInteraction import (BackgroundSourceRangeStyle,
                                               BackgroundMessageStyle,
                                               highlight_text)
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
+from coalib.parsing.DefaultArgParser import default_arg_parser
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -953,6 +954,12 @@ class ShowBearsTest(unittest.TestCase):
         with retrieve_stdout() as stdout:
             show_bears({}, {}, True, True, self.console_printer)
             self.assertIn('No bears to show.', stdout.getvalue())
+
+    def test_show_bears_with_json(self):
+        args = default_arg_parser().parse_args(['--json'])
+        with retrieve_stdout() as stdout:
+            show_bears({}, {}, True, True, self.console_printer, args)
+            self.assertEqual('{\n  "bears": []\n}\n', stdout.getvalue())
 
     @patch('coalib.output.ConsoleInteraction.show_bear')
     def test_show_bears(self, show_bear):

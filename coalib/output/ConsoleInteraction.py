@@ -932,7 +932,7 @@ def print_bears(bears,
     :param console_printer:  Object to print messages on the console.
     :param args:             Args passed to coala command.
     """
-    if not bears:
+    if not bears and not (args and args.json):
         console_printer.print('No bears to show. Did you forget to install '
                               'the `coala-bears` package? Try `pip3 install '
                               'coala-bears`.')
