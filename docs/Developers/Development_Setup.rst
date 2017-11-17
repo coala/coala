@@ -89,13 +89,18 @@ master branch from and all of its dependencies with pip3 using
 
 ::
 
-    (coala-venv)$ git clone https://github.com/coala/coala
+    (coala-venv)$ # For the coala repository:
+    Fork the coala repository from https://github.com/coala/coala
+    (coala-venv)$ git clone https://github.com/<your_username>/coala.git
     (coala-venv)$ cd coala
-    (coala-venv)$ pip3 install .
-    (coala-venv)$ cd -
-    (coala-venv)$ git clone https://github.com/coala/coala-bears
+    (coala-venv)$ sudo -H pip install -r requirements.txt
+    (coala-venv)$ sudo python3 setup.py install
+    (coala-venv)$ # For the coala-bears repository:
+    Fork the coala repository from https://github.com/coala/coala-bears
+    (coala-venv)$ git clone https://github.com/<your_username>/coala-bears.git
     (coala-venv)$ cd coala-bears
-    (coala-venv)$ pip3 install .
+    (coala-venv)$ sudo -H pip install -r requirements.txt
+    (coala-venv)$ sudo python3 setup.py install
 
 Once you have forked the repository you would like to modify, you can
 install a repository-backed version of the repository using
@@ -104,10 +109,10 @@ install a repository-backed version of the repository using
 
     (coala-venv)$ pip3 install -e <path/to/forked/repository>
 
-You will then be able to edit the repository and have the changes take effect
-in your virtualenv immediately. You will also be able to use pip3 to manage
-your installation of the package should you need to install from a different
-source in the future.
+This will then install the repository in editable mode, i.e you will be
+able to make changes in the repository that you have cloned and that will
+get reflected on your virtual environment. You will also be able to manage
+the package installation in that virtual environment.
 
 
 Building Documentation
