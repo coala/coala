@@ -2,7 +2,35 @@ import os
 import unittest
 from collections import OrderedDict
 
-from coalib.collecting.Importers import import_objects
+from coalib.collecting.Importers import _import_module, import_objects
+
+
+class ImportModuleTest(unittest.TestCase):
+
+    def setUp(self):
+        current_dir = os.path.dirname(os.path.relpath(__file__, '.'))
+        self.non_existing_path = os.path.join(current_dir,
+                                              'importers_test_dir',
+                                              'non_existing.py')
+        self.non_python_path = os.path.join(current_dir,
+                                            'importers_test_dir',
+                                            'test.nonpy')
+
+    def test_non_existing(self):
+        with self.assertRaisesRegex(ImportError, (
+                r"^can't import non-existing file '{}'$"
+                .format(os.path.realpath(self.non_existing_path)
+                        # make Windows paths work
+                        .replace('\\', r'\\\\')))):
+            _import_module(self.non_existing_path)
+
+    def test_non_python(self):
+        with self.assertRaisesRegex(ImportError, (
+                r"^'{}' doesn't seem to be a python module$"
+                .format(os.path.realpath(self.non_python_path)
+                        # make Windows paths work
+                        .replace('\\', r'\\\\')))):
+            _import_module(self.non_python_path)
 
 
 class ImportObjectsTest(unittest.TestCase):
