@@ -30,7 +30,7 @@ Request merged successfully, fill out our
 experience better!
 
 Once you've completed all five tasks, please fill our
-`promotion request form <https://docs.google.com/forms/d/e/1FAIpQLSevrkrJga23GySFUdngrTEo0CdjXcqjHBHqX2z_JF2Z61YNmw/viewform?usp=sf_link>`
+`promotion request form <https://goo.gl/55FpbS>`_
 to get promoted to the role of developer.
 
 .. note::
