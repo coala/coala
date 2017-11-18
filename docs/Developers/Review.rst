@@ -117,6 +117,17 @@ For the Reviewers
    behaviour well. E.g. for bear tests just testing for a good and bad file
    is **not** sufficient.
 
+.. note::
+
+    While reviewing pull requests or patches for ``difficulty/low`` issues,
+    make sure that the patch solves the issue and doesn't create any
+    further issues.
+
+    You need to thoroughly review the code, i.e. understand the functionality
+    of the code, check whether it is efficient or not, and leave critical
+    comments. Otherwise, don't review! We need human reviews to find the
+    problems which can't be found automatically.
+
 As you perform your review of each commit, please make comments on the
 relevant lines of code in the GitHub pull request. After performing your
 review, please comment on the pull request directly as follows:
