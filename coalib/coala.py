@@ -19,7 +19,7 @@ from pyprint.ConsolePrinter import ConsolePrinter
 from dependency_management.requirements.PipRequirement import PipRequirement
 
 from coalib.parsing.FilterHelper import (
-    apply_filter, apply_filters, InvalidFilterException)
+    apply_filter, apply_filters, BearFilterError)
 from coalib.output.Logging import configure_logging
 from coalib.parsing.DefaultArgParser import default_arg_parser
 from coalib.misc.Exceptions import get_exitcode
@@ -70,7 +70,7 @@ def main(debug=False):
                 try:
                     filtered_bears = apply_filters(
                         args.filter_by, filtered_bears)
-                except InvalidFilterException as ex:
+                except BearFilterError as ex:
                     # If filter is not available
                     console_printer.print(ex)
                     return 2

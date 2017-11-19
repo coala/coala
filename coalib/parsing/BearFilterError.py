@@ -1,0 +1,2 @@
+class BearFilterError(LookupError):
+    pass
