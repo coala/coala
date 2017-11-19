@@ -95,6 +95,7 @@ div.admonition p {
 .admonition a {
     color: #eee;
     font-weight: 300;
+    text-decoration: underline dotted #eee;
 }
 
 .admonition a:hover {
