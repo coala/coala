@@ -1,5 +1,4 @@
 import unittest
-import re
 import os
 from unittest.mock import patch
 
@@ -110,7 +109,7 @@ class CachingTest(unittest.TestCase):
                     '-c', os.devnull,
                     '--disable-caching',
                     '--flush-cache',
-                    '-f', re.escape(filename),
+                    '-f', filename,
                     '-b', 'LineCountTestBear',
                     '-L', 'DEBUG')
                 self.assertIn('This file has', stdout)
@@ -124,7 +123,7 @@ class CachingTest(unittest.TestCase):
                 'coala',
                 '--non-interactive', '--no-color',
                 '-c', os.devnull,
-                '-f', re.escape(filename),
+                '-f', filename,
                 '-b', 'LineCountTestBear')
             self.assertIn('This file has', stdout)
             self.assertEqual(1, len(stderr.splitlines()))
@@ -137,7 +136,7 @@ class CachingTest(unittest.TestCase):
                 'coala',
                 '--non-interactive', '--no-color',
                 '-c', os.devnull,
-                '-f', re.escape(filename),
+                '-f', filename,
                 '-b', 'LineCountTestBear')
             self.assertIn('This file has', stdout)
             self.assertEqual(1, len(stderr.splitlines()))
