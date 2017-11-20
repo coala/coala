@@ -372,6 +372,12 @@ class BearTest(BearTestBase):
         self.assertEqual(str(result), 'Hypertext Markup Language 5.1')
         self.check_message(LOG_LEVEL.DEBUG)
 
+    def test_See_More(self):
+        bear = Bear(self.settings, None)
+        expected = ''
+        result = bear.SEE_MORE
+        self.assertEqual(result, expected)
+
 
 class BrokenReadHTTPResponse(BytesIO):
 
