@@ -11,7 +11,7 @@ import setuptools.command.build_py
 from setuptools import find_packages, setup
 from setuptools.command.test import test as TestCommand
 
-from coalib import VERSION, assert_supported_version, get_version
+from coalib import assert_supported_version, get_version
 from coalib.misc.BuildManPage import BuildManPage
 
 try:
@@ -22,6 +22,7 @@ try:
 except (ValueError, UnicodeError):
     locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
+VERSION = '0.12.0.dev99999999999999'
 
 assert_supported_version()
 
@@ -45,25 +46,29 @@ class PyTestCommand(TestCommand):
 
 class BuildDocsCommand(setuptools.command.build_py.build_py):
     apidoc_command = (
-        'sphinx-apidoc', '-f', '-o', 'docs', '--no-toc', 'coalib'
+        'sphinx-apidoc', '-f', '-o', 'docs',
+        '--no-toc',
+        'coalib'
     )
-    doc_command = ('make', '-C', 'docs', 'html', 'SPHINXOPTS=-W')
+    make_command = ('make', '-C', 'docs', 'html', 'SPHINXOPTS=-W')
 
     def run(self):
-        errOne = call(self.apidoc_command)
-        errTwo = call(self.doc_command)
-        sys.exit(errOne or errTwo)
+        err_no = call(self.apidoc_command)
+        if not err_no:
+            err_no = call(self.make_command)
+        sys.exit(err_no)
 
 
 # Generate API documentation only if we are running on readthedocs.io
 on_rtd = getenv('READTHEDOCS', None) is not None
 if on_rtd:
     call(BuildDocsCommand.apidoc_command)
-    if 'dev' in VERSION:
+    if 'dev' in '0.12.0.dev99999999999999':
         current_version = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         call(['python3', '.misc/adjust_version_number.py', 'coalib/VERSION',
               '-b {}'.format(current_version)])
         VERSION = get_version()
+
 
 with open('requirements.txt') as requirements:
     required = requirements.read().splitlines()
@@ -74,13 +79,15 @@ with open('test-requirements.txt') as requirements:
 with open('README.rst') as readme:
     long_description = readme.read()
 
-
+extras_require = None
+data_files = None
 if __name__ == '__main__':
     if platform.system() != 'Windows':
         data_files = [('man/man1', ['coala.1'])]
     else:
         data_files = None
 
+if __name__ == '__main__':
     setup(name='coala',
           version=VERSION,
           description='Linting and Fixing Code for All Languages',
@@ -93,8 +100,9 @@ if __name__ == '__main__':
                             'makman@alice.de'),
           url='http://coala.io/',
           platforms='any',
-          packages=find_packages(exclude=['build.*', 'tests', 'tests.*']),
+          packages=find_packages(exclude=('build.*', 'tests', 'tests.*')),
           install_requires=required,
+          extras_require=extras_require,
           tests_require=test_required,
           package_data={'coalib': ['system_coafile', 'VERSION',
                                    'bearlib/languages/documentation/*.coalang']
@@ -108,7 +116,9 @@ if __name__ == '__main__':
                   'coala-ci = coalib.coala_ci:main',
                   'coala-json = coalib.coala_json:main',
                   'coala-format = coalib.coala_format:main',
-                  'coala-delete-orig = coalib.coala_delete_orig:main']},
+                  'coala-delete-orig = coalib.coala_delete_orig:main',
+              ],
+          },
           # from http://pypi.python.org/pypi?%3Aaction=list_classifiers
           classifiers=[
               'Development Status :: 4 - Beta',
@@ -134,7 +144,7 @@ if __name__ == '__main__':
               'Topic :: Scientific/Engineering :: Information Analysis',
               'Topic :: Software Development :: Quality Assurance',
               'Topic :: Text Processing :: Linguistic'],
-          cmdclass={'build_manpage': BuildManPage,
+          cmdclass={'docs': BuildDocsCommand,
+                    'build_manpage': BuildManPage,
                     'build_py': BuildPyCommand,
-                    'docs': BuildDocsCommand,
                     'test': PyTestCommand})

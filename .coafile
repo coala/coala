@@ -124,6 +124,10 @@ files =
     **.sh, .travis.yml, circle.yml, setup.cfg, ./docs/_static/custom.css
 ignore = node_modules/**
 
+[jinja2]
+bears = Jinja2Bear
+files = **.jj2
+
 [TODOS]
 enabled = False
 

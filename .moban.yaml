@@ -1,0 +1,46 @@
+overrides: coala.yaml
+
+name: coala
+contact: coala.analyzer@gmail.com
+description: Linting and Fixing Code for All Languages
+build_version: 0.12.0.dev99999999999999
+current_version: 0.12.0.dev
+version: 0.12.0.dev
+release: 0.12.0.dev
+branch: master
+command_line_interface: coala
+package_module: coalib
+rtd_maintainer: L.S., F.N., M.K.
+
+entry_points:
+  console_scripts:
+    - coala = coalib.coala:main
+    - coala-ci = coalib.coala_ci:main
+    - coala-json = coalib.coala_json:main
+    - coala-format = coalib.coala_format:main
+    - coala-delete-orig = coalib.coala_delete_orig:main
+
+dependencies:
+  - appdirs~=1.4
+  - coala_utils~=0.7.0
+  - colorlog>=2.7,<4.0
+  - dependency_management~=0.4.0
+  - packaging>=16.8
+  - Pygments~=2.1
+  - PyPrint~=0.2.6
+  - requests~=2.12
+  - setuptools>=21.0.0
+  - testfixtures~=5.3.1
+  - unidiff~=0.5.2
+
+configuration:
+  template_dir:
+    - .moban.dt/
+    - ../coala-mobans/templates/
+    - ../setupmobans/templates/
+  configuration: .moban.yaml
+  configuration_dir: ../coala-mobans/
+targets:
+  - setup.py: core-setup.py.jj2
+  - requirements.txt: requirements.txt.jj2
+  - coalib/VERSION: VERSION.jj2

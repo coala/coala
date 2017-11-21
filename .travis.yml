@@ -67,6 +67,10 @@ before_script:
   # Restore the original requirements.txt
   - mv requirements.orig requirements.txt
   - python .misc/check_setuptools.py
+  - git clone https://github.com/moremoban/setupmobans ../setupmobans
+  - git clone https://gitlab.com/coala/mobans ../coala-mobans
+  - moban
+  - git diff --exit-code
 
 script:
   - py.test
