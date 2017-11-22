@@ -1,5 +1,5 @@
 [Default]
-files = *.py, coalib/**/*.py, ./coala, tests/**/*.py, docs/conf.py
+files = *.py, coalib/**/*.py, ./coala, tests/**/*.py, docs/conf.py, *.json
 ignore =
     tests/bearlib/languages/documentation/documentation_extraction_testdata/*.py,
     tests/collecting/collectors_test_dir/bears/incorrect_bear.py,
