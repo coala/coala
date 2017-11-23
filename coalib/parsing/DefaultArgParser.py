@@ -2,7 +2,7 @@ import argparse
 
 from coalib.misc import Constants
 from coalib.collecting.Collectors import get_all_bears_names
-from coalib.parsing.FilterHelper import available_filters
+from coalib.parsing.filters import available_filters
 
 
 class CustomFormatter(argparse.RawDescriptionHelpFormatter):
