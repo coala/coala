@@ -1,4 +1,6 @@
 import copy
+from inspect import signature
+import logging
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting import Dependencies
@@ -45,7 +47,13 @@ def fill_section(section, acquire_settings, log_printer, bears):
 
     # Get missing ones.
     if len(needed_settings) > 0:
-        new_vals = acquire_settings(None, needed_settings, section)
+        if len(signature(acquire_settings).parameters) == 2:
+            new_vals = acquire_settings(None, needed_settings)
+        else:
+            logging.warning('acquire_settings: section parameter is '
+                            'deprecated.')
+            new_vals = acquire_settings(None, needed_settings, section)
+
         for setting, help_text in new_vals.items():
             section.append(Setting(setting, help_text))
 
