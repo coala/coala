@@ -17,7 +17,7 @@ this will do:
 
 ::
 
-    $ sudo apt-get install git-all
+    $ sudo apt-get install git
 
 For installing Git on a Mac OS system, you can use the `homebrew <https://brew.sh/>`_ package
 manager as follows:
