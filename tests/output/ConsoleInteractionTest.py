@@ -490,24 +490,6 @@ class ConsoleInteractionTest(unittest.TestCase):
             self.assertEqual(generator.last_input, 3)
             self.assertNotIn('TestAction', failed_actions)
 
-    def test_ask_for_actions_and_apply(self):
-        failed_actions = set()
-        action = TestAction()
-        args = [self.console_printer, Section(''),
-                [action.get_metadata()], {'TestAction': action},
-                failed_actions, Result('origin', 'message'), {}, {}, {}]
-
-        with simulate_console_inputs('a', 'param1', 'a', 'param2') as generator:
-            action.apply = unittest.mock.Mock(side_effect=AssertionError)
-            ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 1)
-            self.assertIn('TestAction', failed_actions)
-
-            action.apply = lambda *args, **kwargs: {}
-            ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 3)
-            self.assertNotIn('TestAction', failed_actions)
-
     def test_default_input(self):
         action = TestAction()
         args = [self.console_printer, Section(''),
