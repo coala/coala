@@ -942,6 +942,7 @@ def print_bears(bears,
         from coalib.output.JSONEncoder import create_json_encoder
         JSONEncoder = create_json_encoder(use_relpath=args.relpath)
         json_output = {'bears': results}
+        print(json_output)
         import json
         json_formatted_output = json.dumps(json_output,
                                            cls=JSONEncoder,
