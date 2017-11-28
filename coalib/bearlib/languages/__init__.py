@@ -26,4 +26,5 @@ from .definitions.Ruby import Ruby
 from .definitions.Scala import Scala
 from .definitions.Swift import Swift
 from .definitions.Vala import Vala
+from .definitions.TypeScript import TypeScript
 # Stop ignoring PyUnusedCodeBear
