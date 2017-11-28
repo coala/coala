@@ -2,12 +2,18 @@ import copy
 import difflib
 import logging
 
+from pkg_resources import get_distribution
 from unidiff import PatchSet
 
+from clang.cindex import LibclangError
 from coalib.results.LineDiff import LineDiff, ConflictError
 from coalib.results.SourceRange import SourceRange
 from coalib.results.TextRange import TextRange
 from coala_utils.decorators import enforce_signature, generate_eq
+
+
+if get_distribution('libclang-py3').version != '3.4.0':
+    raise LibclangError('coala requires clang 3.4.0')
 
 
 @generate_eq('_file', 'modified', 'rename', 'delete')
