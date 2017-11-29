@@ -15,7 +15,7 @@ on your own.
 
 You can totally help us review source code. Especially try to review source
 code of others and share what you have learnt with them. You can use acks and
-unacks like everyone else and ``cobot`` even allows you to set PRs to WIP. Check
+unacks like everyone else and ``corobo`` even allows you to set PRs to WIP. Check
 the section below for more information.
 
 Generally follow this process:
