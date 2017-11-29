@@ -29,7 +29,7 @@ Please consider helping us by reviewing other peoples pull requests as well:
 
 - pick up any PR at <https://coala.io/review>
 - review it (check <https://coala.io/reviewing> for more info)
-- if you are sure that it needs work, use `cobot mark wip <URL>` to get it out
+- if you are sure that it needs work, use `corobo mark wip <URL>` to get it out
   of the review queue.
 
 The more you review, the more your score will grow at coala.io and we will
