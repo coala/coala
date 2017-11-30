@@ -322,3 +322,17 @@ class coalaTest(unittest.TestCase):
                 self.assertRegex(err, '^\[WARNING\]')
             self.assertEqual(
                 retval, 0, 'coala must return zero when there are no errors')
+
+    def test_coala_ignore_file(self):
+        with bear_test_module(), \
+                prepare_file(['#fixme'], None) as (lines, filename):
+            retval, stdout, stderr = execute_coala(
+                    coala.main, 'coala',
+                    '-c', os.devnull,
+                    '--non-interactive',
+                    '-f', re.escape(filename),
+                    '-i', re.escape(filename),
+                    '-b', 'LineCountTestBear')
+            self.assertNotIn(stdout, 'This file has 1 lines')
+            self.assertEqual(
+                retval, 0, 'coala must return zero when there are no errors')
