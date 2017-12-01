@@ -26,6 +26,19 @@ manager as follows:
 
     $ brew install git
 
+Set your Git user name and email address as follows:
+
+::
+
+    $ git config --global user.name "your_username"
+    $ git config --global user.email <your_email_address>
+
+You can check your settings at any time using:
+
+::
+
+    $ git config --list
+
 Getting Started with coala
 --------------------------
 
