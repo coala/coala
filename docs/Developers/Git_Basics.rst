@@ -26,6 +26,13 @@ manager as follows:
 
     $ brew install git
 
+Set Git username and email address on your local machine as follows:
+
+::
+
+    $ git config --global user.name "your_username"
+    $ git config --global user.email <your_email_address>
+
 Getting Started with coala
 --------------------------
 
