@@ -26,9 +26,7 @@ manager as follows:
 
     $ brew install git
 
-Now that you have git, you should customize the Git Environment.
-The first thing you should do when you install Git is to set your user name
-and email address as follows:
+Set your Git user name and email address as follows:
 
 ::
 
