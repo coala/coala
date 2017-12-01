@@ -15,8 +15,8 @@ on your own.
 
 You can totally help us review source code. Especially try to review source
 code of others and share what you have learnt with them. You can use acks and
-unacks like everyone else and ``cobot`` even allows you to set PRs to WIP. Check
-the section below for more information.
+unacks like everyone else and ``corobo`` even allows you to set PRs to WIP.
+Check the section below for more information.
 
 Generally follow this process:
 
@@ -62,7 +62,7 @@ The review process for coala is as follows:
       are ready to be merged into the master branch
 
    If you don't have write access to coala, you can change the labels using
-   ``cobot mark wip <URL>`` or ``cobot mark pending <URL>``.
+   ``corobo mark wip <URL>`` or ``corobo mark pending <URL>``.
 3. The developers will acknowledge the commits by writing
 
     - ``ack commit_SHA`` or ``commit_SHA is ready``, in case the commit is
