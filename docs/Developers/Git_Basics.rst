@@ -33,7 +33,7 @@ Set Git username and email address on your local machine as follows:
     $ git config --global user.name "your_username"
     $ git config --global user.email <your_email_address>
 
-You can check your settings at any time using:
+You can view your settings at any time using:
 
 ::
 
