@@ -335,9 +335,9 @@ class coalaTest(unittest.TestCase):
                 '-b', 'HiddenBear',
             )
             self.assertIn('-d flag works!', stdout)
-            if "This result has no patch attached" not in stderr:
+            if 'This result has no patch attached' not in stderr:
                 self.assertEqual(
-                    retval, 0, 
+                    retval, 0,
                     'coala must return zero when there are no errors')
             self.assertEqual(
-                retval, 1, "no patch attached error kludge")
+                retval, 1, 'no patch attached error kludge')
