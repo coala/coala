@@ -37,3 +37,4 @@ node_modules
 Goopfile.lock
 venv/
 rultor_secrets.sh
+.vscode
