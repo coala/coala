@@ -51,7 +51,7 @@ def main(debug=False):
             show_bears, show_language_bears_capabilities)
 
         console_printer = ConsolePrinter(print_colored=not args.no_color)
-        configure_logging(not args.no_color)
+        configure_logging(log_level=args.log_level, color=not args.no_color)
 
         if args.show_bears:
             from coalib.settings.ConfigurationGathering import (

@@ -2,7 +2,8 @@ import json
 import logging
 import unittest
 
-from coalib.output.Logging import configure_json_logging
+from coalib.output.Logging import (configure_json_logging,
+                                   configure_logging)
 
 
 class LoggingTest(unittest.TestCase):
@@ -30,3 +31,16 @@ class LoggingTest(unittest.TestCase):
         self.assertEqual(logs_list[2]['level'], 'WARNING')
         self.assertEqual(logs_list[3]['message'], 'This is error log.')
         self.assertEqual(logs_list[3]['level'], 'ERROR')
+
+    def test_file_logging(self):
+        configure_logging()
+        debug_text = 'This is debug log.'
+        logging.debug(debug_text)
+        with open('.coala.log') as log_file:
+            self.assertIn(debug_text, log_file.read())
+
+        configure_logging(logging.ERROR, True)
+        debug_text2 = 'This is another debug log.'
+        logging.debug(debug_text2)
+        with open('.coala.log', 'r') as log_file:
+            self.assertIn(debug_text2, log_file.read())

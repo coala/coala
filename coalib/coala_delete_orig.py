@@ -3,13 +3,20 @@ import os
 
 from coalib.output.Logging import configure_logging
 from coalib.parsing import Globbing
+from coalib.parsing.Globbing import glob_escape
 from coalib.settings.ConfigurationGathering import get_config_directory
 from coalib.settings.Section import Section
-from coalib.parsing.Globbing import glob_escape
 
 
 def main(log_printer=None, section: Section=None):
     configure_logging()
+    return delete_orig(log_printer, section)
+
+
+def delete_orig(log_printer=None, section: Section=None):
+    if log_printer is not None:
+        logging.warning('Using log_printer is deprecated, '
+                        'use python inbuilt logging instead.')
 
     start_path = get_config_directory(section)
 
