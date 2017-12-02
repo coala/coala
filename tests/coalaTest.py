@@ -323,3 +323,21 @@ class coalaTest(unittest.TestCase):
                 self.assertRegex(err, '^\[WARNING\]')
             self.assertEqual(
                 retval, 0, 'coala must return zero when there are no errors')
+
+    def test_coala_add_bear_dir(self):
+        with bear_test_module(), \
+             prepare_file(['#fixme'], None) as (lines, filename):
+            retval, stdout, stderr = execute_coala(
+                coala.main, 'coala', '-c', os.devnull,
+                '--non-interactive',
+                '-f', re.escape(filename),
+                '-d', 'tests/hidden_bear_dir',
+                '-b', 'HiddenBear',
+            )
+            self.assertIn('-d flag works!', stdout)
+            if 'This result has no patch attached' not in stderr:
+                self.assertEqual(
+                    retval, 0,
+                    'coala must return zero when there are no errors')
+            self.assertEqual(
+                retval, 1, 'no patch attached error kludge')
