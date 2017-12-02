@@ -3,6 +3,7 @@ dependencies:
     - ~/.pyenv/versions/3.4.3
     - ~/.pyenv/versions/3.5.1
     - ~/nltk_data
+    - ~/.scspell
     - docs/_build
   pre:
     - sed -i '/source \/home\/ubuntu\/virtualenvs\//d' ~/.circlerc
@@ -23,6 +24,8 @@ test:
         parallel: true
         timeout: 1800  # Allow 30 mins
     - pip install -r docs-requirements.txt:
+        parallel: true
+    - python .misc/generate_dictionary.py:
         parallel: true
     - coala --non-interactive:
         parallel: true

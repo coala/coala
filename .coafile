@@ -137,3 +137,7 @@ cs_keywords =
 bears = KeywordBear
 language = python 3
 keywords = urlopen
+
+[DocsSpelling]
+bears = SpellCheckBear
+files = docs/**/*.rst, CONTRIBUTING.rst, README.rst
