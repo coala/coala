@@ -762,27 +762,27 @@ def linter(executable: str,
     function that constructs the command-line-arguments that get passed to your
     executable.
 
-    >>> @linter("xlint", output_format="regex", output_regex="...")
+    >>> @linter('xlint', output_format='regex', output_regex='...')
     ... class XLintBear:
     ...     @staticmethod
     ...     def create_arguments(filename, file, config_file):
-    ...         return "--lint", filename
+    ...         return '--lint', filename
 
     Or for a ``GlobalBear`` without the ``filename`` and ``file``:
 
-    >>> @linter("ylint",
+    >>> @linter('ylint',
     ...         global_bear=True,
-    ...         output_format="regex",
-    ...         output_regex="...")
+    ...         output_format='regex',
+    ...         output_regex='...')
     ... class YLintBear:
     ...     @staticmethod
     ...     def create_arguments(config_file):
-    ...         return "--lint", filename
+    ...         return '--lint', filename
 
     Requiring settings is possible like in ``Bear.run()`` with supplying
     additional keyword arguments (and if needed with defaults).
 
-    >>> @linter("xlint", output_format="regex", output_regex="...")
+    >>> @linter('xlint', output_format='regex', output_regex='...')
     ... class XLintBear:
     ...     @staticmethod
     ...     def create_arguments(filename,
@@ -790,36 +790,36 @@ def linter(executable: str,
     ...                          config_file,
     ...                          lintmode: str,
     ...                          enable_aggressive_lints: bool=False):
-    ...         arguments = ("--lint", filename, "--mode=" + lintmode)
+    ...         arguments = ('--lint', filename, '--mode=' + lintmode)
     ...         if enable_aggressive_lints:
-    ...             arguments += ("--aggressive",)
+    ...             arguments += ('--aggressive',)
     ...         return arguments
 
     Sometimes your tool requires an actual file that contains configuration.
     ``linter`` allows you to just define the contents the configuration shall
     contain via ``generate_config()`` and handles everything else for you.
 
-    >>> @linter("xlint", output_format="regex", output_regex="...")
+    >>> @linter('xlint', output_format='regex', output_regex='...')
     ... class XLintBear:
     ...     @staticmethod
     ...     def generate_config(filename,
     ...                         file,
     ...                         lintmode,
     ...                         enable_aggressive_lints):
-    ...         modestring = ("aggressive"
+    ...         modestring = ('aggressive'
     ...                       if enable_aggressive_lints else
-    ...                       "non-aggressive")
-    ...         contents = ("<xlint>",
-    ...                     "    <mode>" + lintmode + "</mode>",
-    ...                     "    <aggressive>" + modestring + "</aggressive>",
-    ...                     "</xlint>")
-    ...         return "\\n".join(contents)
+    ...                       'non-aggressive')
+    ...         contents = ('<xlint>',
+    ...                     '    <mode>' + lintmode + '</mode>',
+    ...                     '    <aggressive>' + modestring + '</aggressive>',
+    ...                     '</xlint>')
+    ...         return '\\n'.join(contents)
     ...
     ...     @staticmethod
     ...     def create_arguments(filename,
     ...                          file,
     ...                          config_file):
-    ...         return "--lint", filename, "--config", config_file
+    ...         return '--lint', filename, '--config', config_file
 
     As you can see you don't need to copy additional keyword-arguments you
     introduced from ``create_arguments()`` to ``generate_config()`` and
@@ -942,7 +942,7 @@ def linter(executable: str,
         The message-string to use for all results. Can be used only together
         with ``corrected`` or ``unified_diff`` or ``regex`` output format.
         When using ``corrected`` or ``unified_diff``, the default value is
-        ``"Inconsistency found."``, while for ``regex`` this static message is
+        ``'Inconsistency found.'``, while for ``regex`` this static message is
         disabled and the message matched by ``output_regex`` is used instead.
     :param diff_distance:
         Number of unchanged lines that are allowed in between two changed lines
