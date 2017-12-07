@@ -459,8 +459,9 @@ go for `a low issue <https://coala.io/low>`__ - they are really rewarding!
 
 .. note::
 
-    If you need help picking up an issue, you can always ask us and we'll help
-    you!
+    If you need help picking up an issue.You can always
+    ask us, also keep in mind `Don't ask to ask, just ask <http://sol.gfxile.net/dontask.html>`_
+    and we'll definitely help you!.
 
     If you ever have problems in finding links, you may find
     the solution in our :doc:`useful links section <Useful_Links>`.
