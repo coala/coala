@@ -19,6 +19,7 @@ If you're trying to **use** coala, you should have a look at our
    :hidden:
 
    Welcome <self>
+   Homepage <http://coala.io/#/home>
    Code of Conduct <http://coala.io/coc>
 
 
@@ -34,6 +35,7 @@ If you're trying to **use** coala, you should have a look at our
    :hidden:
 
    Newcomers' Guide <Developers/Newcomers_Guide>
+   User's Guide <http://docs.coala.io/en/latest/>
    Documentation coala settings <Developers/coala_settings>
    Bear Installation Tool <Developers/Bear_Installation_Tool>
    Writing Good Commit Messages <Developers/Writing_Good_Commits>
