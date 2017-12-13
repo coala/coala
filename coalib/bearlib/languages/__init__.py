@@ -27,4 +27,5 @@ from .definitions.Scala import Scala
 from .definitions.Swift import Swift
 from .definitions.Vala import Vala
 from .definitions.TypeScript import TypeScript
+from .definitions.Shell import Shell
 # Stop ignoring PyUnusedCodeBear
