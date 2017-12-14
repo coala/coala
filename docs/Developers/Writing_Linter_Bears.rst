@@ -215,6 +215,12 @@ understands it. This is possible via the ``severity_map`` parameter of
 ``coalib.results.RESULT_SEVERITY`` contains three different values, ``Info``,
 ``Warning`` and ``Error`` you can use.
 
+.. note::
+
+    ``severity_map`` is case insensitive. For example passing
+    ``{'E': RESULT_SEVERITY.MAJOR}`` or ``{'e': RESULT_SEVERITY.MAJOR}``
+    to the severity_map, makes no difference.
+
 We can test our bear like this
 
 ::
