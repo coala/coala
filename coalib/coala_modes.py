@@ -1,4 +1,13 @@
 def mode_normal(console_printer, log_printer, args, debug=False):
+    """
+    This is the default coala mode. User interaction is allowed in this mode.
+
+    :param console_printer: Object to print messages on the console.
+    :param log_printer:     Deprecated.
+    :param args:            Alternative pre-parsed CLI arguments.
+    :param debug:           Run in debug mode, bypassing multiprocessing,
+                            and not catching any exceptions.
+    """
     import functools
 
     from coalib.coala_main import run_coala
