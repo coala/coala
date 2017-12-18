@@ -547,6 +547,8 @@ def require_setting(setting_name, arr, section):
                          of the bears who need this setting in [1] and
                          following.
     :param section:      The section the action corresponds to.
+    :param return:       Returns the setting value that was requested from the
+                         user.
     """
     needed = join_names(arr[1:])
 
