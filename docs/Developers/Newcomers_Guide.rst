@@ -303,7 +303,7 @@ Step 4. Sending Your Changes
 .. note::
 
    Before committing your changes, please check that you are indeed in a
-   development branch created in step 4. To check if you are in a branch, type:
+   development branch created in step 3. To check if you are in a branch, type:
 
    ::
 
