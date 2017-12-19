@@ -96,7 +96,7 @@ class FileLength:
         # This is example is just showing what this aspect is about, because
         # the max number of lines per file is usually 999.
         """
-        example_language = 'Python'
+        example_language = 'Python 3'
         importance_reason = """
         Too long programs (or files) are difficult to read, maintain and
         understand.
@@ -158,40 +158,6 @@ class TrailingSpace:
     allow_trailing_spaces = Taste[bool](
         'Determines whether or not trailing spaces should be allowed or not.',
         (True, False), default=False)
-
-
-@Spacing.subaspect
-class Indentation:
-    """
-    Spaces/tabs used before blocks of code to convey a program's structure.
-    """
-    class docs:
-        example = """
-        # If this code was written on an editor that defined a tab as 2
-        # spaces, mixing tabs and spaces would look like this on a different
-        # editor defining tabs as four spaces.
-
-        def spaces():
-          pass
-
-        def tabs():
-            pass
-        """
-        example_language = 'Python'
-        importance_reason = """
-        Mixing tabs and spaces can cause issues when collaborating on
-        code, as well as during testing and compilation.
-        """
-        fix_suggestions = """
-        Using either tabs or spaces consistently.
-        If using spaces, by using a suitable number of spaces, preferably four.
-        """
-    indent_type = Taste[int](
-        'Represents the type of indent used.',
-        ('tab', 'space'), default='tab')
-    indent_size = Taste[int](
-        'Represents the number of spaces per indentation level.',
-        (2, 3, 4, 5, 6), default=4)
 
 
 @Spacing.subaspect
