@@ -542,3 +542,89 @@ also reorder the commit listing to change the order of the commits themselves.
 If you would like more information/commands, please use your favourite search
 engine to look for it. Git is widely used throughout the world and there are
 many good tutorials and git related Q&A threads out there.
+
+
+::
+
+    $ git reflog
+
+Will present a list of all actions performed on git and across all branches.
+On running ``git reflog`` each command performed till now will be presented
+<<<<<<< Updated upstream
+on the terminal and each command will have an index. The structure of the 
+index is HEAD@{index}.This command is very important when you are in a mess. 
+=======
+on the terminal and each command will have an index. The structure of the
+index is HEAD@{index}.This command is very important when you are in a mess.
+>>>>>>> Stashed changes
+The next command will provide the users a weapon to fix their mistakes.
+
+
+::
+
+   $ git reset HEAD@{index}
+
+<<<<<<< Updated upstream
+Reset to the point before you started messing up. HEAD@{index} denotes the 
+=======
+Reset to the point before you started messing up. HEAD@{index} denotes the
+>>>>>>> Stashed changes
+index of the command before the command which broke everything.
+
+
+::
+
+   $ git branch new-branch-name
+   $ git reset HEAD~ --hard
+   $ git checkout new-branch-name
+
+These commands are useful if you have accidently commited something to master
+but should have been commited to a new branch. ``git branch new-branch-name``
+creates a new branch from the current state of the master.
+``git reset HEAD~ --hard`` removes the commit from the master branch.
+After running ``git checkout new-branch-name`` commit into this branch.
+Note:this does not work if you have already pushed to origin or run other
+commands before trying this.Then you have to use ``git reset HEAD@{index}``.
+
+
+::
+
+   $ git reset HEAD~ --soft
+   $ git stash
+   $ git checkout correct-branch
+   $ git stash pop
+   $ git add <file/folder_name>
+   $ git commit -m "your message"
+
+These series of commands are used when you have accidentally commited to the
+<<<<<<< Updated upstream
+wrong branch.``git reset HEAD~ --soft`` undos the last commit and 
+=======
+wrong branch.``git reset HEAD~ --soft`` undos the last commit and
+>>>>>>> Stashed changes
+``git stash`` keeps the changes available in a stack.
+``git checkout correct-branch`` moves to the correct branch.
+``git stash pop`` applies the commit and removes it from the stack.
+Then using ``git add <file/folder_name>`` and the commit command
+``git commit -m "your message"`` commit your changes to the correct branch.
+
+
+::
+
+   $ git diff --staged
+
+<<<<<<< Updated upstream
+``git diff`` Show changes between the working tree and the index or a tree, 
+changes between the index and a tree, changes between two trees, changes 
+between two blob objects, or changes between two files on disk.
+``git diff --staged`` is used to do a diff of files that have been added to 
+the staging area.
+
+
+=======
+``git diff`` Show changes between the working tree and the index or a tree,
+changes between the index and a tree, changes between two trees, changes
+between two blob objects, or changes between two files on disk.
+``git diff --staged`` is used to do a diff of files that have been added to
+the staging area.
+>>>>>>> Stashed changes
