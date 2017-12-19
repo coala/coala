@@ -231,7 +231,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
 
     misc_group.add_argument(
         '-a', '--apply-patches', action='store_const',
-        dest='default_actions', const='*: ApplyPatchAction',
+        dest='default_actions', const='**: ApplyPatchAction',
         help='apply all patches automatically if possible')
 
     misc_group.add_argument(
