@@ -9,6 +9,15 @@ def mode_normal(console_printer, log_printer, args, debug=False):
                             and not catching any exceptions.
     """
     import functools
+    import logging
+
+    try: log_printer
+    except empty: log_printer = None
+
+    if log_printer is None:
+        pass
+    else:
+        logging.warning("Warning: The use of log_printer is deprecated")
 
     from coalib.coala_main import run_coala
     from coalib.output.ConsoleInteraction import (
