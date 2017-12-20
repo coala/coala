@@ -1,6 +1,6 @@
 appdirs~=1.4
 coala_utils~=0.7.0
-colorlog~=2.7
+colorlog>=2.7,<4.0
 dependency_management~=0.4.0
 packaging>=16.8
 Pygments~=2.1
