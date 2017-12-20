@@ -149,7 +149,8 @@ Example:
    between ``Fixes`` and ``Closes`` may be very small and subjective.
    If a specific issue may lead to an unintended behaviour from the user
    or from the program it should be considered a bug, and should be
-   addresed with ``Fixes``.
+   addresed with ``Fixes``. If an issue is labelled with ``type/bug``
+   you should always use ``Fixes``. For all other issues use ``Closes``.
 -  Should use full URL to the issue.
 -  There should be a single space between the ``Fixes`` or ``Closes`` and the
    URL.
