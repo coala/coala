@@ -211,7 +211,7 @@ Now you can start working on it!
 
             corobo mark pending <full url>
 
-        * To see all of the corobo commands, ::
+        * To see all of the corobo commands::
 
             corobo help
 
