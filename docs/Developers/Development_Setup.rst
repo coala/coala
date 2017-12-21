@@ -81,6 +81,13 @@ https://github.com/coala/coala
 
 https://github.com/coala/coala-bears
 
+Beside those repositories above, ``package_manager`` and ``coala-utils``
+are fundamental parts of coala which is hosted on GitLab.
+
+https://gitlab.com/coala/package_manager/
+
+https://gitlab.com/coala/coala-utils/
+
 Installing from Git
 -------------------
 
