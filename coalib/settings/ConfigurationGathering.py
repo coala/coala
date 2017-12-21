@@ -162,14 +162,16 @@ def save_sections(sections):
     conf_writer.close()
 
 
-def warn_nonexistent_targets(targets, sections, log_printer=None):
+def warn_nonexistent_targets(targets, sections, only_global_bears, log_printer=None):
     """
     Prints out a warning on the given log printer for all targets that are
     not existent within the given sections.
 
-    :param targets:     The targets to check.
-    :param sections:    The sections to search. (Dict.)
-    :param log_printer: The log printer to warn to.
+    :param targets:           The targets to check.
+    :param sections:          The sections to search. (Dict.)
+    :param log_printer:       The log printer to warn to.
+    :param only_global_bears: True if only global bears are 
+                              are being run
     """
     for target in targets:
         if target not in sections:
@@ -179,13 +181,14 @@ def warn_nonexistent_targets(targets, sections, log_printer=None):
 
     # Can't be summarized as python will evaluate conditions lazily, those
     # functions have intended side effects though.
-    files_config_absent = warn_config_absent(sections, 'files')
-    bears_config_absent = warn_config_absent(sections, ['bears', 'aspects'])
-    if files_config_absent or bears_config_absent:
+    files_config_absent, arg_files = warn_config_absent(sections, 'files', only_global_bears)
+    bears_config_absent, arg_bears = warn_config_absent(sections, ['bears', 'aspects'], only_global_bears)
+    if (files_config_absent or bears_config_absent) and (not (only_global_bears and 
+        files_config_absent and arg_files==['files'])) :
         raise SystemExit(2)  # Invalid CLI options provided
 
 
-def warn_config_absent(sections, argument, log_printer=None):
+def warn_config_absent(sections, argument, only_global_bears, log_printer=None):
     """
     Checks if at least 1 of the given arguments is present somewhere in the
     sections and emits a warning that code analysis can not be run without it.
@@ -201,12 +204,13 @@ def warn_config_absent(sections, argument, log_printer=None):
         argument = [argument]
     for section in sections.values():
         if any(arg in section for arg in argument):
-            return False
+            return (False, argument)
 
-    formatted_args = ' or '.join('`--{}`'.format(arg) for arg in argument)
-    logging.warning('coala will not run any analysis. Did you forget '
-                    'to give the {} argument?'.format(formatted_args))
-    return True
+    if only_global_bears and argument==['files']:
+        formatted_args = ' or '.join('`--{}`'.format(arg) for arg in argument)
+        logging.warning('coala will not run any analysis. Did you forget '
+                        'to give the {} argument?'.format(formatted_args))
+    return True, argument
 
 
 def load_configuration(arg_list,
@@ -492,8 +496,12 @@ def gather_configuration(acquire_settings,
     aspectize_sections(sections)
     local_bears, global_bears = fill_settings(sections,
                                               acquire_settings)
+    only_global_bears = True;
+    for sec, value in local_bears.items():
+        if value:
+            only_global_bears = False;
     save_sections(sections)
-    warn_nonexistent_targets(targets, sections)
+    warn_nonexistent_targets(targets, sections, only_global_bears)
 
     return (sections,
             local_bears,

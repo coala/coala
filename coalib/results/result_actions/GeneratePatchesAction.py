@@ -29,7 +29,7 @@ def create_arg_parser(files, bears):
     args = default_arg_parser().parse_args()
     args.files = files
     args.bears = bears
-    args.default_actions = '*: ApplyPatchAction'
+    args.default_actions = '**: ApplyPatchAction'
 
     return args
 
