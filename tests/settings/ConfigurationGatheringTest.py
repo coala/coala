@@ -101,13 +101,50 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         Constants.system_coafile = tmp
 
+    def test_capture_warnings_for_default_coafile(self):
+        """
+        This test case is temporary.
+        """
+        tmp = Constants.system_coafile
+
+        Constants.system_coafile = os.path.abspath(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            'section_manager_test_files',
+            'default_coafile'))
+
+        logger = logging.getLogger(__name__)
+        with self.assertLogs(logger, 'WARNING') as log:
+            self.assertEqual(log.output,
+                             ["WARNING: root: Use of file named\
+                              default_coafile is deprecated."])
+
+        Constants.system_coafile = tmp
+
+    def test_system_coafile_parsing(self):
+        tmp = Constants.system_coafile
+
+        Constants.system_coafile = os.path.abspath(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            'section_manager_test_files',
+            'system_coafile'))
+
+        sections, local_bears, global_bears, targets = gather_configuration(
+            lambda *args: True,
+            self.log_printer,
+            arg_list=[])
+
+        self.assertEqual(str(sections['test']),
+                         "test {value : '1', testval : '5'}")
+
+        Constants.system_coafile = tmp
+
     def test_user_coafile_parsing(self):
         tmp = Constants.user_coafile
 
         Constants.user_coafile = os.path.abspath(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             'section_manager_test_files',
-            'default_coafile'))
+            'system_coafile'))
 
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
@@ -141,14 +178,14 @@ class ConfigurationGatheringTest(unittest.TestCase):
         Constants.system_coafile = os.path.abspath(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             'section_manager_test_files',
-            'default_coafile'))
+            'system_coafile'))
 
         config = os.path.abspath(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             'section_manager_test_files',
             '.coafile'))
 
-        # Check merging of default_coafile and .coafile
+        # Check merging of system_coafile and .coafile
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
             self.log_printer,
@@ -159,7 +196,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         self.assertEqual(str(sections['test-2']),
                          "test-2 {files : '.', bears : 'LineCountBear'}")
 
-        # Check merging of default_coafile, .coafile and cli
+        # Check merging of system_coafile, .coafile and cli
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
             self.log_printer,
