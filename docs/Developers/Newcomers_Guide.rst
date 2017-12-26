@@ -23,6 +23,9 @@ following tasks, you will become a developer at coala:
   - merge a ``difficulty/low`` Pull Request
   - review at least a ``difficulty/low`` or higher Pull Request
 
+Note: After you have solved a ``difficulty/newcomer`` issue, please don't
+take up any more. Instead, move on to more difficult issues.
+
 Once you've run coala on a project, please fill out our
 `usability survey <http://coala.io/usability>`_. And once you've got your first Pull
 Request merged successfully, fill out our
