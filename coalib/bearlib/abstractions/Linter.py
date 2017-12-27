@@ -775,9 +775,8 @@ def linter(executable: str,
     ...         output_format='regex',
     ...         output_regex='...')
     ... class YLintBear:
-    ...     @staticmethod
-    ...     def create_arguments(config_file):
-    ...         return '--lint', filename
+    ...     def create_arguments(self, config_file):
+    ...         return '--lint', self.file_dict.keys()
 
     Requiring settings is possible like in ``Bear.run()`` with supplying
     additional keyword arguments (and if needed with defaults).
