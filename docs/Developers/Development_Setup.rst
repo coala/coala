@@ -64,7 +64,7 @@ in your current directory, as coala only works for Python >= 3.4
         (coala-venv)$ deactivate # to exit the environment
 
 - After this, you can start
-  `installing from git <https://coala.io/devsetup#installing-from-git>`_.
+  `installing from git <https://coala.io/devsetup#id1>`_.
 
 Repositories
 ------------
