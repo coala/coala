@@ -33,7 +33,7 @@ Using venv
         (coala-venv)$ deactivate
 
 - Now you can activate the environment and start
-  `the next part <https://coala.io/devsetup#installing-from-git>`_.
+  `the next part <https://api.coala.io/en/latest/Developers/Development_Setup.html#id1>`_.
 
 Using virtualenv
 ~~~~~~~~~~~~~~~~
