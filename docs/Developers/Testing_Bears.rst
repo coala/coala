@@ -125,7 +125,8 @@ passed.
                 self.uut,
                 file,
                 [Result.from_values('TooManyLinesBear',
-                                    'Too many lines')],
+                                    'Too many lines',
+                                    'filename')],
                 settings={'max_number_of_lines': 20})
 
 ``check_results`` asserts if your bear results match the actual
