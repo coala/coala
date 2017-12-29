@@ -11,7 +11,7 @@ import unittest
 
 from pyprint.ConsolePrinter import ConsolePrinter
 
-from testfixtures import LogCapture, StringComparison
+from testfixtures import LogCapture, StringComparison, TempDirectory
 
 from coalib.bears.Bear import Bear
 from coalib.output.printers.LogPrinter import LogPrinter
@@ -22,6 +22,7 @@ from coalib.processes.Processing import (
     execute_section, filter_raising_callables, get_default_actions,
     get_file_dict, print_result, process_queues, simplify_section_result,
     yield_ignore_ranges)
+from coalib.results.Diff import Diff
 from coalib.results.HiddenResult import HiddenResult
 from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -29,6 +30,7 @@ from coalib.results.result_actions.PrintDebugMessageAction import (
     PrintDebugMessageAction)
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.SourceRange import SourceRange
+from coalib.results.SourcePosition import SourcePosition
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
@@ -437,7 +439,8 @@ class ProcessingTest(unittest.TestCase):
                    {'file1': [Result('a', 'b')], 'file2': None},
                    {'file3': [Result('a', 'c')]},
                    None)
-        yielded, yielded_unfixed, all_results = simplify_section_result(results)
+        yielded, yielded_unfixed, all_results = simplify_section_result(
+            results)
         self.assertEqual(yielded, True)
         self.assertEqual(yielded_unfixed, True)
         self.assertEqual(len(all_results), 2)
@@ -816,3 +819,50 @@ class ProcessingTest_PrintResult(unittest.TestCase):
                                       self.section, self.log_printer, {}, [],
                                       console_printer=self.console_printer)
         self.assertEqual(newres, [])
+
+
+class ESLintBear_apply_patches(unittest.TestCase):
+
+    def setUp(self):
+        self.section = Section('name')
+        self.section.append(Setting('files', '*.js, **/*.js, **/**/*.js'))
+        self.section.append(Setting('eslint_config', '.eslintrc'))
+        self.section.append(Setting('bears', 'ESLintBear'))
+        self.section.append(Setting('default_actions', '**: ApplyPatchAction'))
+        self.log_printer = LogPrinter(ConsolePrinter(), log_level=0)
+
+    def test_autoapply_actions_ESLintBear(self):
+        """
+        Test to ensure --apply-patches works for ESLintBear.
+        """
+        with TempDirectory() as d:
+            d.write('test.js', 'function addIt(x, y)\n{\n\tsum = x + '
+                               'y\n\treturn sum;\n}\n'.encode())
+            file = os.path.join(d.path, 'test.js')
+            self.file_dict = {file: ['function addIt(x, y)\n',
+                                     '{\n', '\tsum = x + y\n',
+                                     '\treturn sum;\n', '}\n']}
+            self.new_output = {file: ['function addIt(x, y)\n',
+                                      '{\n', '\tsum = x + y\n',
+                                      '\treturn sum\n', '}\n']}
+            self.result = Result('YBear', 'msg1')
+            self.result.origin = 'ESLintBear (prettier/prettier)'
+            self.result.confidence = 100
+            self.result.message = 'Delete `;`'
+            self.result.applied_actions = {}
+            self.start = SourcePosition(file, 4, None)
+            self.end = SourcePosition(file, 4, None)
+            self.result.affected_code = [SourceRange(self.start, self.end)]
+            lines = ''.join(self.file_dict[file])
+            output = ''.join(self.new_output[file])
+            self.result.diffs = dict([(file,
+                                       Diff.from_string_arrays(
+                                            lines.splitlines(True),
+                                            output.splitlines(True)))])
+            self.result = [self.result]
+            ret = autoapply_actions(self.result,
+                                    self.file_dict,
+                                    {},
+                                    self.section,
+                                    self.log_printer)
+        self.assertEqual(ret, [])

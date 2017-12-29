@@ -159,7 +159,7 @@ class Indentation:
         Using either tabs or spaces consistently.
         If using spaces, by using a suitable number of spaces, preferably four.
         """
-    indent_type = Taste[int](
+    indent_type = Taste[str](
         'Represents the type of indent used.',
         ('tab', 'space'), default='tab')
     indent_size = Taste[int](

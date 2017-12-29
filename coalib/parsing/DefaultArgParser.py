@@ -1,4 +1,5 @@
 import argparse
+import os
 
 from coalib.misc import Constants
 from coalib.collecting.Collectors import get_all_bears_names
@@ -20,6 +21,23 @@ class CustomFormatter(argparse.RawDescriptionHelpFormatter):
             # Option string arguments (like "-f, --files")
             parts = action.option_strings
             return ', '.join(parts)
+
+
+class PathArg(str):
+    """
+    Uni(xi)fying OS-native directory separators in path arguments.
+
+    Removing the pain from interactively using coala in a Windows cmdline,
+    because backslashes are interpreted as escaping syntax and therefore
+    removed when arguments are turned into coala settings
+
+    >>> import os
+    >>> PathArg(os.path.join('path', 'with', 'separators'))
+    'path/with/separators'
+    """
+
+    def __new__(cls, path):
+        return str.__new__(cls, path.replace(os.path.sep, '/'))
 
 
 def default_arg_parser(formatter_class=None):
@@ -142,19 +160,19 @@ To run coala without user interaction, run the `coala --non-interactive`,
             lambda *args, **kwargs: get_all_bears_names())  # pragma: no cover
 
     inputs_group.add_argument(
-        '-f', '--files', nargs='+', metavar='FILE',
+        '-f', '--files', type=PathArg, nargs='+', metavar='FILE',
         help='files that should be checked')
 
     inputs_group.add_argument(
-        '-i', '--ignore', nargs='+', metavar='FILE',
+        '-i', '--ignore', type=PathArg, nargs='+', metavar='FILE',
         help='files that should be ignored')
 
     inputs_group.add_argument(
-        '--limit-files', nargs='+', metavar='FILE',
+        '--limit-files', type=PathArg, nargs='+', metavar='FILE',
         help="filter the `--files` argument's matches further")
 
     inputs_group.add_argument(
-        '-d', '--bear-dirs', nargs='+', metavar='DIR',
+        '-d', '--bear-dirs', type=PathArg, nargs='+', metavar='DIR',
         help='additional directories which may contain bears')
 
     outputs_group = arg_parser.add_argument_group('Outputs')
@@ -231,7 +249,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
 
     misc_group.add_argument(
         '-a', '--apply-patches', action='store_const',
-        dest='default_actions', const='*: ApplyPatchAction',
+        dest='default_actions', const='**: ApplyPatchAction',
         help='apply all patches automatically if possible')
 
     misc_group.add_argument(

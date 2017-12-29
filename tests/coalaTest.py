@@ -1,5 +1,4 @@
 import os
-import re
 import sys
 import unittest
 import unittest.mock
@@ -36,7 +35,7 @@ class coalaTest(unittest.TestCase):
                              coala.main,
                              'coala', '-c', os.devnull,
                              '--non-interactive', '--no-color',
-                             '-f', re.escape(filename),
+                             '-f', filename,
                              '-b', 'LineCountTestBear')
             self.assertIn('This file has 1 lines.',
                           stdout,
@@ -57,7 +56,7 @@ class coalaTest(unittest.TestCase):
                                  coala.main,
                                  'coala', '-c', os.devnull,
                                  '--non-interactive', '--no-color',
-                                 '-f', re.escape(filename),
+                                 '-f', filename,
                                  '-b', 'LineCountTestBear', '-A')
                 self.assertIn('',
                               stdout,
@@ -79,7 +78,7 @@ class coalaTest(unittest.TestCase):
                                  coala.main,
                                  'coala', '-c', os.devnull,
                                  '--non-interactive', '--no-color',
-                                 '-f', re.escape(filename),
+                                 '-f', filename,
                                  '-b', 'LineCountTestBear', '-A')
                 self.assertIn('',
                               stdout,
@@ -101,7 +100,7 @@ class coalaTest(unittest.TestCase):
                                  coala.main,
                                  'coala', '-c', os.devnull,
                                  '--non-interactive', '--no-color',
-                                 '-f', re.escape(filename),
+                                 '-f', filename,
                                  '-b', 'LineCountTestBear', '-A')
                 self.assertIn('',
                               stdout,
@@ -121,7 +120,7 @@ class coalaTest(unittest.TestCase):
                              coala.main,
                              'coala', '-c', os.devnull,
                              '--non-interactive', '--no-color',
-                             '-f', re.escape(filename),
+                             '-f', filename,
                              '-S', 'cli.aspects=UnusedLocalVariable',
                              'cli.language=Python')
             self.assertIn(
@@ -251,7 +250,7 @@ class coalaTest(unittest.TestCase):
                     log_printer=LogPrinter(),
                     arg_list=(
                         '-c', os.devnull,
-                        '-f', re.escape(filename),
+                        '-f', filename,
                         '-b', 'SpaceConsistencyTestBear',
                         '--apply-patches',
                         '-S', 'use_spaces=yeah'
@@ -268,7 +267,7 @@ class coalaTest(unittest.TestCase):
                     log_printer=LogPrinter(),
                     arg_list=(
                         '-c', os.devnull,
-                        '-f', re.escape(filename),
+                        '-f', filename,
                         '-b', 'SpaceConsistencyTestBear',
                         '--apply-patches',
                         '-S', 'use_spaces=yeah'
@@ -289,7 +288,7 @@ class coalaTest(unittest.TestCase):
                 log_printer=LogPrinter(),
                 arg_list=(
                     '-c', os.devnull,
-                    '-f', re.escape(filename),
+                    '-f', filename,
                     '-b', 'ErrorTestBear'
                 ),
                 autoapply=False
