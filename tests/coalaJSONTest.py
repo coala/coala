@@ -1,6 +1,5 @@
 import json
 import os
-import re
 import sys
 import unittest
 import unittest.mock
@@ -44,7 +43,7 @@ class coalaJSONTest(unittest.TestCase):
             retval, stdout, stderr = execute_coala(coala.main, 'coala',
                                                    '--json', '-c', os.devnull,
                                                    '-b', 'LineCountTestBear',
-                                                   '-f', re.escape(filename))
+                                                   '-f', filename)
             output = json.loads(stdout)
             self.assertEqual(output['results']['cli'][0]['message'],
                              'This file has 1 lines.')
@@ -130,7 +129,7 @@ class coalaJSONTest(unittest.TestCase):
     def test_output_file(self):
         with prepare_file(['#todo this is todo'], None) as (lines, filename):
             args = (coala.main, 'coala', '--json', '-c', os.devnull, '-b',
-                    'LineCountTestBear', '-f', re.escape(filename),
+                    'LineCountTestBear', '-f', filename,
                     '--log-json')
             retval1, stdout1, stderr1 = execute_coala(*args)
             retval2, stdout2, stderr2 = execute_coala(*(args +
@@ -155,7 +154,7 @@ class coalaJSONTest(unittest.TestCase):
     def test_output_file_overwriting(self):
         with prepare_file(['#todo this is todo'], None) as (lines, filename):
             args = (coala.main, 'coala', '--json', '-c', os.devnull, '-b',
-                    'LineCountTestBear', '-f', re.escape(filename),
+                    'LineCountTestBear', '-f', filename,
                     '--log-json', '-o', 'file.json')
             execute_coala(*args)
 

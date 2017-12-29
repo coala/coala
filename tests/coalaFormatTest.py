@@ -1,5 +1,4 @@
 import os
-import re
 import sys
 import unittest
 
@@ -27,8 +26,7 @@ class coalaFormatTest(unittest.TestCase):
                 prepare_file(['#fixme'], None) as (lines, filename):
             retval, stdout, stderr = execute_coala(coala.main, 'coala',
                                                    '--format', '-c',
-                                                   os.devnull, '-f',
-                                                   re.escape(filename),
+                                                   os.devnull, '-f', filename,
                                                    '-b', 'LineCountTestBear')
             self.assertRegex(stdout, r'message:This file has [0-9]+ lines.',
                              'coala-format output for line count should '
@@ -43,8 +41,7 @@ class coalaFormatTest(unittest.TestCase):
                 prepare_file(['#fixme'], None) as (lines, filename):
             retval, stdout, stderr = execute_coala(coala.main, 'coala',
                                                    '--format', '--ci', '-c',
-                                                   os.devnull, '-f',
-                                                   re.escape(filename),
+                                                   os.devnull, '-f', filename,
                                                    '-b', 'LineCountTestBear')
             self.assertRegex(stdout, r'message:This file has [0-9]+ lines.',
                              'coala --format --ci output for line count should '

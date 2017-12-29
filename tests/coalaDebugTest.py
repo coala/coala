@@ -1,5 +1,4 @@
 import os
-import re
 import sys
 
 import unittest
@@ -33,7 +32,7 @@ class coalaDebugTest(unittest.TestCase):
             execute_coala(
                 coala.main, 'coala',
                 '-c', os.devnull,
-                '-f', re.escape(filename),
+                '-f', filename,
                 '-b', 'ErrorTestBear',
                 debug=True)
 
@@ -50,7 +49,7 @@ class coalaDebugTest(unittest.TestCase):
                 log_printer=LogPrinter(),
                 arg_list=(
                     '-c', os.devnull,
-                    '-f', re.escape(filename),
+                    '-f', filename,
                     '-b', 'ErrorTestBear'
                 ),
                 debug=True)
@@ -63,7 +62,7 @@ class coalaDebugTest(unittest.TestCase):
             execute_coala(
                 coala.main, 'coala',
                 '-c', os.devnull,
-                '-f', re.escape(filename),
+                '-f', filename,
                 '-b', 'RaiseTestBear',
                 debug=True)
 
@@ -78,7 +77,7 @@ class coalaDebugTest(unittest.TestCase):
                 log_printer=LogPrinter(),
                 arg_list=(
                     '-c', os.devnull,
-                    '-f', re.escape(filename),
+                    '-f', filename,
                     '-b', 'RaiseTestBear'
                 ),
                 debug=True)
@@ -96,6 +95,6 @@ class coalaDebugTest(unittest.TestCase):
             execute_coala(
                 coala.main, 'coala', '--json',
                 '-c', os.devnull,
-                '-f', re.escape(filename),
+                '-f', filename,
                 '-b', 'RaiseTestBear',
                 debug=True)
