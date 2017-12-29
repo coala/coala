@@ -76,6 +76,7 @@ The review process for coala is as follows:
     .. note::
 
         Only one acknowledgment is needed per commit i.e ``ack commit_SHA``.
+        Unack is used for disapprove commit that is ack-ed by someone else.
 
 4. If the commits are not linearly mergeable into master, rebase and go
    to step one.
