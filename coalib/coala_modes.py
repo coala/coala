@@ -41,14 +41,29 @@ def mode_non_interactive(console_printer, args, debug=False):
         print_section_beginning,
         console_printer)
     results, exitcode, _ = run_coala(
-        print_results=print_results_no_input,
+        # print_results=print_results_no_input,
         print_section_beginning=partial_print_sec_beg,
         force_show_patch=True,
         console_printer=console_printer,
         args=args,
         debug=debug)
 
+    for (section, result_list) in results.items():
+        file_diffs = {}
+        file_dict = {}
+        from coala_utils.decorators import get_public_members
+        for result in result_list:
+            if get_public_members(result)['diffs']:
+            # if result.diffs:
+                for (k, v) in get_public_members(result)['diffs']:
+                # for (k, v) in result.diffs:
+                    file_dict[k] = v
+                    file_diffs[k] = v
+        print_results_no_input(None, section, result_list,
+                               file_dict, file_diffs, console_printer)
     return exitcode
+
+#                                                   test error to get linelength warning
 
 
 def mode_json(args, debug=False):

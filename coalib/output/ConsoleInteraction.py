@@ -427,6 +427,7 @@ def print_affected_files(console_printer,
                               color=FILE_NAME_COLOR)
     else:
         for sourcerange in result.affected_code:
+            # print(file_dict)
             if (
                     sourcerange.file is not None and
                     sourcerange.file not in file_dict):
