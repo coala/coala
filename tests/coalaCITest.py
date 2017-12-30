@@ -127,6 +127,23 @@ class coalaCITest(unittest.TestCase):
             self.assertNotEqual(retval, 0,
                                 'coala was expected to return non-zero')
 
+    def test_additional_parameters_settings(self, debug=False):
+        with bear_test_module(), \
+             prepare_file(['\t#include <a>'], None) as (lines, filename):
+            retval, stdout, stderr = execute_coala(
+                 coala.main, 'coala',
+                 '--non-interactive', '-S',
+                 'name.bears=SpaceConsistencyTestBear',
+                 'name.files={}'.format(filename),
+                 'name.enabled=False',
+                 '-c', os.devnull,
+                 debug=debug)
+            self.assertEqual('Executing section cli...\n', stdout)
+            self.assertNotIn('During execution, we found that some required '
+                             'settings were not provided.', stderr)
+            self.assertEqual(retval, 0,
+                             'coala was expected to return zero')
+
     def test_fail_acquire_settings_debug(self):
         with self.assertRaisesRegex(
                 AssertionError,

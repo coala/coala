@@ -491,6 +491,7 @@ def gather_configuration(acquire_settings,
     _set_section_language(sections)
     aspectize_sections(sections)
     local_bears, global_bears = fill_settings(sections,
+                                              targets,
                                               acquire_settings)
     save_sections(sections)
     warn_nonexistent_targets(targets, sections)
