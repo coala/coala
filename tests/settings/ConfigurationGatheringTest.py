@@ -1,5 +1,4 @@
 import os
-import re
 import tempfile
 import unittest
 import logging
@@ -152,7 +151,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
             self.log_printer,
-            arg_list=['-c', re.escape(config)])
+            arg_list=['-c', config])
 
         self.assertEqual(str(sections['test']),
                          "test {value : '2'}")
@@ -164,7 +163,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
             lambda *args: True,
             self.log_printer,
             arg_list=['-c',
-                      re.escape(config),
+                      config,
                       '-S',
                       'test.value=3',
                       'test-2.bears=',
