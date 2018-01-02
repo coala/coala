@@ -1,5 +1,4 @@
 import os
-import re
 import tempfile
 import unittest
 import logging
@@ -12,6 +11,7 @@ import pytest
 from coalib.bearlib.aspects.Metadata import CommitMessage
 from coalib.bearlib.languages import Language
 from coalib.misc import Constants
+from coalib.parsing.DefaultArgParser import PathArg
 from coalib.settings.Section import Section
 from coala_utils.ContextManagers import (
     make_temp, change_directory, retrieve_stdout)
@@ -67,12 +67,13 @@ class ConfigurationGatheringTest(unittest.TestCase):
             sections, local_bears, global_bears, targets = (
                 gather_configuration(
                     *args,
-                    arg_list=['-S', 'test=5', '-c', escape(temporary, '\\'),
+                    arg_list=['-S', 'test=5', '-c', temporary,
                               '-s'] + self.min_args))
 
         self.assertEqual(
             str(sections['cli']),
-            "cli {bears : 'JavaTestBear', config : " + repr(temporary) +
+            "cli {bears : 'JavaTestBear', config : " +
+            repr(PathArg(temporary)) +
             ", files : '*.java', save : 'True', test : '5'}")
 
         with make_temp() as temporary:
@@ -80,7 +81,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
                 gather_configuration(*args,
                                      arg_list=['-S test=5',
                                                '-f *.java',
-                                               '-c ' + escape(temporary, '\\'),
+                                               '-c ' + (temporary),
                                                '-b LineCountBear -s']))
 
         self.assertEqual(len(local_bears['cli']), 0)
@@ -168,7 +169,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         sections, local_bears, global_bears, targets = gather_configuration(
             lambda *args: True,
             self.log_printer,
-            arg_list=['-c', re.escape(config)])
+            arg_list=['-c', config])
 
         self.assertEqual(str(sections['test']),
                          "test {value : '2'}")
@@ -180,7 +181,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
             lambda *args: True,
             self.log_printer,
             arg_list=['-c',
-                      re.escape(config),
+                      config,
                       '-S',
                       'test.value=3',
                       'test-2.bears=',

@@ -124,7 +124,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
     config_group = arg_parser.add_argument_group('Configuration')
 
     config_group.add_argument(
-        '-c', '--config', nargs=1, metavar='FILE',
+        '-c', '--config', type=PathArg, nargs=1, metavar='FILE',
         help='configuration file to be used, defaults to {}'.format(
             Constants.default_coafile))
 
@@ -138,7 +138,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
         help='run without using any config file')
 
     config_group.add_argument(
-        '-s', '--save', nargs='?', const=True, metavar='FILE',
+        '-s', '--save', type=PathArg, nargs='?', const=True, metavar='FILE',
         help='save used arguments to a config file to a {}, the given path, '
              'or at the value of -c'.format(Constants.default_coafile))
 
@@ -234,7 +234,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
              ' (must be called with --json)')
 
     outputs_group.add_argument(
-        '-o', '--output', nargs=1, metavar='FILE',
+        '-o', '--output', type=PathArg, nargs=1, metavar='FILE',
         help='write results to the given file (must be called with --json)')
 
     outputs_group.add_argument(
