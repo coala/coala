@@ -35,9 +35,6 @@ install:
 
   - "%CMD_IN_ENV% pip install --cache-dir=C:\\pip_cache -r requirements.txt -r test-requirements.txt"
 
-  - curl -fsSL http://llvm.org/releases/%LLVM_VERSION%/LLVM-%LLVM_VERSION%-win32.exe -o LLVM.exe
-  - 7z x LLVM.exe -oC:\LLVM
-
 build: false  # Not a C# project, build stuff at the test step instead.
 
 test_script:
