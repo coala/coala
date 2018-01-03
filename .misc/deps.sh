@@ -13,10 +13,6 @@ case $CIRCLE_NODE_INDEX in
  *) dep_versions=( "3.5.1" ) ;;
 esac
 
-# apt-get commands
-deps="libclang1-3.4"
-sudo apt-get install $deps
-
 for dep_version in "${dep_versions[@]}" ; do
   pyenv install -ks $dep_version
   pyenv local $dep_version

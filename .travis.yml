@@ -26,13 +26,6 @@ cache:
     - node_modules
     - docs/_build
 
-addons:
-  apt:
-    packages:
-      - clang-3.4
-    sources:
-      - llvm-toolchain-precise
-
 before_install:
   - if [[ $TRAVIS_OS_NAME == osx ]]; then TRAVIS_PYTHON_VERSION=3.5; fi
 
