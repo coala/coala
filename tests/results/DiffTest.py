@@ -1,14 +1,9 @@
 import json
 import logging
 import unittest
-import unittest.case
 
-from clang.cindex import LibclangError
-from importlib import reload
 from unidiff.errors import UnidiffParseError
-from unittest.mock import patch
 
-import coalib.results.Diff
 from coalib.output.JSONEncoder import create_json_encoder
 from coalib.results.Diff import ConflictError, Diff, SourceRange
 
@@ -552,32 +547,6 @@ class DiffTest(unittest.TestCase):
         diff_string = '\n'.join(diff)
         with self.assertRaises(UnidiffParseError):
             self.uut = Diff.from_unified_diff(diff_string, source)
-
-    def test_from_clang_fixit(self):
-        try:
-            from clang.cindex import Index, LibclangError
-        except ImportError as err:
-            raise unittest.case.SkipTest(str(err))
-
-        joined_file = 'struct { int f0; }\nx = { f0 :1 };\n'
-        file = joined_file.splitlines(True)
-        fixed_file = ['struct { int f0; }\n', 'x = { .f0 = 1 };\n']
-        try:
-            tu = Index.create().parse('t.c', unsaved_files=[
-                ('t.c', joined_file)])
-        except LibclangError as err:
-            raise unittest.case.SkipTest(str(err))
-
-        fixit = tu.diagnostics[0].fixits[0]
-        clang_fixed_file = Diff.from_clang_fixit(fixit, file).modified
-        self.assertEqual(fixed_file, clang_fixed_file)
-
-    @patch('pkg_resources.get_distribution')
-    def test_clang_version_check(self, get_distribution):
-        get_distribution.configure_mode(version='1.2')
-        with self.assertRaisesRegexp(LibclangError,
-                                     'coala requires clang 3.4.0'):
-            reload(coalib.results.Diff)
 
     def test_equality(self):
         a = ['first', 'second', 'third']

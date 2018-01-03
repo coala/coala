@@ -2,18 +2,12 @@ import copy
 import difflib
 import logging
 
-from pkg_resources import get_distribution
 from unidiff import PatchSet
 
-from clang.cindex import LibclangError
 from coalib.results.LineDiff import LineDiff, ConflictError
 from coalib.results.SourceRange import SourceRange
 from coalib.results.TextRange import TextRange
 from coala_utils.decorators import enforce_signature, generate_eq
-
-
-if get_distribution('libclang-py3').version != '3.4.0':
-    raise LibclangError('coala requires clang 3.4.0')
 
 
 @generate_eq('_file', 'modified', 'rename', 'delete')
@@ -160,30 +154,6 @@ class Diff:
                 pass
 
         return diff
-
-    @classmethod
-    def from_clang_fixit(cls, fixit, file):
-        """
-        Creates a Diff object from a given clang fixit and the file contents.
-
-        :param fixit: A cindex.Fixit object.
-        :param file:  A list of lines in the file to apply the fixit to.
-        :return:      The corresponding Diff object.
-        """
-        assert isinstance(file, (list, tuple))
-
-        oldvalue = '\n'.join(file[fixit.range.start.line-1:
-                                  fixit.range.end.line])
-        endindex = fixit.range.end.column - len(file[fixit.range.end.line-1])-1
-
-        newvalue = (oldvalue[:fixit.range.start.column-1] +
-                    fixit.value +
-                    oldvalue[endindex:])
-        new_file = (file[:fixit.range.start.line-1] +
-                    type(file)(newvalue.splitlines(True)) +
-                    file[fixit.range.end.line:])
-
-        return cls.from_string_arrays(file, new_file)
 
     def _get_change(self, line_nr, min_line=1):
         if not isinstance(line_nr, int):
