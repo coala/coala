@@ -1,15 +1,10 @@
 import unittest
-from collections import namedtuple
 from os.path import abspath
 
-from clang.cindex import LibclangError
-from importlib import reload
-from unittest.mock import patch
 from coalib.results.SourcePosition import SourcePosition
 from coalib.results.SourceRange import SourceRange
 from coalib.results.AbsolutePosition import AbsolutePosition
 from coalib.results.Diff import Diff
-import coalib.results.SourceRange
 
 
 class SourceRangeTest(unittest.TestCase):
@@ -31,27 +26,6 @@ class SourceRangeTest(unittest.TestCase):
         uut = SourceRange.from_values('B', start_line=2, end_line=4)
         self.assertEqual(uut.start, self.result_fileB_line2)
         self.assertEqual(uut.end, self.result_fileB_line4)
-
-    def test_from_clang_range(self):
-        # Simulating a clang SourceRange is easier than setting one up without
-        # actually parsing a complete C file.
-        ClangRange = namedtuple('ClangRange', 'start end')
-        ClangPosition = namedtuple('ClangPosition', 'file line column')
-        ClangFile = namedtuple('ClangFile', 'name')
-        file = ClangFile('t.c')
-        start = ClangPosition(file, 1, 2)
-        end = ClangPosition(file, 3, 4)
-
-        uut = SourceRange.from_clang_range(ClangRange(start, end))
-        compare = SourceRange.from_values('t.c', 1, 2, 3, 4)
-        self.assertEqual(uut, compare)
-
-    @patch('pkg_resources.get_distribution')
-    def test_clang_version_check(self, get_distribution):
-        get_distribution.configure_mode(version='1.2')
-        with self.assertRaisesRegexp(LibclangError,
-                                     'coala requires clang 3.4.0'):
-            reload(coalib.results.SourceRange)
 
     def test_from_absolute_position(self):
         text = ('a\n', 'b\n')

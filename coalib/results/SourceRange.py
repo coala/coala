@@ -1,15 +1,9 @@
 from os.path import relpath
-from pkg_resources import get_distribution
 
-from clang.cindex import LibclangError
 from coala_utils.decorators import enforce_signature, get_public_members
 from coalib.results.SourcePosition import SourcePosition
 from coalib.results.TextRange import TextRange
 from coalib.results.AbsolutePosition import AbsolutePosition
-
-
-if get_distribution('libclang-py3').version != '3.4.0':
-    raise LibclangError('coala requires clang 3.4.0')
 
 
 class SourceRange(TextRange):
@@ -52,19 +46,6 @@ class SourceRange(TextRange):
             end = None
 
         return cls(start, end)
-
-    @classmethod
-    def from_clang_range(cls, range):
-        """
-        Creates a SourceRange from a clang SourceRange object.
-
-        :param range: A cindex.SourceRange object.
-        """
-        return cls.from_values(range.start.file.name,
-                               range.start.line,
-                               range.start.column,
-                               range.end.line,
-                               range.end.column)
 
     @classmethod
     @enforce_signature
