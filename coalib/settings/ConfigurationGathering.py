@@ -194,19 +194,19 @@ def warn_config_absent(sections, argument, log_printer=None):
     :param argument:    An argument OR a list of arguments that at least 1
                         should present.
     :param log_printer: A log printer to emit the warning to.
-    :return:            Returns a boolean True if the given argument
-                        is present in the sections, else returns False.
+    :return:            Returns a boolean False if the given argument
+                        is present in the sections, else returns True.
     """
     if isinstance(argument, str):
         argument = [argument]
     for section in sections.values():
         if any(arg in section for arg in argument):
-            return True
+            return False
 
     formatted_args = ' or '.join('`--{}`'.format(arg) for arg in argument)
     logging.warning('coala will not run any analysis. Did you forget '
                     'to give the {} argument?'.format(formatted_args))
-    return False
+    return True
 
 
 def load_configuration(arg_list,
