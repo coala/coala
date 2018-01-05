@@ -1,5 +1,4 @@
 import os
-import re
 import unittest
 from collections import OrderedDict
 
@@ -10,6 +9,7 @@ from coalib.settings.Setting import (
     language,
     float_list, bool_list, int_list, str_list,
 )
+from coalib.parsing.DefaultArgParser import PathArg
 from coalib.parsing.Globbing import glob_escape
 
 
@@ -34,8 +34,8 @@ class SettingTest(unittest.TestCase):
         self.assertEqual(path(self.uut),
                          os.path.abspath(os.path.join('.', '22')))
 
-        abspath = os.path.abspath('.')
-        self.uut = Setting('key', re.escape(abspath))
+        abspath = PathArg(os.path.abspath('.'))
+        self.uut = Setting('key', abspath)
         self.assertEqual(path(self.uut), abspath)
 
         self.uut = Setting('key', ' 22', '')

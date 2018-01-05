@@ -1,5 +1,4 @@
 import os
-import re
 import sys
 import logging
 
@@ -11,6 +10,7 @@ from coalib.output.ConfWriter import ConfWriter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.CliParsing import parse_cli, check_conflicts
 from coalib.parsing.ConfParser import ConfParser
+from coalib.parsing.DefaultArgParser import PathArg
 from coalib.settings.Section import Section, extract_aspects_from_section
 from coalib.settings.SectionFilling import fill_settings
 from coalib.settings.Setting import Setting, path
@@ -237,7 +237,7 @@ def load_configuration(arg_list,
             bool(cli_sections['cli'].get('find_config', 'False')) and
             str(cli_sections['cli'].get('config')) == ''):
         cli_sections['cli'].add_or_create_setting(
-            Setting('config', re.escape(find_user_config(os.getcwd()))))
+            Setting('config', PathArg(find_user_config(os.getcwd()))))
 
     targets = []
     # We don't want to store targets argument back to file, thus remove it
