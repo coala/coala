@@ -194,8 +194,8 @@ def warn_config_absent(sections, argument, log_printer=None):
     :param argument:    An argument OR a list of arguments that at least 1
                         should present.
     :param log_printer: A log printer to emit the warning to.
-    :return:            Returns a boolean True if the given argument
-                        is present in the sections, else returns False.
+    :return:            Returns a boolean False if the given argument
+                        is present in the sections, else returns Truee.
     """
     if isinstance(argument, str):
         argument = [argument]
