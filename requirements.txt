@@ -10,4 +10,4 @@ PyPrint~=0.2.6
 requests~=2.12
 setuptools>=19.0
 testfixtures~=4.14.3
-unidiff~=0.5.2
+unidiff>=0.5.2,<=0.5.4
