@@ -79,6 +79,7 @@ script:
     if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
       sed -i.bak '/bears = GitCommitBear/d' .coafile
     fi
+  - python .misc/generate_dictionary.py
   - coala --non-interactive
   - python setup.py docs
 

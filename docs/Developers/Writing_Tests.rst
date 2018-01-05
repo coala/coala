@@ -155,7 +155,7 @@ So an example test that succeeds would be:
 ``setUp()`` and ``tearDown()``
 ------------------------------
 
-Often you reuse components or need to make an inital setup for your
+Often you reuse components or need to make an initial setup for your
 tests. For that purpose the function ``setUp()`` exists. Just declare it
 inside your test suite and it is invoked automatically once at test
 suite startup:

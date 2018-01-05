@@ -46,7 +46,7 @@ AppVeyor which runs test and build commands in a
 Microsoft Windows box. Here are examples of CI build in AppVeyor :
 https://ci.appveyor.com/project/coala/coala/ and
 https://ci.appveyor.com/project/coala/coala-bears/.
-Now to add an indentical Appveyor CI to your forked repository,
+Now to add an identical Appveyor CI to your forked repository,
 follow the following instructions.
 
 1. Go to `ci.appveyor.com <http://ci.appveyor.com>`_ and login
@@ -55,7 +55,7 @@ follow the following instructions.
    repositories listed under your username.
 3. On the right side, you will see an "Add" button, click on it
    and it will add it to your projects.
-4. AppVeyor CI requires appvyor.yml file that should have the
+4. AppVeyor CI requires appveyor.yml file that should have the
    settings and instructions for windows, e.g `coala's appveyor.yml
    <https://github.com/coala/coala/blob/master/.misc/appveyor.yml>`_.
    Your forked repository already has that file.
