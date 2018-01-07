@@ -4,6 +4,7 @@ import unittest
 import logging
 import sys
 
+from unittest.mock import patch
 from pyprint.ClosableObject import close_objects
 from pyprint.NullPrinter import NullPrinter
 import pytest
@@ -138,6 +139,25 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
     def test_nonexistent_file(self):
         filename = 'bad.one/test\neven with bad chars in it'
+        with self.assertRaises(SystemExit):
+            gather_configuration(lambda *args: True,
+                                 self.log_printer,
+                                 arg_list=['-S', 'config=' + filename])
+
+        tmp = Constants.system_coafile
+        Constants.system_coafile = filename
+
+        with self.assertRaises(SystemExit):
+            gather_configuration(lambda *args: True,
+                                 self.log_printer,
+                                 arg_list=[])
+
+        Constants.system_coafile = tmp
+
+    @patch('coalib.parsing.ConfParser.ConfParser.parse')
+    def test_notauthorized_file(self, mock_open):
+        mock_open.side_effect = PermissionError
+        filename = 'something'
         with self.assertRaises(SystemExit):
             gather_configuration(lambda *args: True,
                                  self.log_printer,
