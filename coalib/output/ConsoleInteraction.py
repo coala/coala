@@ -2,6 +2,7 @@ import copy
 import logging
 import platform
 import os
+from collections import OrderedDict
 
 from termcolor import colored
 
@@ -13,6 +14,7 @@ except ImportError:  # pragma: no cover
 
 from coalib.misc.DictUtilities import inverse_dicts
 from coalib.misc.Exceptions import log_exception
+from coalib.misc.DeprecationUtilities import check_deprecation
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -866,14 +868,18 @@ def show_bear(bear,
     Displays all information about a bear.
 
     :param bear:             The bear to be displayed.
-    :param show_description: True if the main description should be shown.
-    :param show_params:      True if the details should be shown.
+    :param show_description: This parameter is deprecated.
+    :param show_params:      This parameter is deprecated.
     :param console_printer:  Object to print messages on the console.
     :param args:             Args passed to coala command.
     """
     console_printer.print(bear.name, color='blue')
 
     metadata = bear.get_metadata()
+
+    check_deprecation(OrderedDict([
+        ('show_description', show_description),
+        ('show_params', show_params)]))
 
     if show_description:
         console_printer.print(
@@ -927,13 +933,15 @@ def print_bears(bears,
 
     :param bears:            It's a dictionary with bears as keys and list of
                              sections containing those bears as values.
-    :param show_description: True if the main description of the bears should
-                             be shown.
-    :param show_params:      True if the parameters and their description
-                             should be shown.
+    :param show_description: This parameter is deprecated.
+    :param show_params:      This parameter is deprecated.
     :param console_printer:  Object to print messages on the console.
     :param args:             Args passed to coala command.
     """
+    check_deprecation(OrderedDict([
+        ('show_description', show_description),
+        ('show_params', show_params)]))
+
     if not bears and not (args and args.json):
         console_printer.print('No bears to show. Did you forget to install '
                               'the `coala-bears` package? Try `pip3 install '
@@ -984,10 +992,8 @@ def show_bears(local_bears,
                              as keys and bear list as values.
     :param global_bears:     Dictionary of global bears with section
                              names as keys and bear list as values.
-    :param show_description: True if the main description of the bears should
-                             be shown.
-    :param show_params:      True if the parameters and their description
-                             should be shown.
+    :param show_description: This parameter is deprecated.
+    :param show_params:      This parameter is deprecated.
     :param console_printer:  Object to print messages on the console.
     :param args:             Args passed to coala command.
     """
