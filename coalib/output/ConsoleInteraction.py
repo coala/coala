@@ -9,18 +9,16 @@ try:
     # This import has side effects and is needed to make input() behave nicely
     import readline  # pylint: disable=unused-import
 except ImportError:  # pragma: no cover
-pass
+    pass
 
 from coalib.misc.DictUtilities import inverse_dicts
-from coalib.misc.Exceptions import log_exception
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
 from coalib.results.result_actions.DoNothingAction import DoNothingAction
-from coalib.results.result_actions.GeneratePatchesAction import (
-    GeneratePatchesAction)
+from coalib.results.result_actions.ChainPatchAction import ChainPatchAction
 from coalib.results.result_actions.ShowAppliedPatchesAction import (
     ShowAppliedPatchesAction)
 from coalib.results.result_actions.PrintDebugMessageAction import (
@@ -61,8 +59,11 @@ class NoColorStyle(Style):
     }
 
 
-def highlight_text(no_color, text, style, lexer=TextLexer()):
-    formatter = TerminalTrueColorFormatter(style=style)
+def highlight_text(no_color, text, lexer=TextLexer(), style=None):
+    if style:
+        formatter = TerminalTrueColorFormatter(style=style)
+    else:
+        formatter = TerminalTrueColorFormatter()
     if no_color:
         formatter = TerminalTrueColorFormatter(style=NoColorStyle)
     return highlight(text, lexer, formatter)[:-1]
@@ -88,8 +89,8 @@ CLI_ACTIONS = (OpenEditorAction(),
                PrintMoreInfoAction(),
                ShowPatchAction(),
                IgnoreResultAction(),
-               ShowAppliedPatchesAction(),
-               GeneratePatchesAction())
+               ChainPatchAction(),
+               ShowAppliedPatchesAction())
 DIFF_EXCERPT_MAX_SIZE = 4
 
 
@@ -114,7 +115,7 @@ def color_letter(console_printer, line):
 
 def format_lines(lines, symbol='', line_nr=''):
     def sym(x): return ']' if x is '[' else x
-    return '\n'.join('{}{:>4}{} {}'.format(symbol, line_nr, sym(symbol), line)
+    return '\n'.join('{}{:>5}{} {}'.format(symbol, sym(symbol), line_nr, line)
                      for line in lines.rstrip('\n').split('\n'))
 
 
@@ -122,6 +123,7 @@ def print_section_beginning(console_printer, section):
     """
     Will be called after initialization current_section in
     begin_section()
+
     :param console_printer: Object to print messages on the console.
     :param section:         The section that will get executed now.
     """
@@ -129,14 +131,15 @@ def print_section_beginning(console_printer, section):
         name=section.name))
 
 
-def nothing_done(log_printer=None):
+def nothing_done(log_printer):
     """
     Will be called after processing a coafile when nothing had to be done,
     i.e. no section was enabled/targeted.
+
     :param log_printer: A LogPrinter object.
     """
-    logging.warning('No existent section was targeted or enabled. Nothing to '
-                    'do.')
+    log_printer.warn('No existent section was targeted or enabled. '
+                     'Nothing to do.')
 
 
 def acquire_actions_and_apply(console_printer,
@@ -148,6 +151,7 @@ def acquire_actions_and_apply(console_printer,
                               apply_single=False):
     """
     Acquires applicable actions and applies them.
+
     :param console_printer: Object to print messages on the console.
     :param section:         Name of section to which the result belongs.
     :param file_diff_dict:  Dictionary containing filenames as keys and Diff
@@ -162,37 +166,45 @@ def acquire_actions_and_apply(console_printer,
     cli_actions = CLI_ACTIONS if cli_actions is None else cli_actions
     failed_actions = set()
     applied_actions = {}
-
     while True:
-        action_dict = {}
-        metadata_list = []
-
+        actions = []
         for action in cli_actions:
-            if action.is_applicable(result,
-                                    file_dict,
-                                    file_diff_dict,
-                                    tuple(applied_actions.keys())) is True:
-                metadata = action.get_metadata()
-                action_dict[metadata.name] = action
-                metadata_list.append(metadata)
+            if action.is_applicable(result, file_dict, file_diff_dict) is True:
+                actions.append(action)
 
-        if not metadata_list:
+        if actions == []:
             return
 
+        action_dict = {}
+        metadata_list = []
+        for action in actions:
+            metadata = action.get_metadata()
+            action_dict[metadata.name] = action
+            metadata_list.append(metadata)
+
         # User can always choose no action which is guaranteed to succeed
-        continue_interaction = ask_for_action_and_apply(
-            console_printer,
-            section,
-            metadata_list,
-            action_dict,
-            failed_actions,
-            result,
-            file_diff_dict,
-            file_dict,
-            applied_actions,
-            apply_single=apply_single
-        )
-        if not continue_interaction:
+        if apply_single:
+            ask_for_action_and_apply(console_printer,
+                                     section,
+                                     metadata_list,
+                                     action_dict,
+                                     failed_actions,
+                                     result,
+                                     file_diff_dict,
+                                     file_dict,
+                                     applied_actions,
+                                     apply_single=apply_single)
+            break
+        elif not ask_for_action_and_apply(console_printer,
+                                          section,
+                                          metadata_list,
+                                          action_dict,
+                                          failed_actions,
+                                          result,
+                                          file_diff_dict,
+                                          file_dict,
+                                          applied_actions,
+                                          apply_single=apply_single):
             break
 
 
@@ -202,6 +214,7 @@ def print_lines(console_printer,
     """
     Prints the lines between the current and the result line. If needed
     they will be shortened.
+
     :param console_printer: Object to print messages on the console.
     :param file_dict:       A dictionary containing all files as values with
                             filenames as key.
@@ -228,24 +241,21 @@ def print_lines(console_printer,
         printed_chars = 0
         if i == sourcerange.start.line and sourcerange.start.column:
             console_printer.print(highlight_text(
-                no_color, line[:sourcerange.start.column - 1],
-                BackgroundMessageStyle, lexer), end='')
+                no_color, line[:sourcerange.start.column - 1], lexer), end='')
 
             printed_chars = sourcerange.start.column - 1
 
         if i == sourcerange.end.line and sourcerange.end.column:
             console_printer.print(highlight_text(
                 no_color, line[printed_chars:sourcerange.end.column - 1],
-                BackgroundSourceRangeStyle, lexer), end='')
+                lexer, BackgroundSourceRangeStyle), end='')
 
             console_printer.print(highlight_text(
-               no_color, line[sourcerange.end.column - 1:],
-               BackgroundSourceRangeStyle, lexer), end='')
+               no_color, line[sourcerange.end.column - 1:], lexer), end='')
             console_printer.print('')
         else:
             console_printer.print(highlight_text(
-                no_color, line[printed_chars:], BackgroundMessageStyle, lexer),
-                                  end='')
+                no_color, line[printed_chars:], lexer), end='')
             console_printer.print('')
 
 
@@ -258,6 +268,7 @@ def print_result(console_printer,
                  apply_single=False):
     """
     Prints the result to console.
+
     :param console_printer: Object to print messages on the console.
     :param section:         Name of section to which the result belongs.
     :param file_diff_dict:  Dictionary containing filenames as keys and Diff
@@ -294,7 +305,7 @@ def print_result(console_printer,
                               color=RESULT_SEVERITY_COLORS[result.severity])
     lexer = TextLexer()
     result.message = highlight_text(no_color, result.message,
-                                    BackgroundMessageStyle, lexer)
+                                    lexer, BackgroundMessageStyle)
     console_printer.print(format_lines(result.message, symbol='!'))
 
     if interactive:
@@ -324,6 +335,7 @@ def print_result(console_printer,
 def print_diffs_info(diffs, printer):
     """
     Prints diffs information (number of additions and deletions) to the console.
+
     :param diffs:    List of Diff objects containing corresponding diff info.
     :param printer:  Object responsible for printing diffs on console.
     """
@@ -345,6 +357,7 @@ def print_results_formatted(log_printer,
     """
     Prints results through the format string from the format setting done by
     user.
+
     :param log_printer:    Printer responsible for logging the messages.
     :param section:        The section to which the results belong.
     :param result_list:    List of Result objects containing the corresponding
@@ -387,19 +400,9 @@ def print_results_formatted(log_printer,
                                         message=result.message,
                                         **format_args))
         except KeyError as exception:
-            log_exception(
+            log_printer.log_exception(
                 'Unable to print the result with the given format string.',
                 exception)
-
-
-def print_bears_formatted(bears, format=None):
-    format_str = format or ('name:{name}:can_detect:{can_detect}:'
-                            'can_fix:{can_fix}:description:{description}')
-    print('\n\n'.join(format_str.format(name=bear.name,
-                                        can_detect=bear.CAN_DETECT,
-                                        can_fix=bear.CAN_FIX,
-                                        description=bear.get_metadata().desc)
-                      for bear in bears))
 
 
 def print_affected_files(console_printer,
@@ -408,6 +411,7 @@ def print_affected_files(console_printer,
                          file_dict):
     """
     Prints all the affected files and affected lines within them.
+
     :param console_printer: Object to print messages on the console.
     :param log_printer:     Printer responsible for logging the messages.
     :param result:          The result to print the context for.
@@ -422,10 +426,10 @@ def print_affected_files(console_printer,
             if (
                     sourcerange.file is not None and
                     sourcerange.file not in file_dict):
-                logging.warning('The context for the result ({}) cannot '
-                                'be printed because it refers to a file '
-                                "that doesn't seem to exist ({})"
-                                '.'.format(result, sourcerange.file))
+                log_printer.warn('The context for the result ({}) cannot '
+                                 'be printed because it refers to a file '
+                                 "that doesn't seem to exist ({})"
+                                 '.'.format(result, sourcerange.file))
             else:
                 print_affected_lines(console_printer,
                                      file_dict,
@@ -441,6 +445,7 @@ def print_results_no_input(log_printer,
                            apply_single=False):
     """
     Prints all non interactive results in a section
+
     :param log_printer:    Printer responsible for logging the messages.
     :param section:        The section to which the results belong to.
     :param result_list:    List containing the results
@@ -455,7 +460,7 @@ def print_results_no_input(log_printer,
     for result in result_list:
 
         print_affected_files(console_printer,
-                             None,
+                             log_printer,
                              result,
                              file_dict)
 
@@ -477,6 +482,7 @@ def print_results(log_printer,
                   apply_single=False):
     """
     Prints all the results in a section.
+
     :param log_printer:    Printer responsible for logging the messages.
     :param section:        The section to which the results belong to.
     :param result_list:    List containing the results
@@ -491,7 +497,7 @@ def print_results(log_printer,
     for result in sorted(result_list):
 
         print_affected_files(console_printer,
-                             None,
+                             log_printer,
                              result,
                              file_dict)
 
@@ -506,6 +512,7 @@ def print_results(log_printer,
 def print_affected_lines(console_printer, file_dict, sourcerange):
     """
     Prints the lines affected by the bears.
+
     :param console_printer:    Object to print messages on the console.
     :param file_dict:          A dictionary containing all files with filename
                                as key.
@@ -530,13 +537,12 @@ def require_setting(setting_name, arr, section):
     """
     This method is responsible for prompting a user about a missing setting and
     taking its value as input from the user.
+
     :param setting_name: Name of the setting missing
     :param arr:          A list containing a description in [0] and the name
                          of the bears who need this setting in [1] and
                          following.
     :param section:      The section the action corresponds to.
-    :param return:       Returns the setting value that was requested from the
-                         user.
     """
     needed = join_names(arr[1:])
 
@@ -551,6 +557,7 @@ def require_setting(setting_name, arr, section):
 def acquire_settings(log_printer, settings_names_dict, section):
     """
     This method prompts the user for the given settings.
+
     :param log_printer:
         Printer responsible for logging the messages. This is needed to comply
         with the interface.
@@ -558,11 +565,16 @@ def acquire_settings(log_printer, settings_names_dict, section):
         A dictionary with the settings name as key and a list containing a
         description in [0] and the name of the bears who need this setting in
         [1] and following.
+
                         Example:
+
     ::
+
         {"UseTabs": ["describes whether tabs should be used instead of spaces",
                      "SpaceConsistencyBear",
                      "SomeOtherBear"]}
+
+
     :param section:
         The section the action corresponds to.
     :return:
@@ -586,6 +598,7 @@ def get_action_info(section, action, failed_actions):
     """
     Gets all the required Settings for an action. It updates the section with
     the Settings.
+
     :param section:         The section the action corresponds to.
     :param action:          The action to get the info for.
     :param failed_actions:  A set of all actions that have failed. A failed
@@ -609,22 +622,19 @@ def choose_action(console_printer, actions, apply_single=False):
     """
     Presents the actions available to the user and takes as input the action
     the user wants to choose.
+
     :param console_printer: Object to print messages on the console.
     :param actions:         Actions available to the user.
     :param apply_single:    The action that should be applied for all results.
                             If it's not selected, has a value of False.
-    :return:                Return a tuple of lists, a list with the names of
-                            actions that needs to be applied and a list with
-                            with the description of the actions.
+    :return:                Return choice of action of user.
     """
     actions.insert(0, DoNothingAction().get_metadata())
-    actions_desc = []
-    actions_name = []
     if apply_single:
         for i, action in enumerate(actions, 0):
             if apply_single == action.desc:
-                return ([action.desc], [action.name])
-        return (['Do (N)othing'], ['Do (N)othing'])
+                return i
+        return 0
     else:
         while True:
             for i, action in enumerate(actions, 0):
@@ -635,34 +645,48 @@ def choose_action(console_printer, actions, apply_single=False):
             line = format_lines(STR_ENTER_NUMBER, symbol='[')
 
             choice = input(line)
-            choice = str(choice)
-
-            for c in choice:
-                c = str(c)
-                actions_desc_len = len(actions_desc)
-                if c.isnumeric():
-                    for i, action in enumerate(actions, 0):
-                        c = int(c)
-                        if i == c:
-                            actions_desc.append(action.desc)
-                            actions_name.append(action.name)
-                            break
-                elif c.isalpha():
-                    c = c.upper()
-                    c = '(' + c + ')'
-                    for i, action in enumerate(actions, 1):
-                        if c in action.desc:
-                            actions_desc.append(action.desc)
-                            actions_name.append(action.name)
-                            break
-                if actions_desc_len == len(actions_desc):
-                    console_printer.print(format_lines(
-                        'Please enter a valid letter.', symbol='['))
-
             if not choice:
-                actions_desc.append(DoNothingAction().get_metadata().desc)
-                actions_name.append(DoNothingAction().get_metadata().name)
-            return (actions_desc, actions_name)
+                return 0
+            choice = str(choice)
+            if choice.isalpha():
+                choice = choice.upper()
+                choice = '(' + choice + ')'
+                for i, action in enumerate(actions, 0):
+                    if choice in action.desc:
+                        return i
+            elif choice.isnumeric():
+                choice = int(choice)
+                if 0 <= choice <= len(actions):
+                    return choice
+
+            console_printer.print(format_lines(
+                'Please enter a valid letter.', symbol='['))
+
+
+def print_actions(console_printer, section, actions, failed_actions,
+                  apply_single):
+    """
+    Prints the given actions and lets the user choose.
+
+    :param console_printer: Object to print messages on the console.
+    :param actions:         A list of FunctionMetadata objects.
+    :param failed_actions:  A set of all actions that have failed. A failed
+                            action remains in the list until it is
+                            successfully executed.
+    :param apply_single:    The action that should be applied for all results.
+                            If it's not selected, has a value of False.
+    :return:                A tuple with the name member of the
+                            FunctionMetadata object chosen by the user
+                            and a Section containing at least all needed
+                            values for the action. If the user did
+                            choose to do nothing, return (None, None).
+    """
+    choice = choose_action(console_printer, actions, apply_single)
+
+    if choice == 0:
+        return None, None
+
+    return get_action_info(section, actions[choice], failed_actions)
 
 
 def try_to_apply_action(action_name,
@@ -678,6 +702,7 @@ def try_to_apply_action(action_name,
                         applied_actions):
     """
     Try to apply the given action.
+
     :param action_name:     The name of the action.
     :param choose_action:   The action object that will be applied.
     :param console_printer: Object to print messages on the console.
@@ -717,6 +742,85 @@ def try_to_apply_action(action_name,
         failed_actions.add(action_name)
 
 
+def apply_chain_action(console_printer,
+                       section,
+                       metadata_list,
+                       action_dict,
+                       failed_actions,
+                       result,
+                       file_diff_dict,
+                       file_dict,
+                       applied_actions):
+    """
+    Asks the user for an action and applies it.
+
+    :param console_printer: Object to print messages on the console.
+    :param section:         Currently active section.
+    :param metadata_list:   Contains metadata for all the actions.
+    :param action_dict:     Contains the action names as keys and their
+                            references as values.
+    :param failed_actions:  A set of all actions that have failed. A failed
+                            action remains in the list until it is successfully
+                            executed.
+    :param result:          Result corresponding to the actions.
+    :param file_diff_dict:  If it is an action which applies a patch, this
+                            contains the diff of the patch to be applied to
+                            the file with filename as keys.
+    :param file_dict:       Dictionary with filename as keys and its contents
+                            as values.
+    :param applied_actions: A dictionary that contains the result, file_dict,
+                            file_diff_dict and the section for an action.
+    :return:                Return False if the action that is applied is Do
+                            (N)othing or True otherwise.
+    """
+    flag = False
+
+    action_list = str(section['actions'])
+    action_list = list(action_list)
+    for action_choice in action_list:
+        if action_choice.isalpha():
+            action_choice = action_choice.upper()
+            action_choice = '(' + action_choice + ')'
+            if action_choice == '(N)':
+                return False
+            flag = False
+            for action_n in metadata_list:
+                if action_choice in action_n.desc:
+                    chosen_action = action_dict[action_n.name]
+                    action_choice_made = action_choice
+                    flag = True
+                    break
+            if flag:
+                for index, action_details in enumerate(metadata_list, 1):
+                    if action_choice_made in action_details.desc:
+                        action_name, section = get_action_info(
+                            section, metadata_list[index-1], failed_actions)
+                        try_to_apply_action(action_name,
+                                            chosen_action,
+                                            console_printer,
+                                            section,
+                                            metadata_list,
+                                            action_dict,
+                                            failed_actions,
+                                            result,
+                                            file_diff_dict,
+                                            file_dict,
+                                            applied_actions)
+            else:
+                console_printer.print(
+                    format_lines('Couldn\'t apply \'{}\''.format(
+                        action_choice), symbol='['),
+                    color=HIGHLIGHTED_CODE_COLOR)
+        else:
+            console_printer.print(
+                format_lines('Please enter a letter'.format(
+                    action_choice), symbol='['),
+                color=HIGHLIGHTED_CODE_COLOR)
+
+    section.delete_setting('actions')
+    return True
+
+
 def ask_for_action_and_apply(console_printer,
                              section,
                              metadata_list,
@@ -729,6 +833,7 @@ def ask_for_action_and_apply(console_printer,
                              apply_single=False):
     """
     Asks the user for an action and applies it.
+
     :param console_printer: Object to print messages on the console.
     :param section:         Currently active section.
     :param metadata_list:   Contains metadata for all the actions.
@@ -750,55 +855,38 @@ def ask_for_action_and_apply(console_printer,
     :return:                Returns a boolean value. True will be returned, if
                             it makes sense that the user may choose to execute
                             another action, False otherwise.
-                            If apply_single ist set, always return False.
     """
-    actions_desc, actions_name = choose_action(console_printer, metadata_list,
-                                               apply_single)
-
-    if apply_single:
-        if apply_single == 'Do (N)othing':
-            return False
-        for index, action_details in enumerate(metadata_list, 1):
-            if apply_single == action_details.desc:
-                action_name, section = get_action_info(
-                    section, metadata_list[index - 1], failed_actions)
-                chosen_action = action_dict[action_details.name]
-                try_to_apply_action(action_name,
-                                    chosen_action,
-                                    console_printer,
-                                    section,
-                                    metadata_list,
-                                    action_dict,
-                                    failed_actions,
-                                    result,
-                                    file_diff_dict,
-                                    file_dict,
-                                    applied_actions)
+    action_name, section = print_actions(console_printer, section,
+                                         metadata_list, failed_actions,
+                                         apply_single=apply_single)
+    if action_name is None:
         return False
-    else:
-        for action_choice, action_choice_name in zip(actions_desc,
-                                                     actions_name):
-            if action_choice == 'Do (N)othing':
-                return False
-            chosen_action = action_dict[action_choice_name]
-            action_choice_made = action_choice
-            for index, action_details in enumerate(metadata_list, 1):
-                if action_choice_made in action_details.desc:
-                    action_name, section = get_action_info(
-                        section, metadata_list[index-1], failed_actions)
-                    try_to_apply_action(action_name,
-                                        chosen_action,
-                                        console_printer,
-                                        section,
-                                        metadata_list,
-                                        action_dict,
-                                        failed_actions,
-                                        result,
-                                        file_diff_dict,
-                                        file_dict,
-                                        applied_actions)
 
-    return True
+    if action_name == 'ChainPatchAction':
+        ret = apply_chain_action(console_printer,
+                                 section,
+                                 metadata_list,
+                                 action_dict,
+                                 failed_actions,
+                                 result,
+                                 file_diff_dict,
+                                 file_dict,
+                                 applied_actions)
+        return ret
+    else:
+        chosen_action = action_dict[action_name]
+        try_to_apply_action(action_name,
+                            chosen_action,
+                            console_printer,
+                            section,
+                            metadata_list,
+                            action_dict,
+                            failed_actions,
+                            result,
+                            file_diff_dict,
+                            file_dict,
+                            applied_actions)
+        return True
 
 
 def show_enumeration(console_printer,
@@ -810,9 +898,11 @@ def show_enumeration(console_printer,
     This function takes as input an iterable object (preferably a list or
     a dict) and prints it in a stylized format. If the iterable object is
     empty, it prints a specific statement given by the user. An e.g :
+
     <indentation>Title:
     <indentation> * Item 1
     <indentation> * Item 2
+
     :param console_printer: Object to print messages on the console.
     :param title:           Title of the text to be printed
     :param items:           The iterable object.
@@ -836,17 +926,19 @@ def show_enumeration(console_printer,
 def show_bear(bear,
               show_description,
               show_params,
-              console_printer,
-              args=None):
+              console_printer):
     """
     Displays all information about a bear.
+
     :param bear:             The bear to be displayed.
     :param show_description: True if the main description should be shown.
     :param show_params:      True if the details should be shown.
     :param console_printer:  Object to print messages on the console.
-    :param args:             Args passed to coala command.
     """
     console_printer.print(bear.name, color='blue')
+
+    if not show_description and not show_params:
+        return
 
     metadata = bear.get_metadata()
 
@@ -862,8 +954,6 @@ def show_bear(bear,
             '  ',
             'The bear does not provide information about which languages '
             'it can analyze.')
-
-    if (args and args.show_settings) or show_params:
         show_enumeration(console_printer,
                          'Needed Settings:',
                          metadata.non_optional_params,
@@ -874,8 +964,6 @@ def show_bear(bear,
                          metadata.optional_params,
                          '  ',
                          'No optional settings.')
-
-    if show_params:
         show_enumeration(console_printer,
                          'Can detect:',
                          bear.can_detect,
@@ -895,10 +983,10 @@ def show_bear(bear,
 def print_bears(bears,
                 show_description,
                 show_params,
-                console_printer,
-                args=None):
+                console_printer):
     """
     Presents all bears being used in a stylized manner.
+
     :param bears:            It's a dictionary with bears as keys and list of
                              sections containing those bears as values.
     :param show_description: True if the main description of the bears should
@@ -906,53 +994,31 @@ def print_bears(bears,
     :param show_params:      True if the parameters and their description
                              should be shown.
     :param console_printer:  Object to print messages on the console.
-    :param args:             Args passed to coala command.
     """
-    if not bears and not (args and args.json):
+    if not bears:
         console_printer.print('No bears to show. Did you forget to install '
                               'the `coala-bears` package? Try `pip3 install '
                               'coala-bears`.')
         return
 
-    results = [bear for bear, _ in sorted(bears.items(),
-                                          key=lambda bear_tuple:
-                                          bear_tuple[0].name.lower())]
-    if args and args.json:
-        from coalib.output.JSONEncoder import create_json_encoder
-        JSONEncoder = create_json_encoder(use_relpath=args.relpath)
-        json_output = {'bears': results}
-        import json
-        json_formatted_output = json.dumps(json_output,
-                                           cls=JSONEncoder,
-                                           sort_keys=True,
-                                           indent=2,
-                                           separators=(',', ': '))
-        if args.output:
-            filename = args.output[0]
-            with open(filename, 'w') as fp:
-                fp.write(json_formatted_output)
-        else:
-            print(json_formatted_output)
-    elif args and args.format:
-        print_bears_formatted(results)
-    else:
-        for bear in results:
-            show_bear(bear,
-                      show_description,
-                      show_params,
-                      console_printer,
-                      args)
+    for bear, sections in sorted(bears.items(),
+                                 key=lambda bear_tuple:
+                                 bear_tuple[0].name.lower()):
+        show_bear(bear,
+                  show_description,
+                  show_params,
+                  console_printer)
 
 
 def show_bears(local_bears,
                global_bears,
                show_description,
                show_params,
-               console_printer,
-               args=None):
+               console_printer):
     """
     Extracts all the bears from each enabled section or the sections in the
     targets and passes a dictionary to the show_bears_callback method.
+
     :param local_bears:      Dictionary of local bears with section names
                              as keys and bear list as values.
     :param global_bears:     Dictionary of global bears with section
@@ -962,17 +1028,17 @@ def show_bears(local_bears,
     :param show_params:      True if the parameters and their description
                              should be shown.
     :param console_printer:  Object to print messages on the console.
-    :param args:             Args passed to coala command.
     """
     bears = inverse_dicts(local_bears, global_bears)
 
-    print_bears(bears, show_description, show_params, console_printer, args)
+    print_bears(bears, show_description, show_params, console_printer)
 
 
 def show_language_bears_capabilities(language_bears_capabilities,
                                      console_printer):
     """
     Displays what the bears can detect and fix.
+
     :param language_bears_capabilities:
         Dictionary with languages as keys and their bears' capabilities as
         values. The capabilities are stored in a tuple of two elements where the
@@ -1000,4 +1066,4 @@ def show_language_bears_capabilities(language_bears_capabilities,
             else:
                 console_printer.print('coala does not support ', color='red',
                                       end='')
-console_printer.print(language, color='blue')
+                console_printer.print(language, color='blue')
