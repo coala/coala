@@ -1,8 +1,7 @@
 import unittest
 
 from coalib import coala
-from coalib.parsing.FilterHelper import (
-    available_filters, InvalidFilterException)
+from coalib.parsing.FilterHelper import available_filters
 from tests.TestUtilities import (
     bear_test_module,
     execute_coala,
