@@ -1,5 +1,5 @@
 # all requirements are needed so that autodoc can find them
 -r requirements.txt
 -r test-requirements.txt
-sphinx~=1.6.2
+sphinx>=1.6.2,<1.6.6
 sphinx-argparse~=0.2.1
