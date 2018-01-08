@@ -9,7 +9,7 @@ try:
     # This import has side effects and is needed to make input() behave nicely
     import readline  # pylint: disable=unused-import
 except ImportError:  # pragma: no cover
-    pass
+pass
 
 from coalib.misc.DictUtilities import inverse_dicts
 from coalib.misc.Exceptions import log_exception
@@ -122,7 +122,6 @@ def print_section_beginning(console_printer, section):
     """
     Will be called after initialization current_section in
     begin_section()
-
     :param console_printer: Object to print messages on the console.
     :param section:         The section that will get executed now.
     """
@@ -134,7 +133,6 @@ def nothing_done(log_printer=None):
     """
     Will be called after processing a coafile when nothing had to be done,
     i.e. no section was enabled/targeted.
-
     :param log_printer: A LogPrinter object.
     """
     logging.warning('No existent section was targeted or enabled. Nothing to '
@@ -150,7 +148,6 @@ def acquire_actions_and_apply(console_printer,
                               apply_single=False):
     """
     Acquires applicable actions and applies them.
-
     :param console_printer: Object to print messages on the console.
     :param section:         Name of section to which the result belongs.
     :param file_diff_dict:  Dictionary containing filenames as keys and Diff
@@ -205,7 +202,6 @@ def print_lines(console_printer,
     """
     Prints the lines between the current and the result line. If needed
     they will be shortened.
-
     :param console_printer: Object to print messages on the console.
     :param file_dict:       A dictionary containing all files as values with
                             filenames as key.
@@ -262,7 +258,6 @@ def print_result(console_printer,
                  apply_single=False):
     """
     Prints the result to console.
-
     :param console_printer: Object to print messages on the console.
     :param section:         Name of section to which the result belongs.
     :param file_diff_dict:  Dictionary containing filenames as keys and Diff
@@ -329,7 +324,6 @@ def print_result(console_printer,
 def print_diffs_info(diffs, printer):
     """
     Prints diffs information (number of additions and deletions) to the console.
-
     :param diffs:    List of Diff objects containing corresponding diff info.
     :param printer:  Object responsible for printing diffs on console.
     """
@@ -351,7 +345,6 @@ def print_results_formatted(log_printer,
     """
     Prints results through the format string from the format setting done by
     user.
-
     :param log_printer:    Printer responsible for logging the messages.
     :param section:        The section to which the results belong.
     :param result_list:    List of Result objects containing the corresponding
@@ -415,7 +408,6 @@ def print_affected_files(console_printer,
                          file_dict):
     """
     Prints all the affected files and affected lines within them.
-
     :param console_printer: Object to print messages on the console.
     :param log_printer:     Printer responsible for logging the messages.
     :param result:          The result to print the context for.
@@ -449,7 +441,6 @@ def print_results_no_input(log_printer,
                            apply_single=False):
     """
     Prints all non interactive results in a section
-
     :param log_printer:    Printer responsible for logging the messages.
     :param section:        The section to which the results belong to.
     :param result_list:    List containing the results
@@ -486,7 +477,6 @@ def print_results(log_printer,
                   apply_single=False):
     """
     Prints all the results in a section.
-
     :param log_printer:    Printer responsible for logging the messages.
     :param section:        The section to which the results belong to.
     :param result_list:    List containing the results
@@ -516,7 +506,6 @@ def print_results(log_printer,
 def print_affected_lines(console_printer, file_dict, sourcerange):
     """
     Prints the lines affected by the bears.
-
     :param console_printer:    Object to print messages on the console.
     :param file_dict:          A dictionary containing all files with filename
                                as key.
@@ -541,7 +530,6 @@ def require_setting(setting_name, arr, section):
     """
     This method is responsible for prompting a user about a missing setting and
     taking its value as input from the user.
-
     :param setting_name: Name of the setting missing
     :param arr:          A list containing a description in [0] and the name
                          of the bears who need this setting in [1] and
@@ -563,7 +551,6 @@ def require_setting(setting_name, arr, section):
 def acquire_settings(log_printer, settings_names_dict, section):
     """
     This method prompts the user for the given settings.
-
     :param log_printer:
         Printer responsible for logging the messages. This is needed to comply
         with the interface.
@@ -571,16 +558,11 @@ def acquire_settings(log_printer, settings_names_dict, section):
         A dictionary with the settings name as key and a list containing a
         description in [0] and the name of the bears who need this setting in
         [1] and following.
-
                         Example:
-
     ::
-
         {"UseTabs": ["describes whether tabs should be used instead of spaces",
                      "SpaceConsistencyBear",
                      "SomeOtherBear"]}
-
-
     :param section:
         The section the action corresponds to.
     :return:
@@ -604,7 +586,6 @@ def get_action_info(section, action, failed_actions):
     """
     Gets all the required Settings for an action. It updates the section with
     the Settings.
-
     :param section:         The section the action corresponds to.
     :param action:          The action to get the info for.
     :param failed_actions:  A set of all actions that have failed. A failed
@@ -628,7 +609,6 @@ def choose_action(console_printer, actions, apply_single=False):
     """
     Presents the actions available to the user and takes as input the action
     the user wants to choose.
-
     :param console_printer: Object to print messages on the console.
     :param actions:         Actions available to the user.
     :param apply_single:    The action that should be applied for all results.
@@ -698,7 +678,6 @@ def try_to_apply_action(action_name,
                         applied_actions):
     """
     Try to apply the given action.
-
     :param action_name:     The name of the action.
     :param choose_action:   The action object that will be applied.
     :param console_printer: Object to print messages on the console.
@@ -750,7 +729,6 @@ def ask_for_action_and_apply(console_printer,
                              apply_single=False):
     """
     Asks the user for an action and applies it.
-
     :param console_printer: Object to print messages on the console.
     :param section:         Currently active section.
     :param metadata_list:   Contains metadata for all the actions.
@@ -832,11 +810,9 @@ def show_enumeration(console_printer,
     This function takes as input an iterable object (preferably a list or
     a dict) and prints it in a stylized format. If the iterable object is
     empty, it prints a specific statement given by the user. An e.g :
-
     <indentation>Title:
     <indentation> * Item 1
     <indentation> * Item 2
-
     :param console_printer: Object to print messages on the console.
     :param title:           Title of the text to be printed
     :param items:           The iterable object.
@@ -864,7 +840,6 @@ def show_bear(bear,
               args=None):
     """
     Displays all information about a bear.
-
     :param bear:             The bear to be displayed.
     :param show_description: True if the main description should be shown.
     :param show_params:      True if the details should be shown.
@@ -924,7 +899,6 @@ def print_bears(bears,
                 args=None):
     """
     Presents all bears being used in a stylized manner.
-
     :param bears:            It's a dictionary with bears as keys and list of
                              sections containing those bears as values.
     :param show_description: True if the main description of the bears should
@@ -979,7 +953,6 @@ def show_bears(local_bears,
     """
     Extracts all the bears from each enabled section or the sections in the
     targets and passes a dictionary to the show_bears_callback method.
-
     :param local_bears:      Dictionary of local bears with section names
                              as keys and bear list as values.
     :param global_bears:     Dictionary of global bears with section
@@ -1000,7 +973,6 @@ def show_language_bears_capabilities(language_bears_capabilities,
                                      console_printer):
     """
     Displays what the bears can detect and fix.
-
     :param language_bears_capabilities:
         Dictionary with languages as keys and their bears' capabilities as
         values. The capabilities are stored in a tuple of two elements where the
@@ -1028,4 +1000,4 @@ def show_language_bears_capabilities(language_bears_capabilities,
             else:
                 console_printer.print('coala does not support ', color='red',
                                       end='')
-                console_printer.print(language, color='blue')
+console_printer.print(language, color='blue')
