@@ -369,7 +369,7 @@ class LinterComponentTest(unittest.TestCase):
                 '@@ -1,3 +1,4 @@',
                 '-void main()  {',
                 '-return 09;',
-                '+void main()'
+                '+void main()',
                 '+{',
                 '+       return 9;',
                 ' }']

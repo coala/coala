@@ -289,7 +289,7 @@ class DiffTest(unittest.TestCase):
         target = ['A\n', 'Y\n', 'Z\n', 'C']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
-                '@@ -1,3 +1,5 @@',
+                '@@ -1,3 +1,4 @@',
                 ' A',
                 '+Y',
                 '+Z',
@@ -304,7 +304,7 @@ class DiffTest(unittest.TestCase):
         target = ['Y\n', 'Z\n', 'C']
         diff = ['--- a/testfile',
                 '+++ b/testfile',
-                '@@ -1,3 +1,5 @@',
+                '@@ -1,3 +1,3 @@',
                 '-A',
                 '+Y',
                 '+Z',
