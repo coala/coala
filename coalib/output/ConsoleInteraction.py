@@ -1,4 +1,4 @@
-import copy
+import cop
 import logging
 import platform
 import os
