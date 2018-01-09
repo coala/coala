@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import logging
 import os
 import platform
@@ -152,6 +153,11 @@ def run_coala(console_printer=None,
         cache = None
         if not sections['cli'].get('disable_caching', False):
             cache = FileCache(None, os.getcwd(), flush_cache)
+
+        if targets:
+            sections = OrderedDict(
+                (section_name, sections[section_name])
+                for section_name in targets)
 
         for section_name, section in sections.items():
             if not section.is_enabled(targets):
