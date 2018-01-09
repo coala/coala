@@ -236,7 +236,8 @@ Before you push the commit, ensure that you are not developing on master again
 by running:
 
 ::
-    git status
+
+    $ git status
 
 Now you will need to push the commit to the fork. All you have to do is:
 
