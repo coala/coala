@@ -5,11 +5,15 @@ import os
 
 from termcolor import colored
 
-try:
-    # This import has side effects and is needed to make input() behave nicely
-    import readline  # pylint: disable=unused-import
-except ImportError:  # pragma: no cover
-    pass
+if os.name == 'Windows':
+    try:
+        '''
+        This import has side effects and is
+        needed to make input() behave nicely
+        '''
+        import readline  # pylint: disable=unused-import
+    except ImportError as e:  # pragma: no cover
+        print(e)
 
 from coalib.misc.DictUtilities import inverse_dicts
 from coalib.misc.Exceptions import log_exception
