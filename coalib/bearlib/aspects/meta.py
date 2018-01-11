@@ -41,6 +41,7 @@ class aspectclass(type):
         and usage.
         """
         aspectname = subcls.__name__
+        sub_qualname = '%s.%s' % (cls.__qualname__, aspectname)
 
         docs = getattr(subcls, 'docs', None)
         aspectdocs = Documentation(subcls.__doc__, **{
@@ -53,6 +54,8 @@ class aspectclass(type):
             if isinstance(member, Taste):
                 # tell the taste its own name
                 member.name = name
+                # tell its owner name
+                member.aspect_name = sub_qualname
                 subtastes[name] = member
 
         class Sub(subcls, aspectbase, metaclass=aspectclass):
@@ -68,7 +71,7 @@ class aspectclass(type):
             Sub = generate_repr(*members)(Sub)
 
         Sub.__name__ = aspectname
-        Sub.__qualname__ = '%s.%s' % (cls.__qualname__, aspectname)
+        Sub.__qualname__ = sub_qualname
         cls.subaspects[aspectname] = Sub
         setattr(cls, aspectname, Sub)
         return Sub

@@ -51,7 +51,6 @@ def execute_bear(bear, *args, **kwargs):
             msg.append(bear.message_queue.get().message)
         msg += console_output
         raise AssertionError(str(err) + ''.join('\n' + m for m in msg))
-    return list(bear_output_generator)
 
 
 def get_results(local_bear,

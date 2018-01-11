@@ -1,5 +1,4 @@
 import os
-import re
 import sys
 import unittest
 
@@ -12,8 +11,6 @@ class coalaCITest(unittest.TestCase):
 
     def setUp(self):
         self.old_argv = sys.argv
-        self.unescaped_coafile = os.path.abspath('./.coafile')
-        self.coafile = re.escape(self.unescaped_coafile)
 
     def tearDown(self):
         sys.argv = self.old_argv
@@ -61,7 +58,7 @@ class coalaCITest(unittest.TestCase):
             retval, stdout, stderr = execute_coala(coala.main, 'coala',
                                                    '--non-interactive',
                                                    '-c', os.devnull,
-                                                   '-f', re.escape(filename),
+                                                   '-f', filename,
                                                    '-b',
                                                    'SpaceConsistencyTestBear',
                                                    '--settings',
@@ -87,7 +84,7 @@ class coalaCITest(unittest.TestCase):
                                                    '--non-interactive',
                                                    '-c', os.devnull,
                                                    '-b', 'LineCountTestBear',
-                                                   '-f', re.escape(filename),
+                                                   '-f', filename,
                                                    debug=debug)
             self.assertIn('This file has 1 lines.',
                           stdout,
@@ -105,7 +102,7 @@ class coalaCITest(unittest.TestCase):
             retval, stdout, stderr = execute_coala(
                 coala.main, 'coala', '--non-interactive',
                 '-c', os.devnull,
-                '-f', re.escape(filename),
+                '-f', filename,
                 '-b', 'SpaceConsistencyTestBear',
                 '--settings', 'use_spaces=True',
                 debug=debug)
@@ -137,3 +134,41 @@ class coalaCITest(unittest.TestCase):
                 r'were not provided.'
         ):
             self.test_fail_acquire_settings(debug=True)
+
+    def test_limit_files_affirmative(self):
+        sample_text = '\t#include <a>'
+        with open('match.cpp', 'w') as match, \
+                open('noMatch.cpp', 'w') as no_match:
+            match.write(sample_text)
+            no_match.write(sample_text)
+        with bear_test_module():
+            retval, stdout, stderr = execute_coala(
+                coala.main, 'coala', '--non-interactive',
+                '-c', os.devnull,
+                '--limit-files', 'match*',
+                '-f', 'match.cpp', 'noMatch.cpp',
+                '-b', 'SpaceConsistencyTestBear',
+                '--settings', 'use_spaces=True')
+            os.remove('match.cpp')
+            os.remove('noMatch.cpp')
+            self.assertIn('match.cpp', stdout)
+            self.assertNotIn('noMatch.cpp', stdout)
+            self.assertIn("Applied 'ShowPatchAction'", stderr)
+            self.assertEqual(retval, 5,
+                             'coala must return exitcode 5 when it '
+                             'autofixes the code.')
+
+    def test_limit_files_negative(self):
+        with bear_test_module(), \
+                prepare_file(['\t#include <a>'], None) as (lines, filename):
+            retval, stdout, stderr = execute_coala(
+                coala.main, 'coala', '--non-interactive',
+                '-c', os.devnull,
+                '--limit-files', 'some_pattern',
+                '-f', filename,
+                '-b', 'SpaceConsistencyTestBear',
+                '--settings', 'use_spaces=True',)
+            self.assertEqual('Executing section cli...\n', stdout)
+            self.assertFalse(stderr)
+            self.assertEqual(retval, 0,
+                             'coala must return zero when successful')

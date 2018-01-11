@@ -122,7 +122,7 @@ Let's say:
 -  We want some information from the user (e.g. the tab width if we rely
    on indentation).
 -  We've got some useful information for the user and want to show it to
-   them. This might be some issue with their code or just an information
+   them. There might be some issue with their code or just an information
    like the number of lines.
 
 So let's extend our HelloWorldBear a bit, I've named the new bear with
@@ -261,6 +261,10 @@ The Setting does support some very basic types:
 -  List of strings (``list``, values will be split by comma)
 -  Dict of strings (``dict``, values will be split by comma and colon)
 
+You can use shortcuts for basic types, ``str_list`` for strings,
+``int_list`` for ints, ``float_list`` for floats and ``bool_list`` for
+boolean values.
+
 If you need another type, you can write the conversion function yourself
 and use this function as the annotation (if you cannot convert value, be
 sure to throw ``TypeError`` or ``ValueError``). We've provided a few
@@ -277,6 +281,8 @@ advanced conversions for you:
    conversion to all keys, the ``value_type`` conversion to all values
    and uses the ``default`` value for all unset keys. Use ``typed_dict``
    if the order is irrelevant for you.
+-  ``coalib.settings.Setting.language``, converts into coala ``Language``
+   object.
 
 Results
 -------
@@ -519,5 +525,74 @@ can be used as follows:
         ASCIINEMA_URL = 'https://asciinema.org/a/80761'
         SEE_MORE = 'https://www.pylint.org'
 
+Aspect Bear
+-----------
+
+Aspect is a feature in coala that make configuring coala in project more easy
+and language agnostic. For more detail about aspect, see cEP-0005 in
+https://github.com/coala/cEPs/blob/master/cEP-0005.md.
+
+An aspect-compliant bear MUST:
+
+1. Declare list of aspect it can fix and detected. Note that the aspect MUST be
+   a leaf aspect. You can see list of supported aspect here
+   https://github.com/coala/aspect-docs.
+2. Declare list of supported language. See list of supported language
+   https://github.com/coala/coala/tree/master/coalib/bearlib/languages/definitions.
+3. Map setting to its equivalent aspect or taste using ``map_setting_to_aspect``
+   decorator.
+4. Yield result with relevant aspect.
+
+For example, let's make an aspect bear named SpellingCheckBear.
+
+.. code:: python
+
+    from coalib.bearlib.aspects import map_setting_to_aspect
+    from coalib.bearlib.aspects.Spelling import (
+        DictionarySpelling,
+        OrgSpecificWordSpelling,
+    )
+    from coalib.bears.LocalBear import LocalBear
+
+
+    class SpellingCheckBear(
+            LocalBear,
+            aspect={
+                'detect': [
+                    DictionarySpelling,
+                    OrgSpecificWordSpelling,
+                ],
+            },
+            languages=['Python']):
+
+        @map_setting_to_aspect(
+            use_standard_dictionary=DictionarySpelling,
+            additional_dictionary_words=OrgSpecificWordSpelling.specific_word,
+        )
+        def run(self,
+                filename,
+                file,
+                use_standard_dictionary: bool=True,
+                additional_dictionary_words: list=None):
+            """
+            Detect wrong spelling.
+
+            :param use_standard_dictionary:     Use standard English dictionary.
+            :param additional_dictionary_words: Additional list of word.
+            """
+            if use_standard_dictionary:
+                # Imagine this is where we save our standard dictionary.
+                dictionary_words = ['lorem', 'ipsum']
+            else:
+                dictionary_words = []
+            if additional_dictionary_words:
+                dictionary_words += additional_dictionary_words
+
+            for word in file.split():
+                if word not in dictionary_words:
+                    yield self.new_result(
+                        message='Wrong spelling in word `{}`'.format(word),
+                        aspect=DictionarySpelling('py'),
+                    )
 
 .. _main tutorial: https://docs.coala.io/en/latest/Users/Tutorial.html

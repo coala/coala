@@ -28,14 +28,14 @@ Let us understand how to write tests for ``TooManyLinesBear`` in ``some_dir``.
                 filename,
                 max_number_of_lines: int=10):
             """
-            Detects if a file has more than "max_number_of_lines" lines
+            Detects if a file has more than ``max_number_of_lines`` lines.
 
-            :param max_number_of_lines    Maximum number of lines to be
-                                          allowed for a file. Default is 10.
+            :param max_number_of_lines:
+                Maximum number of lines to be allowed for a file. Default is 10.
             """
 
-            if(len(file)>max_number_of_lines):
-                yield Result(self, "Too many lines")
+            if len(file) > max_number_of_lines:
+                yield Result(self, 'Too many lines')
 
 **EXAMPLE 1** using ``verify_local_bear``
 
@@ -126,7 +126,7 @@ passed.
                 file,
                 [Result.from_values('TooManyLinesBear',
                                     'Too many lines')],
-                settings={'max_number_of_lines': int=20})
+                settings={'max_number_of_lines': 20})
 
 ``check_results`` asserts if your bear results match the actual
 results on execution on CLI. Just like the above example, we need to ``setUp``
@@ -141,3 +141,7 @@ A Final Note
 ``LocalBearTestHelper`` is written to ease off testing for bears. Make sure
 that your tests have 100% coverage and zero redundancy. Use ``check_results``
 as much as possible to test your bears.
+
+Glossary
+--------
+- ``uut`` - Unit Under Test

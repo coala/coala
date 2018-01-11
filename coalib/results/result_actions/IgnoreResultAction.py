@@ -1,4 +1,5 @@
 from coalib.bearlib.languages import Language
+from coalib.bearlib.languages.Language import UnknownLanguageError
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.Result import Result
 from coalib.results.Diff import Diff
@@ -17,11 +18,18 @@ class IgnoreResultAction(ResultAction):
 
     @staticmethod
     @enforce_signature
-    def is_applicable(result: Result, original_file_dict, file_diff_dict):
+    def is_applicable(result: Result,
+                      original_file_dict,
+                      file_diff_dict,
+                      applied_actions=()):
         """
         For being applicable, the result has to point to a number of files
         that have to exist i.e. have not been previously deleted.
+        Additionally, the action should not have been applied to the current
+        result before.
         """
+        if IgnoreResultAction.__name__ in applied_actions:
+            return 'An ignore comment was already added for this result.'
 
         if len(result.affected_code) == 0:
             return 'The result is not associated with any source code.'
@@ -98,7 +106,7 @@ class IgnoreResultAction(ResultAction):
                 ignore_comment = (str(start_comment) + ' Ignore ' +
                                   origin + ' ' +
                                   str(end_comment) + '\n')
-            except AttributeError:
+            except UnknownLanguageError:
                 # multiline comments also not supported by language
                 logging.warning(
                     'coala does not support Ignore in "{language}". Consider'

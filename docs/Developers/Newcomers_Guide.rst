@@ -23,15 +23,18 @@ following tasks, you will become a developer at coala:
   - merge a ``difficulty/low`` Pull Request
   - review at least a ``difficulty/low`` or higher Pull Request
 
+Note: After you have solved a ``difficulty/newcomer`` issue, please don't
+take up any more. Instead, move on to more difficult issues.
+
 Once you've run coala on a project, please fill out our
 `usability survey <http://coala.io/usability>`_. And once you've got your first Pull
 Request merged successfully, fill out our
 `survey form <http://coala.io/newform>`_. By doing so, you can help us make your
 experience better!
 
-Once you have achieved all these, just ask to be promoted on the chat
-(see step 1 below) and provide links to your reviews and merged Pull Requests.
-Then you'll be able to call yourself a coala developer!
+Once you've completed all five tasks, please fill our
+`promotion request form <https://docs.google.com/forms/d/e/1FAIpQLSevrkrJga23GySFUdngrTEo0CdjXcqjHBHqX2z_JF2Z61YNmw/viewform?usp=sf_link>`_
+to get promoted to the role of developer.
 
 .. note::
 
@@ -122,6 +125,11 @@ keep in mind.
     may be signed into, you might even wake someone on the other side of the
     world up. Also it discourages other people to answer the question,
     so you might wait longer for an answer.
+  * Do not mention users unrelated to a particular issue/question. This also
+    means you should not mention the person that was last online. For example,
+    mentioning someone on a Github issue will subscribe them to that issue,
+    even if they don't want to be a part of the discussion. However, mentioning
+    someone is okay if they really need to see your message.
   * Don't use /all if you are a newcomer or do not have a critical reason.
   * Don't repeatedly @-mention people in an ongoing conversation.
   * You should ask someone before mentioning them.
@@ -202,7 +210,11 @@ Now you can start working on it!
 
             corobo mark wip <full url>
 
-        * To see all of the corobo commands, ::
+        * To label a PR as pending review::
+
+            corobo mark pending <full url>
+
+        * To see all of the corobo commands::
 
             corobo help
 
@@ -294,7 +306,7 @@ Step 4. Sending Your Changes
 .. note::
 
    Before committing your changes, please check that you are indeed in a
-   development branch created in step 4. To check if you are in a branch, type:
+   development branch created in step 3. To check if you are in a branch, type:
 
    ::
 
@@ -308,7 +320,7 @@ to be merged, create a commit and push it to your fork, using:
 
 ::
 
-    $ git push myfork
+    $ git push -u myfork <branchname>
 
 where ``myfork`` is the name of your fork that you added at the previous step.
 
@@ -353,7 +365,8 @@ For more information about reviewing code, check out this `link <http://coala.io
 .. note::
 
     Reviewing code helps you to learn from other people's mistakes so you can
-    avoid making those same mistakes yourself in the future!
+    avoid making those same mistakes yourself in the future! Thus, you are
+    improving yourself in the process.
 
     **We highly encourage you to do reviews.** Don't be afraid of doing
     something wrong - there will always be someone looking over it before
@@ -420,8 +433,8 @@ commit!
     $ git push --force myfork
 
 The meaning of ``myfork`` is explained
-`in step 4 of this guide
-<http://api.coala.io/en/latest/Developers/Newcomers_Guide.html#step-4-creating-a-fork-and-testing-your-changes>`__.
+`in step 3 of this guide
+<http://api.coala.io/en/latest/Developers/Newcomers_Guide.html#step-3-creating-a-fork-and-testing-your-changes>`__.
 The ``Pull Request`` will automatically update with the newest changes.
 
 **Congratulations!** Your PR just got accepted! You're awesome.

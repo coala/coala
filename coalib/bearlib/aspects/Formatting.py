@@ -134,6 +134,40 @@ class Spacing:
 
 
 @Spacing.subaspect
+class Indentation:
+    """
+    Spaces/tabs used before blocks of code to convey a program's structure.
+    """
+    class docs:
+        example = """
+        # If this code was written on an editor that defined a tab as 2
+        # spaces, mixing tabs and spaces would look like this on a different
+        # editor defining tabs as four spaces.
+
+        def spaces():
+          pass
+
+        def tabs():
+            pass
+        """
+        example_language = 'Python'
+        importance_reason = """
+        Mixing tabs and spaces can cause issues when collaborating on
+        code, as well as during testing and compilation.
+        """
+        fix_suggestions = """
+        Using either tabs or spaces consistently.
+        If using spaces, by using a suitable number of spaces, preferably four.
+        """
+    indent_type = Taste[str](
+        'Represents the type of indent used.',
+        ('tab', 'space'), default='tab')
+    indent_size = Taste[int](
+        'Represents the number of spaces per indentation level.',
+        (2, 3, 4, 5, 6), default=4)
+
+
+@Spacing.subaspect
 class TrailingSpace:
     """
     Unnecessary whitespace at end of a line.

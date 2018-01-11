@@ -46,30 +46,25 @@ def append_to_sections(sections,
 
 def extract_aspects_from_section(section):
     """
-    Extracts aspects and their related settings from a section and create an
-    AspectList from it.
+    Extract aspects settings from a section into an AspectList.
+
+    Note that the section is assumed to already have valid and complete aspects
+    related setting. This checking could be done by
+    :meth:`coalib.settings.ConfigurationGathering.validate_aspect_config`.
 
     :param section: Section object.
     :return:        AspectList containing aspectclass instance with
                     user-defined tastes.
     """
+    ASPECT_TASTE_DELIMITER = ':'
     aspects = section.get('aspects')
-    language = section.get('language')
-
-    # Skip aspects initialization if not configured in section
-    if not len(aspects):
-        return None
-
-    if not len(language):
-        raise AttributeError('Language was not found in configuration file. '
-                             'Usage of aspect-based configuration must '
-                             'include language information.')
+    language = section.language
 
     aspect_instances = AspectList(exclude=section.get('excludes'))
 
     for aspect in AspectList(aspects):
         # Search all related tastes in section.
-        tastes = {name.split('.')[-1]: value
+        tastes = {name.split(ASPECT_TASTE_DELIMITER)[-1]: value
                   for name, value in section.contents.items()
                   if name.lower().startswith(aspect.__name__.lower())}
         aspect_instances.append(aspect(language, **tastes))
@@ -96,7 +91,7 @@ class Section:
     >>> len(sections)
     1
     >>> str(sections)
-    "{'all': <Section object(contents=OrderedDict([('test1', ..."
+    "{'all': <Section object(... contents=OrderedDict([('test1', ..."
 
     We can also add settings that can be appended to other settings. Basically
     it takes the default value of the setting which resides in the defaults of
@@ -137,6 +132,8 @@ class Section:
         self.name = str(name)
         self.defaults = defaults
         self.contents = OrderedDict()
+        self.aspects = None
+        self.language = None
 
     def bear_dirs(self):
         bear_dirs = path_list(self.get('bear_dirs', ''))

@@ -8,5 +8,6 @@ packaging~=16.8
 Pygments~=2.1
 PyPrint~=0.2.6
 requests~=2.12
-setuptools>=17.0
+setuptools>=19.0
+testfixtures~=4.14.3
 unidiff~=0.5.2

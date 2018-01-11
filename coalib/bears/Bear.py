@@ -28,7 +28,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     whatever it wants with the files it gets. If you are missing some Result
     type, feel free to contact us and/or help us extending the coalib.
 
-    This is the base class for every bear. If you want to write an bear, you
+    This is the base class for every bear. If you want to write a bear, you
     will probably want to look at the GlobalBear and LocalBear classes that
     inherit from this class. In any case you'll want to overwrite at least the
     run method. You can send debug/warning/error messages through the
@@ -275,6 +275,11 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
 
     def run_bear_from_section(self, args, kwargs):
         try:
+            # Don't get `language` setting from `section.contents`
+            if self.section.language and (
+                    'language' in self.get_metadata()._optional_params or
+                    'language' in self.get_metadata()._non_optional_params):
+                kwargs['language'] = self.section.language
             kwargs.update(
                 self.get_metadata().create_params_from_section(self.section))
         except ValueError as err:
@@ -306,13 +311,13 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
                 raise
 
             if self.kind() == BEAR_KIND.LOCAL:
-                self.warn('Bear {} failed to run on file {}. Take a look '
-                          'at debug messages (`-V`) for further '
-                          'information.'.format(name, args[0]))
+                self.err('Bear {} failed to run on file {}. Take a look '
+                         'at debug messages (`-V`) for further '
+                         'information.'.format(name, args[0]))
             else:
-                self.warn('Bear {} failed to run. Take a look '
-                          'at debug messages (`-V`) for further '
-                          'information.'.format(name))
+                self.err('Bear {} failed to run. Take a look '
+                         'at debug messages (`-V`) for further '
+                         'information.'.format(name))
             self.debug(
                 'The bear {bear} raised an exception. If you are the author '
                 'of this bear, please make sure to catch all exceptions. If '
@@ -337,7 +342,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         """
         return FunctionMetadata.from_function(
             cls.run,
-            omit={'self', 'dependency_results'})
+            omit={'self', 'dependency_results', 'language'})
 
     @classmethod
     def __json__(cls):

@@ -26,6 +26,25 @@ Example of a good commit:
 - `Closes https://github.com/coala/coala/issues/5861`: Mention the URL
    of the issue it closes or fixes.
 
+::
+
+    configure.py: Fix docstring typo
+
+    This fixes the typo and changes
+    it from wether --> whether.
+
+    Fixes https://github.com/coala/coala/issues/4018
+
+- `configure.py: Fix docstring typo`: Describe the change in
+   maximum of 50 characters.
+
+- `This fixes.. ..whether.`: Describe the reasoning of your changes
+   in maximum of 72 characters per line.
+
+- `Closes https://github.com/coala/coala/issues/7971`: Mention the URL
+   of the issue it closes or fixes.
+
+
 At coala we are looking heavily at the maintainability of the code.
 
 .. note::
@@ -130,7 +149,8 @@ Example:
    between ``Fixes`` and ``Closes`` may be very small and subjective.
    If a specific issue may lead to an unintended behaviour from the user
    or from the program it should be considered a bug, and should be
-   addresed with ``Fixes``.
+   addresed with ``Fixes``. If an issue is labelled with ``type/bug``
+   you should always use ``Fixes``. For all other issues use ``Closes``.
 -  Should use full URL to the issue.
 -  There should be a single space between the ``Fixes`` or ``Closes`` and the
    URL.
@@ -171,6 +191,16 @@ Example 2 (implemented feature):
     This massively helps debugging linters.
 
     Closes https://github.com/coala/coala/issues/2060
+
+Example 3 (fixed typo):
+
+::
+
+    ConsoleInteraction.print_result: Fix docstring typo
+
+    wether --> whether.
+
+    Fixes https://github.com/coala/coala/issues/4018
 
 Editing Commit Messages
 -----------------------

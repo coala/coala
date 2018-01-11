@@ -7,8 +7,11 @@ import logging
 
 from pyprint.ConsolePrinter import ConsolePrinter
 
+from testfixtures import LogCapture, StringComparison
+
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
 from coalib.bears.Bear import Bear
+from coalib import coala
 from coala_utils.ContextManagers import (
     make_temp, retrieve_stdout, simulate_console_inputs)
 from coalib.output.ConsoleInteraction import (
@@ -21,14 +24,16 @@ from coalib.output.ConsoleInteraction import (BackgroundSourceRangeStyle,
                                               BackgroundMessageStyle,
                                               highlight_text)
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
+from coalib.parsing.DefaultArgParser import default_arg_parser
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
-from coalib.results.result_actions.ChainPatchAction import ChainPatchAction
 from coalib.results.result_actions.DoNothingAction import DoNothingAction
 from coalib.results.result_actions.ShowAppliedPatchesAction \
     import ShowAppliedPatchesAction
+from coalib.results.result_actions.GeneratePatchesAction import (
+    GeneratePatchesAction)
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Section import Section
@@ -36,6 +41,10 @@ from coalib.settings.Setting import Setting
 
 from pygments.filters import VisibleWhitespaceFilter
 from pygments.lexers import TextLexer
+from pygments.style import Style
+from pygments.token import Token
+
+from tests.TestUtilities import bear_test_module, execute_coala
 
 
 STR_GET_VAL_FOR_SETTING = ('Please enter a value for the setting \"{}\" ({}) '
@@ -44,6 +53,12 @@ STR_LINE_DOESNT_EXIST = ('The line belonging to the following result '
                          'cannot be printed because it refers to a line '
                          "that doesn't seem to exist in the given file.")
 STR_PROJECT_WIDE = 'Project wide:'
+
+
+class NoColorStyle(Style):
+    styles = {
+        Token: 'noinherit'
+    }
 
 
 class TestAction(ResultAction):
@@ -287,11 +302,12 @@ class ConsoleInteractionTest(unittest.TestCase):
 
             # Interaction must be closed by the user with `0` if it's not a
             # param
-            with simulate_console_inputs('INVALID',
+            with simulate_console_inputs('x',
                                          -1,
-                                         'a',
+                                         1,
+                                         0,
                                          'n',
-                                         'm') as input_generator:
+                                         0) as input_generator:
                 curr_section = Section('')
                 print_section_beginning(self.console_printer, curr_section)
                 print_result(self.console_printer,
@@ -313,7 +329,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                                                 TestAction().get_metadata(),
                                                 failed_actions=set())
                 self.assertEqual(input_generator.last_input, 4)
-                self.assertEqual(str(section), " {param : 'm'}")
+                self.assertEqual(str(section), " {param : 'n'}")
                 self.assertEqual(name, 'TestAction')
 
         # Check if the user is asked for the parameter only the first time.
@@ -407,7 +423,7 @@ class ConsoleInteractionTest(unittest.TestCase):
 
             ApplyPatchAction.is_applicable = old_applypatch_is_applicable
 
-    def test_acquire_actions_and_apply(self):
+    def test_acquire_actions_and_apply_single(self):
         with make_temp() as testfile_path:
             file_dict = {testfile_path: ['1\n', '2\n', '3\n']}
             diff = Diff(file_dict[testfile_path])
@@ -478,76 +494,23 @@ class ConsoleInteractionTest(unittest.TestCase):
             self.assertEqual(generator.last_input, 3)
             self.assertNotIn('TestAction', failed_actions)
 
-    def test_ask_for_actions_and_apply2(self):
+    def test_ask_for_actions_and_apply(self):
         failed_actions = set()
-        action = ApplyPatchAction()
-        action2 = ChainPatchAction()
+        action = TestAction()
         args = [self.console_printer, Section(''),
-                [action.get_metadata(), action2.get_metadata()],
-                {'ApplyPatchAction': action, 'ChainPatchAction': action2},
+                [action.get_metadata()], {'TestAction': action},
                 failed_actions, Result('origin', 'message'), {}, {}, {}]
 
-        with simulate_console_inputs('c', 'a') as generator:
+        with simulate_console_inputs('a', 'param1', 'a', 'param2') as generator:
+            action.apply = unittest.mock.Mock(side_effect=AssertionError)
             ask_for_action_and_apply(*args)
             self.assertEqual(generator.last_input, 1)
-            self.assertIn('ApplyPatchAction', failed_actions)
+            self.assertIn('TestAction', failed_actions)
 
-        with simulate_console_inputs('c', 'n') as generator:
+            action.apply = lambda *args, **kwargs: {}
             ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 1)
-            self.assertNotIn('ChainPatchAction', failed_actions)
-
-        with simulate_console_inputs('c', 'x') as generator:
-            ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 0)
-            self.assertNotIn('ChainPatchAction', failed_actions)
-
-        with simulate_console_inputs('c', 'o') as generator:
-            ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 0)
-            self.assertNotIn('ChainPatchAction', failed_actions)
-
-    def test_ask_for_actions_and_apply3(self):
-        failed_actions = set()
-        action = ApplyPatchAction()
-        action2 = ChainPatchAction()
-        args = [self.console_printer, Section(''),
-                [action.get_metadata(), action2.get_metadata()],
-                {'ApplyPatchAction': action, 'ChainPatchAction': action2},
-                failed_actions, Result('origin', 'message'), {}, {}, {}]
-
-        with simulate_console_inputs('c', 'x') as generator:
-            ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 1)
-            self.assertNotIn('ChainPatchAction', failed_actions)
-
-    def test_ask_for_actions_and_apply4(self):
-        failed_actions = set()
-        action = ApplyPatchAction()
-        action2 = ChainPatchAction()
-        args = [self.console_printer, Section(''),
-                [action.get_metadata(), action2.get_metadata()],
-                {'ApplyPatchAction': action, 'ChainPatchAction': action2},
-                failed_actions, Result('origin', 'message'), {}, {}, {}]
-
-        with simulate_console_inputs('c', 1) as generator:
-            ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 1)
-            self.assertNotIn('ChainPatchAction', failed_actions)
-
-    def test_ask_for_actions_and_apply5(self):
-        failed_actions = set()
-        action = ApplyPatchAction()
-        action2 = ChainPatchAction()
-        args = [self.console_printer, Section(''),
-                [action.get_metadata(), action2.get_metadata()],
-                {'ApplyPatchAction': action, 'ChainPatchAction': action2},
-                failed_actions, Result('origin', 'message'), {}, {}, {}]
-
-        with simulate_console_inputs('c', 'i') as generator:
-            ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 1)
-            self.assertNotIn('ChainPatchAction', failed_actions)
+            self.assertEqual(generator.last_input, 3)
+            self.assertNotIn('TestAction', failed_actions)
 
     def test_default_input(self):
         action = TestAction()
@@ -560,10 +523,9 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_default_input2(self):
         action = TestAction()
-        do_nothing_action = DoNothingAction()
         args = [self.console_printer, Section(''),
-                [do_nothing_action.get_metadata(), action.get_metadata()],
-                {'DoNothingAction': do_nothing_action, 'TestAction': action},
+                [action.get_metadata()],
+                {'TestAction': action},
                 set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs(1, 1) as generator:
@@ -571,10 +533,9 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_default_input3(self):
         action = TestAction()
-        do_nothing_action = DoNothingAction()
         args = [self.console_printer, Section(''),
-                [do_nothing_action.get_metadata(), action.get_metadata()],
-                {'DoNothingAction': do_nothing_action, 'TestAction': action},
+                [action.get_metadata()],
+                {'TestAction': action},
                 set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs(1, 'a') as generator:
@@ -587,7 +548,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                 set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs(5, 0) as generator:
-            self.assertFalse(ask_for_action_and_apply(*args))
+            self.assertTrue(ask_for_action_and_apply(*args))
 
     def test_default_input_apply_single_nothing(self):
         action = TestAction()
@@ -602,6 +563,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                     [action.get_metadata()], {'TestAction': action},
                     set(), Result('origin', 'message'), {}, {},
                     {}, apply_single]
+            self.assertFalse(ask_for_action_and_apply(*args))
 
         with simulate_console_inputs('') as generator:
             self.assertFalse(ask_for_action_and_apply(*args))
@@ -617,7 +579,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                 set(), Result('origin', 'message'), {}, {}, {}, apply_single]
 
         with simulate_console_inputs('a') as generator:
-            self.assertTrue(ask_for_action_and_apply(*args))
+            self.assertFalse(ask_for_action_and_apply(*args))
 
     def test_default_input_apply_single_fail(self):
         action = TestAction()
@@ -667,10 +629,12 @@ Project wide:
             self.assertEqual(stdout.getvalue(), 'Executing section name...\n')
 
     def test_nothing_done(self):
-        nothing_done(self.log_printer)
-        self.assertEqual(['No existent section was targeted or enabled. '
-                          'Nothing to do.'],
-                         [log.message for log in self.log_printer.logs])
+        with LogCapture() as capture:
+            nothing_done(self.log_printer)
+        capture.check(
+            ('root', 'WARNING', 'No existent section was targeted or enabled. '
+                                'Nothing to do.')
+        )
 
     def test_print_results_empty(self):
         with retrieve_stdout() as stdout:
@@ -708,9 +672,10 @@ Project wide:
                 self.console_printer)
             self.assertEqual("""
 filename
-[    ]2 {0}
+[   2] {0}
 **** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
-!    ! {1}\n""".format(highlight_text(self.no_color, 'line 2', self.lexer),
+!    ! {1}\n""".format(highlight_text(self.no_color, 'line 2', NoColorStyle,
+                                      self.lexer),
                        highlight_text(self.no_color,
                                       'Trailing whitespace found',
                                       style=BackgroundMessageStyle), ''),
@@ -733,9 +698,10 @@ filename
                 self.console_printer)
             self.assertEqual("""
 filename
-[    ]5 {0}
+[   5] {0}
 **** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
-!    ! {1}\n""".format(highlight_text(self.no_color, 'line 5', self.lexer),
+!    ! {1}\n""".format(highlight_text(self.no_color, 'line 5', NoColorStyle,
+                                      self.lexer),
                        highlight_text(self.no_color,
                                       'Trailing whitespace found',
                                       style=BackgroundMessageStyle), ''),
@@ -763,18 +729,20 @@ filename
 
             self.assertEqual("""
 file
-[    ]2 {0}
+[   2] {0}
 **** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
 !    ! Trailing whitespace found
 
 file
-[    ]5 {2}
+[   5] {2}
 **** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
-!    ! {1}\n""".format(highlight_text(self.no_color, '\t', self.lexer),
+!    ! {1}\n""".format(highlight_text(self.no_color, '\t', NoColorStyle,
+                                      self.lexer),
                        highlight_text(self.no_color,
                                       'Trailing whitespace found',
                                       style=BackgroundMessageStyle),
-                       highlight_text(self.no_color, 'line 5\t', self.lexer)),
+                       highlight_text(self.no_color, 'line 5\t',
+                                      NoColorStyle, self.lexer)),
                 stdout.getvalue())
 
     def test_print_results_multiple_ranges(self):
@@ -797,29 +765,34 @@ file
                 self.console_printer)
             self.assertEqual("""
 another_file
-[    ]1 li{0}{1}
+[   1] li{0}{1}
 
 another_file
-[    ]3 li{0}{2}
+[   3] li{0}{2}
 
 some_file
-[    ]5 li{0}{3}
-[    ]6 li{0}{4}
-[    ]7 li{0}{5}
+[   5] li{0}{3}
+[   6] li{0}{4}
+[   7] li{0}{5}
 **** ClangCloneDetectionBear [Section:  | Severity: NORMAL] ****
-!    ! {6}\n""".format(highlight_text(self.no_color, 'ne', self.lexer,
-                                      BackgroundSourceRangeStyle),
-                       highlight_text(self.no_color, ' 1', self.lexer),
-                       highlight_text(self.no_color, ' 3', self.lexer),
-                       highlight_text(self.no_color, ' 5', self.lexer),
-                       highlight_text(self.no_color, ' 6', self.lexer),
-                       highlight_text(self.no_color, ' 7', self.lexer),
+!    ! {6}\n""".format(highlight_text(self.no_color, 'ne',
+                                      BackgroundSourceRangeStyle, self.lexer),
+                       highlight_text(self.no_color, ' 1', NoColorStyle,
+                                      self.lexer),
+                       highlight_text(self.no_color, ' 3', NoColorStyle,
+                                      self.lexer),
+                       highlight_text(self.no_color, ' 5', NoColorStyle,
+                                      self.lexer),
+                       highlight_text(self.no_color, ' 6', NoColorStyle,
+                                      self.lexer),
+                       highlight_text(self.no_color, ' 7', NoColorStyle,
+                                      self.lexer),
                        highlight_text(self.no_color, 'Clone Found',
                                       style=BackgroundMessageStyle), ' '),
                 stdout.getvalue())
 
     def test_print_results_missing_file(self):
-        self.log_printer.log_level = logging.CRITICAL
+        logging.getLogger().setLevel(logging.CRITICAL)
         with retrieve_stdout() as stdout:
             print_results(
                 self.log_printer,
@@ -855,18 +828,19 @@ some_file
                 self.console_printer)
             self.assertEqual(
                              '\nfile\n'
-                             '[    ]5 {0}'
+                             '[   5] {0}'
                              '\n'
                              '**** t [Section:  | Severity: NORMAL] ****\n'
                              '!    ! {1}\n'
                              '\n'
                              'file\n'
-                             '!    !6 {2}'
+                             '!   6! {2}'
                              '\n'
                              '**** t [Section:  | Severity: NORMAL] ****\n'
                              '!    ! {1}\n'.format(
                                  highlight_text(self.no_color,
-                                                'line 5', self.lexer),
+                                                'line 5', NoColorStyle,
+                                                self.lexer),
                                  highlight_text(self.no_color, 'msg',
                                                 style=BackgroundMessageStyle),
                                  STR_LINE_DOESNT_EXIST, ' '),
@@ -963,10 +937,29 @@ class ShowBearsTest(unittest.TestCase):
                              '  Can fix:\n   * Formatting\n\n  Path:\n   ' +
                              repr(TestBear.source_location) + '\n\n')
 
+    def test_show_bear_settings_only(self):
+        with retrieve_stdout() as stdout:
+            from coalib.parsing.DefaultArgParser import default_arg_parser
+            args = default_arg_parser().parse_args(['--show-settings'])
+            show_bear(TestBear, False, False, self.console_printer, args)
+            self.assertEqual(stdout.getvalue(),
+                             'TestBear\n'
+                             '  Needed Settings:\n'
+                             '   * setting1: Required Setting.\n\n'
+                             '  Optional Settings:\n'
+                             '   * setting2: Optional Setting. ('
+                             "Optional, defaults to 'None'.)\n\n")
+
     def test_show_bears_empty(self):
         with retrieve_stdout() as stdout:
             show_bears({}, {}, True, True, self.console_printer)
             self.assertIn('No bears to show.', stdout.getvalue())
+
+    def test_show_bears_with_json(self):
+        args = default_arg_parser().parse_args(['--json'])
+        with retrieve_stdout() as stdout:
+            show_bears({}, {}, True, True, self.console_printer, args)
+            self.assertEqual('{\n  "bears": []\n}\n', stdout.getvalue())
 
     @patch('coalib.output.ConsoleInteraction.show_bear')
     def test_show_bears(self, show_bear):
@@ -976,7 +969,8 @@ class ShowBearsTest(unittest.TestCase):
         show_bear.assert_called_once_with(SomelocalBear,
                                           True,
                                           True,
-                                          self.console_printer)
+                                          self.console_printer,
+                                          None)
 
     def test_show_bears_sorted(self):
         local_bears = OrderedDict([('default', [SomelocalBear]),
@@ -1068,13 +1062,16 @@ class PrintFormattedResultsTest(unittest.TestCase):
 
     def test_bad_format(self):
         self.section.append(Setting('format', '{nonexistant}'))
-        print_results_formatted(self.logger,
-                                self.section,
-                                [Result('1', '2')],
-                                None,
-                                None)
-        self.assertRegex(''.join(log.message for log in self.logger.logs),
-                         '.*Unable to print.*')
+        with LogCapture() as capture:
+            print_results_formatted(self.logger,
+                                    self.section,
+                                    [Result('1', '2')],
+                                    None,
+                                    None)
+        capture.check(
+            ('root', 'ERROR', StringComparison(r'.*Unable to print.*')),
+            ('root', 'INFO', StringComparison(r'.*Exception was.*'))
+        )
 
     def test_good_format(self):
         self.section.append(Setting('format', '{origin}'))
@@ -1109,3 +1106,20 @@ class PrintFormattedResultsTest(unittest.TestCase):
                 {abspath('file'): ('def fun():\n', '    pass  \n')})
             self.assertEqual(stdout.getvalue(),
                              "('    pass  \\n',)\n")
+
+    def test_show_bears_specified_in_args(self):
+        with bear_test_module():
+            retval, stdout, stderr = execute_coala(
+                coala.main, 'coala', '-B', '--bears',
+                'JavaTestBear', '--no-color')
+            self.assertEqual(retval, 0)
+            self.assertEqual(stdout.strip(), 'JavaTestBear')
+
+    def test_show_bears_specified_in_args_regex(self):
+        with bear_test_module():
+            retval, stdout, stderr = execute_coala(
+                coala.main, 'coala', '-B', '--bears',
+                '*Java*', '*Space*', '--no-color')
+            self.assertEqual(retval, 0)
+            self.assertEqual(['JavaTestBear', 'SpaceConsistencyTestBear'],
+                             [bear.strip() for bear in stdout.splitlines()])

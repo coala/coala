@@ -69,8 +69,8 @@ class Result:
         :param message:
             Base message to show with this result.
         :param affected_code:
-            A tuple of SourceRange objects pointing to related positions in the
-            source code.
+            A tuple of ``SourceRange`` objects pointing to related positions
+            in the source code.
         :param severity:
             Severity of this result.
         :param additional_info:
@@ -125,6 +125,9 @@ class Result:
         self.diffs = diffs
         self.id = uuid.uuid4().int
         self.aspect = aspect
+        if self.aspect and not self.additional_info:
+            self.additional_info = '{} {}'.format(
+                aspect.docs.importance_reason, aspect.docs.fix_suggestions)
 
     @property
     def message(self):

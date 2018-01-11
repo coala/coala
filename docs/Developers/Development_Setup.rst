@@ -33,7 +33,7 @@ Using venv
         (coala-venv)$ deactivate
 
 - Now you can activate the environment and start
-  `the next part <https://coala.io/devsetup#installing-from-git>`_.
+  `the next part <https://api.coala.io/en/latest/Developers/Development_Setup.html#id1>`_.
 
 Using virtualenv
 ~~~~~~~~~~~~~~~~
@@ -64,7 +64,7 @@ in your current directory, as coala only works for Python >= 3.4
         (coala-venv)$ deactivate # to exit the environment
 
 - After this, you can start
-  `installing from git <https://coala.io/devsetup#installing-from-git>`_.
+  `installing from git <https://api.coala.io/en/latest/Developers/Development_Setup.html#id1>`_.
 
 Repositories
 ------------
@@ -80,6 +80,13 @@ of standard bears. You can fork and clone the repositories from:
 https://github.com/coala/coala
 
 https://github.com/coala/coala-bears
+
+Beside those repositories above, ``package_manager`` and ``coala-utils``
+are fundamental parts of coala which is hosted on GitLab.
+
+https://gitlab.com/coala/package_manager/
+
+https://gitlab.com/coala/coala-utils/
 
 Installing from Git
 -------------------

@@ -18,9 +18,9 @@ from pyprint.ConsolePrinter import ConsolePrinter
 
 from dependency_management.requirements.PipRequirement import PipRequirement
 
-from coalib.parsing.FilterHelper import FilterHelper, InvalidFilterException
+from coalib.parsing.FilterHelper import (
+    apply_filter, apply_filters, InvalidFilterException)
 from coalib.output.Logging import configure_logging
-from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.parsing.DefaultArgParser import default_arg_parser
 from coalib.misc.Exceptions import get_exitcode
 
@@ -30,8 +30,6 @@ def main(debug=False):
 
     args = None  # to have args variable in except block when parse_args fails
     try:
-        console_printer = ConsolePrinter()
-        log_printer = LogPrinter(console_printer)
         # Note: We parse the args here once to check whether to show bears or
         # not.
         args = default_arg_parser().parse_args()
@@ -55,15 +53,14 @@ def main(debug=False):
         console_printer = ConsolePrinter(print_colored=not args.no_color)
         configure_logging(not args.no_color)
 
-        if args.json:  # needs to be checked in order to display bears in json
-            return mode_json(args, debug=debug)
-
         if args.show_bears:
-            from coalib.settings.ConfigurationGathering import (
-                get_all_bears)
-            filtered_bears = get_all_bears(log_printer)
+            from coalib.settings.ConfigurationGathering import get_all_bears
+            kwargs = {}
+            if args.bears:
+                kwargs['bear_globs'] = args.bears
+            filtered_bears = get_all_bears(**kwargs)
             if args.filter_by_language:
-                log_printer.warn(
+                logging.warning(
                     "'--filter-by-language ...' is deprecated. "
                     "Use '--filter-by language ...' instead.")
                 if args.filter_by is None:
@@ -73,7 +70,7 @@ def main(debug=False):
                 # Each iteration of the following loop applies
                 # filters one by one provided as arguments
                 try:
-                    filtered_bears = FilterHelper.apply_filters(
+                    filtered_bears = apply_filters(
                         args.filter_by, filtered_bears)
                 except InvalidFilterException as ex:
                     # If filter is not available
@@ -85,19 +82,22 @@ def main(debug=False):
                        global_bears,
                        args.show_description or args.show_details,
                        args.show_details,
-                       console_printer)
+                       console_printer,
+                       args)
 
             return 0
         elif args.show_capabilities:
             from coalib.collecting.Collectors import (
                 filter_capabilities_by_languages)
-            local_bears, _ = FilterHelper.apply_filter(
-                'language', args.show_capabilities)
+            local_bears, _ = apply_filter('language', args.show_capabilities)
             capabilities = filter_capabilities_by_languages(
                 local_bears, args.show_capabilities)
             show_language_bears_capabilities(capabilities, console_printer)
 
             return 0
+
+        if args.json:
+            return mode_json(args, debug=debug)
 
     except BaseException as exception:  # pylint: disable=broad-except
         if not isinstance(exception, SystemExit):
@@ -109,7 +109,7 @@ def main(debug=False):
             if debug:
                 raise
 
-        return get_exitcode(exception, log_printer)
+        return get_exitcode(exception)
 
     if args.format:
         return mode_format(args, debug=debug)
@@ -117,7 +117,7 @@ def main(debug=False):
     if args.non_interactive:
         return mode_non_interactive(console_printer, args, debug=debug)
 
-    return mode_normal(console_printer, log_printer, args, debug=debug)
+    return mode_normal(console_printer, None, args, debug=debug)
 
 
 if __name__ == '__main__':  # pragma: no cover

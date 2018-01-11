@@ -6,6 +6,7 @@ from coala_utils.decorators import (
     generate_repr,
 )
 from coala_utils.string_processing.StringConverter import StringConverter
+from coalib.bearlib.languages.Language import Language, UnknownLanguageError
 from coalib.parsing.Globbing import glob_escape
 
 
@@ -44,6 +45,20 @@ def glob_list(obj, *args, **kwargs):
     return obj.__glob_list__(*args, **kwargs)
 
 
+def language(name):
+    """
+    Convert a string into ``Language`` object.
+
+    :param name:        String containing language name.
+    :return:            ``Language`` object.
+    :raises ValueError: If the ``name`` contain invalid language name.
+    """
+    try:
+        return Language[name]
+    except UnknownLanguageError as e:
+        raise ValueError(e)
+
+
 def typed_list(conversion_func):
     """
     Creates a class that converts a setting into a list of elements each
@@ -64,6 +79,18 @@ def typed_list(conversion_func):
             return 'typed_list(%s)' % conversion_func.__name__
 
     return Converter()
+
+
+str_list = typed_list(str)
+
+
+int_list = typed_list(int)
+
+
+float_list = typed_list(float)
+
+
+bool_list = typed_list(bool)
 
 
 def typed_dict(key_type, value_type, default):

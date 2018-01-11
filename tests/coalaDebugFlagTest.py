@@ -1,5 +1,4 @@
 import os
-import re
 import sys
 
 import unittest
@@ -68,7 +67,7 @@ class coalaDebugFlagTest(unittest.TestCase):
             status, stdout, stderr = execute_coala(
                 coala.main, 'coala', '--debug', '--json',
                 '-c', os.devnull,
-                '-f', re.escape(filename),
+                '-f', filename,
                 '-b', 'RaiseTestBear')
         assert status == 13
         assert not stdout
@@ -88,7 +87,7 @@ class coalaDebugFlagTest(unittest.TestCase):
             execute_coala(
                 coala.main, 'coala', '--debug',
                 '-c', os.devnull,
-                '-f', re.escape(filename),
+                '-f', filename,
                 '-b', 'ErrorTestBear')
 
         mocked_ipdb.launch_ipdb_on_exception.assert_called_once_with()
@@ -105,7 +104,7 @@ class coalaDebugFlagTest(unittest.TestCase):
             execute_coala(
                 coala.main, 'coala', '--debug',
                 '-c', os.devnull,
-                '-f', re.escape(filename),
+                '-f', filename,
                 '-b', 'RaiseTestBear')
 
         mocked_ipdb.launch_ipdb_on_exception.assert_called_once_with()
@@ -124,7 +123,7 @@ class coalaDebugFlagTest(unittest.TestCase):
             execute_coala(
                 coala.main, 'coala', '--debug', '--json',
                 '-c', os.devnull,
-                '-f', re.escape(filename),
+                '-f', filename,
                 '-b', 'RaiseTestBear')
 
         mocked_ipdb.launch_ipdb_on_exception.assert_called_once_with()

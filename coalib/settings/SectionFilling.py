@@ -1,4 +1,6 @@
 import copy
+from inspect import signature
+import logging
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting import Dependencies
@@ -45,7 +47,13 @@ def fill_section(section, acquire_settings, log_printer, bears):
 
     # Get missing ones.
     if len(needed_settings) > 0:
-        new_vals = acquire_settings(log_printer, needed_settings, section)
+        if len(signature(acquire_settings).parameters) == 2:
+            new_vals = acquire_settings(None, needed_settings)
+        else:
+            logging.warning('acquire_settings: section parameter is '
+                            'deprecated.')
+            new_vals = acquire_settings(None, needed_settings, section)
+
         for setting, help_text in new_vals.items():
             section.append(Setting(setting, help_text))
 
@@ -54,7 +62,7 @@ def fill_section(section, acquire_settings, log_printer, bears):
 
 def fill_settings(sections,
                   acquire_settings,
-                  log_printer,
+                  log_printer=None,
                   fill_section_method=fill_section,
                   **kwargs):
     """
@@ -94,15 +102,14 @@ def fill_settings(sections,
             section_local_bears, section_global_bears = collect_bears(
                 bear_dirs,
                 bears,
-                [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
-                log_printer)
+                [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL])
         section_local_bears = Dependencies.resolve(section_local_bears)
         section_global_bears = Dependencies.resolve(section_global_bears)
         all_bears = copy.deepcopy(section_local_bears)
         all_bears.extend(section_global_bears)
         fill_section_method(section,
                             acquire_settings,
-                            log_printer,
+                            None,
                             all_bears,
                             **kwargs)
 

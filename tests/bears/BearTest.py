@@ -13,7 +13,7 @@ import requests_mock
 
 from coalib.bearlib.aspects.collections import AspectList
 from coalib.bearlib.aspects.Metadata import CommitMessage
-from coalib.bearlib.languages.Language import Languages
+from coalib.bearlib.languages.Language import Language, Languages
 from coalib.bears.Bear import Bear
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
@@ -22,7 +22,7 @@ from coalib.results.Result import Result
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
 from coalib.settings.Section import Section
-from coalib.settings.Setting import Setting
+from coalib.settings.Setting import Setting, language
 
 
 class BadTestBear(Bear):
@@ -130,6 +130,19 @@ class aspectsFixOnlyTestBear(Bear, aspects={
     pass
 
 
+class BearWithLanguage(Bear):
+
+    def __init__(self, section, queue):
+        Bear.__init__(self, section, queue)
+
+    @staticmethod
+    def kind():
+        return BEAR_KIND.GLOBAL
+
+    def run(self, language: language=language('Python 3.4')):
+        yield language
+
+
 class BearTestBase(unittest.TestCase):
 
     def setUp(self):
@@ -209,7 +222,7 @@ class BearTest(BearTestBase):
         self.uut = BadTestBear(self.settings, self.queue)
         self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG)
-        self.check_message(LOG_LEVEL.WARNING,
+        self.check_message(LOG_LEVEL.ERROR,
                            'Bear BadTestBear failed to run. Take a look at '
                            'debug messages (`-V`) for further '
                            'information.')
@@ -221,7 +234,7 @@ class BearTest(BearTestBase):
         self.uut.execute('filename.py', 'file\n')
         self.check_message(LOG_LEVEL.DEBUG)
         # Fails because of no run() implementation
-        self.check_message(LOG_LEVEL.WARNING,
+        self.check_message(LOG_LEVEL.ERROR,
                            'Bear LocalBear failed to run on file filename.py. '
                            'Take a look at debug messages (`-V`) for further '
                            'information.')
@@ -231,7 +244,7 @@ class BearTest(BearTestBase):
         self.uut.execute()
         self.check_message(LOG_LEVEL.DEBUG)
         # Fails because of no run() implementation
-        self.check_message(LOG_LEVEL.WARNING,
+        self.check_message(LOG_LEVEL.ERROR,
                            'Bear GlobalBear failed to run. Take a look at '
                            'debug messages (`-V`) for further '
                            'information.')
@@ -251,11 +264,14 @@ class BearTest(BearTestBase):
         self.assertTrue(self.queue.empty())
         self.assertFalse(self.uut.was_executed)
 
-    def check_message(self, log_level, message=None):
+    def check_message(self, log_level, message=None, regex=False):
         msg = self.queue.get()
         self.assertIsInstance(msg, LogMessage)
         if message:
-            self.assertEqual(msg.message, message)
+            if regex:
+                self.assertRegexpMatches(msg.message, message)
+            else:
+                self.assertEqual(msg.message, message)
 
         self.assertEqual(msg.log_level, log_level, msg)
 
@@ -337,6 +353,24 @@ class BearTest(BearTestBase):
         result = bear.new_result('test message', '/tmp/testy')
         expected = Result.from_values(bear, 'test message', '/tmp/testy')
         self.assertEqual(result, expected)
+
+    def test_bear_with_default_language(self):
+        self.uut = BearWithLanguage(self.settings, self.queue)
+        result = self.uut.execute()[0]
+        self.assertIsInstance(result, Language)
+        self.assertEqual(str(result), 'Python 3.4')
+        self.check_message(LOG_LEVEL.DEBUG)
+
+    def test_bear_with_specific_language(self):
+        self.uut = BearWithLanguage(self.settings, self.queue)
+        # This should be ignored
+        self.settings['language'] = 'Java'
+        # Use this instead
+        self.settings.language = Language['HTML 5.1']
+        result = self.uut.execute()[0]
+        self.assertIsInstance(result, Language)
+        self.assertEqual(str(result), 'Hypertext Markup Language 5.1')
+        self.check_message(LOG_LEVEL.DEBUG)
 
 
 class BrokenReadHTTPResponse(BytesIO):

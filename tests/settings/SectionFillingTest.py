@@ -1,6 +1,7 @@
 import unittest
 
 from pyprint.ConsolePrinter import ConsolePrinter
+from testfixtures import LogCapture
 
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
@@ -40,6 +41,7 @@ class SectionFillingTest(unittest.TestCase):
         self.log_printer = LogPrinter(ConsolePrinter())
         self.section = Section('test')
         self.section.append(Setting('key', 'val'))
+        self.empty_section = Section('')
 
     def test_fill_settings(self):
         sections = {'test': self.section}
@@ -86,6 +88,25 @@ class SectionFillingTest(unittest.TestCase):
         self.assertTrue('global name' in new_section)
         self.assertEqual(new_section['key'].value, 'val')
         self.assertEqual(len(new_section.contents), 3)
+
+        # test the deprecation of calling acquire_settings
+        with LogCapture() as capture:
+            fill_section(self.empty_section,
+                         lambda param_1, param_2: {},
+                         self.log_printer,
+                         [LocalTestBear, GlobalTestBear])
+            capture.check()
+
+        with LogCapture() as capture:
+            fill_section(self.empty_section,
+                         lambda param_1, param_2, param_3: {},
+                         self.log_printer,
+                         [LocalTestBear, GlobalTestBear])
+            capture.check(
+                ('root',
+                 'WARNING',
+                 'acquire_settings: section parameter is deprecated.')
+            )
 
     def test_dependency_resolving(self):
         sections = {'test': self.section}

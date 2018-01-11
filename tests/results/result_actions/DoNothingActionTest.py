@@ -7,7 +7,7 @@ from coalib.results.result_actions.DoNothingAction import DoNothingAction
 from coalib.settings.Section import Section, Setting
 
 
-class ShowPatchActionTest(unittest.TestCase):
+class DoNothingActionTest(unittest.TestCase):
 
     def setUp(self):
         self.uut = DoNothingAction()
