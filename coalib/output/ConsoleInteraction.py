@@ -772,7 +772,7 @@ def ask_for_action_and_apply(console_printer,
     :return:                Returns a boolean value. True will be returned, if
                             it makes sense that the user may choose to execute
                             another action, False otherwise.
-                            If apply_single ist set, always return False.
+                            If apply_single isn't set, always return False.
     """
     actions_desc, actions_name = choose_action(console_printer, metadata_list,
                                                apply_single)
