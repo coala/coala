@@ -3,11 +3,13 @@ from coalib.bearlib.languages.Language import UnknownLanguageError
 from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.Result import Result
 from coalib.results.Diff import Diff
+from coalib.parsing.comments import read_ignore_comments
 from coala_utils.FileUtils import detect_encoding
 from os.path import exists
 from os.path import isfile
 import shutil
 import logging
+import re
 
 from coala_utils.decorators import enforce_signature
 
@@ -46,22 +48,32 @@ class IgnoreResultAction(ResultAction):
         """
         Add (I)gnore comment
         """
-
-        ignore_comment = self.get_ignore_comment(result.origin, language)
-
-        if not ignore_comment:
-            return file_diff_dict
-
         source_range = next(filter(lambda sr: exists(sr.file),
                                    result.affected_code))
         filename = source_range.file
 
+        original_line = original_file_dict[filename][
+            source_range.start.line-1].rstrip()
+
+        ignore_comment = self.get_ignore_comment(result.origin, language,
+                                                 original_line)
+
+        if not ignore_comment:
+            return file_diff_dict
+
         ignore_diff = Diff(original_file_dict[filename])
-        ignore_diff.change_line(
-            source_range.start.line,
-            original_file_dict[filename][source_range.start.line-1],
-            original_file_dict[filename][source_range.start.line-1].rstrip() +
-            '  ' + ignore_comment)
+
+        if ' and ' in ignore_comment:
+            # Add the new ignore, replacing the previous ignore.
+            changed_line = re.sub(r'\S+\sIgnore(\s\S+)+', ignore_comment,
+                                  original_line)
+
+        else:
+            # Add a new ignore comment if no previous ignore exists.
+            changed_line = original_line + '  ' + ignore_comment
+
+        ignore_diff.change_line(source_range.start.line, original_line,
+                                changed_line)
 
         if filename in file_diff_dict:
             ignore_diff = file_diff_dict[filename] + ignore_diff
@@ -78,7 +90,7 @@ class IgnoreResultAction(ResultAction):
 
         return file_diff_dict
 
-    def get_ignore_comment(self, origin, language):
+    def get_ignore_comment(self, origin, language, original_line=''):
         r"""
         Returns a string of Ignore Comment, depending on the language
         Supports Single Line Comments
@@ -94,8 +106,15 @@ class IgnoreResultAction(ResultAction):
         try:
             comment_delimiter = Language[
                 language].get_default_version().comment_delimiter
-            ignore_comment = (str(comment_delimiter) + ' Ignore ' +
-                              origin + '\n')
+            ignored_bears = read_ignore_comments(original_line,
+                                                 str(comment_delimiter))
+            if ignored_bears:
+                # Append previously ignored bears to the ignore comment
+                ignore_statement = (' Ignore ' + ', '.join(ignored_bears)
+                                    + ' and ' + origin)
+            else:
+                ignore_statement = ' Ignore ' + origin
+            ignore_comment = (str(comment_delimiter) + ignore_statement + '\n')
         except AttributeError:
             # singleline comments not supported by language
             try:
@@ -103,9 +122,17 @@ class IgnoreResultAction(ResultAction):
                     language].get_default_version().multiline_comment_delimiters
                 start_comment, end_comment = next(iter(
                                         multiline_comment_delimiter.items()))
-                ignore_comment = (str(start_comment) + ' Ignore ' +
-                                  origin + ' ' +
-                                  str(end_comment) + '\n')
+                ignored_bears = read_ignore_comments(original_line,
+                                                     str(start_comment),
+                                                     str(end_comment))
+                if ignored_bears:
+                    # Append previously ignored bears to the ignore comment
+                    ignore_statement = (' Ignore ' + ', '.join(ignored_bears)
+                                        + ' and ' + origin)
+                else:
+                    ignore_statement = ' Ignore ' + origin
+                ignore_comment = (str(start_comment) + ignore_statement
+                                  + ' ' + str(end_comment) + '\n')
             except UnknownLanguageError:
                 # multiline comments also not supported by language
                 logging.warning(

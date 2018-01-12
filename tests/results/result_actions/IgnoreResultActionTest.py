@@ -101,6 +101,40 @@ class IgnoreResultActionTest(unittest.TestCase):
             with open(f_a, 'r') as f:
                 self.assertEqual(file_diff_dict[f_a].modified, f.readlines())
 
+        with make_temp() as f_a:
+            file_dict = {
+                f_a: ['1\n', '2  /* Ignore this */\n', '3\n']
+            }
+
+            file_diff_dict = {}
+
+            # Modify already existing patch
+            uut.apply(Result.from_values('origin', 'msg', f_a, 2),
+                      file_dict, file_diff_dict, 'css')
+            self.assertEqual(
+                file_diff_dict[f_a].modified,
+                ['1\n', '2  /* Ignore this and origin */\n', '3\n'])
+            with open(f_a, 'r') as f:
+                self.assertEqual(file_diff_dict[f_a].modified, f.readlines())
+            self.assertTrue(exists(f_a + '.orig'))
+
+        with make_temp() as f_a:
+            file_dict = {
+                f_a: ['1\n', '2  # Ignore this and that\n', '3\n']
+            }
+
+            file_diff_dict = {}
+
+            # Modify already existing patch
+            uut.apply(Result.from_values('origin', 'msg', f_a, 2),
+                      file_dict, file_diff_dict, 'python')
+            self.assertEqual(
+                file_diff_dict[f_a].modified,
+                ['1\n', '2  # Ignore this, that and origin\n', '3\n'])
+            with open(f_a, 'r') as f:
+                self.assertEqual(file_diff_dict[f_a].modified, f.readlines())
+            self.assertTrue(exists(f_a + '.orig'))
+
             import logging
             logger = logging.getLogger()
 
