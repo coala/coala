@@ -22,7 +22,7 @@ default_actions = *: ApplyPatchAction
 # Do not set default_action to ApplyPatchAction as it may lead to some
 # required imports being removed that might result in coala behaving weirdly.
 
-default_action: *: ShowPatchAction
+default_actions = *: ShowPatchAction
 
 bears = PyUnusedCodeBear
 language = Python
