@@ -125,11 +125,15 @@ class LocalBearTestHelper(unittest.TestCase):
             with execute_bear(uut, 'filename', ['file']) as result:
                 raise AssertionError
         except AssertionError as ex:
-            self.assertIn('The program yielded the following output:', str(ex))
-            self.assertIn('Stdout:', str(ex))
-            self.assertIn('hello stdout', str(ex))
-            self.assertIn('Stderr:', str(ex))
-            self.assertIn('hello stderr', str(ex))
+            self.assertIn('Program arguments:\n'
+                          "('-c', \"import sys\\n"
+                          "print('hello stdout')\\n"
+                          "print('hello stderr', file=sys.stderr)\")\n"
+                          'The program yielded the following output:\n\n'
+                          'Stdout:\n'
+                          'hello stdout\n\n'
+                          'Stderr:\n'
+                          'hello stderr', str(ex))
 
         # Testing with only stdout enabled
         uut = (linter(sys.executable, use_stdout=True)
@@ -139,8 +143,12 @@ class LocalBearTestHelper(unittest.TestCase):
             with execute_bear(uut, 'filename', ['file']) as result:
                 raise AssertionError
         except AssertionError as ex:
-            self.assertIn('The program yielded the following output:', str(ex))
-            self.assertIn('hello stdout', str(ex))
+            self.assertIn('Program arguments:\n'
+                          "('-c', \"import sys\\n"
+                          "print('hello stdout')\\n"
+                          "print('hello stderr', file=sys.stderr)\")\n"
+                          'The program yielded the following output:\n\n'
+                          'hello stdout', str(ex))
 
     def test_exception(self):
 

@@ -22,12 +22,24 @@ def execute_bear(bear, *args, **kwargs):
         # stdout and stderr.
         with ExitStack() as stack:
             if isinstance(bear, LinterClass):
-                console_output.append('The program yielded '
-                                      'the following output:\n')
                 old_process_output = bear.process_output
+                old_create_arguments = bear.create_arguments
+
+                def new_create_arguments(filename, file, config_file,
+                                         *args, **kwargs):
+                    arguments = old_create_arguments(filename, file,
+                                                     config_file, *args,
+                                                     **kwargs)
+                    console_output.append(
+                        'Program arguments:\n' + repr(arguments))
+
+                    return arguments
 
                 def new_process_output(output, filename=None, file=None,
                                        **process_output_kwargs):
+
+                    console_output.append('The program yielded '
+                                          'the following output:\n')
                     if isinstance(output, tuple):
                         stdout, stderr = output
                         console_output.append('Stdout:\n' + stdout)
@@ -39,6 +51,9 @@ def execute_bear(bear, *args, **kwargs):
 
                 stack.enter_context(patch.object(
                     bear, 'process_output', wraps=new_process_output))
+
+                stack.enter_context(patch.object(
+                    bear, 'create_arguments', wraps=new_create_arguments))
 
             bear_output_generator = bear.execute(*args, **kwargs)
 
