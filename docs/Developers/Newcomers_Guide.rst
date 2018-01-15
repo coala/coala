@@ -34,7 +34,8 @@ experience better!
 
 Once you've completed all five tasks, please fill our
 `promotion request form <https://docs.google.com/forms/d/e/1FAIpQLSevrkrJga23GySFUdngrTEo0CdjXcqjHBHqX2z_JF2Z61YNmw/viewform?usp=sf_link>`_
-to get promoted to the role of developer.
+to get promoted to the role of developer. GitLab contributions also
+count to the promotion of a newcomer to developer.
 
 .. note::
 
@@ -163,6 +164,13 @@ git/GitHub, we strongly recommend following a tutorial, such as `this one
 
 We also have a `page dedicated to git commands <http://coala.io/git>`_ that
 will help you learn the basics.
+
+.. note::
+
+    You can view some of our repositories on
+    `GitLab <https://gitlab.com/coala>`_.
+    For more information about it, browse to our
+    `wiki page <https://github.com/coala/coala/wiki/GitLab>`_.
 
 If anything is unclear, or you are encountering problems, feel free
 to contact us on `gitter <https://coala.io/chat>`_,
