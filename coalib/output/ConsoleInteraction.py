@@ -199,6 +199,112 @@ def acquire_actions_and_apply(console_printer,
             break
 
 
+def get_context(console_printer, file_dict,
+                sourcerange):  # pragma: no cover
+    """
+    Gets context for the affected lines and also the line numbers
+    of the context
+
+    :param file_dict:       A dictionary containing all files as values with
+                            filenames as key.
+    :param sourcerange:     The SourceRange object referring to the related
+                            lines to print.
+
+    :yield:                 Affected file's contextual information
+
+    """
+
+    related_lines = list()
+    related_lines_nr = list()
+
+    affected_line = file_dict[sourcerange.file][
+                    sourcerange.start.line-1].rstrip()
+    affected_line = affected_line.replace('\t', 8*' ')
+
+    indet_space_count = len(affected_line)-len(affected_line.lstrip())
+    if indet_space_count > 0:
+        for j in range(sourcerange.start.line-2, -1, -1):  # pragma: no cover
+            rline = file_dict[sourcerange.file][j].rstrip()
+            affected_line = rline.replace('\t', 8*' ')
+            prv_space_count = len(affected_line) - len(affected_line.lstrip())
+            if prv_space_count < indet_space_count and rline:
+                related_lines.append(rline)
+                related_lines_nr.append(j+1)
+                indet_space_count = prv_space_count
+            if indet_space_count == 0:
+                break
+    else:
+        pre_context = list(range(sourcerange.start.line-1))
+        pre_context.reverse()
+        pre_context = pre_context[0: min(2, len(pre_context))]
+        for i in pre_context:
+            related_lines.append(file_dict[sourcerange.file][i])
+            related_lines_nr.append(i+1)
+
+    related_lines_nr.reverse()
+    related_lines.reverse()
+
+    return related_lines, related_lines_nr
+
+
+def print_before_context(console_printer,
+                         file_dict,
+                         sourcerange):  # pragma: no cover
+    """
+    Prints the context for the affected lines.
+
+    :param console_printer: Object to print messages on the console.
+    :param file_dict:       A dictionary containing all files as values with
+                            filenames as key.
+    :param sourcerange:     The SourceRange object referring to the related
+                            lines to print.
+    """
+
+    related_lines, related_line_nr = get_context(console_printer, file_dict,
+                                                 sourcerange)
+    no_color = not console_printer.print_colored
+    j = 0
+    for i in related_line_nr:
+        # Print affected file's line number in the sidebar.
+        console_printer.print(format_lines(lines='', line_nr=i, symbol='['),
+                              color=FILE_LINES_COLOR,
+                              end='')
+
+        line = related_lines[j].rstrip('\n')
+        j += 1
+        try:
+            lexer = get_lexer_for_filename(sourcerange.file)
+        except ClassNotFound:
+            lexer = TextLexer()
+        lexer.add_filter(VisibleWhitespaceFilter(
+            spaces=True, tabs=True,
+            tabsize=SpacingHelper.DEFAULT_TAB_WIDTH))
+        # highlight() combines lexer and formatter to output a ``str``
+        # object.
+        printed_chars = 0
+        if i == sourcerange.start.line and sourcerange.start.column:
+            console_printer.print(highlight_text(
+                no_color, line[:sourcerange.start.column - 1],
+                BackgroundMessageStyle, lexer), end='')
+
+            printed_chars = sourcerange.start.column - 1
+
+        if i == sourcerange.end.line and sourcerange.end.column:
+            console_printer.print(highlight_text(
+                no_color, line[printed_chars:sourcerange.end.column - 1],
+                BackgroundSourceRangeStyle, lexer), end='')
+
+            console_printer.print(highlight_text(
+               no_color, line[sourcerange.end.column - 1:],
+               BackgroundSourceRangeStyle, lexer), end='')
+            console_printer.print('')
+        else:
+            console_printer.print(highlight_text(
+                no_color, line[printed_chars:], BackgroundMessageStyle, lexer),
+                                  end='')
+            console_printer.print('')
+
+
 def print_lines(console_printer,
                 file_dict,
                 sourcerange):
@@ -282,25 +388,9 @@ def print_result(console_printer,
                         'class.')
         return
 
-    if hasattr(section, 'name'):
-        console_printer.print('**** {bear} [Section: {section} | Severity: '
-                              '{severity}] ****'
-                              .format(bear=result.origin,
-                                      section=section.name,
-                                      severity=RESULT_SEVERITY.__str__(
-                                          result.severity)),
-                              color=RESULT_SEVERITY_COLORS[result.severity])
-    else:
-        console_printer.print('**** {bear} [Section {section} | Severity '
-                              '{severity}] ****'
-                              .format(bear=result.origin, section='<empty>',
-                                      severity=RESULT_SEVERITY.__str__(
-                                          result.severity)),
-                              color=RESULT_SEVERITY_COLORS[result.severity])
     lexer = TextLexer()
     result.message = highlight_text(no_color, result.message,
                                     BackgroundMessageStyle, lexer)
-    console_printer.print(format_lines(result.message, symbol='!'))
 
     if interactive:
         cli_actions = CLI_ACTIONS
@@ -317,6 +407,7 @@ def print_result(console_printer,
                                     if not isinstance(action, ShowPatchAction))
             else:
                 print_diffs_info(result.diffs, console_printer)
+
         acquire_actions_and_apply(console_printer,
                                   section,
                                   file_diff_dict,
@@ -463,6 +554,27 @@ def print_results_no_input(log_printer,
     """
     for result in result_list:
 
+        console_printer.print('\n'+format_lines(result.message, symbol='!'))
+        if hasattr(section, 'name'):  # pragma: no cover
+            console_printer.print(
+                '**** {bear} [Section: {section} | Severity: '
+                '{severity}] ****'
+                .format(
+                    bear=result.origin,
+                    section=section.name,
+                    severity=RESULT_SEVERITY.__str__(
+                                              result.severity
+                                              )
+                        ),
+                color=RESULT_SEVERITY_COLORS[result.severity])
+        else:   # pragma: no cover
+            console_printer.print(
+                '**** {bear} [Section {section} | Severity '
+                '{severity}] ****'
+                .format(bear=result.origin, section='<empty>',
+                        severity=RESULT_SEVERITY.__str__(result.severity)),
+                color=RESULT_SEVERITY_COLORS[result.severity])
+
         print_affected_files(console_printer,
                              None,
                              result,
@@ -500,6 +612,27 @@ def print_results(log_printer,
     """
     for result in sorted(result_list):
 
+        console_printer.print('\n'+format_lines(result.message, symbol='!'))
+        if hasattr(section, 'name'):  # pragma: no cover
+            console_printer.print(
+                '**** {bear} [Section: {section} | Severity: '
+                '{severity}] ****'
+                .format(
+                    bear=result.origin,
+                    section=section.name,
+                    severity=RESULT_SEVERITY.__str__(
+                                              result.severity
+                                              )
+                        ),
+                color=RESULT_SEVERITY_COLORS[result.severity])
+        else:  # pragma: no cover
+            console_printer.print(
+                '**** {bear} [Section {section} | Severity '
+                '{severity}] ****'
+                .format(bear=result.origin, section='<empty>',
+                        severity=RESULT_SEVERITY.__str__(result.severity)),
+                color=RESULT_SEVERITY_COLORS[result.severity])
+
         print_affected_files(console_printer,
                              None,
                              result,
@@ -532,6 +665,7 @@ def print_affected_lines(console_printer, file_dict, sourcerange):
                                                line_nr=sourcerange.end.line,
                                                symbol='!'))
         else:
+            print_before_context(console_printer, file_dict, sourcerange)
             print_lines(console_printer,
                         file_dict,
                         sourcerange)

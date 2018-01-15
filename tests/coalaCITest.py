@@ -106,7 +106,8 @@ class coalaCITest(unittest.TestCase):
                 '-b', 'SpaceConsistencyTestBear',
                 '--settings', 'use_spaces=True',
                 debug=debug)
-            self.assertIn('Line contains ', stdout)  # Result message is shown
+            self.assertIn('include',
+                          stdout)  # Result message is shown
             self.assertIn("Applied 'ShowPatchAction'", stderr)
             self.assertEqual(retval, 5,
                              'coala must return exitcode 5 when it '
