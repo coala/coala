@@ -7,6 +7,7 @@ from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from pkg_resources import VersionConflict
 from coalib.bears.Bear import Bear
 
+
 def get_exitcode(exception, log_printer=None):
     if isinstance(exception, KeyboardInterrupt):  # Ctrl+C
         print('Program terminated by user.')
