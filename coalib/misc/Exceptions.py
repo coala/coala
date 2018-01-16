@@ -5,7 +5,7 @@ from coalib.misc import Constants
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 
 from pkg_resources import VersionConflict
-
+from coalib.bears.Bear import Bear
 
 def get_exitcode(exception, log_printer=None):
     if isinstance(exception, KeyboardInterrupt):  # Ctrl+C
@@ -17,7 +17,7 @@ def get_exitcode(exception, log_printer=None):
     elif isinstance(exception, SystemExit):
         exitcode = exception.code
     elif isinstance(exception, VersionConflict):
-        log_message = Constants.VERSION_CONFLICT_MESSAGE % str(exception.req)
+        log_message = Constants.VERSION_CONFLICT_MESSAGE % (str(exception.req),str(Bear.name()))
         log_exception(log_message, exception)
         exitcode = 13
     elif isinstance(exception, BaseException):
