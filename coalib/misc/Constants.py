@@ -25,7 +25,7 @@ VERSION_CONFLICT_MESSAGE = ('There is a conflict in the version of a '
                             'coala or running `pip3 install "%s"`. Be aware '
                             'that the latter solution might break other '
                             'python packages that depend on the currently '
-                            'installed version.')
+                            'installed version. The "%s" is conflicting')
 
 OBJ_NOT_ACCESSIBLE = '{} is not accessible and will be ignored!'
 
