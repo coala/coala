@@ -1,5 +1,4 @@
 import os
-import re
 import sys
 import unittest
 
@@ -12,8 +11,6 @@ class coalaCITest(unittest.TestCase):
 
     def setUp(self):
         self.old_argv = sys.argv
-        self.unescaped_coafile = os.path.abspath('./.coafile')
-        self.coafile = re.escape(self.unescaped_coafile)
 
     def tearDown(self):
         sys.argv = self.old_argv
@@ -61,7 +58,7 @@ class coalaCITest(unittest.TestCase):
             retval, stdout, stderr = execute_coala(coala.main, 'coala',
                                                    '--non-interactive',
                                                    '-c', os.devnull,
-                                                   '-f', re.escape(filename),
+                                                   '-f', filename,
                                                    '-b',
                                                    'SpaceConsistencyTestBear',
                                                    '--settings',
@@ -87,7 +84,7 @@ class coalaCITest(unittest.TestCase):
                                                    '--non-interactive',
                                                    '-c', os.devnull,
                                                    '-b', 'LineCountTestBear',
-                                                   '-f', re.escape(filename),
+                                                   '-f', filename,
                                                    debug=debug)
             self.assertIn('This file has 1 lines.',
                           stdout,
@@ -105,7 +102,7 @@ class coalaCITest(unittest.TestCase):
             retval, stdout, stderr = execute_coala(
                 coala.main, 'coala', '--non-interactive',
                 '-c', os.devnull,
-                '-f', re.escape(filename),
+                '-f', filename,
                 '-b', 'SpaceConsistencyTestBear',
                 '--settings', 'use_spaces=True',
                 debug=debug)
@@ -168,7 +165,7 @@ class coalaCITest(unittest.TestCase):
                 coala.main, 'coala', '--non-interactive',
                 '-c', os.devnull,
                 '--limit-files', 'some_pattern',
-                '-f', re.escape(filename),
+                '-f', filename,
                 '-b', 'SpaceConsistencyTestBear',
                 '--settings', 'use_spaces=True',)
             self.assertEqual('Executing section cli...\n', stdout)
