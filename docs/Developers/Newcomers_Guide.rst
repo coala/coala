@@ -397,7 +397,7 @@ Now there are two possibilities:
 - your ``Pull Request`` gets accepted, and your commits will get merged into
   the master branch
 - your ``Pull Request`` doesn't get accepted, and therefore you will
-  need to to modify it as per the review comments
+  need to modify it as per the review comments
 
 .. note::
 
