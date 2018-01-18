@@ -130,7 +130,10 @@ passed.
                 settings={'max_number_of_lines': 20})
 
 ``check_results`` asserts if your bear results match the actual
-results on execution on CLI.Use ``ShowPatchAction`` to see the relative difference of your code after the patch is applied.Just like the above example, we need to ``setUp``a *Section* and your Bear with some *Settings*. ``check_results`` validates
+results on execution on CLI.Use ``ShowPatchAction`` to see the relative
+difference of your code after the patch is applied.
+Just like the above example, we need to ``setUp``a *Section* and your Bear
+with some *Settings*. ``check_results`` validates
 your results by giving your local bear, lines to check and expected results
 as input. ``check_results`` asserts if your bear's results on checking the
 ``file`` match with ``Results.from_values(...)``.
