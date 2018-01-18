@@ -21,8 +21,7 @@ easily by overriding ``generate_config()``.
             return config_file
 
 The string returned by this method is written into a temporary file before
-invoking ``create_arguments()``. If you return ``None``, no configuration file
-is generated.
+invoking ``create_arguments()``.
 
 The path of the temporary configuration file can be accessed inside
 ``create_arguments()`` via the ``config_file`` parameter:
@@ -40,6 +39,30 @@ The path of the temporary configuration file can be accessed inside
         @staticmethod
         def create_arguments(filename, file, config_file):
             return "--use-config", config_file
+
+If you return ``None``, no configuration file is generated. A common case
+where to explicitly return ``None`` is when you want to expose a setting
+for the user to use his own tool-specific config. In case the user specifies
+such a config file, we can avoid generating one again with ``generate_config``
+to reduce I/O load.
+
+::
+
+    @linter(executable='...')
+    class MyBear:
+        @staticmethod
+        def generate_config(filename, file,
+                            user_config: str='',
+                            setting_a: bool=False):
+            if user_config:
+                return None
+            else:
+                return 'A={}'.format(setting_a)
+
+        def create_arguments(filename, file, config_file,
+                             user_config: str=''):
+            return (filename, '--use-config',
+                    user_config if user_config else config_file)
 
 .. note::
 
