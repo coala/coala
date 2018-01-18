@@ -539,6 +539,9 @@ commands (described below) for each commit to be rebased. These commands
 determine how individual commits will be transferred to the new base. You can
 also reorder the commit listing to change the order of the commits themselves.
 
+For more important commands go to http://ohshitgit.com/ as these commands more
+often than not help you to get out of a mess.
+
 If you would like more information/commands, please use your favourite search
 engine to look for it. Git is widely used throughout the world and there are
 many good tutorials and git related Q&A threads out there.
