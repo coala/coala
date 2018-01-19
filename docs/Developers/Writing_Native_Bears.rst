@@ -51,14 +51,15 @@ each file:
 
 .. code:: python
 
-    from coalib.bears.LocalBear import LocalBear
+    import logging
 
+    from coalib.bears.LocalBear import LocalBear
 
     class HelloWorldBear(LocalBear):
         def run(self,
                 filename,
                 file):
-            self.debug("Hello World! Checking file", filename, ".")
+            logging.debug("Hello World! Checking file", filename, ".")
 
 This bear is stored at ``./bears/HelloWorldBear.py``
 
@@ -110,8 +111,8 @@ You should now see an output like this on your command line:
     tutorial, else you will see a bunch of other outputs from other bears
     as well.
 
-The Bear class also supports ``warn`` and ``err`` to create ``WARNING`` and
-``ERROR`` messages respectively.
+For more detail about Python's built-in ``logging`` facility,
+see https://docs.python.org/3/library/logging.html.
 
 Communicating with the User
 ---------------------------
@@ -130,6 +131,8 @@ the creative name CommunicationBear:
 
 .. code:: python
 
+    import logging
+
     from coalib.bears.LocalBear import LocalBear
 
     class CommunicationBear(LocalBear):
@@ -143,7 +146,7 @@ the creative name CommunicationBear:
 
             :param user_input: Arbitrary user input.
             """
-            self.debug("Got '{ui}' as user input of type {type}.".format(
+            logging.debug("Got '{ui}' as user input of type {type}.".format(
                 ui=user_input,
                 type=type(user_input)))
 
