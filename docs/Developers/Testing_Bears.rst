@@ -140,9 +140,9 @@ A Final Note
 ------------
 Use ``ShowPatchAction`` to see the
 relative difference of your code after the patch is applied.
-``LocalBearTestHelper`` is written to ease off testing for bears. Make sure
-that your tests have 100% coverage and zero redundancy. Use ``check_results``
-as much as possible to test your bears. 
+``LocalBearTestHelper`` is written to ease off testing for bears.
+Make surethat your tests have 100% coverage and zero redundancy.
+Use ``check_results``as much as possible to test your bears. 
 
 Glossary
 --------
