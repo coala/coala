@@ -138,8 +138,8 @@ as input. ``check_results`` asserts if your bear's results on checking the
 
 A Final Note
 ------------
-Use ``ShowPatchAction`` to see the
-relative difference of your code after the patch is applied.
+Use ``ShowPatchAction`` to see the relative 
+difference of your code after the patch is applied.
 ``LocalBearTestHelper`` is written to ease off testing for bears.
 Make surethat your tests have 100% coverage and zero redundancy.
 Use ``check_results``as much as possible to test your bears. 
