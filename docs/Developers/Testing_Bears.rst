@@ -9,6 +9,7 @@ You can use the following to test your bears:
 - ``LocalBearTestHelper.check_results``
 - ``verify_local_bears``
 
+
 Understanding through examples
 ------------------------------
 
@@ -137,10 +138,11 @@ as input. ``check_results`` asserts if your bear's results on checking the
 
 A Final Note
 ------------
-
-``LocalBearTestHelper`` is written to ease off testing for bears. Make sure
-that your tests have 100% coverage and zero redundancy. Use ``check_results``
-as much as possible to test your bears.
+``LocalBearTestHelper`` is written to ease off testing for bears.
+Make surethat your tests have 100% coverage and zero redundancy.
+Use ``check_results``as much as possible to test your bears. 
+Use ``ShowPatchAction`` to see the relative 
+difference of your code after the patch is applied.
 
 Glossary
 --------
