@@ -30,7 +30,7 @@ Generally follow this process:
 **Be sure to not value quantity over quality!** Be transparent and polite:
 Explain why something has to be changed and don't just "command" the coder to
 obey guidelines for no reason. Reviewing always involves saying someone that
-his code isn't right, be very careful not to appear rude even if
+their code isn't right, be very careful not to appear rude even if
 you don't mean it! Bad reviews will scare away other contributors.
 
 .. note::
