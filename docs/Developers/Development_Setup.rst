@@ -91,30 +91,25 @@ https://gitlab.com/coala/coala-utils/
 Installing from Git
 -------------------
 
-We recommend first installing the latest development snapshot of coala's
-master branch from and all of its dependencies with pip3 using
+We recommend installing coala from the source and its dependencies with
+pip3 using
 
 ::
 
     (coala-venv)$ git clone https://github.com/coala/coala
     (coala-venv)$ cd coala
     (coala-venv)$ pip3 install .
+    # This will install coala from the current directory.
     (coala-venv)$ cd -
     (coala-venv)$ git clone https://github.com/coala/coala-bears
     (coala-venv)$ cd coala-bears
     (coala-venv)$ pip3 install .
+    # This will install coala-bears from the current directory.
 
-Once you have forked the repository you would like to modify, you can
-install a repository-backed version of the repository using
-
-::
-
-    (coala-venv)$ pip3 install -e <path/to/forked/repository>
-
-You will then be able to edit the repository and have the changes take effect
-in your virtualenv immediately. You will also be able to use pip3 to manage
-your installation of the package should you need to install from a different
-source in the future.
+Once you have forked the repository, you will be able to edit the
+repository. This will also help you in managing the installed package
+using pip3 should you need to install from a different source in the
+future.
 
 
 Building Documentation
