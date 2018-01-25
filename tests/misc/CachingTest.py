@@ -113,7 +113,6 @@ class CachingTest(unittest.TestCase):
                     '-b', 'LineCountTestBear',
                     '-L', 'DEBUG')
                 self.assertIn('This file has', stdout)
-                self.assertIn('Running bear LineCountTestBear', stderr)
 
             # Due to the change in configuration from the removal of
             # ``--flush-cache`` this run will not be sufficient to

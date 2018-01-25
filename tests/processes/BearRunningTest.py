@@ -9,6 +9,7 @@ from coalib.processes.BearRunning import (
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.settings.Section import Section
+from testfixtures import LogCapture, StringComparison
 
 
 class LocalTestBear(LocalBear):
@@ -200,24 +201,31 @@ class BearRunningUnitTest(unittest.TestCase):
         self.file_name_queue.put('t')
         self.file_dict['t'] = []
 
-        run(self.file_name_queue,
-            self.local_bear_list,
-            self.global_bear_list,
-            self.global_bear_queue,
-            self.file_dict,
-            self.local_result_dict,
-            self.global_result_dict,
-            self.message_queue,
-            self.control_queue)
+        with LogCapture() as capture:
+            run(self.file_name_queue,
+                self.local_bear_list,
+                self.global_bear_list,
+                self.global_bear_queue,
+                self.file_dict,
+                self.local_result_dict,
+                self.global_result_dict,
+                self.message_queue,
+                self.control_queue)
 
-        expected_messages = [LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.ERROR,
-                             LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.ERROR]
-
-        for msg in expected_messages:
-            self.assertEqual(msg, self.message_queue.get(timeout=0).log_level)
+            capture.check(
+                ('root', 'DEBUG', 'Running bear UnexpectedBear1...'),
+                ('root', 'DEBUG', 'Running bear UnexpectedBear2...'),
+                ('root', 'ERROR', 'Bear UnexpectedBear2 failed to run on file '
+                                  't. Take a look at debug messages (`-V`) for '
+                                  'further information.'),
+                ('root', 'DEBUG', StringComparison(r'.*The bear UnexpectedBear2 '
+                                                   'raised an exception*'))
+            )
+        try:
+            while True:
+                self.message_queue.get(timeout=0)
+        except queue.Empty:
+            pass
 
 
 class BearRunningIntegrationTest(unittest.TestCase):
@@ -260,28 +268,32 @@ d
         self.global_bear_queue.put(1)
 
     def test_run(self):
-        run(self.file_name_queue,
-            self.local_bear_list,
-            self.global_bear_list,
-            self.global_bear_queue,
-            self.file_dict,
-            self.local_result_dict,
-            self.global_result_dict,
-            self.message_queue,
-            self.control_queue)
+        with LogCapture() as capture:
+            run(self.file_name_queue,
+                self.local_bear_list,
+                self.global_bear_list,
+                self.global_bear_queue,
+                self.file_dict,
+                self.local_result_dict,
+                self.global_result_dict,
+                self.message_queue,
+                self.control_queue)
 
-        expected_messages = [LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.ERROR,
-                             LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.WARNING,
-                             LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.WARNING,
-                             LOG_LEVEL.ERROR,
-                             LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.WARNING]
-        for msg in expected_messages:
-            self.assertEqual(msg, self.message_queue.get(timeout=0).log_level)
+            capture.check(
+                ('root', 'DEBUG', 'Running bear LocalTestBear...'),
+                ('root', 'ERROR', 'Bear LocalTestBear failed to run on file '
+                                  'file1. Take a look at debug messages (`-V`) '
+                                  'for further information.'),
+                ('root', 'DEBUG', StringComparison(r'.*The bear LocalTestBear '
+                                                   'raised an exception*')),
+                ('root', 'DEBUG', 'Running bear LocalTestBear...'),
+                ('root', 'DEBUG', 'Running bear GlobalTestBear...')
+            )
+        try:
+            while True:
+                self.message_queue.get(timeout=0)
+        except queue.Empty:
+            pass
 
         local_result_expected = [[],
                                  [Result.from_values('LocalTestBear',
@@ -320,5 +332,4 @@ d
         self.assertEqual(len(self.global_result_dict), 2)
         self.assertEqual(len(self.local_result_dict),
                          len(local_result_expected))
-        self.assertRaises(queue.Empty, self.message_queue.get, timeout=0)
         self.assertRaises(queue.Empty, self.control_queue.get, timeout=0)
