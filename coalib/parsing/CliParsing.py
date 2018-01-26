@@ -113,12 +113,12 @@ def check_conflicts(sections):
     :raises SystemExit: If there are conflicting arguments (exit code: 2)
     """
     for section in sections.values():
-        if (
-                section.get('no_config', False) and
-                (section.get('save', False) or
-                 section.get('find_config', False))):
+        if section.get('no_config', False):
+            section['find_config'] = 'False'
+
+        if section.get('no_config', False) and section.get('save', False):
             ArgumentParser().error(
-                "'no_config' cannot be set together 'save' or 'find_config'.")
+                "'no_config' cannot be set together 'save'.")
 
         if (
                 not section.get('json', False) and

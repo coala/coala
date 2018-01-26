@@ -74,7 +74,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
             str(sections['cli']),
             "cli {bears : 'JavaTestBear', config : " +
             repr(PathArg(temporary)) +
-            ", files : '*.java', save : 'True', test : '5'}")
+            ", files : '*.java', find_config : 'True', "
+            "save : 'True', test : '5'}")
 
         with make_temp() as temporary:
             sections, local_bears, global_bears, targets = (
@@ -114,7 +115,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
             arg_list=[])
 
         self.assertEqual(str(sections['test']),
-                         "test {value : '1', testval : '5'}")
+                         "test {value : '1'}")
 
         Constants.system_coafile = tmp
 
@@ -132,7 +133,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
             arg_list=[])
 
         self.assertEqual(str(sections['test']),
-                         "test {value : '1', testval : '5'}")
+                         "test {value : '1'}")
 
         Constants.user_coafile = tmp
 
@@ -228,7 +229,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
         with open(filename, 'r') as f:
             lines = f.readlines()
         self.assertEqual(['[cli]\n',
-                          'config = some_bad_filename\n'], lines)
+                          'config = some_bad_filename\n',
+                          'find_config = True\n'], lines)
 
         with self.assertRaises(SystemExit):
             gather_configuration(
@@ -246,6 +248,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
             filename = escape(filename, '\\')
         self.assertEqual(['[cli]\n',
                           'config = ' + filename + '\n',
+                          'find_config = True\n',
                           '[test]\n',
                           'value = 5\n'], lines)
 
@@ -285,8 +288,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
             sections, _, _, _ = gather_configuration(
                 lambda *args: True,
                 self.log_printer,
-                arg_list=['--find-config'])
-            self.assertEqual(bool(sections['cli']['find_config']), True)
+                arg_list=['--find-config=False'])
+            self.assertEqual(bool(sections['cli']['find_config']), False)
 
     def test_no_config(self):
         current_dir = os.path.abspath(os.path.dirname(__file__))
