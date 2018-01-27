@@ -953,7 +953,6 @@ class ShowBearsTest(unittest.TestCase):
     @check_logs(*deprecation_messages)
     def test_show_bear_settings_only(self):
         with retrieve_stdout() as stdout:
-            from coalib.parsing.DefaultArgParser import default_arg_parser
             args = default_arg_parser().parse_args(['--show-settings'])
             show_bear(TestBear, False, False, self.console_printer, args)
             self.assertEqual(stdout.getvalue(),
