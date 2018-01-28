@@ -48,7 +48,7 @@ before_install:
   # Apart from builds with python 2.7 and 3.5, it installs setuptools
   # twice. So, it is required to uninstall one version manually.
   - pip uninstall setuptools --yes
-  - pip install pip==9 setuptools==19
+  - pip install pip==9 setuptools==21
   - python .misc/check_setuptools.py
 
   # https://github.com/coala/coala/issues/3183
