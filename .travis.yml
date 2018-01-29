@@ -10,8 +10,16 @@ matrix:
     # OSX build removed due to long build startup delays
     # Restore matrix job entry from d2d67fab to test OSX
     - python: 2.7
-      env: UNSUPPORTED=true
-      script: .misc/check_unsupported.sh
+      # Re-use this job for two checks as the concurrency limit is five jobs
+      services: docker
+      # Set environment variable COALA_BRANCH=<branch> to override
+      # the default.
+      env:
+        - UNSUPPORTED=true
+        - CHECK_DOCKER_BEARS=true
+      script:
+        - .misc/check_unsupported.sh
+        - .misc/check_docker_bears.sh
     - python: 3.3
       env: UNSUPPORTED=true
       script: .misc/check_unsupported.sh
