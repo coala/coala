@@ -147,7 +147,7 @@ class coalaJSONTest(unittest.TestCase):
             del output['logs'][log_index]['timestamp']
 
         self.assertEqual(data, output)
-        self.assertFalse(retval2)
+        self.assertEqual(retval2, 2)
         self.assertFalse(stdout2)
         self.assertFalse(stderr2)
 
