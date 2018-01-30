@@ -116,9 +116,11 @@ def check_conflicts(sections):
         if (
                 section.get('no_config', False) and
                 (section.get('save', False) or
-                 section.get('find_config', False))):
+                 section.get('find_config', False) or
+                 (str(section.get('config', 'no_input')) != 'no_input'))):
             ArgumentParser().error(
-                "'no_config' cannot be set together 'save' or 'find_config'.")
+                "'no_config' cannot be set together 'save' or 'find_config'"
+                " or 'config'.")
 
         if (
                 not section.get('json', False) and
