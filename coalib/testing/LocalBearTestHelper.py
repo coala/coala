@@ -231,6 +231,9 @@ class LocalBearTestHelper(unittest.TestCase):
         :param lines:            The lines to check. (List of strings)
         :param results:          The expected list of results.
         :param filename:         The filename, if it matters.
+        :param check_order:      Whether to check that the elements of
+                                 ``results`` and that of the actual list
+                                 generated are in the same order or not.
         :param force_linebreaks: Whether to append newlines at each line
                                  if needed. (Bears expect a \\n for every line)
         :param create_tempfile:  Whether to save lines in tempfile if needed.
