@@ -271,6 +271,16 @@ class CollectBearsTest(unittest.TestCase):
             ['other_kind'],
             self.log_printer)[0]), 0)
 
+    def test_bear_suffix(self):
+        self.assertEqual(
+            len(collect_bears(os.path.join(self.collectors_test_dir, 'bears'),
+                              ['namebear'], ['kind'],
+                              self.log_printer)[0]), 1)
+        self.assertEqual(
+            len(collect_bears(os.path.join(self.collectors_test_dir, 'bears'),
+                              ['name'], ['kind'],
+                              self.log_printer)[0]), 1)
+
     def test_all_bears_from_sections(self):
         test_section = Section('test_section')
         test_section.bear_dirs = lambda: os.path.join(self.collectors_test_dir,

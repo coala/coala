@@ -177,6 +177,23 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer=None,
         bears_found[index].append(bear)
         bear_globs_with_bears.add(glob)
 
+    unused_globs = set(bear_globs) - set(bear_globs_with_bears)
+    suffix_globs = {}
+
+    for glob in unused_globs:
+        if glob is not '**' and glob is not '*':
+            if glob.endswith('bear'):  # pragma nt: no cover
+                new_glob = glob[:-4] + 'B' + glob[-3:]
+                suffix_globs[new_glob] = glob
+            elif not glob.endswith('Bear'):
+                suffix_globs[glob + 'Bear'] = glob
+
+    for bear, glob in icollect_bears(bear_dirs,
+                                     set(suffix_globs.keys()), kinds):
+        index = kinds.index(_get_kind(bear))
+        bears_found[index].append(bear)
+        bear_globs_with_bears.add(suffix_globs[glob])
+
     if warn_if_unused_glob:
         _warn_if_unused_glob(bear_globs, bear_globs_with_bears,
                              'No bears matching \'{}\' were found. Make sure '
