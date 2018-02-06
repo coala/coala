@@ -35,7 +35,7 @@ class FunctionMetadata:
                                     the default value. To preserve the order,
                                     use OrderedDict.
         :param omit:                A set of parameters to omit.
-        :param deprecared_params:   A list of params that are deprecated.
+        :param deprecated_params:   A list of params that are deprecated.
         """
         if non_optional_params is None:
             non_optional_params = OrderedDict()
