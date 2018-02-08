@@ -77,9 +77,9 @@ with open('README.rst') as readme:
 
 if __name__ == '__main__':
     if platform.system() != 'Windows':
-        data_files = [('.', ['coala.1'])]
+        data_files = [('man/man1', ['coala.1'])]
     else:
-        data_files = [('.', [])]
+        data_files = [('man/man1', [])]
 
     setup(name='coala',
           version=VERSION,
