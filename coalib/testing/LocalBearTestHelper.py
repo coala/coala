@@ -108,14 +108,21 @@ class LocalBearTestHelper(unittest.TestCase):
         Asserts that a check of the given lines with the given local bear
         either yields or does not yield any results.
 
-        :param local_bear:       The local bear to check with.
-        :param lines:            The lines to check. (List of strings)
-        :param filename:         The filename, if it matters.
-        :param valid:            Whether the lines are valid or not.
-        :param force_linebreaks: Whether to append newlines at each line
-                                 if needed. (Bears expect a \\n for every line)
-        :param create_tempfile:  Whether to save lines in tempfile if needed.
-        :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
+        :param local_bear:
+            The local bear to check with.
+        :param lines:
+            The lines to check. (List of strings)
+        :param filename:
+            The filename, if it matters.
+        :param valid:
+            Whether the lines are valid or not.
+        :param force_linebreaks:
+            Whether to append newlines at each line if needed.
+            (Bears expect a \\n for every line)
+        :param create_tempfile:
+            Whether to save lines in tempfile if needed.
+        :param tempfile_kwargs:
+            Kwargs passed to tempfile.mkstemp().
         """
         if valid:
             self.check_results(local_bear, lines,
@@ -147,13 +154,19 @@ class LocalBearTestHelper(unittest.TestCase):
         Asserts that a check of the given lines with the given local bear
         yields results.
 
-        :param local_bear:       The local bear to check with.
-        :param lines:            The lines to check. (List of strings)
-        :param filename:         The filename, if it matters.
-        :param force_linebreaks: Whether to append newlines at each line
-                                 if needed. (Bears expect a \\n for every line)
-        :param create_tempfile:  Whether to save lines in tempfile if needed.
-        :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
+        :param local_bear:
+            The local bear to check with.
+        :param lines:
+            The lines to check. (List of strings)
+        :param filename:
+            The filename, if it matters.
+        :param force_linebreaks:
+            Whether to append newlines at each line if needed.
+            (Bears expect a \\n for every line)
+        :param create_tempfile:
+            Whether to save lines in tempfile if needed.
+        :param tempfile_kwargs:
+            Kwargs passed to tempfile.mkstemp().
         """
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
@@ -189,17 +202,24 @@ class LocalBearTestHelper(unittest.TestCase):
         Asserts that a check of the given lines with the given local bear does
         yield exactly the given results.
 
-        :param local_bear:       The local bear to check with.
-        :param lines:            The lines to check. (List of strings)
-        :param results:          The expected list of results.
-        :param filename:         The filename, if it matters.
-        :param force_linebreaks: Whether to append newlines at each line
-                                 if needed. (Bears expect a \\n for every line)
-        :param create_tempfile:  Whether to save lines in tempfile if needed.
-        :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
-        :param settings:         A dictionary of keys and values (both strings)
-                                 from which settings will be created that will
-                                 be made available for the tested bear.
+        :param local_bear:
+            The local bear to check with.
+        :param lines:
+            The lines to check. (List of strings)
+        :param results:
+            The expected list of results.
+        :param filename:
+            The filename, if it matters.
+        :param force_linebreaks:
+            Whether to append newlines at each line if needed.
+            (Bears expect a \\n for every line)
+        :param create_tempfile:
+            Whether to save lines in tempfile if needed.
+        :param tempfile_kwargs:
+            Kwargs passed to tempfile.mkstemp().
+        :param settings:
+            A dictionary of keys and values (both strings) from which settings
+            will be created that will be made available for the tested bear.
         """
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
@@ -247,17 +267,24 @@ class LocalBearTestHelper(unittest.TestCase):
         """
         Check many results for each line.
 
-        :param local_bear:       The local bear to check with.
-        :param lines:            The lines to check. (List of strings)
-        :param results_num:      The expected list of many results each line.
-        :param filename:         The filename, if it matters.
-        :param force_linebreaks: Whether to append newlines at each line
-                                 if needed. (Bears expect a \\n for every line)
-        :param create_tempfile:  Whether to save lines in tempfile if needed.
-        :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
-        :param settings:         A dictionary of keys and values (both strings)
-                                 from which settings will be created that will
-                                 be made available for the tested bear.
+        :param local_bear:
+            The local bear to check with.
+        :param lines:
+            The lines to check. (List of strings)
+        :param results_num:
+            The expected list of many results each line.
+        :param filename:
+            The filename, if it matters.
+        :param force_linebreaks:
+            Whether to append newlines at each line if needed.
+            (Bears expect a \\n for every line)
+        :param create_tempfile:
+            Whether to save lines in tempfile if needed.
+        :param tempfile_kwargs:
+            Kwargs passed to tempfile.mkstemp().
+        :param settings:
+            A dictionary of keys and values (both strings) from which settings
+            will be created that will be made available for the tested bear.
         """
 
         modified_lines = []
@@ -293,22 +320,28 @@ def verify_local_bear(bear,
     YourTestName = verify_local_bear(YourBear, (['valid line'],),
                                      (['invalid line'],))
 
-    :param bear:             The Bear class to test.
-    :param valid_files:      An iterable of files as a string list that won't
-                             yield results.
-    :param invalid_files:    An iterable of files as a string list that must
-                             yield results.
-    :param filename:         The filename to use for valid and invalid files.
-    :param settings:         A dictionary of keys and values (both string) from
-                             which settings will be created that will be made
-                             available for the tested bear.
-    :param force_linebreaks: Whether to append newlines at each line
-                             if needed. (Bears expect a \\n for every line)
-    :param create_tempfile:  Whether to save lines in tempfile if needed.
-    :param timeout:          The total time to run the test for.
-    :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp() if tempfile
-                             needs to be created.
-    :return:                 A unittest.TestCase object.
+    :param bear:
+        The Bear class to test.
+    :param valid_files:
+        An iterable of files as a string list that won't yield results.
+    :param invalid_files:
+        An iterable of files as a string list that must yield results.
+    :param filename:
+        The filename to use for valid and invalid files.
+    :param settings:
+        A dictionary of keys and values (both string) from which settings
+        will be created that will be made available for the tested bear.
+    :param force_linebreaks:
+        Whether to append newlines at each line if needed.
+        (Bears expect a \\n for every line)
+    :param create_tempfile:
+        Whether to save lines in tempfile if needed.
+    :param timeout:
+        The total time to run the test for.
+    :param tempfile_kwargs:
+        Kwargs passed to tempfile.mkstemp() if tempfile needs to be created.
+    :return:
+        A unittest.TestCase object.
     """
     @pytest.mark.timeout(timeout)
     @generate_skip_decorator(bear)
