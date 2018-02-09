@@ -6,6 +6,14 @@ def is_valid_filter(filter):
     return filter in available_filters
 
 
+def _filter_section_bears(bears, args, filter_name):
+    filter_function = available_filters[filter_name]
+    return {section:
+            tuple(bear for bear in bears[section]
+                  if filter_function(bear, args))
+            for section in bears}
+
+
 def apply_filter(filter_name, filter_args, all_bears=None):
     if all_bears is None:
         from coalib.settings.ConfigurationGathering import (
@@ -15,7 +23,14 @@ def apply_filter(filter_name, filter_args, all_bears=None):
         raise InvalidFilterException(filter_name)
     if not filter_args or len(filter_args) == 0:
         return all_bears
-    return available_filters[filter_name](all_bears, filter_args)
+
+    filter_args = {arg.lower() for arg in filter_args}
+    local_bears, global_bears = all_bears
+    local_bears = _filter_section_bears(
+        local_bears, filter_args, filter_name)
+    global_bears = _filter_section_bears(
+        global_bears, filter_args, filter_name)
+    return local_bears, global_bears
 
 
 def apply_filters(filters, bears=None):
