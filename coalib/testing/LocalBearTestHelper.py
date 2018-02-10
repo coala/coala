@@ -123,14 +123,21 @@ class LocalBearTestHelper(unittest.TestCase):
         Asserts that a check of the given lines with the given local bear
         either yields or does not yield any results.
 
-        :param local_bear:       The local bear to check with.
-        :param lines:            The lines to check. (List of strings)
-        :param filename:         The filename, if it matters.
-        :param valid:            Whether the lines are valid or not.
-        :param force_linebreaks: Whether to append newlines at each line
-                                 if needed. (Bears expect a \\n for every line)
-        :param create_tempfile:  Whether to save lines in tempfile if needed.
-        :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
+        :param local_bear:
+            The local bear to check with.
+        :param lines:
+            The lines to check. (List of strings)
+        :param filename:
+            The filename, if it matters.
+        :param valid:
+            Whether the lines are valid or not.
+        :param force_linebreaks:
+            Whether to append newlines at each line if needed.
+            (Bears expect a \\n for every line)
+        :param create_tempfile:
+            Whether to save lines in tempfile if needed.
+        :param tempfile_kwargs:
+            Kwargs passed to tempfile.mkstemp().
         """
         if valid:
             self.check_results(local_bear, lines,
