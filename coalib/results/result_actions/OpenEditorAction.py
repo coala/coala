@@ -92,6 +92,11 @@ KNOWN_EDITORS = {
         'args': '--new-window',
         'gui': True
     },
+    'code': {
+        'file_arg_template': '{filename}:{line}',
+        'args': '--wait -g',
+        'gui': True
+    },
 }
 
 
