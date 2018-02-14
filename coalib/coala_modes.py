@@ -1,3 +1,6 @@
+import logging
+
+
 def mode_normal(console_printer, log_printer, args, debug=False):
     """
     This is the default coala mode. User interaction is allowed in this mode.
@@ -26,7 +29,8 @@ def mode_normal(console_printer, log_printer, args, debug=False):
         console_printer=console_printer,
         args=args,
         debug=debug)
-
+    if log_printer:
+        logging.warning('Warning: The use of log_printer is deprecated')
     return exitcode
 
 
