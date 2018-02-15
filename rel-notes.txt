@@ -1,0 +1,99 @@
+Bugs fixed:
+
+Coloring bug with `--no-color` flag was resolved
+https://github.com/coala/coala/issues/4185
+
+Documentation Extraction API: Diff-cutoff removed
+https://github.com/coala/coala/issues/4187
+
+Diff.unified_diff renders the unified-diff now properly
+even when no linebreaks were passed to the Diff instance.
+
+Cornercase behaviour fixed in `DocumentationComment.assemble()`
+https://github.com/coala/coala/issues/2645
+
+Documentation API:
+Parsing error corrected
+https://github.com/coala/coala/issues/2143
+
+Various Documentation API fixes:
+- https://github.com/coala/coala/issues/4029
+
+Linter.py:
+Errors fixed that were raised when displaying debug
+messages with `None` arguments
+https://github.com/coala/coala/issues/4433
+
+coala now properly detects BOMs
+https://github.com/coala/coala-bears/issues/1205
+
+User
+
+https://github.com/coala/coala/issues/4084
+NeoVim is now an editor recognized by coala.
+
+New aspects added:
+- coalaCorrect (https://gitlab.com/coala/GSoC-2017/issues/236)
+- Smell (https://github.com/coala/coala/issues/4305)
+- Root.Security
+
+Better readable results output
+
+New generic filtering system with the `--filter-by` flag.
+Filters for language, can-fix- and can-detect-capabilities
+are available in this version. New filters going to come.
+https://github.com/coala/coala/issues/2509
+
+API / Developer
+
+The two duplicated CircularDependencyError classes were merged,
+please use `coalib.core.CircularDependencyError`.
+https://github.com/coala/coala/issues/4191
+
+Added check_line_result_count() to LocalBearTestHelper, to
+assert quickly how many results occurred on a line.
+https://github.com/coala/coala/issues/4227
+
+`Diff`:
+- `has_changes` property was removed and `__bool__` should
+be used instead (via the built-in Python function `bool`).
+- The behaviour of `__bool__` was changed to be more consistent.
+https://github.com/coala/coala/issues/4178
+
+HTML language support for ignore comments was added
+https://github.com/coala/coala/issues/4260
+
+LocalBearTestHelper:
+- `settings` argument added to `check_validity` and `check_invalidity`.
+  This allows to quickly supply section settings without overhead.
+https://github.com/coala/coala/issues/4247
+
+--debug flag added, coala immediately steps into a debugging-session
+on errors.
+
+Diff: Consistently appends linebreaks if they aren't passed inside
+file-data.
+https://github.com/coala/coala/issues/3834
+
+Documentation API:
+Add support for `:raises ...:` metadata
+https://github.com/coala/coala/issues/4279
+
+Documentation API:
+Improved docstring recognition
+https://github.com/coala/coala/issues/4291
+
+Documentation API:
+DocumentationComment accepts now a position instead of a range
+https://github.com/coala/coala/issues/2646
+
+Bears can now process non-text files.
+https://github.com/coala/coala/issues/3529
+
+LocalBearTestHelper:
+get_results() supports bears with dependencies.
+https://github.com/coala/coala/issues/2860
+
+ChainPatchAction added
+
+
