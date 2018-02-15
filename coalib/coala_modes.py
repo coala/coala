@@ -27,7 +27,7 @@ def mode_normal(console_printer, log_printer, args, debug=False):
         args=args,
         debug=debug)
     if log_printer:
-        logging.warn('depracated warning')
+        logging.warn('depracated')
     return exitcode
 
 
