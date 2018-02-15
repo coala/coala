@@ -1,3 +1,177 @@
+coala 0.12 - XBear
+==================
+
+This release was brought to you by 116 contributors contributing 353
+commits.
+
+This release was long overdue, and contains several improvements
+in many components of coala, as well as the latest GSoC projects
+and features.
+
+The Next-Gen core is still on its way, but it's nearly done, and you can
+soon enjoy coala's new core features :)
+
+**Breaking Changes**
+
+- Write output to empty file instead of appending.
+  When ``--output`` option is specified, write output of coala to a
+  fresh file. This avoids file corruption for certain output formats
+  (like ``--json``).
+- ``coalib.misc.Shell.get_shell_type`` was removed without deprecation.
+- ``Interactions.fail_acquire_settings``: Removed parameter ``section``
+  without deprecation.
+  `Issue #4740 <https://github.com/coala/coala/issues/4740>`_
+
+**General**
+
+- Improved results output.
+- NeoVim is now an editor recognized by coala.
+  `Issue #4084 <https://github.com/coala/coala/issues/4084>`_
+- New aspects added:
+  - ``coalaCorrect`` (`Issue #236@gitlab/coala/GSoC-2017 <https://gitlab.com/coala/GSoC-2017/issues/236>`_)
+  - ``Smell`` (`Issue #4305 <https://github.com/coala/coala/issues/4305>`_)
+  - ``Security``
+  - ``Formatting``
+  - ``Indentation``
+- New generic filtering system with the ``--filter-by`` flag.
+  Filters for language, can-fix- and can-detect-capabilities
+  are available in this version. New filters going to come.
+  `Issue #2509 <https://github.com/coala/coala/issues/2509>`_
+- Basic language features added for
+  - TypeScript
+  - Shell
+- HTML language support for ignore comments was added.
+  `Issue #4260 <https://github.com/coala/coala/issues/4260>`_
+- Certain bears can now be queried for info with ``--show-bears``
+  together with ``--bears``.
+  `Issue #4651 <https://github.com/coala/coala/issues/4651>`_
+- Windows-style backslashes can now be provided in Windows-shells
+  without escaping them for arguments that accept a path. This
+  improves workflow with the native auto-completion inside
+  Windows-shells.
+  `Issue #4356 <https://github.com/coala/coala/issues/4356>`_
+- Change naming of ``default_coafile``: ``system_coafile``
+  shall be used instead. ``default_coafile`` is hereby deprecated.
+  `Issue #3389 <https://github.com/coala/coala/issues/3389>`_
+- ``--debug`` flag added; coala immediately steps into a
+  debugging-session on errors.
+
+**Bear Developers**
+
+- Bear can now process non-text files.
+  `Issue #3529 <https://github.com/coala/coala/issues/3529>`_
+- ``CAN_DETECT`` field inside bears got ``Statistics`` as new
+  category.
+  `Issue #4233 <https://github.com/coala/coala/issues/4233>`_
+- ``HiddenResult.__init()__`` now has all the parameters of
+  ``Result.__init()__``.
+  `Issue #4454 <https://github.com/coala/coala/issues/4454>`_
+- Added specialized shortcuts for ``typed_list``,
+  for ``str``, ``int``, ``float`` and ``bool`` types.
+  `Issue #3224 <https://github.com/coala/coala/issues/3224>`_
+- ``LocalBearTestHelper``
+  - Add ``check_invalidity``
+    `Issue #2197 <https://github.com/coala/coala/issues/2197>`_
+  - ``settings`` argument added to ``check_validity`` and
+    ``check_invalidity``. This allows to quickly supply section
+    settings without overhead.
+    `Issue #4247 <https://github.com/coala/coala/issues/4247>`_
+  - Added ``check_line_result_count()``,
+    to quickly assert how many results occurred on a line.
+    `Issue #4227 <https://github.com/coala/coala/issues/4227>`_
+  - ``get_results()`` supports now bears with dependencies
+    properly.
+    `Issue #2860 <https://github.com/coala/coala/issues/2860>`_
+
+**API Changes**
+
+- The two duplicated ``CircularDependencyError`` classes were merged,
+  please use ``coalib.core.CircularDependencyError``.
+  `Issue #4191 <https://github.com/coala/coala/issues/4191>`_
+- Added ``LinterClass``, a virtual base class for linters.
+- ``ChainPatchAction`` added
+- ``Language``: ``UnknownLanguageError`` created for failing
+  language lookups.
+  `Issue #4642 <https://github.com/coala/coala/issues/4642>`_
+- ``SectionFilling.acquire_settings``: Deprecated ``section``
+  parameter.
+- ``ConsoleInteraction.show_bear``.py: Deprecated parameters
+  ``show_params`` and ``show_description``.
+  `Issue #4868 <https://github.com/coala/coala/issues/4868>`_
+- ``Diff``
+  - ``__bool__``: Behaviour was changed to be more consistent.
+    `Issue #4178 <https://github.com/coala/coala/issues/4178>`_
+  - Consistently appends linebreaks if they aren't passed with
+    file-data.
+    `Issue #3834 <https://github.com/coala/coala/issues/3834>`_
+- Documentation API:
+  - Added support for ``:raises ...:`` metadata.
+    `Issue #4279 <https://github.com/coala/coala/issues/4279>`_
+  - Improved docstring recognition.
+    `Issue #4291 <https://github.com/coala/coala/issues/4291>`_
+  - ``DocumentationComment`` accepts now a position instead
+    of a range.
+    `Issue #2646 <https://github.com/coala/coala/issues/2646>`_
+  - Added ``DocBaseClass``.
+    `Issue #2659 <https://github.com/coala/coala/issues/2659>`_
+  - Added ``MalformedComment``
+    `Issue #4548 <https://github.com/coala/coala/issues/4548>`_
+  - Added ``padding`` and ``type`` attributes to API.
+- Aspects
+  - Created exception for aspects lookup.
+    `Issue #4381 <https://github.com/coala/coala/issues/4381>`_,
+    `Issue #4402 <https://github.com/coala/coala/issues/4402>`_
+  - ``coalib.bearlib.aspects.meta.aspectTypeError`` is now
+    ``coalib.bearlib.aspects.exceptions.AspectTypeError``.
+  - ``AspectList``: Overload ``__init__`` to accept strings.
+    `Issue #4382 <https://github.com/coala/coala/issues/4382>`_
+  - ``aspectbase`` & ``AspectList`` & ``aspectModule``:
+    Add ed``get()`` method, that serves as quick way to get a
+    specific, deep subaspect of an aspect.
+    `Issue #4410 <https://github.com/coala/coala/issues/4410>`_,
+    `Issue #4384 <https://github.com/coala/coala/issues/4384>`_,
+    `Issue #4411 <https://github.com/coala/coala/issues/4411>`_
+  - ``AspectList``: Added ``exclude`` attribute.
+    `Issue #4438 <https://github.com/coala/coala/issues/4438>`_
+  - Created ``get_leaf_aspects`` method.
+  - Added ``map_setting_to_aspect`` decorator.
+    `Issue #4661 <https://github.com/coala/coala/issues/4661>`_
+
+**Bugfixes**
+
+- Section inheritance fixed for upper-cased section names.
+  `Issue #4182 <https://github.com/coala/coala/issues/4182>`_
+- coala now properly detects BOMs.
+  `Issue #1205@coala-bears <https://github.com/coala/coala-bears/issues/1205>`_
+- Coloring bug with ``--no-color`` flag was resolved
+  `Issue #4185 <https://github.com/coala/coala/issues/4185>`_
+- Fix `--apply-patches` not working
+  `Issue #4957 <https://github.com/coala/coala/issues/4957>`_
+- ``Diff.unified_diff`` renders now properly even when no
+  linebreaks were passed to the ``Diff`` instance.
+- Linter: Stop TypeError being raised during debug logging.
+  `Issue #4433 <https://github.com/coala/coala/issues/4433>`_
+- Documentation API
+  - Unwanted diff-cutoff fixed.
+    `Issue #4187 <https://github.com/coala/coala/issues/4187>`_
+  - Cornercase behaviour fixed in ``DocumentationComment.assemble()``.
+    `Issue #2645 <https://github.com/coala/coala/issues/2645>`_
+  - ``DocumentationComment``: Fixed exception when ending colon missing
+    of metadata.
+    `Issue #2143 <https://github.com/coala/coala/issues/2143>`_
+  - DocstyleDefinition: Multiple loading of coalang files led to unwanted
+    section overrides.
+    `Issue #4470 <https://github.com/coala/coala/issues/4470>`_
+  - Various fixes covered by
+    `Issue #4029 <https://github.com/coala/coala/issues/4029>`_
+- ``aspectbase``: Recursively instantiate aspect children.
+    `Issue #4388 <https://github.com/coala/coala/issues/4388>`_
+- Made ``Language`` class pickle-able.
+- Collectors: Stabilised bear order irrespective of the order
+  of entries returned by the file-system.
+  `Issue #4541 <https://github.com/coala/coala/issues/4541>`_
+
+
 coala 0.11 - BrewBear
 =====================
 
