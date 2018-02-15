@@ -26,6 +26,8 @@ test:
         parallel: true
     - coala --non-interactive:
         parallel: true
+    - coala -B --json:
+        parallel: false
     - codecov:
         parallel: true
     - python setup.py docs

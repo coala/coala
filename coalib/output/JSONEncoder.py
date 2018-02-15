@@ -21,6 +21,12 @@ def create_json_encoder(**kwargs):
                 params = self._filter_params(
                     fdata.optional_params, fdata.non_optional_params)
                 return obj.__json__(**params)
+            elif 'package_managers' in dir(obj):
+                return {member: getattr(obj, member)
+                        for member in dir(obj)
+                        if not member == 'package_managers'
+                        and not member.startswith('_')
+                        and not hasattr(getattr(obj, member), '__call__')}
             elif isinstance(obj, collections.Iterable):
                 return list(obj)
             elif isinstance(obj, datetime):
