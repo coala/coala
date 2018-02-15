@@ -26,7 +26,8 @@ def mode_normal(console_printer, log_printer, args, debug=False):
         console_printer=console_printer,
         args=args,
         debug=debug)
-
+    if log_printer:
+       logging.warn('deprecated warning')
     return exitcode
 
 
