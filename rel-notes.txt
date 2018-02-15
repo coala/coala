@@ -96,4 +96,7 @@ https://github.com/coala/coala/issues/2860
 
 ChainPatchAction added
 
-
+Users can now print selected bears using
+--show-bears --bears. It also allows user
+to specify regex to search bears.
+https://github.com/coala/coala/issues/4651
