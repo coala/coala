@@ -9,7 +9,7 @@ def mode_normal(console_printer, log_printer, args, debug=False):
                             and not catching any exceptions.
     """
     import functools
-
+   
     from coalib.coala_main import run_coala
     from coalib.output.ConsoleInteraction import (
         acquire_settings, nothing_done,
@@ -26,7 +26,8 @@ def mode_normal(console_printer, log_printer, args, debug=False):
         console_printer=console_printer,
         args=args,
         debug=debug)
-
+    if log_printer:
+        logging.warn('Deprecated')
     return exitcode
 
 
