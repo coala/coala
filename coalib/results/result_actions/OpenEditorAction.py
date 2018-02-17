@@ -82,6 +82,10 @@ KNOWN_EDITORS = {
         'args': '--new',
         'gui': True
     },
+    'notepadqq': {
+    	'file_arg_template': '{filename}',
+    	'gui': True
+    },
     'subl': {
         'file_arg_template': '{filename}:{line}:{column}',
         'args': '--wait',
