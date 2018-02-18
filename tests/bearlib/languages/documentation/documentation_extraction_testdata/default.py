@@ -56,6 +56,32 @@ def docstring_find(filename):
     """
 
 
+def raw_docstring_find1(filename):
+    r"""
+    This is dummy raw docstring find function.
+
+    :param filename:
+        contains filename
+    :raises FileNotFoundError:
+        raised when the given file name was not found
+
+    :return: returns all possible docstrings in a file
+    """
+
+
+def raw_docstring_find2(filename):
+    R"""
+    This is second dummy raw docstring find function.
+
+    :param filename:
+        contains filename
+    :raises FileNotFoundError:
+        raised when the given file name was not found
+
+    :return: returns all possible docstrings in a file
+    """
+
+
 def foobar_triangle(side_A, side_B, side_C):
     """
     This returns perimeter of a triangle.   

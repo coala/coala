@@ -39,7 +39,8 @@ class DocstyleDefinitionTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             DocstyleDefinition('PYTHON',
                                'doxygen',
-                               (('##', '', '#'), ('"""', '"""')),
+                               (('##', '', '#'), ('"""', '"""'),
+                                ('r"""', '"""'), ('R"""', '"""')),
                                self.dummy_metadata,
                                self.dummy_class_padding,
                                self.dummy_function_padding,
@@ -47,7 +48,9 @@ class DocstyleDefinitionTest(unittest.TestCase):
                                self.dummy_docstring_position)
 
         with self.assertRaises(TypeError):
-            DocstyleDefinition(123, ['doxygen'], (('"""', '"""')),
+            DocstyleDefinition(123, ['doxygen'],
+                               (('"""', '"""'),
+                                ('r"""', '"""'), ('R"""', '"""')),
                                self.dummy_metadata,
                                self.dummy_class_padding,
                                self.dummy_function_padding,
@@ -55,7 +58,9 @@ class DocstyleDefinitionTest(unittest.TestCase):
                                self.dummy_docstring_position)
 
         with self.assertRaises(TypeError):
-            DocstyleDefinition('language', ['doxygen'], (('"""', '"""')),
+            DocstyleDefinition('language', ['doxygen'],
+                               (('"""', '"""'),
+                                ('r"""', '"""'), ('R"""', '"""')),
                                'metdata', 'clpading', 'dfpadding', 'kind')
 
     def test_properties(self):
@@ -134,7 +139,9 @@ class DocstyleDefinitionTest(unittest.TestCase):
 
         self.assertEqual(result.language, 'python3')
         self.assertEqual(result.docstyle, 'default')
-        self.assertEqual(result.markers, (('"""', '', '"""'),))
+        self.assertEqual(result.markers, (('"""', '', '"""'),
+                                          ('r"""', '', '"""'),
+                                          ('R"""', '', '"""')))
 
         self.assertEqual(result.metadata, self.dummy_metadata)
 

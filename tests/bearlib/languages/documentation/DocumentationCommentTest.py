@@ -179,6 +179,24 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
                                       'file name was not found\n\n'),
              self.ReturnValue(desc=' returns all possible docstrings'
                                    ' in a file\n')],
+            [self.Description(desc='\nThis is dummy raw docstring find '
+                              'function.\n\n'),
+             self.Parameter(name='filename',
+                            desc='\n    contains filename\n'),
+             self.ExceptionValue(name='FileNotFoundError',
+                                 desc='\n    raised when the given '
+                                      'file name was not found\n\n'),
+             self.ReturnValue(desc=' returns all possible docstrings'
+                                   ' in a file\n')],
+            [self.Description(desc='\nThis is second dummy raw docstring find '
+                              'function.\n\n'),
+             self.Parameter(name='filename',
+                            desc='\n    contains filename\n'),
+             self.ExceptionValue(name='FileNotFoundError',
+                                 desc='\n    raised when the given '
+                                      'file name was not found\n\n'),
+             self.ReturnValue(desc=' returns all possible docstrings'
+                                   ' in a file\n')],
             [self.Description(desc='\nThis returns perimeter '
                                    'of a triangle.   \n\n'),
              self.Parameter(name='side_A',

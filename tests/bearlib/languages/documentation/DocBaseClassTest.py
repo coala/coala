@@ -269,9 +269,9 @@ class DocBaseClassTest(unittest.TestCase):
         self.assertEqual(
             list(DocBaseClass.extract(data, 'PYTHON3', 'default')),
             [DocumentationComment('\nThis is a raw docstring\n',
-                                  docstyle_PYTHON3_default, 'r',
-                                  docstyle_PYTHON3_default.markers[0],
-                                  TextPosition(1, 2))])
+                                  docstyle_PYTHON3_default, '',
+                                  docstyle_PYTHON3_default.markers[1],
+                                  TextPosition(1, 1))])
 
     def test_DocBaseClass_instantiate_padding_PYTHON3_6(self):
         data = ['def some_function:\n',

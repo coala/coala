@@ -1,5 +1,7 @@
 [PYTHON]
-doc-marker = """, , """
+doc-marker1 = """, , """
+doc-marker2 = r""", , """
+doc-marker3 = R""", , """
 param_start = :param\ # here's a space
 param_end = :
 exception_start = :raises\ # here's a space
@@ -11,7 +13,9 @@ class_padding = 0, 1
 function_padding = 0, 0
 
 [PYTHON3]
-doc-marker = """, , """
+doc-marker1 = """, , """
+doc-marker2 = r""", , """
+doc-marker3 = R""", , """
 param_start = :param\ # here's a space
 param_end = :
 exception_start = :raises\ # here's a space
