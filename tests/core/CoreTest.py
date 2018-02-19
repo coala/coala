@@ -52,11 +52,6 @@ class MultiTaskBear(Bear):
         return [run_id]
 
     def generate_tasks(self):
-        # Choose single task parallelization for simplicity. Also use the
-        # section name as a parameter instead of the section itself, as compare
-        # operations on tests do not succeed on them due to the pickling of
-        # multiprocessing to transfer objects to the other process, which
-        # instantiates a new section on each transfer.
         return (((i,), {}) for i in range(self.tasks_count))
 
 
