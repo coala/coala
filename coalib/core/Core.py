@@ -203,7 +203,7 @@ class Session:
         self.executor = (concurrent.futures.ProcessPoolExecutor()
                          if executor is None else
                          executor)
-        self.running_tasks = {}
+        self.running_futures = {}
 
         # Initialize dependency tracking.
         self.dependency_tracker, self.bears_to_schedule = (
@@ -241,7 +241,7 @@ class Session:
                     'should be smarter. Please report this to the developers.'
                     .format(bear))
             else:
-                tasks = set()
+                futures = set()
 
                 for task in bear.generate_tasks():
                     bear_args, bear_kwargs = task
@@ -258,25 +258,25 @@ class Session:
                             None, self._execute_task_with_cache,
                             bear, task)
 
-                    tasks.add(future)
+                    futures.add(future)
 
-                self.running_tasks[bear] = tasks
+                self.running_futures[bear] = futures
 
                 # Cleanup bears without tasks after all bears had the chance to
                 # schedule their tasks. Not doing so might stop the run too
                 # early, as the cleanup is also responsible for stopping the
                 # event-loop when no more tasks do exist.
-                if not tasks:
+                if not futures:
                     logging.debug('{!r} scheduled no tasks.'.format(bear))
                     bears_without_tasks.append(bear)
                     continue
 
-                for task in tasks:
-                    task.add_done_callback(functools.partial(
+                for future in futures:
+                    future.add_done_callback(functools.partial(
                         self._finish_task, bear))
 
-                logging.debug('Scheduled {!r} (tasks: {})'.format(bear,
-                                                                  len(tasks)))
+                logging.debug('Scheduled {!r} (tasks: {})'.format(
+                    bear, len(futures)))
 
         for bear in bears_without_tasks:
             self._cleanup_bear(bear)
@@ -295,15 +295,15 @@ class Session:
         :param bear:
             The bear to clean up state for.
         """
-        if not self.running_tasks[bear]:
+        if not self.running_futures[bear]:
             resolved_bears = self.dependency_tracker.resolve(bear)
 
             if resolved_bears:
                 self._schedule_bears(resolved_bears)
 
-            del self.running_tasks[bear]
+            del self.running_futures[bear]
 
-        if not self.running_tasks:
+        if not self.running_futures:
             # Check the DependencyTracker additionally for remaining
             # dependencies.
             resolved = self.dependency_tracker.are_dependencies_resolved
@@ -345,7 +345,7 @@ class Session:
 
         return results
 
-    def _finish_task(self, bear, task):
+    def _finish_task(self, bear, future):
         """
         The callback for when a task of a bear completes. It is responsible for
         checking if the bear completed its execution and the handling of the
@@ -354,11 +354,11 @@ class Session:
 
         :param bear:
             The bear that the task belongs to.
-        :param task:
-            The task that completed.
+        :param future:
+            The future that completed.
         """
         try:
-            results = task.result()
+            results = future.result()
 
             for dependant in self.dependency_tracker.get_dependants(bear):
                 dependant.dependency_results[type(bear)] += results
@@ -379,7 +379,7 @@ class Session:
                           ', '.join(repr(dependant)
                                     for dependant in dependants))
         finally:
-            self.running_tasks[bear].remove(task)
+            self.running_futures[bear].remove(future)
             self._cleanup_bear(bear)
 
         if results is not None:
