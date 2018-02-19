@@ -20,12 +20,6 @@ class FileBear(Bear):
 
         self._kwargs = self.get_metadata().create_params_from_section(section)
 
-    def execute_task(self, args, kwargs):
-        # To optimize performance and memory usage, we use kwargs from this
-        # class instance instead of passing the same settings thousand times in
-        # the tasks themselves.
-        return Bear.execute_task(self, args, self._kwargs)
-
     @classmethod
     def get_metadata(cls):
         """
@@ -38,5 +32,5 @@ class FileBear(Bear):
             omit={'self', 'filename', 'file'})
 
     def generate_tasks(self):
-        return (((filename, file), {})
+        return (((filename, file), self._kwargs)
                 for filename, file in self.file_dict.items())
