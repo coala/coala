@@ -41,20 +41,6 @@ class TestBearBase(Bear):
         return ((self, self.section.name, self.file_dict), {}),
 
 
-class MultiTaskBear(Bear):
-    BEAR_DEPS = set()
-
-    def __init__(self, section, file_dict, tasks_count=1):
-        Bear.__init__(self, section, file_dict)
-        self.tasks_count = tasks_count
-
-    def analyze(self, run_id):
-        return [run_id]
-
-    def generate_tasks(self):
-        return (((i,), {}) for i in range(self.tasks_count))
-
-
 class CustomTasksBear(Bear):
 
     def __init__(self, section, file_dict, tasks=()):
@@ -442,7 +428,8 @@ class CoreTest(CoreTestBase):
 
     def test_run_simple(self):
         # Test single bear without dependencies.
-        bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=1)
+        bear = CustomTasksBear(self.section1, self.filedict1,
+                               tasks=[(0,)])
 
         results = self.execute_run({bear})
 
@@ -517,7 +504,8 @@ class CoreTest(CoreTestBase):
         # Test exception in result handler. The core needs to retry to invoke
         # the handler and then exit correctly if no more results and bears are
         # left.
-        bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=10)
+        bear = CustomTasksBear(self.section1, self.filedict1,
+                               tasks=[(x,) for x in range(10)])
 
         on_result = unittest.mock.Mock(side_effect=ValueError)
 
@@ -551,7 +539,8 @@ class CoreTest(CoreTestBase):
         with self.assertLogs(logging.getLogger()) as cm:
             results = self.execute_run(
                 {FailingBear(self.section1, self.filedict1),
-                 MultiTaskBear(self.section1, self.filedict1, tasks_count=3)})
+                 CustomTasksBear(self.section1, self.filedict1,
+                                 tasks=[(x,) for x in range(3)])})
 
         self.assertEqual(len(cm.output), 1)
         self.assertTrue(cm.output[0].startswith(
@@ -562,7 +551,8 @@ class CoreTest(CoreTestBase):
     def test_run_bear_with_multiple_tasks(self):
         # Test when bear is not completely finished because it has multiple
         # tasks.
-        bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=3)
+        bear = CustomTasksBear(self.section1, self.filedict1,
+                               tasks=[(x,) for x in range(3)])
 
         results = self.execute_run({bear})
 
@@ -589,7 +579,7 @@ class CoreTest(CoreTestBase):
         self.assertEqual(bear_failing.dependency_results, {})
 
     def test_run_bear_with_0_tasks(self):
-        bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=0)
+        bear = CustomTasksBear(self.section1, self.filedict1, tasks=[])
 
         # This shall not block forever.
         results = self.execute_run({bear})
@@ -641,7 +631,8 @@ class CoreTest(CoreTestBase):
     def test_run_heavy_cpu_load(self):
         # No normal computer should expose 100 cores at once, so we can test
         # if the scheduler works properly.
-        bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=100)
+        bear = CustomTasksBear(self.section1, self.filedict1,
+                               tasks=[(x,) for x in range(100)])
 
         results = self.execute_run({bear})
 
@@ -668,9 +659,9 @@ class CoreOnThreadPoolExecutorTest(CoreTest):
 # executors / having the control over executors.
 class CoreOnSpecificExecutorTest(CoreTestBase):
     def test_custom_executor_closed_after_run(self):
-        bear = MultiTaskBear(Section('test-section'),
-                             {'some-file': []},
-                             tasks_count=1)
+        bear = CustomTasksBear(Section('test-section'),
+                               {'some-file': []},
+                               tasks=[(0,)])
 
         # The executor should be closed regardless how many bears are passed.
         for bears in [set(), {bear}]:
