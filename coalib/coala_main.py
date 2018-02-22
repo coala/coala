@@ -100,24 +100,27 @@ def run_coala(console_printer=None,
     """
     all_actions_possible = provide_all_actions()
     apply_single = None
+
     if getattr(args, 'single_action', None) is not None:
         while True:
             for i, action in enumerate(all_actions_possible, 1):
                 console_printer.print(format_lines('{}'.format(
-                    action), symbol='['))
+                    action), symbol='[', line_nr=' ' + str(i) + '. '))
 
             line = format_lines(STR_ENTER_NUMBER, symbol='[')
-
             choice = input(line)
+            choice = str(choice)
 
-            if choice.isalpha():
+            if choice.isalnum():
                 choice = choice.upper()
                 choice = '(' + choice + ')'
                 if choice == '(N)':
                     apply_single = 'Do (N)othing'
                     break
                 for i, action in enumerate(all_actions_possible, 1):
-                    if choice in action:
+                    index = all_actions_possible.index(action)
+                    index = str('(') + str(index + 1) + str(')')
+                    if choice in action or choice in index:
                         apply_single = action
                         break
                 if apply_single:
@@ -125,9 +128,7 @@ def run_coala(console_printer=None,
                 console_printer.print(format_lines(
                                     'Please enter a valid letter.',
                                     symbol='['))
-
         args.apply_patch = False
-
     exitcode = 0
     sections = {}
     results = {}

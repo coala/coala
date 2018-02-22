@@ -780,7 +780,7 @@ def ask_for_action_and_apply(console_printer,
                                                apply_single)
 
     if apply_single:
-        if apply_single == 'Do (N)othing':
+        if apply_single == 'Do (S)othing':
             return False
         for index, action_details in enumerate(metadata_list, 1):
             if apply_single == action_details.desc:
