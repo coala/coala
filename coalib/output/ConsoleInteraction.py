@@ -702,7 +702,7 @@ def try_to_apply_action(action_name,
     Try to apply the given action.
 
     :param action_name:     The name of the action.
-    :param choose_action:   The action object that will be applied.
+    :param chosen_action:   The action object that will be applied.
     :param console_printer: Object to print messages on the console.
     :param section:         Currently active section.
     :param metadata_list:   Contains metadata for all the actions.
