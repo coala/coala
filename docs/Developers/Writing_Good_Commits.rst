@@ -200,7 +200,7 @@ Example 3 (fixed typo):
 
     wether --> whether.
 
-    Fixes https://github.com/coala/coala/issues/4018
+    Closes https://github.com/coala/coala/issues/4018
 
 Editing Commit Messages
 -----------------------
