@@ -22,12 +22,6 @@ class DependencyBear(Bear):
 
         self._kwargs = self.get_metadata().create_params_from_section(section)
 
-    def execute_task(self, args, kwargs):
-        # To optimize performance and memory usage, we use kwargs from this
-        # class instance instead of passing the same settings thousand times in
-        # the tasks themselves.
-        return Bear.execute_task(self, args, self._kwargs)
-
     @classmethod
     def get_metadata(cls):
         """
@@ -40,6 +34,6 @@ class DependencyBear(Bear):
             omit={'self', 'dependency_bear', 'dependency_result'})
 
     def generate_tasks(self):
-        return (((bear, dependency_result), {})
+        return (((bear, dependency_result), self._kwargs)
                 for bear, dependency_results in self.dependency_results.items()
                 for dependency_result in dependency_results)

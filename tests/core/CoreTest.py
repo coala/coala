@@ -1,5 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor
 import logging
+import sys
 import unittest
 import unittest.mock
 
@@ -41,23 +42,18 @@ class TestBearBase(Bear):
         return ((self, self.section.name, self.file_dict), {}),
 
 
-class MultiTaskBear(Bear):
-    BEAR_DEPS = set()
+class CustomTasksBear(Bear):
 
-    def __init__(self, section, file_dict, tasks_count=1):
-        Bear.__init__(self, section, file_dict)
-        self.tasks_count = tasks_count
+    def __init__(self, section, file_dict, tasks=()):
+        super().__init__(section, file_dict)
 
-    def analyze(self, run_id):
-        return [run_id]
+        self.tasks = tasks
+
+    def analyze(self, *args):
+        return args
 
     def generate_tasks(self):
-        # Choose single task parallelization for simplicity. Also use the
-        # section name as a parameter instead of the section itself, as compare
-        # operations on tests do not succeed on them due to the pickling of
-        # multiprocessing to transfer objects to the other process, which
-        # instantiates a new section on each transfer.
-        return (((i,), {}) for i in range(self.tasks_count))
+        return ((task, {}) for task in self.tasks)
 
 
 class BearA(TestBearBase):
@@ -98,6 +94,19 @@ class BearH_NeedsG(TestBearBase):
     BEAR_DEPS = {BearG_NeedsF}
 
 
+class BearI_NeedsA_NeedsBDuringRuntime(TestBearBase):
+    BEAR_DEPS = {BearA}
+
+    def __init__(self, section, filedict):
+        super().__init__(section, filedict)
+
+        self.BEAR_DEPS.add(BearB)
+
+
+class BearJ_NeedsI(TestBearBase):
+    BEAR_DEPS = {BearI_NeedsA_NeedsBDuringRuntime}
+
+
 class MultiResultBear(TestBearBase):
 
     def analyze(self, bear, section_name, file_dict):
@@ -120,10 +129,18 @@ class DynamicTaskBear(TestBearBase):
         return (((i,), {}) for i in range(tasks_count))
 
 
+# Define those classes at module level to make them picklable.
+for i in range(100):
+    classname = 'NoTasksBear{}'.format(i)
+    generated_type = type(classname,
+                          (Bear,),
+                          dict(generate_tasks=lambda self: tuple()))
+
+    setattr(sys.modules[__name__], classname, generated_type)
+
+
 class DependentOnMultipleZeroTaskBearsTestBear(TestBearBase):
-    BEAR_DEPS = {type('NoTasksBear{}'.format(i),
-                      (Bear,),
-                      dict(generate_tasks=lambda self: tuple()))
+    BEAR_DEPS = {getattr(sys.modules[__name__], 'NoTasksBear{}'.format(i))
                  for i in range(100)} | {MultiResultBear}
 
 
@@ -433,7 +450,8 @@ class CoreTest(CoreTestBase):
 
     def test_run_simple(self):
         # Test single bear without dependencies.
-        bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=1)
+        bear = CustomTasksBear(self.section1, self.filedict1,
+                               tasks=[(0,)])
 
         results = self.execute_run({bear})
 
@@ -508,7 +526,8 @@ class CoreTest(CoreTestBase):
         # Test exception in result handler. The core needs to retry to invoke
         # the handler and then exit correctly if no more results and bears are
         # left.
-        bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=10)
+        bear = CustomTasksBear(self.section1, self.filedict1,
+                               tasks=[(x,) for x in range(10)])
 
         on_result = unittest.mock.Mock(side_effect=ValueError)
 
@@ -542,7 +561,8 @@ class CoreTest(CoreTestBase):
         with self.assertLogs(logging.getLogger()) as cm:
             results = self.execute_run(
                 {FailingBear(self.section1, self.filedict1),
-                 MultiTaskBear(self.section1, self.filedict1, tasks_count=3)})
+                 CustomTasksBear(self.section1, self.filedict1,
+                                 tasks=[(x,) for x in range(3)])})
 
         self.assertEqual(len(cm.output), 1)
         self.assertTrue(cm.output[0].startswith(
@@ -553,7 +573,8 @@ class CoreTest(CoreTestBase):
     def test_run_bear_with_multiple_tasks(self):
         # Test when bear is not completely finished because it has multiple
         # tasks.
-        bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=3)
+        bear = CustomTasksBear(self.section1, self.filedict1,
+                               tasks=[(x,) for x in range(3)])
 
         results = self.execute_run({bear})
 
@@ -580,7 +601,7 @@ class CoreTest(CoreTestBase):
         self.assertEqual(bear_failing.dependency_results, {})
 
     def test_run_bear_with_0_tasks(self):
-        bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=0)
+        bear = CustomTasksBear(self.section1, self.filedict1, tasks=[])
 
         # This shall not block forever.
         results = self.execute_run({bear})
@@ -632,7 +653,8 @@ class CoreTest(CoreTestBase):
     def test_run_heavy_cpu_load(self):
         # No normal computer should expose 100 cores at once, so we can test
         # if the scheduler works properly.
-        bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=100)
+        bear = CustomTasksBear(self.section1, self.filedict1,
+                               tasks=[(x,) for x in range(100)])
 
         results = self.execute_run({bear})
 
@@ -643,6 +665,49 @@ class CoreTest(CoreTestBase):
 
     def test_run_empty(self):
         self.execute_run(set())
+
+    def test_bears_with_runtime_dependencies(self):
+        bear = BearI_NeedsA_NeedsBDuringRuntime(self.section1, self.filedict1)
+
+        results = self.execute_run({bear})
+
+        self.assertTestResultsEqual(
+            results,
+            [(BearA.name, self.section1.name, self.filedict1),
+             (BearB.name, self.section1.name, self.filedict1),
+             (BearI_NeedsA_NeedsBDuringRuntime.name, self.section1.name,
+              self.filedict1)])
+
+        self.assertEqual(len(bear.dependency_results), 2)
+
+        self.assertTestResultsEqual(
+            bear.dependency_results[BearA],
+            [(BearA.name, self.section1.name, self.filedict1)])
+
+        self.assertTestResultsEqual(
+            bear.dependency_results[BearB],
+            [(BearB.name, self.section1.name, self.filedict1)])
+
+        # See whether this also works with a bear using the bear with runtime
+        # dependencies itself as a dependency.
+        bear = BearJ_NeedsI(self.section1, self.filedict1)
+
+        results = self.execute_run({bear})
+
+        self.assertTestResultsEqual(
+            results,
+            [(BearA.name, self.section1.name, self.filedict1),
+             (BearB.name, self.section1.name, self.filedict1),
+             (BearI_NeedsA_NeedsBDuringRuntime.name, self.section1.name,
+              self.filedict1),
+             (BearJ_NeedsI.name, self.section1.name, self.filedict1)])
+
+        self.assertEqual(len(bear.dependency_results), 1)
+
+        self.assertTestResultsEqual(
+            bear.dependency_results[BearI_NeedsA_NeedsBDuringRuntime],
+            [(BearI_NeedsA_NeedsBDuringRuntime.name, self.section1.name,
+              self.filedict1)])
 
 
 # Execute the same tests from CoreTest, but use a ThreadPoolExecutor instead.
@@ -659,17 +724,132 @@ class CoreOnThreadPoolExecutorTest(CoreTest):
 # executors / having the control over executors.
 class CoreOnSpecificExecutorTest(CoreTestBase):
     def test_custom_executor_closed_after_run(self):
-        bear = MultiTaskBear(Section('test-section'),
-                             {'some-file': []},
-                             tasks_count=1)
+        bear = CustomTasksBear(Section('test-section'),
+                               {'some-file': []},
+                               tasks=[(0,)])
 
         # The executor should be closed regardless how many bears are passed.
         for bears in [set(), {bear}]:
             executor = ThreadPoolExecutor(max_workers=1)
 
-            self.execute_run(bears, executor)
+            self.execute_run(bears, executor=executor)
 
             # Submitting new tasks should raise an exception now.
             with self.assertRaisesRegex(
                     RuntimeError, 'cannot schedule new futures after shutdown'):
                 executor.submit(lambda: None)
+
+
+class CoreCacheTest(CoreTestBase):
+
+    def setUp(self):
+        # Standard mocks only work within the same process, so we have to use
+        # Python threads for testing.
+        self.executor = ThreadPoolExecutor, tuple(), dict(max_workers=1)
+
+    def test_no_cache(self):
+        # Two runs without using the cache shall always run analyze() again.
+        section = Section('test-section')
+        filedict = {}
+
+        task_args = 3, 4, 5
+        bear = CustomTasksBear(section, filedict, tasks=[task_args])
+
+        with unittest.mock.patch.object(bear, 'analyze',
+                                        wraps=bear.analyze) as mock:
+            # By default, omitting the cache parameter shall mean "no cache".
+            results = self.execute_run({bear})
+            mock.assert_called_once_with(*task_args)
+            self.assertEqual(results, list(task_args))
+
+            mock.reset_mock()
+
+            results = self.execute_run({bear})
+            mock.assert_called_once_with(*task_args)
+            self.assertEqual(results, list(task_args))
+
+            mock.reset_mock()
+
+            # Passing None for cache shall disable it too explicitly.
+            results = self.execute_run({bear}, None)
+            mock.assert_called_once_with(*task_args)
+            self.assertEqual(results, list(task_args))
+
+    def test_cache(self):
+        section = Section('test-section')
+        filedict = {}
+
+        cache = {}
+
+        task_args = 10, 11, 12
+        bear = CustomTasksBear(section, filedict, tasks=[task_args])
+
+        with unittest.mock.patch.object(bear, 'analyze',
+                                        wraps=bear.analyze) as mock:
+            # First time we have a cache miss.
+            results = self.execute_run({bear}, cache)
+            mock.assert_called_once_with(*task_args)
+            self.assertEqual(results, list(task_args))
+            self.assertEqual(len(cache), 1)
+            self.assertEqual(next(iter(cache.keys())), CustomTasksBear)
+            self.assertEqual(len(next(iter(cache.values()))), 1)
+
+            # All following times we have a cache hit (we don't modify the
+            # cache in between).
+            for i in range(3):
+                mock.reset_mock()
+
+                results = self.execute_run({bear}, cache)
+                self.assertFalse(mock.called)
+                self.assertEqual(results, list(task_args))
+                self.assertEqual(len(cache), 1)
+                self.assertIn(CustomTasksBear, cache)
+                self.assertEqual(len(next(iter(cache.values()))), 1)
+
+        task_args = 500, 11, 12
+        bear = CustomTasksBear(section, filedict, tasks=[task_args])
+        with unittest.mock.patch.object(bear, 'analyze',
+                                        wraps=bear.analyze) as mock:
+            # Invocation with different args should add another cache entry,
+            # and invoke analyze() again because those weren't cached before.
+            results = self.execute_run({bear}, cache)
+            mock.assert_called_once_with(*task_args)
+            self.assertEqual(results, list(task_args))
+            self.assertEqual(len(cache), 1)
+            self.assertIn(CustomTasksBear, cache)
+            self.assertEqual(len(next(iter(cache.values()))), 2)
+
+            mock.reset_mock()
+
+            results = self.execute_run({bear}, cache)
+            self.assertFalse(mock.called)
+            self.assertEqual(results, list(task_args))
+            self.assertEqual(len(cache), 1)
+            self.assertIn(CustomTasksBear, cache)
+            self.assertEqual(len(next(iter(cache.values()))), 2)
+
+    def test_existing_cache_with_unrelated_data(self):
+        section = Section('test-section')
+        filedict = {}
+
+        # Start with some unrelated cache values. Those are ignored as they are
+        # never hit during a cache lookup.
+        cache = {CustomTasksBear: {b'123456': [100, 101, 102]}}
+
+        task_args = -1, -2, -3
+        bear = CustomTasksBear(section, filedict, tasks=[task_args])
+
+        with unittest.mock.patch.object(bear, 'analyze',
+                                        wraps=bear.analyze) as mock:
+            # First time we have a cache miss.
+            results = self.execute_run({bear}, cache)
+            mock.assert_called_once_with(*task_args)
+            self.assertEqual(results, list(task_args))
+            self.assertEqual(len(cache), 1)
+            self.assertIn(CustomTasksBear, cache)
+
+            cache_values = next(iter(cache.values()))
+            self.assertEqual(len(cache_values), 2)
+            # The unrelated data is left untouched.
+            self.assertIn(b'123456', cache_values)
+            self.assertEqual(cache_values[b'123456'], [100, 101, 102])

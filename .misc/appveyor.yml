@@ -7,12 +7,12 @@ environment:
 
   matrix:
     - PYTHON: "C:\\Python34"
-      PYTHON_VERSION: "3.4"
+      PYTHON_VERSION: "3.4.4"
       PYTHON_ARCH: "32"
       LLVM_VERSION: 3.4.1
 
     - PYTHON: "C:\\Python34-x64"
-      PYTHON_VERSION: "3.4"
+      PYTHON_VERSION: "3.4.4"
       PYTHON_ARCH: "64"
       LLVM_VERSION: 3.4.1
 

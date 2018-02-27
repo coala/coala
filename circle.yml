@@ -1,6 +1,6 @@
 dependencies:
   cache_directories:
-    - ~/.pyenv/versions/3.4.3
+    - ~/.pyenv/versions/3.4.4
     - ~/.pyenv/versions/3.5.1
     - ~/nltk_data
     - docs/_build

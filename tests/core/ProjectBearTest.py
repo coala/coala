@@ -1,4 +1,5 @@
 from concurrent.futures import ThreadPoolExecutor
+from unittest.mock import ANY, patch
 
 from coalib.core.ProjectBear import ProjectBear
 from coalib.settings.Section import Section
@@ -23,7 +24,7 @@ class TestProjectBearWithParameters(ProjectBear):
 class ProjectBearTest(CoreTestBase):
 
     def assertResultsEqual(self, bear_type, expected,
-                           section=None, file_dict=None):
+                           section=None, file_dict=None, cache=None):
         """
         Asserts whether the expected results do match the output of the bear.
 
@@ -39,6 +40,9 @@ class ProjectBearTest(CoreTestBase):
         :param file_dict:
             A file-dictionary for the bear to use. By default uses an empty
             dictionary.
+        :param cache:
+            A cache the bear can use to speed up runs. If ``None``, no cache
+            will be used.
         """
         if section is None:
             section = Section('test-section')
@@ -47,7 +51,7 @@ class ProjectBearTest(CoreTestBase):
 
         uut = bear_type(section, file_dict)
 
-        results = self.execute_run({uut})
+        results = self.execute_run({uut}, cache)
 
         self.assertEqual(sorted(expected), sorted(results))
 
@@ -139,3 +143,52 @@ class ProjectBearOnThreadPoolExecutorTest(ProjectBearTest):
     def setUp(self):
         super().setUp()
         self.executor = ThreadPoolExecutor, tuple(), dict(max_workers=8)
+
+    # Cache-tests require to be executed in the same Python process, as mocks
+    # aren't multiprocessing capable. Thus put them here.
+
+    def test_cache(self):
+        section = Section('test-section')
+        filedict1 = {'file.txt': []}
+        filedict2 = {'file.txt': ['first-line\n']}
+        expected_results1 = ['file.txt:[]']
+        expected_results2 = ["file.txt:['first-line\\n']"]
+        cache = {}
+
+        with patch.object(TestProjectBear, 'analyze',
+                          autospec=True,
+                          side_effect=TestProjectBear.analyze) as mock:
+
+            self.assertResultsEqual(TestProjectBear,
+                                    section=section,
+                                    file_dict=filedict1,
+                                    cache=cache,
+                                    expected=expected_results1)
+            mock.assert_called_once_with(ANY, filedict1)
+            self.assertEqual(len(cache), 1)
+            self.assertEqual(len(next(iter(cache.values()))), 1)
+
+            mock.reset_mock()
+
+            self.assertResultsEqual(TestProjectBear,
+                                    section=section,
+                                    file_dict=filedict1,
+                                    cache=cache,
+                                    expected=expected_results1)
+            # Due to https://bugs.python.org/issue28380, assert_not_called()
+            # is not available. The fix for this bug was not backported to
+            # Python 3.5 or earlier, so to be compatible with 3.4.4 we have to
+            # manually assert.
+            self.assertFalse(mock.called)
+            self.assertEqual(len(cache), 1)
+            self.assertEqual(len(next(iter(cache.values()))), 1)
+
+            self.assertResultsEqual(TestProjectBear,
+                                    section=section,
+                                    file_dict=filedict2,
+                                    cache=cache,
+                                    expected=expected_results2)
+
+            mock.assert_called_once_with(ANY, filedict2)
+            self.assertEqual(len(cache), 1)
+            self.assertEqual(len(next(iter(cache.values()))), 2)
