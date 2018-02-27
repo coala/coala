@@ -13,7 +13,6 @@ from coalib.misc.Exceptions import log_exception
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.BearRunning import run
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
-from coalib.processes.LogPrinterThread import LogPrinterThread
 from coalib.results.Result import Result
 from coalib.results.result_actions.DoNothingAction import DoNothingAction
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -598,8 +597,7 @@ def process_queues(processes,
     result_files = set()
     ignore_ranges = list(yield_ignore_ranges(file_dict))
 
-    # One process is the logger thread (if not in debug mode)
-    while local_processes > (1 if not debug else 0):
+    while local_processes > 0:
         try:
             control_elem, index = control_queue.get(timeout=0.1)
 
@@ -626,7 +624,7 @@ def process_queues(processes,
                 assert control_elem == CONTROL_ELEMENT.GLOBAL
                 global_result_buffer.append(index)
         except queue.Empty:
-            if get_running_processes(processes) < 2:  # pragma: no cover
+            if get_running_processes(processes) < 1:  # pragma: no cover
                 # Recover silently, those branches are only
                 # nondeterministically covered.
                 break
@@ -646,8 +644,7 @@ def process_queues(processes,
                                    apply_single=apply_single)
         global_result_dict[elem] = res
 
-    # One process is the logger thread
-    while global_processes > 1:
+    while global_processes > 0:
         try:
             control_elem, index = control_queue.get(timeout=0.1)
 
@@ -668,7 +665,7 @@ def process_queues(processes,
                 assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
                 global_processes -= 1
         except queue.Empty:
-            if get_running_processes(processes) < 2:  # pragma: no cover
+            if get_running_processes(processes) < 1:  # pragma: no cover
                 # Recover silently, those branches are only
                 # nondeterministically covered.
                 break
@@ -789,13 +786,6 @@ def execute_section(section,
                                                 debug=debug,
                                                 use_raw_files=use_raw_files)
 
-    logger_thread = LogPrinterThread(arg_dict['message_queue'])
-    # Start and join the logger thread along with the processes to run bears
-    if not debug:
-        # in debug mode the logging messages are directly processed by the
-        # message_queue
-        processes.append(logger_thread)
-
     for runner in processes:
         runner.start()
 
@@ -817,9 +807,8 @@ def execute_section(section,
                 arg_dict['file_dict'])
     finally:
         if not debug:
-            # in debug mode multiprocessing and logger_thread are disabled
-            # ==> no need for following actions
-            logger_thread.running = False
+            # in debug mode multiprocessing is disabled
+            # ==> no need for following action
 
             for runner in processes:
                 runner.join()

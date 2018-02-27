@@ -1,3 +1,4 @@
+import logging
 import queue
 import traceback
 
@@ -5,7 +6,7 @@ from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
 from coalib.misc import Constants
-from coalib.processes.communication.LogMessage import LOG_LEVEL, LogMessage
+from coalib.processes.communication.LogMessage import LOG_LEVEL
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.Result import Result
 
@@ -27,8 +28,7 @@ def send_msg(message_queue, timeout, log_level, *args, delimiter=' ', end=''):
     :param end:           It is the value placed at the end of the message.
     """
     output = str(delimiter).join(str(arg) for arg in args) + str(end)
-    message_queue.put(LogMessage(log_level, output),
-                      timeout=timeout)
+    logging.log(log_level, output)
 
 
 def validate_results(message_queue, timeout, result_list, name, args, kwargs):
@@ -57,15 +57,15 @@ def validate_results(message_queue, timeout, result_list, name, args, kwargs):
 
     for result in result_list:
         if not isinstance(result, Result):
-            send_msg(message_queue,
-                     timeout,
+            send_msg(None,
+                     None,
                      LOG_LEVEL.ERROR,
                      'The results from the bear {bear} could only be '
                      'partially processed with arguments {arglist}, '
                      '{kwarglist}'
                      .format(bear=name, arglist=args, kwarglist=kwargs))
-            send_msg(message_queue,
-                     timeout,
+            send_msg(None,
+                     None,
                      LOG_LEVEL.DEBUG,
                      'One of the results in the list for the bear {bear} is '
                      'an instance of {ret} but it should be an instance of '
@@ -107,14 +107,14 @@ def run_bear(message_queue, timeout, bear_instance, *args, debug=False,
         if debug and not isinstance(exc, SystemExit):
             raise
 
-        send_msg(message_queue,
-                 timeout,
+        send_msg(None,
+                 None,
                  LOG_LEVEL.ERROR,
                  'The bear {bear} failed to run with the arguments '
                  '{arglist}, {kwarglist}. Skipping bear...'
                  .format(bear=name, arglist=args, kwarglist=kwargs))
-        send_msg(message_queue,
-                 timeout,
+        send_msg(None,
+                 None,
                  LOG_LEVEL.DEBUG,
                  'Traceback for error in bear {}:'.format(name),
                  traceback.format_exc(),
@@ -122,8 +122,8 @@ def run_bear(message_queue, timeout, bear_instance, *args, debug=False,
 
         return None
 
-    return validate_results(message_queue,
-                            timeout,
+    return validate_results(None,
+                            None,
                             result_list,
                             name,
                             args,
@@ -188,8 +188,8 @@ def run_local_bear(message_queue,
     """
     if (not isinstance(bear_instance, LocalBear) or
             bear_instance.kind() != BEAR_KIND.LOCAL):
-        send_msg(message_queue,
-                 timeout,
+        send_msg(None,
+                 None,
                  LOG_LEVEL.WARNING,
                  'A given local bear ({}) is not valid. Leaving '
                  'it out...'.format(bear_instance.__class__.__name__),
@@ -201,8 +201,8 @@ def run_local_bear(message_queue,
               get_local_dependency_results(local_result_list,
                                            bear_instance),
               'debug': debug}
-    return run_bear(message_queue,
-                    timeout,
+    return run_bear(None,
+                    None,
                     bear_instance,
                     filename,
                     file_dict[filename],
@@ -234,8 +234,8 @@ def run_global_bear(message_queue,
     """
     if (not isinstance(global_bear_instance, GlobalBear)
             or global_bear_instance.kind() != BEAR_KIND.GLOBAL):
-        send_msg(message_queue,
-                 timeout,
+        send_msg(None,
+                 None,
                  LOG_LEVEL.WARNING,
                  'A given global bear ({}) is not valid. Leaving it '
                  'out...'
@@ -246,8 +246,8 @@ def run_global_bear(message_queue,
 
     kwargs = {'dependency_results': dependency_results,
               'debug': debug}
-    return run_bear(message_queue,
-                    timeout,
+    return run_bear(None,
+                    None,
                     global_bear_instance,
                     **kwargs)
 
@@ -282,13 +282,13 @@ def run_local_bears_on_file(message_queue,
     :param filename:          The name of file on which to run the bears.
     """
     if filename not in file_dict:
-        send_msg(message_queue,
-                 timeout,
+        send_msg(None,
+                 None,
                  LOG_LEVEL.ERROR,
                  'An internal error occurred.',
                  Constants.THIS_IS_A_BUG)
-        send_msg(message_queue,
-                 timeout,
+        send_msg(None,
+                 None,
                  LOG_LEVEL.DEBUG,
                  'The given file through the queue is not in the file '
                  'dictionary.')
@@ -297,8 +297,8 @@ def run_local_bears_on_file(message_queue,
 
     local_result_list = []
     for bear_instance in local_bear_list:
-        result = run_local_bear(message_queue,
-                                timeout,
+        result = run_local_bear(None,
+                                None,
                                 local_result_list,
                                 file_dict,
                                 bear_instance,
@@ -419,8 +419,8 @@ def run_local_bears(filename_queue,
     try:
         while True:
             filename = filename_queue.get(timeout=timeout)
-            run_local_bears_on_file(message_queue,
-                                    timeout,
+            run_local_bears_on_file(None,
+                                    None,
                                     file_dict,
                                     local_bear_list,
                                     local_result_dict,
@@ -468,7 +468,7 @@ def run_global_bears(message_queue,
                                      global_bear_list,
                                      global_result_dict))
             bearname = bear.__class__.__name__
-            result = run_global_bear(message_queue, timeout, bear, dep_results,
+            result = run_global_bear(None, None, bear, dep_results,
                                      debug=debug)
             if result:
                 global_result_dict[bearname] = result
@@ -542,7 +542,7 @@ def run(file_name_queue,
     """
     try:
         run_local_bears(file_name_queue,
-                        message_queue,
+                        None,
                         timeout,
                         file_dict,
                         local_bear_list,
@@ -551,7 +551,7 @@ def run(file_name_queue,
                         debug=debug)
         control_queue.put((CONTROL_ELEMENT.LOCAL_FINISHED, None))
 
-        run_global_bears(message_queue,
+        run_global_bears(None,
                          timeout,
                          global_bear_queue,
                          global_bear_list,

@@ -7,7 +7,9 @@ from os.path import abspath, exists, isfile, join, getmtime
 import shutil
 
 from freezegun import freeze_time
+from testfixtures import LogCapture, StringComparison
 
+import logging
 import requests
 import requests_mock
 
@@ -19,8 +21,6 @@ from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
 from coalib.results.Result import Result
-from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.processes.communication.LogMessage import LogMessage
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting, language
 
@@ -51,8 +51,8 @@ class TestBear(Bear):
 
     def run(self):
         self.print('set', 'up', delimiter='=')
-        self.err('teardown')
-        self.err()
+        logging.error('teardown')
+        logging.error('')
 
 
 class TypedTestBear(Bear):
@@ -212,68 +212,75 @@ class BearTest(BearTestBase):
         self.assertEqual(base.get_non_optional_settings(), {})
 
     def test_message_queue(self):
-        self.uut.execute()
-        self.check_message(LOG_LEVEL.DEBUG,
-                           'Running bear TestBear...')
-        self.check_message(LOG_LEVEL.DEBUG, 'set=up')
-        self.check_message(LOG_LEVEL.ERROR, 'teardown')
+        with LogCapture() as capture:
+            self.uut.execute()
+        capture.check(
+            ('root', 'DEBUG', 'Running bear TestBear...'),
+            ('root', 'DEBUG', 'set=up\n'),
+            ('root', 'ERROR', 'teardown'),
+            ('root', 'ERROR', '')
+        )
 
     def test_bad_bear(self):
         self.uut = BadTestBear(self.settings, self.queue)
-        self.uut.execute()
-        self.check_message(LOG_LEVEL.DEBUG)
-        self.check_message(LOG_LEVEL.ERROR,
-                           'Bear BadTestBear failed to run. Take a look at '
-                           'debug messages (`-V`) for further '
-                           'information.')
-        # debug message contains custom content, dont test this here
-        self.queue.get()
+        with LogCapture() as capture:
+            self.uut.execute()
+        capture.check(
+            ('root', 'DEBUG', 'Running bear BadTestBear...'),
+            ('root', 'ERROR', 'Bear BadTestBear failed to run. '
+                              'Take a look at debug messages (`-V`)'
+                              ' for further information.'),
+            ('root', 'DEBUG', StringComparison(r'.*The bear BadTestBear*'))
+        )
 
     def test_print_filename_LocalBear(self):
         self.uut = LocalBear(self.settings, self.queue)
-        self.uut.execute('filename.py', 'file\n')
-        self.check_message(LOG_LEVEL.DEBUG)
+        with LogCapture() as capture:
+            self.uut.execute('filename.py', 'file\n')
+        capture.check(
+            ('root', 'DEBUG', 'Running bear LocalBear...'),
+            ('root', 'ERROR', 'Bear LocalBear failed to run on file '
+                              'filename.py. Take a look at debug '
+                              'messages (`-V`) for further information.'),
+            ('root', 'DEBUG', StringComparison(r'.*The bear LocalBear*'))
+        )
         # Fails because of no run() implementation
-        self.check_message(LOG_LEVEL.ERROR,
-                           'Bear LocalBear failed to run on file filename.py. '
-                           'Take a look at debug messages (`-V`) for further '
-                           'information.')
 
     def test_print_no_filename_GlobalBear(self):
         self.uut = GlobalBear(None, self.settings, self.queue)
-        self.uut.execute()
-        self.check_message(LOG_LEVEL.DEBUG)
+        with LogCapture() as capture:
+            self.uut.execute()
+        capture.check(
+            ('root', 'DEBUG', 'Running bear GlobalBear...'),
+            ('root', 'ERROR', 'Bear GlobalBear failed to run. '
+                              'Take a look at debug messages '
+                              '(`-V`) for further information.'),
+            ('root', 'DEBUG', StringComparison(r'.*The bear GlobalBear*'))
+        )
         # Fails because of no run() implementation
-        self.check_message(LOG_LEVEL.ERROR,
-                           'Bear GlobalBear failed to run. Take a look at '
-                           'debug messages (`-V`) for further '
-                           'information.')
 
     def test_inconvertible(self):
         self.uut = TypedTestBear(self.settings, self.queue)
         self.settings.append(Setting('something', '5'))
-        self.uut.execute()
-        self.check_message(LOG_LEVEL.DEBUG)
+        with LogCapture() as capture:
+            self.uut.execute()
+        capture.check(
+            ('root', 'DEBUG', 'Running bear TypedTestBear...'),
+        )
         self.assertTrue(self.uut.was_executed)
 
         self.settings.append(Setting('something', 'nonsense'))
         self.uut.was_executed = False
-        self.uut.execute()
-        self.check_message(LOG_LEVEL.DEBUG)
-        self.check_message(LOG_LEVEL.WARNING)
+        with LogCapture() as capture:
+            self.uut.execute()
+        capture.check(
+            ('root', 'DEBUG', 'Running bear TypedTestBear...'),
+            ('root', 'WARNING', 'The bear TypedTestBear cannot be executed. '
+                                "Unable to convert parameter 'something' into "
+                                "type <class 'int'>.")
+        )
         self.assertTrue(self.queue.empty())
         self.assertFalse(self.uut.was_executed)
-
-    def check_message(self, log_level, message=None, regex=False):
-        msg = self.queue.get()
-        self.assertIsInstance(msg, LogMessage)
-        if message:
-            if regex:
-                self.assertRegexpMatches(msg.message, message)
-            else:
-                self.assertEqual(msg.message, message)
-
-        self.assertEqual(msg.log_level, log_level, msg)
 
     def test_no_queue(self):
         uut = TestBear(self.settings, None)
@@ -294,36 +301,44 @@ class BearTest(BearTestBase):
 
     def test_check_prerequisites(self):
         uut = BearWithPrerequisites(self.settings, self.queue, True)
-        uut.execute()
-        self.check_message(LOG_LEVEL.DEBUG)
+        with LogCapture() as capture:
+            uut.execute()
+        capture.check(
+            ('root', 'DEBUG', 'Running bear BearWithPrerequisites...'),
+        )
         self.assertTrue(self.queue.empty())
         self.assertTrue(uut.was_executed)
 
-        self.assertRaisesRegex(RuntimeError,
-                               'The bear BearWithPrerequisites does not '
-                               'fulfill all requirements\\.',
-                               BearWithPrerequisites,
-                               self.settings,
-                               self.queue,
-                               False)
-
-        self.check_message(LOG_LEVEL.ERROR,
-                           'The bear BearWithPrerequisites does not fulfill '
-                           'all requirements.')
+        with LogCapture() as capture:
+            self.assertRaisesRegex(
+                RuntimeError,
+                'The bear BearWithPrerequisites does not '
+                'fulfill all requirements\\.',
+                BearWithPrerequisites,
+                self.settings,
+                self.queue,
+                False
+            )
+        capture.check(
+            ('root', 'ERROR', 'The bear BearWithPrerequisites does not '
+                              'fulfill all requirements.'),
+        )
         self.assertTrue(self.queue.empty())
 
-        self.assertRaisesRegex(RuntimeError,
-                               'The bear BearWithPrerequisites does not '
-                               'fulfill all requirements\\. Just because '
-                               'I want to\\.',
-                               BearWithPrerequisites,
-                               self.settings,
-                               self.queue,
-                               'Just because I want to.')
-
-        self.check_message(LOG_LEVEL.ERROR,
-                           'The bear BearWithPrerequisites does not fulfill '
-                           'all requirements. Just because I want to.')
+        with LogCapture() as capture:
+            self.assertRaisesRegex(RuntimeError,
+                                   'The bear BearWithPrerequisites does not '
+                                   'fulfill all requirements\\. Just because '
+                                   'I want to\\.',
+                                   BearWithPrerequisites,
+                                   self.settings,
+                                   self.queue,
+                                   'Just because I want to.')
+        capture.check(
+            ('root', 'ERROR', 'The bear BearWithPrerequisites does not '
+                              'fulfill all requirements. Just because I '
+                              'want to.'),
+        )
         self.assertTrue(self.queue.empty())
 
     def test_get_non_optional_settings(self):
@@ -356,10 +371,13 @@ class BearTest(BearTestBase):
 
     def test_bear_with_default_language(self):
         self.uut = BearWithLanguage(self.settings, self.queue)
-        result = self.uut.execute()[0]
+        with LogCapture() as capture:
+            result = self.uut.execute()[0]
+        capture.check(
+            ('root', 'DEBUG', 'Running bear BearWithLanguage...'),
+        )
         self.assertIsInstance(result, Language)
         self.assertEqual(str(result), 'Python 3.4')
-        self.check_message(LOG_LEVEL.DEBUG)
 
     def test_bear_with_specific_language(self):
         self.uut = BearWithLanguage(self.settings, self.queue)
@@ -367,10 +385,13 @@ class BearTest(BearTestBase):
         self.settings['language'] = 'Java'
         # Use this instead
         self.settings.language = Language['HTML 5.1']
-        result = self.uut.execute()[0]
+        with LogCapture() as capture:
+            result = self.uut.execute()[0]
+        capture.check(
+            ('root', 'DEBUG', 'Running bear BearWithLanguage...'),
+        )
         self.assertIsInstance(result, Language)
         self.assertEqual(str(result), 'Hypertext Markup Language 5.1')
-        self.check_message(LOG_LEVEL.DEBUG)
 
 
 class BrokenReadHTTPResponse(BytesIO):

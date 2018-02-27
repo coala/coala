@@ -5,10 +5,11 @@ import unittest
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
 from coalib.processes.BearRunning import (
-    LOG_LEVEL, LogMessage, run, send_msg, task_done)
+    LOG_LEVEL, run, send_msg, task_done)
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.settings.Section import Section
+from testfixtures import LogCapture, StringComparison
 
 
 class LocalTestBear(LocalBear):
@@ -132,16 +133,18 @@ class BearRunningUnitTest(unittest.TestCase):
         task_done('test')  # Should pass silently
 
     def test_messaging(self):
-        send_msg(self.message_queue,
-                 0,
-                 LOG_LEVEL.DEBUG,
-                 'test',
-                 'messag',
-                 delimiter='-',
-                 end='e')
+        with LogCapture() as capture:
+            send_msg(None,
+                     None,
+                     LOG_LEVEL.DEBUG,
+                     'test',
+                     'messag',
+                     delimiter='-',
+                     end='e')
 
-        self.assertEqual(self.message_queue.get(),
-                         LogMessage(LOG_LEVEL.DEBUG, 'test-message'))
+        capture.check(
+            ('root', 'DEBUG', 'test-message'),
+        )
 
     def test_dependencies(self):
         self.local_bear_list.append(SimpleBear(self.settings,
@@ -166,15 +169,8 @@ class BearRunningUnitTest(unittest.TestCase):
             self.file_dict,
             self.local_result_dict,
             self.global_result_dict,
-            self.message_queue,
+            None,
             self.control_queue)
-
-        try:
-            while True:
-                msg = self.message_queue.get(timeout=0)
-                self.assertEqual(msg.log_level, LOG_LEVEL.DEBUG)
-        except queue.Empty:
-            pass
 
     def test_evil_bear(self):
         self.local_bear_list.append(EvilBear(self.settings,
@@ -189,7 +185,7 @@ class BearRunningUnitTest(unittest.TestCase):
             self.file_dict,
             self.local_result_dict,
             self.global_result_dict,
-            self.message_queue,
+            None,
             self.control_queue)
 
     def test_strange_bear(self):
@@ -200,24 +196,32 @@ class BearRunningUnitTest(unittest.TestCase):
         self.file_name_queue.put('t')
         self.file_dict['t'] = []
 
-        run(self.file_name_queue,
-            self.local_bear_list,
-            self.global_bear_list,
-            self.global_bear_queue,
-            self.file_dict,
-            self.local_result_dict,
-            self.global_result_dict,
-            self.message_queue,
-            self.control_queue)
+        with LogCapture() as capture:
+            run(self.file_name_queue,
+                self.local_bear_list,
+                self.global_bear_list,
+                self.global_bear_queue,
+                self.file_dict,
+                self.local_result_dict,
+                self.global_result_dict,
+                None,
+                self.control_queue)
 
-        expected_messages = [LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.ERROR,
-                             LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.ERROR]
-
-        for msg in expected_messages:
-            self.assertEqual(msg, self.message_queue.get(timeout=0).log_level)
+        capture.check(
+            ('root', 'DEBUG', 'Running bear UnexpectedBear1...'),
+            ('root', 'ERROR', 'The results from the bear UnexpectedBear1 '
+                              'could only be partially processed with '
+                              "arguments ('t', []), {}"),
+            ('root', 'DEBUG', 'One of the results in the list for the bear '
+                              'UnexpectedBear1 is an instance of <class '
+                              "'int'> but it should be an instance of Result"),
+            ('root', 'DEBUG', 'Running bear UnexpectedBear2...'),
+            ('root', 'ERROR', 'Bear UnexpectedBear2 failed to run on file '
+                              't. Take a look at debug messages (`-V`) for '
+                              'further information.'),
+            ('root', 'DEBUG', StringComparison(r'.*The bear UnexpectedBear2 '
+                                               'raised an exception*'))
+        )
 
 
 class BearRunningIntegrationTest(unittest.TestCase):
@@ -260,28 +264,44 @@ d
         self.global_bear_queue.put(1)
 
     def test_run(self):
-        run(self.file_name_queue,
-            self.local_bear_list,
-            self.global_bear_list,
-            self.global_bear_queue,
-            self.file_dict,
-            self.local_result_dict,
-            self.global_result_dict,
-            self.message_queue,
-            self.control_queue)
+        with LogCapture() as capture:
+            run(self.file_name_queue,
+                self.local_bear_list,
+                self.global_bear_list,
+                self.global_bear_queue,
+                self.file_dict,
+                self.local_result_dict,
+                self.global_result_dict,
+                None,
+                self.control_queue)
 
-        expected_messages = [LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.ERROR,
-                             LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.WARNING,
-                             LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.WARNING,
-                             LOG_LEVEL.ERROR,
-                             LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.DEBUG,
-                             LOG_LEVEL.WARNING]
-        for msg in expected_messages:
-            self.assertEqual(msg, self.message_queue.get(timeout=0).log_level)
+        capture.check(
+            ('root', 'DEBUG', 'Running bear LocalTestBear...'),
+            ('root', 'ERROR', 'Bear LocalTestBear failed to run on file '
+                              'file1. Take a look at debug messages (`-V`) '
+                              'for further information.'),
+            ('root', 'DEBUG', StringComparison(r'.*The bear LocalTestBear '
+                                               'raised an exception*')),
+            ('root', 'WARNING', 'A given local bear (str) is not valid. '
+                                'Leaving it out... This is a bug. We are '
+                                'sorry for the inconvenience. Please contact '
+                                'the developers for assistance.'),
+            ('root', 'DEBUG', 'Running bear LocalTestBear...'),
+            ('root', 'WARNING', 'A given local bear (str) is not valid. '
+                                'Leaving it out... This is a bug. We are '
+                                'sorry for the inconvenience. Please contact '
+                                'the developers for assistance.'),
+            ('root', 'ERROR', 'An internal error occurred. This is a bug. We '
+                              'are sorry for the inconvenience. Please contact '
+                              'the developers for assistance.'),
+            ('root', 'DEBUG', 'The given file through the queue is not in '
+                              'the file dictionary.'),
+            ('root', 'DEBUG', 'Running bear GlobalTestBear...'),
+            ('root', 'WARNING', 'A given global bear (str) is not valid. '
+                                'Leaving it out... This is a bug. We are '
+                                'sorry for the inconvenience. Please contact '
+                                'the developers for assistance.')
+        )
 
         local_result_expected = [[],
                                  [Result.from_values('LocalTestBear',

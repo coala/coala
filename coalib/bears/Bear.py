@@ -1,4 +1,5 @@
 import inspect
+import logging
 import traceback
 from functools import partial
 from os import makedirs
@@ -260,11 +261,11 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
             if cp is not False:
                 error_string += ' ' + cp
 
-            self.err(error_string)
+            logging.error(error_string)
             raise RuntimeError(error_string)
 
     def _print(self, output, **kwargs):
-        self.debug(output)
+        logging.debug(output)
 
     def log_message(self, log_message, timestamp=None, **kwargs):
         if self.message_queue is not None:
@@ -283,8 +284,8 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
             kwargs.update(
                 self.get_metadata().create_params_from_section(self.section))
         except ValueError as err:
-            self.warn('The bear {} cannot be executed.'.format(
-                self.name), str(err))
+            logging.warning('The bear {} cannot be executed. {}'.format(
+                self.name, str(err)))
             return
 
         return self.run(*args, **kwargs)
@@ -292,7 +293,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     def execute(self, *args, debug=False, **kwargs):
         name = self.name
         try:
-            self.debug('Running bear {}...'.format(name))
+            logging.debug('Running bear {}...'.format(name))
 
             # If `dependency_results` kwargs is defined but there are no
             # dependency results (usually in Bear that has no dependency)
@@ -311,14 +312,14 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
                 raise
 
             if self.kind() == BEAR_KIND.LOCAL:
-                self.err('Bear {} failed to run on file {}. Take a look '
-                         'at debug messages (`-V`) for further '
-                         'information.'.format(name, args[0]))
+                logging.error('Bear {} failed to run on file {}. Take a look '
+                              'at debug messages (`-V`) for further '
+                              'information.'.format(name, args[0]))
             else:
-                self.err('Bear {} failed to run. Take a look '
-                         'at debug messages (`-V`) for further '
-                         'information.'.format(name))
-            self.debug(
+                logging.error('Bear {} failed to run. Take a look '
+                              'at debug messages (`-V`) for further '
+                              'information.'.format(name))
+            logging.debug(
                 'The bear {bear} raised an exception. If you are the author '
                 'of this bear, please make sure to catch all exceptions. If '
                 'not and this error annoys you, you might want to get in '
@@ -488,8 +489,8 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         if exists(filename):
             return filename
 
-        self.info('Downloading {filename!r} for bear {bearname} from {url}.'
-                  .format(filename=filename, bearname=self.name, url=url))
+        logging.info('Downloading {filename!r} for bear {bearname} from {url}.'
+                     .format(filename=filename, bearname=self.name, url=url))
 
         response = requests.get(url, stream=True, timeout=20)
         response.raise_for_status()

@@ -71,7 +71,7 @@ class Queue(queue.Queue):
         there is a ``self.log_printer``. Then `item` is just sent to logger
         instead.
         """
-        if isinstance(item, LogMessage):
+        if isinstance(item, LogMessage):  # pragma: nocover
             logging.log(item.log_level, item.message)
         else:
             super().put(item)

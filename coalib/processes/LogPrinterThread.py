@@ -21,7 +21,7 @@ class LogPrinterThread(threading.Thread):
         while self.running:
             try:
                 elem = self.message_queue.get(timeout=0.1)
-                if isinstance(elem, LogMessage):
+                if isinstance(elem, LogMessage):  # pragma: nocover
                     logging.log(elem.log_level, elem.message)
                 else:
                     logging.info(elem)
