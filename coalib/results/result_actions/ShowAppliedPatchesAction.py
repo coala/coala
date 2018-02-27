@@ -3,12 +3,7 @@ from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.results.RESULT_SEVERITY import (
     RESULT_SEVERITY, RESULT_SEVERITY_COLORS)
 from pyprint.ConsolePrinter import ConsolePrinter
-
-
-def format_lines(lines, symbol='', line_nr=''):
-    def sym(x): return ']' if x is '[' else x
-    return '\n'.join('{}{:>5}{} {}'.format(symbol, sym(symbol), line_nr, line)
-                     for line in lines.rstrip('\n').split('\n'))
+from coalib.output.Interactions import format_lines
 
 
 class ShowAppliedPatchesAction(ResultAction):

@@ -5,7 +5,7 @@ import platform
 
 from coalib import VERSION
 from coalib.misc.Exceptions import get_exitcode
-from coalib.output.Interactions import fail_acquire_settings
+from coalib.output.Interactions import fail_acquire_settings, format_lines
 from coalib.output.Logging import CounterHandler
 from coalib.processes.Processing import execute_section, simplify_section_result
 from coalib.settings.ConfigurationGathering import gather_configuration
@@ -41,13 +41,6 @@ def provide_all_actions():
             PrintAspectAction().get_metadata().desc,
             PrintDebugMessageAction().get_metadata().desc,
             PrintMoreInfoAction().get_metadata().desc]
-
-
-def format_lines(lines, symbol='', line_nr=''):
-    # type: (object, object, object) -> object
-    def sym(x): return ']' if x is '[' else x
-    return '\n'.join('{}{:>5}{} {}'.format(symbol, sym(symbol), line_nr, line)
-                     for line in lines.rstrip('\n').split('\n'))
 
 
 def run_coala(console_printer=None,

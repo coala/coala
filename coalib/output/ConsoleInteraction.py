@@ -16,6 +16,8 @@ from coalib.misc.DictUtilities import inverse_dicts
 from coalib.misc.Exceptions import log_exception
 from coalib.misc.DeprecationUtilities import check_deprecation
 from coalib.bearlib.spacing.SpacingHelper import SpacingHelper
+from coalib.output.Interactions import (
+        format_lines, color_letter, highlight_text)
 from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
@@ -35,7 +37,6 @@ from coalib.results.RESULT_SEVERITY import (
 from coalib.settings.Setting import Setting
 from coala_utils.string_processing.Core import join_names
 
-from pygments import highlight
 from pygments.formatters import (TerminalTrueColorFormatter,
                                  TerminalFormatter)
 from pygments.filters import VisibleWhitespaceFilter
@@ -63,13 +64,6 @@ class NoColorStyle(Style):
     }
 
 
-def highlight_text(no_color, text, style, lexer=TextLexer()):
-    formatter = TerminalTrueColorFormatter(style=style)
-    if no_color:
-        formatter = TerminalTrueColorFormatter(style=NoColorStyle)
-    return highlight(text, lexer, formatter)[:-1]
-
-
 STR_GET_VAL_FOR_SETTING = ('Please enter a value for the setting \"{}\" ({}) '
                            'needed by {} for section \"{}\": ')
 STR_LINE_DOESNT_EXIST = ('The line belonging to the following result '
@@ -93,31 +87,6 @@ CLI_ACTIONS = (OpenEditorAction(),
                ShowAppliedPatchesAction(),
                GeneratePatchesAction())
 DIFF_EXCERPT_MAX_SIZE = 4
-
-
-def color_letter(console_printer, line):
-    x = -1
-    y = -1
-    letter = ''
-    for i, l in enumerate(line, 0):
-        if line[i] == '(':
-            x = i
-        if line[i] == ')':
-            y = i
-        if l.isupper() and x != -1:
-            letter = l
-    first_part = line[:x+1]
-    second_part = line[y:]
-
-    console_printer.print(first_part, end='')
-    console_printer.print(letter, color='blue', end='')
-    console_printer.print(second_part)
-
-
-def format_lines(lines, symbol='', line_nr=''):
-    def sym(x): return ']' if x is '[' else x
-    return '\n'.join('{}{:>4}{} {}'.format(symbol, line_nr, sym(symbol), line)
-                     for line in lines.rstrip('\n').split('\n'))
 
 
 def print_section_beginning(console_printer, section):

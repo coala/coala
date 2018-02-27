@@ -1,4 +1,21 @@
 import logging
+from pygments.lexers import TextLexer
+from pygments import highlight
+from pygments.formatters import TerminalTrueColorFormatter
+from pygments.style import Style
+from pygments.token import Token
+
+
+class NoColorStyle(Style):
+    styles = {
+        Token: 'noinherit'
+    }
+
+
+class BackgroundMessageStyle(Style):
+    styles = {
+        Token: 'bold bg:#eee #111'
+    }
 
 
 def fail_acquire_settings(log_printer, settings_names_dict):
@@ -28,3 +45,35 @@ def fail_acquire_settings(log_printer, settings_names_dict):
 
         logging.error(msg)
         raise AssertionError(msg)
+
+
+def highlight_text(no_color, text, style, lexer=TextLexer()):
+    formatter = TerminalTrueColorFormatter(style=style)
+    if no_color:
+        formatter = TerminalTrueColorFormatter(style=NoColorStyle)
+    return highlight(text, lexer, formatter)[:-1]
+
+
+def color_letter(console_printer, line):
+    x = -1
+    y = -1
+    letter = ''
+    for i, l in enumerate(line, 0):
+        if line[i] == '(':
+            x = i
+        if line[i] == ')':
+            y = i
+        if l.isupper() and x != -1:
+            letter = l
+    first_part = line[:x+1]
+    second_part = line[y:]
+
+    console_printer.print(first_part, end='')
+    console_printer.print(letter, color='blue', end='')
+    console_printer.print(second_part)
+
+
+def format_lines(lines, symbol='', line_nr=''):
+    def sym(x): return ']' if x is '[' else x
+    return '\n'.join('{}{:>4}{} {}'.format(symbol, line_nr, sym(symbol), line)
+                     for line in lines.rstrip('\n').split('\n'))
