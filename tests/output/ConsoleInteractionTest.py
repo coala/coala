@@ -440,7 +440,7 @@ class ConsoleInteractionTest(unittest.TestCase):
                                           Result('origin', 'message', diffs={
                                               testfile_path: diff}),
                                           file_dict, apply_single=True)
-                self.assertEqual(generator.last_input, -1)
+                self.assertEqual(generator.last_input, 0)
                 self.assertIn('', sio.getvalue())
 
             class InvalidateTestAction(ResultAction):

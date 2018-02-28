@@ -1,4 +1,3 @@
-from collections import OrderedDict
 import logging
 import os
 import platform
@@ -9,16 +8,6 @@ from coalib.output.Interactions import fail_acquire_settings
 from coalib.output.Logging import CounterHandler
 from coalib.processes.Processing import execute_section, simplify_section_result
 from coalib.settings.ConfigurationGathering import gather_configuration
-from coalib.results.result_actions.DoNothingAction import DoNothingAction
-from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
-from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
-from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
-from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
-from coalib.results.result_actions.PrintAspectAction import PrintAspectAction
-from coalib.results.result_actions.PrintMoreInfoAction import  \
-    PrintMoreInfoAction
-from coalib.results.result_actions.PrintDebugMessageAction import \
-    PrintDebugMessageAction
 from coalib.misc.Caching import FileCache
 from coalib.misc.CachingUtilities import (
     settings_changed, update_settings_db, get_settings_hash)
@@ -30,24 +19,6 @@ def do_nothing(*args):
 
 STR_ENTER_NUMBER = 'Enter number (Ctrl-{} to exit): '.format(
     'Z' if platform.system() == 'Windows' else 'D')
-
-
-def provide_all_actions():
-    return [DoNothingAction().get_metadata().desc,
-            ShowPatchAction().get_metadata().desc,
-            ApplyPatchAction().get_metadata().desc,
-            IgnoreResultAction().get_metadata().desc,
-            OpenEditorAction().get_metadata().desc,
-            PrintAspectAction().get_metadata().desc,
-            PrintDebugMessageAction().get_metadata().desc,
-            PrintMoreInfoAction().get_metadata().desc]
-
-
-def format_lines(lines, symbol='', line_nr=''):
-    # type: (object, object, object) -> object
-    def sym(x): return ']' if x is '[' else x
-    return '\n'.join('{}{:>5}{} {}'.format(symbol, sym(symbol), line_nr, line)
-                     for line in lines.rstrip('\n').split('\n'))
 
 
 def run_coala(console_printer=None,
@@ -65,7 +36,6 @@ def run_coala(console_printer=None,
     """
     This is a main method that should be usable for almost all purposes and
     reduces executing coala to one function call.
-
     :param console_printer:         Object to print messages on the console.
     :param log_printer:             A LogPrinter object to use for logging.
     :param print_results:           A callback that takes a LogPrinter, a
@@ -99,34 +69,9 @@ def run_coala(console_printer=None,
     :return:                        A dictionary containing a list of results
                                     for all analyzed sections as key.
     """
-    all_actions_possible = provide_all_actions()
     apply_single = None
     if getattr(args, 'single_action', None) is not None:
-        while True:
-            for i, action in enumerate(all_actions_possible, 1):
-                console_printer.print(format_lines('{}'.format(
-                    action), symbol='['))
-
-            line = format_lines(STR_ENTER_NUMBER, symbol='[')
-
-            choice = input(line)
-
-            if choice.isalpha():
-                choice = choice.upper()
-                choice = '(' + choice + ')'
-                if choice == '(N)':
-                    apply_single = 'Do (N)othing'
-                    break
-                for i, action in enumerate(all_actions_possible, 1):
-                    if choice in action:
-                        apply_single = action
-                        break
-                if apply_single:
-                    break
-                console_printer.print(format_lines(
-                                    'Please enter a valid letter.',
-                                    symbol='['))
-
+        apply_single = True
         args.apply_patch = False
 
     exitcode = 0
@@ -153,11 +98,6 @@ def run_coala(console_printer=None,
         cache = None
         if not sections['cli'].get('disable_caching', False):
             cache = FileCache(None, os.getcwd(), flush_cache)
-
-        if targets:
-            sections = OrderedDict(
-                (section_name, sections[section_name])
-                for section_name in targets)
 
         for section_name, section in sections.items():
             if not section.is_enabled(targets):
