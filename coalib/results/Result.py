@@ -25,6 +25,7 @@ from coalib.results.SourceRange import SourceRange
                    'message_arguments',
                    'aspect',
                    'additional_info',
+                   'diffs',
                    'debug_msg',
                    'applied_actions')
 class Result:
