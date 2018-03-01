@@ -679,7 +679,7 @@ def choose_action(console_printer, actions, apply_single=False):
                             break
                 if actions_desc_len == len(actions_desc):
                     console_printer.print(format_lines(
-                        'Please enter a valid letter.', symbol='['))
+                        'Please enter a valid letter or number.', symbol='['))
 
             if not choice:
                 actions_desc.append(DoNothingAction().get_metadata().desc)
