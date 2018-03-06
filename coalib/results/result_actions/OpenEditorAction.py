@@ -56,7 +56,10 @@ KNOWN_EDITORS = {
         'file_arg_template': '+{line}:{column} {filename}',
         'gui': False
     },
-
+    'vi': {
+        'file_arg_template': '+{line},{column} {filename} ',
+        'gui': False
+    },``
     # gui editors
     'atom': {
         'file_arg_template': '{filename}:{line}:{column}',
