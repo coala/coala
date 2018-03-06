@@ -51,7 +51,7 @@ to coala, while getting you familiar with the workflow!
 
 For more information about Pull Requests, keep reading!
 
-.. note::
+.. tip::
 
     **You do not need to read the coala codebase to get started** - this guide
     is intended to help you do that without reading tons of meaningless code.
@@ -75,7 +75,7 @@ to learn how to set up an environment to work on coala.
 Most importantly, keep notes on what could be changed to make coala usage
 easier!  What documentation was missing? What was hard to understand?
 
-.. note::
+.. seealso::
 
     *Struggling with this?* We have a very verbose guide on this topic in
     `our Google Code In resources <https://github.com/coala/coala/wiki/Google-Code-In-Task-Use-coala>`_
@@ -175,7 +175,7 @@ Now it is time to pick an issue.
 It is the best way to familiarise yourself with the codebase.
 You can view `all Newcomer issues on GitHub <https://coala.io/new>`_.
 
-.. note::
+.. important::
 
     You need to be logged in before you follow the Newcomer issues link.
 
@@ -192,7 +192,7 @@ Leave a comment that you would like to be assigned to the issue. This way
 we don't have multiple people working on the same issue at the same time.
 Now you can start working on it!
 
-.. note::
+.. caution::
 
     As stated above, you should never work on an issue without being
     assigned. Fortunately, corobo is here to help you! If you are
@@ -228,7 +228,7 @@ Now you can start working on it!
     Before starting your first commit, check out this
     link: `Writing good commits <http://coala.io/commit>`_.
 
-.. seealso::
+.. important::
 
     An important part of working on issues is documenting your work
     in such a way that it is easy for others to read and understand.
@@ -256,7 +256,7 @@ repository, go to the official repository of coala/coala-bears and click on the
 where ``myfork`` is the name of your fork, and ``fork_link`` is a link to your
 fork repository.
 
-.. note::
+.. important::
    It is important that you **DO NOT** make your changes on the master branch
    of your forked repository to avoid the following cases:
 
@@ -310,7 +310,7 @@ into your bash prompt. This will analyze your code and help you fix it.
 Step 4. Sending Your Changes
 ----------------------------
 
-.. note::
+.. caution::
 
    Before committing your changes, please check that you are indeed in a
    development branch created in step 3. To check if you are in a branch, type:
@@ -387,7 +387,7 @@ see that's the case from the ``process/pending review`` label. Now all you have
 to do is wait, or let the other developers know on Gitter that you have
 published your changes.
 
-.. note::
+.. important::
 
     Do not tag the reviewers every time you push a change. They review PRs
     consistently whenever they have time!
@@ -399,7 +399,7 @@ Now there are two possibilities:
 - your ``Pull Request`` doesn't get accepted, and therefore you will
   need to modify it as per the review comments
 
-.. note::
+.. caution::
 
     Wait until the reviewer has reviewed your whole Pull Request
     and has labeled it ``process/wip``. If you push again before that happens,
@@ -449,7 +449,7 @@ Now you should `tell us about your experience <https://coala.io/newform>`_ and
 go for `a low issue <https://coala.io/low>`__ - they are really rewarding!
 
 
-.. note::
+.. attention::
 
     Do not delete the fork subsequent to Pull Request for review or
     after it is merged!

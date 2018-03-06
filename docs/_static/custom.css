@@ -69,7 +69,7 @@ h1,h2,h3,h4,h5,h6 {
     margin-bottom: 2em;
 }
 
-div.admonition, div.note {  /* Ignore CSSLintBear */
+div.admonition {  /* Ignore CSSLintBear */
     background-color: #263238;
     border: none;
     border-radius: 0;
@@ -81,14 +81,34 @@ div.admonition, div.note {  /* Ignore CSSLintBear */
     transition: box-shadow .25s;
 }
 
+div.attention {  /* csslint allow: overqualified-elements */
+    background-color: #d9534f;
+}
+
+div.caution {  /* csslint allow: overqualified-elements */
+    background-color: #f0ad4e;
+}
+
+div.important {  /* csslint allow: overqualified-elements */
+    background-color: #d9534f;
+}
+
+div.tip {  /* csslint allow: overqualified-elements */
+    background-color: #428bca;
+}
+
+div.note {  /* csslint allow: overqualified-elements */
+    background-color: #5bc0de;
+}
+
 div.admonition p.admonition-title {  /* Ignore CSSLintBear */
     font-family: 'Roboto', serif;
-    font-weight: 100;
+    font-weight: 200;
     margin: 0 0 5px 0;
 }
 
 div.admonition p {
-    font-weight: 200;
+    font-weight: 300;
     margin-top: 1em;
 }
 
