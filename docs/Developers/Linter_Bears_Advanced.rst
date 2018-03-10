@@ -95,24 +95,78 @@ several functions accessible with the naming scheme
 ``process_output_<output-format>``.
 
 - ``process_output_regex``: Extracts results using a regex.
+
+  ::
+
+      @linter(executable='my_tool',
+              use_stdout=False,
+              use_stderr=True)
+      class MyBear:
+          # Assuming the tool puts some issue messages into stderr.
+          def process_output(self, output, filename, file):
+              # output is a string, as we activated just ``use_stderr``
+              map = {'info': RESULT_SEVERITY.INFO,
+                     'warn': RESULT_SEVERITY.NORMAL,
+                     'error': RESULT_SEVERITY.MAJOR}
+              regex = "(?P<line>\d+):(?P<message>(?P<severity>[WEI]).*)"
+              yield from self.process_output_regex(stderr,
+                                                   filename,
+                                                   file,
+                                                   regex,
+                                                   map)
+
+  A static message to use for results instead of grabbing it from the executable
+  output (via the ``message`` named regex group) can also be provided using the
+  ``result_message`` parameter.
+
 - ``process_output_corrected``: Extracts results (with patches) by using a
   corrected version of the file processed.
 
-::
+  ::
 
     @linter(executable='my_tool',
             use_stdout=True,
-            use_stderr=True)
+            use_stderr=False)
     class MyBear:
-        # Assuming the tool puts a corrected version of the file into stdout
-        # and additional issue messages (that can't be fixed automatically)
-        # into stderr, let's combine both streams!
+        # Assuming the tool puts a corrected version of the file into stdout.
         def process_output(self, output, filename, file):
-            # output is now a tuple, as we activated both, stdout and stderr.
-            stdout, stderr = output
-            yield from self.process_output_corrected(stdout, filename, file)
-            regex = "(?P<message>.*)"
-            yield from self.process_output_regex(stderr, filename, file, regex)
+            # output is a string, as we activated just ``use_stdout``
+            yield from self.process_output_corrected(
+                                stdout,
+                                filename,
+                                file,
+                                diff_severity=RESULT_SEVERITY.NORMAL,
+                                diff_distance=2)
+
+  The ``diff_distance`` parameter takes the number of unchanged lines
+  allowed in between two changed lines so they get yielded as a single diff.
+  If ``-1`` is given, every change will be yielded as an own diff.
+
+- ``process_output_unified_diff``: Extracts results (with patches) by processing
+  a unified diff.
+
+  ::
+
+      @linter(executable='my_tool',
+              use_stdout=True,
+              use_stderr=True)
+      class MyBear:
+          # Assuming the tool puts a unified diff into stdout
+          # and additional issue messages (that can't be fixed automatically)
+          # into stderr, let's combine both streams!
+          def process_output(self, output, filename, file):
+              # output is now a tuple, as we activated both, ``use_stdout`` and
+              # ``use_stderr``.
+              stdout, stderr = output
+              yield from self.process_output_unified_diff(stdout,
+                                                          filename,
+                                                          file)
+              regex = "(?P<message>.*)"
+              yield from self.process_output_regex(stderr,
+                                                   filename,
+                                                   file,
+                                                   regex)
+
 
 JSON output is also very common:
 
