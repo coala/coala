@@ -211,7 +211,7 @@ def _extract_doc_comment_from_line(content, line, column, regex,
         if doc_comment:
             return end_line, end_column, doc
         else:
-            malformed_comment = MalformedComment(dedent("""\
+            malformed_comment = MalformedComment(dedent("""
                 Please check the docstring for faulty markers. A starting
                 marker has been found, but no instance of DocComment is
                 returned."""), line)
