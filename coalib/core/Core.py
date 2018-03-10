@@ -175,6 +175,10 @@ class Session:
 
                 def result_callback(result):
                     pass
+
+            Only those results are passed for bears that were explicitly
+            requested via the ``bears`` parameter, implicit dependency results
+            do not call the callback.
         :param cache:
             A cache bears can use to speed up runs. If ``None``, no cache will
             be used.
@@ -386,7 +390,9 @@ class Session:
             self.running_futures[bear].remove(future)
             self._cleanup_bear(bear)
 
-        if results is not None:
+        # Only pass results to the callback for bears that were desired during
+        # init.
+        if results is not None and bear in self.bears:
             for result in results:
                 try:
                     # FIXME Long operations on the result-callback could block
@@ -415,6 +421,10 @@ def run(bears, result_callback, cache=None, executor=None):
 
             def result_callback(result):
                 pass
+
+        Only those results are passed for bears that were explicitly requested
+        via the ``bears`` parameter, implicit dependency results do not call
+        the callback.
     :param cache:
         A cache bears can use to speed up runs. If ``None``, no cache will be
         used.
