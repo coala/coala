@@ -252,16 +252,21 @@ def _absolute_flat_glob(pattern):
     return
 
 
-def _iter_relative_dirs(dirname):
+def _iter_relative_dirs(dirname, ignored_globs=None):
     """
     Recursively iterates subdirectories of all levels from dirname
 
-    :param dirname: Directory name
-    :return:        Iterator that yields files and directory from the given dir
-                    and all it's (recursive) subdirectories
+    :param dirname:       Directory name
+    :param ignored_globs: List of globs to ignore when matching files
+    :return:              Iterator that yields files and directory from the
+                          given dir all it's (recursive) subdirectories
     """
     if not dirname:
         dirname = os.curdir
+
+    if ignored_globs:
+        if fnmatch(dirname, ignored_globs):
+            return
     try:
         files_or_dirs = os.listdir(dirname)
     except os.error:
@@ -269,23 +274,25 @@ def _iter_relative_dirs(dirname):
     for file_or_dir in files_or_dirs:
         yield file_or_dir
         path = os.path.join(dirname, file_or_dir)
-        for sub_file_or_dir in _iter_relative_dirs(path):
+        for sub_file_or_dir in _iter_relative_dirs(path, ignored_globs):
             yield os.path.join(file_or_dir, sub_file_or_dir)
 
 
-def relative_wildcard_glob(dirname, pattern):
+def relative_wildcard_glob(dirname, pattern, ignored_globs=None):
     """
     Non-recursive glob for one directory. Accepts wildcards.
 
-    :param dirname: Directory name
-    :param pattern: Glob pattern with wildcards
-    :return:        List of files in the dir of dirname that match the pattern
+    :param dirname:       Directory name
+    :param pattern:       Glob pattern with wildcards
+    :param ignored_globs: List of globs to ignore when matching files
+    :return:              List of files in the dir of dirname that
+                          match the pattern
     """
     if not dirname:
         dirname = os.curdir
     try:
         if '**' in pattern:
-            names = list(_iter_relative_dirs(dirname))
+            names = list(_iter_relative_dirs(dirname, ignored_globs))
         else:
             names = os.listdir(dirname)
     except OSError:
@@ -299,33 +306,35 @@ def relative_wildcard_glob(dirname, pattern):
     return result
 
 
-def relative_flat_glob(dirname, basename):
+def relative_flat_glob(dirname, basename, ignored_globs=None):
     """
     Non-recursive glob for one directory. Does not accept wildcards.
 
-    :param dirname:  Directory name
-    :param basename: Basename of a file in dir of dirname
-    :return:         List containing Basename if the file exists
+    :param dirname:       Directory name
+    :param basename:      Basename of a file in dir of dirname
+    :param ignored_globs: List of globs to ignore when matching files
+    :return:              List containing Basename if the file exists
     """
     if os.path.exists(os.path.join(dirname, basename)):
         return [basename]
     return []
 
 
-def relative_recursive_glob(dirname, pattern):
+def relative_recursive_glob(dirname, pattern, ignored_globs=None):
     """
     Recursive Glob for one directory and all its (nested) subdirectories.
     Accepts only '**' as pattern.
 
-    :param dirname: Directory name
-    :param pattern: The recursive wildcard '**'
-    :return:        Iterator that yields all the (nested) subdirectories of the
-                    given dir
+    :param dirname:       Directory name
+    :param pattern:       The recursive wildcard '**'
+    :param ignored_globs: List of globs to ignore when matching files
+    :return:              Iterator that yields all the (nested) subdirectories
+                          of the given dir
     """
     assert pattern == '**'
     if dirname:
         yield pattern[:0]
-    for relative_dir in _iter_relative_dirs(dirname):
+    for relative_dir in _iter_relative_dirs(dirname, ignored_globs):
         yield relative_dir
 
 
@@ -336,14 +345,14 @@ def has_wildcard(pattern):
     """
     Checks whether pattern has any wildcards.
 
-    :param pattern: Glob pattern that may contain wildcards
-    :return:        Boolean: Whether or not there are wildcards in pattern
+    :param pattern:       Glob pattern that may contain wildcards
+    :return:              Boolean: Whether or not there are wildcards in pattern
     """
     match = wildcard_check_pattern.search(pattern)
     return match is not None
 
 
-def _iglob(pattern):
+def _iglob(pattern, ignored_globs=None):
     dirname, basename = os.path.split(pattern)
     if not has_wildcard(pattern):
         for file in _absolute_flat_glob(pattern):
@@ -358,49 +367,53 @@ def _iglob(pattern):
         relative_glob_function = relative_flat_glob
 
     if not dirname:
-        for file in relative_glob_function(dirname, basename):
+        for file in relative_glob_function(dirname, basename, ignored_globs):
             yield file
         return
 
     # Prevent an infinite recursion if a drive or UNC path contains
     # wildcard characters (i.e. r'\\?\C:').
     if dirname != pattern and has_wildcard(dirname):
-        dirs = iglob(dirname)
+        dirs = iglob(dirname, ignored_globs)
     else:
         dirs = [dirname]
 
     for dirname in dirs:
-        for name in relative_glob_function(dirname, basename):
+        for name in relative_glob_function(dirname, basename, ignored_globs):
             yield os.path.join(dirname, name)
 
 
 @yield_once
-def iglob(pattern):
+def iglob(pattern, ignored_globs=None):
     """
     Iterates all filesystem paths that get matched by the glob pattern.
     Syntax is equal to that of fnmatch.
 
-    :param pattern: Glob pattern with wildcards
-    :return:        Iterator that yields all file names that match pattern
+    :param pattern:       Glob pattern with wildcards
+    :param ignored_globs: List of globs to ignore when matching files
+    :return:              Iterator that yields file names that match pattern,
+                          excluding files that are in directories matching
+                          ignored_globs.
     """
     for pat in _iter_alternatives(pattern):
         pat = os.path.expanduser(pat)
         pat = os.path.normcase(pat)
 
         if pat.endswith(os.sep):
-            for name in _iglob(pat):
+            for name in _iglob(pat, ignored_globs):
                 yield name
         else:
-            for name in _iglob(pat):
+            for name in _iglob(pat, ignored_globs):
                 yield name.rstrip(os.sep)
 
 
-def glob(pattern):
+def glob(pattern, ignored_globs=None):
     """
     Iterates all filesystem paths that get matched by the glob pattern.
     Syntax is equal to that of fnmatch.
 
-    :param pattern: Glob pattern with wildcards
-    :return:        List of all file names that match pattern
+    :param pattern:       Glob pattern with wildcards
+    :param ignored_globs: List of globs to ignore when matching files
+    :return:              List of all file names that match pattern
     """
-    return list(iglob(pattern))
+    return list(iglob(pattern, ignored_globs))

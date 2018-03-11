@@ -222,8 +222,9 @@ class GlobTest(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
 
-    def _test_glob(self, pattern, file_list):
-        results = sorted([os.path.normcase(g) for g in glob(pattern)])
+    def _test_glob(self, pattern, file_list, ignored_globs=None):
+        results = sorted([os.path.normcase(g)
+                          for g in glob(pattern, ignored_globs)])
         file_list = sorted([os.path.normcase(f) for f in file_list])
         self.assertEqual([i for i in results
                           if re.search(r'(__pycache__|\.pyc)', i) is None],
@@ -243,6 +244,17 @@ class GlobTest(unittest.TestCase):
         pattern = os.path.join(TestFiles.dir1 + os.sep)
         file_list = [TestFiles.dir1+os.sep]
         self._test_glob(pattern, file_list)
+
+    def test_collect_ignore(self):
+        pattern = os.path.join(TestFiles.glob_test_dir, '**')
+        file_list = [TestFiles.glob_test_dir,
+                     TestFiles.dir1,
+                     TestFiles.dir2,
+                     TestFiles.file1,
+                     TestFiles.file2,
+                     TestFiles.file3]
+        ignored_pattern = os.path.join(TestFiles.glob_test_dir, 'Sub*')
+        self._test_glob(pattern, file_list, ignored_pattern)
 
     def test_collect_flat(self):
         pattern = os.path.join(TestFiles.glob_test_dir, '*')

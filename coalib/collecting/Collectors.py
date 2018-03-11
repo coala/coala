@@ -51,7 +51,7 @@ def icollect(file_paths, ignored_globs=None, match_cache={}):
 
     for file_path in file_paths:
         if file_path not in match_cache:
-            match_cache[file_path] = list(iglob(file_path))
+            match_cache[file_path] = list(iglob(file_path, ignored_globs))
 
         for match in match_cache[file_path]:
             if not ignored_globs or not fnmatch(match, ignored_globs):
