@@ -35,7 +35,7 @@ def append_to_sections(sections,
         return
 
     if section_name == '' or section_name is None:
-        section_name = 'default'
+        section_name = 'all'
 
     if not section_name.lower() in sections:
         sections[section_name.lower()] = Section(section_name)

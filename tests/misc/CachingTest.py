@@ -159,9 +159,6 @@ class CachingTest(unittest.TestCase):
                    '-c', filename + '.coafile',
                    '-f', filename + 'test.py')
                 self.assertIn('This file has', stdout)
-                self.assertIn(
-                    'Implicit \'Default\' section inheritance is deprecated',
-                    stderr)
 
             retval, stdout, stderr = execute_coala(
                coala.main,
@@ -173,7 +170,4 @@ class CachingTest(unittest.TestCase):
             self.assertEqual(2, len(stderr.splitlines()))
             self.assertIn(
                 'LineCountTestBear: This result has no patch attached.',
-                stderr)
-            self.assertIn(
-                'Implicit \'Default\' section inheritance is deprecated',
                 stderr)

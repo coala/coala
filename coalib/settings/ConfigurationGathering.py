@@ -109,7 +109,7 @@ def load_config_file(filename, log_printer=None, silent=False):
     """
     Loads sections from a config file. Prints an appropriate warning if
     it doesn't exist and returns a section dict containing an empty
-    default section in that case.
+    all section in that case.
 
     It assumes that the cli_sections are available.
 
@@ -139,7 +139,7 @@ def load_config_file(filename, log_printer=None, silent=False):
                                           found='does not exist'))
                 sys.exit(2)
 
-        return {'default': Section('default')}
+        return {'all': Section('all')}
 
 
 def save_sections(sections):
@@ -252,8 +252,8 @@ def load_configuration(arg_list,
         user_sections = load_config_file(
             Constants.user_coafile, silent=True)
 
-        default_config = str(base_sections['default'].get('config', '.coafile'))
-        user_config = str(user_sections['default'].get(
+        default_config = str(base_sections['all'].get('config', '.coafile'))
+        user_config = str(user_sections['all'].get(
             'config', default_config))
         config = os.path.abspath(
             str(cli_sections['cli'].get('config', user_config)))

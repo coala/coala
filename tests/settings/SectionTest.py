@@ -38,7 +38,7 @@ class SectionTest(unittest.TestCase):
         self.assertTrue(uut.is_enabled(['name', 'wrongname']))
 
     def test_iter(self):
-        defaults = Section('default', None)
+        defaults = Section('all', None)
         uut = Section('name', defaults)
         uut.append(Setting(5, 5))
         uut.add_or_create_setting(Setting('TEsT', 4))
@@ -140,9 +140,9 @@ class SectionTest(unittest.TestCase):
         self.assertEqual(sections, {})
 
         append_to_sections(sections, 'test', 'val', 'origin')
-        self.assertIn('default', sections)
+        self.assertIn('all', sections)
         self.assertEqual(len(sections), 1)
-        self.assertEqual(len(sections['default'].contents), 1)
+        self.assertEqual(len(sections['all'].contents), 1)
 
     def test_update_setting(self):
         section = Section('section', None)

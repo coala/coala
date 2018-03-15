@@ -12,7 +12,7 @@ from coalib.settings.Setting import Setting
 class coalaDeleteOrigTest(unittest.TestCase):
 
     def setUp(self):
-        self.section = Section('default')
+        self.section = Section('all')
         self.section.append(Setting('config', '/path/to/file'))
 
     @unittest.mock.patch('os.getcwd')

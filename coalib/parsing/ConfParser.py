@@ -84,7 +84,7 @@ class ConfParser:
             remove_empty_iter_elements=self.__remove_empty_iter_elements))
 
     def __parse_lines(self, lines, origin):
-        current_section_name = 'default'
+        current_section_name = 'all'
         current_section = self.get_section(current_section_name)
         current_keys = []
         no_section = True
@@ -158,5 +158,5 @@ class ConfParser:
 
     def __init_sections(self):
         self.sections = OrderedDict()
-        self.sections['default'] = Section('Default')
+        self.sections['all'] = Section('all')
         self.__rand_helper = 0

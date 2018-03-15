@@ -1,4 +1,4 @@
-[Default]
+[all]
 use_spaces = True
 maxline_length = 80
 

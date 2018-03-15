@@ -96,12 +96,12 @@ class ConfWriterTest(unittest.TestCase):
         with open(self.file, 'w', encoding='utf-8') as file:
             file.write(self.append_example_file)
 
-        result_file = ['[defaults]\n',
+        result_file = ['[all]\n',
                        'a = 4\n',
                        'b = 4,5,6\n',
                        'c = 4,5\n',
                        'd = 4\n',
-                       '[defaults.new]\n',
+                       '[all.new]\n',
                        'b += 7\n',
                        'c += 6, 7\n',
                        'a, d += 5, 6, 7\n',

@@ -227,7 +227,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         with open(filename, 'r') as f:
             lines = f.readlines()
-        self.assertEqual(['[cli]\n',
+        self.assertEqual(['[all]\n', '[cli]\n',
                           'config = some_bad_filename\n'], lines)
 
         with self.assertRaises(SystemExit):

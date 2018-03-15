@@ -73,22 +73,6 @@ class ConfParserTest(unittest.TestCase):
                           self.uut.get_section,
                           'inexistent section')
 
-    def test_parse_default_section_deprecated(self):
-        default_should = OrderedDict([
-            ('setting', 'without_section')])
-
-        key, val = self.sections.popitem(last=False)
-        self.assertTrue(isinstance(val, Section))
-        self.assertEqual(key, 'default')
-
-        is_dict = OrderedDict()
-        for k in val:
-            is_dict[k] = str(val[k])
-        self.assertEqual(is_dict, default_should)
-
-        self.assertRegex(self.cm.output[0],
-                         'A setting does not have a section.')
-
     def test_parse_foo_section(self):
         foo_should = OrderedDict([
             ('a_default', 'val'),

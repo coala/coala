@@ -669,7 +669,7 @@ class LinterComponentTest(unittest.TestCase):
         generate_config_mock.reset_mock()
         process_output_mock.reset_mock()
 
-        self.section['default'] = '1000'
+        self.section['all'] = '1000'
         self.section['some_default'] = 'xyz'
         self.section['xxx'] = '-50'
         self.assertIsNotNone(list(uut.execute(filename='def.py', file=[])))
