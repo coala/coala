@@ -412,7 +412,7 @@ gather information by using these values. Our bear now looks like:
       https://pylint.org/
       """
 
-      LANGUAGES = {"Python", "Python 2", "Python 3"}
+      LANGUAGES = {'Python', 'Python 2', 'Python 3'}
       REQUIREMENTS = {PipRequirement('pylint', '1.*')}
       AUTHORS = {'The coala developers'}
       AUTHORS_EMAILS = {'coala-devel@googlegroups.com'}
@@ -451,7 +451,7 @@ To use our `pylint_rcfile` setting we can do
 
 ::
 
-    $ coala --bear-dirs=. --bears=PythonTutorialBear \
+    $ coala --bear-dirs=. --bears=PylintTutorialBear \
     > -S pylint_rcfile=my_rcfile --files=sample.py
 
 You now know how to write a linter Bear and also how to use it in your
