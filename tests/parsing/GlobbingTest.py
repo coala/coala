@@ -211,10 +211,8 @@ class FnmatchTest(unittest.TestCase):
         non_matches = ['aXbX', 'aXcX']
         self._test_fnmatch(pattern, matches, non_matches)
 
-        pattern = []
-        matches = ['anything', 'anything_else']
-        non_matches = []
-        self._test_fnmatch(pattern, matches, non_matches)
+    def test_empty_globs(self):
+        self.assertFalse(fnmatch('something', []))
 
 
 class GlobTest(unittest.TestCase):

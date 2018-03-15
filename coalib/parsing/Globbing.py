@@ -217,7 +217,7 @@ def fnmatch(name, globs):
     globs = (globs,) if isinstance(globs, str) else tuple(globs)
 
     if len(globs) == 0:
-        return True
+        return False
 
     name = os.path.normcase(name)
 
