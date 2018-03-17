@@ -9,7 +9,7 @@ Documentation is written in reStructuredText and rendered by `Read the Docs
 You can view the current user documentation on http://docs.coala.io.
 
 To familiarize yourself with the reStructuredText syntax please see this
-`guide <http://www.sphinx-doc.org/en/latest/rest.html>`_.
+`guide <http://www.sphinx-doc.org/en/master/rest.html>`_.
 
 After getting the coala source code (see `Installation
 Instructions`_), you can start hacking on
