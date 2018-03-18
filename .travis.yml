@@ -5,16 +5,18 @@ python:
   - 3.5
   - 3.6
 
-matrix:
+jobs:
   include:
     # OSX build removed due to long build startup delays
     # Restore matrix job entry from d2d67fab to test OSX
     - python: 2.7
       env: UNSUPPORTED=true
       script: .misc/check_unsupported.sh
+      if: branch = master
     - python: 3.3
       env: UNSUPPORTED=true
       script: .misc/check_unsupported.sh
+      if: branch = master
 
 env:
   global:
