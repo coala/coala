@@ -184,9 +184,9 @@ class Session:
             be used.
 
             The cache stores the results that were returned last time from the
-            parameters passed to ``execute_task`` in bears. If the section and
-            parameters to ``execute_task`` are the same from a previous run,
-            the cache will be queried instead of executing ``execute_task``.
+            parameters passed to ``execute_task`` in bears. If the parameters
+            to ``execute_task`` are the same from a previous run, the cache
+            will be queried instead of executing ``execute_task``.
 
             The cache has to be a dictionary-like object, that maps bear types
             to respective cache-tables. The cache-tables itself are
@@ -430,9 +430,9 @@ def run(bears, result_callback, cache=None, executor=None):
         used.
 
         The cache stores the results that were returned last time from the
-        parameters passed to ``execute_task`` in bears. If the section and
-        parameters to ``execute_task`` are the same from a previous run,
-        the cache will be queried instead of executing ``execute_task``.
+        parameters passed to ``execute_task`` in bears. If the parameters
+        to ``execute_task`` are the same from a previous run, the cache
+        will be queried instead of executing ``execute_task``.
 
         The cache has to be a dictionary-like object, that maps bear types
         to respective cache-tables. The cache-tables itself are dictionary-like
