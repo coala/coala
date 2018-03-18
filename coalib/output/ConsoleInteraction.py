@@ -721,6 +721,12 @@ def try_to_apply_action(action_name,
                             as values.
     """
     try:
+        applied_actions[action_name] = [copy.copy(result), copy.copy(
+            file_dict),
+                                    copy.copy(file_diff_dict),
+                                    copy.copy(section)]
+        result.set_applied_actions(applied_actions)
+
         chosen_action.apply_from_section(result,
                                          file_dict,
                                          file_diff_dict,
@@ -728,11 +734,6 @@ def try_to_apply_action(action_name,
         console_printer.print(
             format_lines(chosen_action.SUCCESS_MESSAGE, symbol='['),
             color=SUCCESS_COLOR)
-        applied_actions[action_name] = [copy.copy(result), copy.copy(
-            file_dict),
-                                    copy.copy(file_diff_dict),
-                                    copy.copy(section)]
-        result.set_applied_actions(applied_actions)
         failed_actions.discard(action_name)
     except Exception as exception:  # pylint: disable=broad-except
         logging.error('Failed to execute the action {} with error: {}.'
