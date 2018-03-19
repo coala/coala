@@ -191,3 +191,17 @@ class ResultTest(unittest.TestCase):
         self.assertEqual(
             json_dump,
             '"--- \\n+++ \\n@@ -1,3 +1,2 @@\\n 1\\n-2\\n-3\\n+3_changed"')
+
+    def test_different_diffs(self):
+        file_dict = {
+            'f_a': ['1', '2', '3'],
+            'f_b': ['4', '5', '6']
+        }
+
+        diff = Diff(file_dict['f_a'])
+        uut1 = Result('origin', 'msg', diffs={'f_a': diff})
+
+        diff = Diff(file_dict['f_b'])
+        uut2 = Result('origin', 'msg', diffs={'f_b': diff})
+
+        self.assertNotEqual(uut1, uut2)

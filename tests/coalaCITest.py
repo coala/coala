@@ -222,3 +222,16 @@ class coalaCITest(unittest.TestCase):
             self.assertFalse(stderr)
             self.assertEqual(retval, 0,
                              'coala must return zero when successful')
+
+    def test_bear_dirs(self):
+        with prepare_file(['random_text'], None) as (lines, filename):
+            retval, stdout, stderr = execute_coala(
+                    coala.main, 'coala', '--non-interactive',
+                    '-c', os.devnull,
+                    '--bear-dirs', 'tests/test_bears',
+                    '-b', 'LineCountTestBear',
+                    '-f', filename)
+            self.assertIn('This file has 1 lines.', stdout)
+            self.assertIn('This result has no patch attached.', stderr)
+            self.assertNotEqual(retval, 0,
+                                'coala must return nonzero when errors occured')

@@ -107,6 +107,14 @@ class BearJ_NeedsI(TestBearBase):
     BEAR_DEPS = {BearI_NeedsA_NeedsBDuringRuntime}
 
 
+class BearK_NeedsA(TestBearBase):
+    BEAR_DEPS = {BearA}
+
+
+class BearL_NeedsA(TestBearBase):
+    BEAR_DEPS = {BearA}
+
+
 class MultiResultBear(TestBearBase):
 
     def analyze(self, bear, section_name, file_dict):
@@ -467,11 +475,7 @@ class CoreTest(CoreTestBase):
 
         self.assertTestResultsEqual(
             results,
-            [(BearA.name, self.section1.name, self.filedict1),
-             (BearB.name, self.section1.name, self.filedict1),
-             (BearC_NeedsB.name, self.section1.name, self.filedict1),
-             (BearD_NeedsC.name, self.section1.name, self.filedict1),
-             (BearE_NeedsAD.name, self.section1.name, self.filedict1)])
+            [(BearE_NeedsAD.name, self.section1.name, self.filedict1)])
 
         # The last bear executed has to be BearE_NeedsAD.
         self.assertEqual(results[-1].bear.name, bear_e.name)
@@ -489,14 +493,16 @@ class CoreTest(CoreTestBase):
             [(BearD_NeedsC.name, self.section1.name, self.filedict1)])
 
         # For BearE -> BearA.
-        bear_a = get_next_instance(BearA,
-                                   (result.bear for result in results))
+        bear_a = get_next_instance(
+            BearA,
+            (result.bear for result in bear_e.dependency_results[BearA]))
         self.assertIsNotNone(bear_a)
         self.assertEqual(bear_a.dependency_results, {})
 
         # For BearE -> BearD.
-        bear_d = get_next_instance(BearD_NeedsC,
-                                   (result.bear for result in results))
+        bear_d = get_next_instance(
+            BearD_NeedsC,
+            (result.bear for result in bear_e.dependency_results[BearD_NeedsC]))
         self.assertIsNotNone(bear_d)
 
         self.assertIn(BearC_NeedsB, bear_d.dependency_results)
@@ -506,8 +512,9 @@ class CoreTest(CoreTestBase):
             [(BearC_NeedsB.name, self.section1.name, self.filedict1)])
 
         # For BearE -> BearD -> BearC
-        bear_c = get_next_instance(BearC_NeedsB,
-                                   (result.bear for result in results))
+        bear_c = get_next_instance(
+            BearC_NeedsB,
+            (result.bear for result in bear_d.dependency_results[BearC_NeedsB]))
         self.assertIsNotNone(bear_c)
 
         self.assertIn(BearB, bear_c.dependency_results)
@@ -517,10 +524,91 @@ class CoreTest(CoreTestBase):
             [(BearB.name, self.section1.name, self.filedict1)])
 
         # For BearE -> BearD -> BearC -> BearB.
-        bear_b = get_next_instance(BearB,
-                                   (result.bear for result in results))
+        bear_b = get_next_instance(
+            BearB,
+            (result.bear for result in bear_c.dependency_results[BearB]))
         self.assertIsNotNone(bear_b)
         self.assertEqual(bear_b.dependency_results, {})
+
+    def test_run_multiple_bears(self):
+        bear1 = BearA(self.section1, self.filedict1)
+        bear2 = BearB(self.section1, self.filedict1)
+
+        results = self.execute_run({bear1, bear2})
+        self.assertTestResultsEqual(
+            results,
+            [(BearA.name, self.section1.name, self.filedict1),
+             (BearB.name, self.section1.name, self.filedict1)])
+
+    def test_run_multiple_bears_with_independent_dependencies(self):
+        bear1 = BearK_NeedsA(self.section1, self.filedict1)
+        bear2 = BearC_NeedsB(self.section1, self.filedict1)
+
+        results = self.execute_run({bear1, bear2})
+        self.assertTestResultsEqual(
+            results,
+            [(BearK_NeedsA.name, self.section1.name, self.filedict1),
+             (BearC_NeedsB.name, self.section1.name, self.filedict1)])
+
+        self.assertEqual(len(bear1.dependency_results), 1)
+        self.assertTestResultsEqual(
+            bear1.dependency_results[BearA],
+            [(BearA.name, self.section1.name, self.filedict1)])
+
+        self.assertEqual(len(bear2.dependency_results), 1)
+        self.assertTestResultsEqual(
+            bear2.dependency_results[BearB],
+            [(BearB.name, self.section1.name, self.filedict1)])
+
+    def test_run_multiple_bears_with_same_dependencies(self):
+        bear1 = BearK_NeedsA(self.section1, self.filedict1)
+        bear2 = BearL_NeedsA(self.section1, self.filedict1)
+
+        results = self.execute_run({bear1, bear2})
+        self.assertTestResultsEqual(
+            results,
+            [(BearK_NeedsA.name, self.section1.name, self.filedict1),
+             (BearL_NeedsA.name, self.section1.name, self.filedict1)])
+
+        self.assertEqual(len(bear1.dependency_results), 1)
+        self.assertEqual(bear1.dependency_results[BearA],
+                         bear2.dependency_results[BearA])
+        self.assertTestResultsEqual(
+            bear1.dependency_results[BearA],
+            [(BearA.name, self.section1.name, self.filedict1)])
+
+    def test_run_same_bear_twice(self):
+        bear1 = BearA(self.section1, self.filedict1)
+        bear2 = BearA(self.section1, self.filedict1)
+
+        results = self.execute_run({bear1, bear2})
+        self.assertTestResultsEqual(
+            results,
+            [(BearA.name, self.section1.name, self.filedict1),
+             (BearA.name, self.section1.name, self.filedict1)])
+
+    def test_run_dependency_bear_explicitly(self):
+        bear = BearD_NeedsC(self.section1, self.filedict1)
+        bear_dependency = BearB(self.section1, self.filedict1)
+
+        results = self.execute_run({bear, bear_dependency})
+        self.assertTestResultsEqual(
+            results,
+            [(BearB.name, self.section1.name, self.filedict1),
+             (BearD_NeedsC.name, self.section1.name, self.filedict1)])
+
+        self.assertEqual(len(bear.dependency_results), 1)
+        self.assertTestResultsEqual(
+            bear.dependency_results[BearC_NeedsB],
+            [(BearC_NeedsB.name, self.section1.name, self.filedict1)])
+
+        bear_c = get_next_instance(
+            BearC_NeedsB,
+            (result.bear for result in bear.dependency_results[BearC_NeedsB]))
+        self.assertEqual(len(bear_c.dependency_results), 1)
+        self.assertTestResultsEqual(
+            bear_c.dependency_results[BearB],
+            [(BearB.name, self.section1.name, self.filedict1)])
 
     def test_run_result_handler_exception(self):
         # Test exception in result handler. The core needs to retry to invoke
@@ -614,7 +702,7 @@ class CoreTest(CoreTestBase):
 
         results = self.execute_run({bear})
 
-        self.assertEqual(len(results), 6)
+        self.assertEqual(len(results), 3)
         self.assertEqual(len(bear.dependency_results), 2)
         self.assertIn(MultiResultBear, bear.dependency_results)
         self.assertIn(BearA, bear.dependency_results)
@@ -638,9 +726,7 @@ class CoreTest(CoreTestBase):
 
         results = self.execute_run({uut})
 
-        self.assertEqual(len(results), 3)
-        self.assertIn(1, results)
-        self.assertIn(2, results)
+        self.assertEqual(len(results), 1)
 
         uut_result = get_next_instance(TestResult, results)
         self.assertEqual(uut_result.bear.name, uut.name)
@@ -673,9 +759,7 @@ class CoreTest(CoreTestBase):
 
         self.assertTestResultsEqual(
             results,
-            [(BearA.name, self.section1.name, self.filedict1),
-             (BearB.name, self.section1.name, self.filedict1),
-             (BearI_NeedsA_NeedsBDuringRuntime.name, self.section1.name,
+            [(BearI_NeedsA_NeedsBDuringRuntime.name, self.section1.name,
               self.filedict1)])
 
         self.assertEqual(len(bear.dependency_results), 2)
@@ -696,11 +780,7 @@ class CoreTest(CoreTestBase):
 
         self.assertTestResultsEqual(
             results,
-            [(BearA.name, self.section1.name, self.filedict1),
-             (BearB.name, self.section1.name, self.filedict1),
-             (BearI_NeedsA_NeedsBDuringRuntime.name, self.section1.name,
-              self.filedict1),
-             (BearJ_NeedsI.name, self.section1.name, self.filedict1)])
+            [(BearJ_NeedsI.name, self.section1.name, self.filedict1)])
 
         self.assertEqual(len(bear.dependency_results), 1)
 

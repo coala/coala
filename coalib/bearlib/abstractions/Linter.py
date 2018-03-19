@@ -343,7 +343,7 @@ def _create_linter(klass, options):
             correction results.
 
             :param diff:
-                An instance of ``coalib.results.Diff`` object containing
+                A ``coalib.results.Diff`` object containing
                 differences of the file named ``filename``.
             :param filename:
                 The name of the file currently being corrected.

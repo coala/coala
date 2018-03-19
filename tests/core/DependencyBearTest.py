@@ -84,23 +84,19 @@ class DependencyBearTest(CoreTestBase):
         self.assertResultsEqual(
             TestBearDependentOnProjectBear,
             file_dict={},
-            expected=['',
-                      'TestProjectBear - '])
+            expected=['TestProjectBear - '])
         self.assertResultsEqual(
             TestBearDependentOnProjectBear,
             file_dict={'fileX': []},
-            expected=['fileX(0)',
-                      'TestProjectBear - fileX(0)'])
+            expected=['TestProjectBear - fileX(0)'])
         self.assertResultsEqual(
             TestBearDependentOnProjectBear,
             file_dict={'fileX': [], 'fileY': ['hello']},
-            expected=['fileX(0), fileY(1)',
-                      'TestProjectBear - fileX(0), fileY(1)'])
+            expected=['TestProjectBear - fileX(0), fileY(1)'])
         self.assertResultsEqual(
             TestBearDependentOnProjectBear,
             file_dict={'fileX': [], 'fileY': ['hello'], 'fileZ': ['x\n', 'y']},
-            expected=['fileX(0), fileY(1), fileZ(2)',
-                      'TestProjectBear - fileX(0), fileY(1), fileZ(2)'])
+            expected=['TestProjectBear - fileX(0), fileY(1), fileZ(2)'])
 
     def test_filebear_dependency(self):
         # Dependency results are also catched in the result callback, thus they
@@ -112,22 +108,16 @@ class DependencyBearTest(CoreTestBase):
         self.assertResultsEqual(
             TestBearDependentOnFileBear,
             file_dict={'fileX': []},
-            expected=['fileX:0',
-                      'TestFileBear - fileX:0'])
+            expected=['TestFileBear - fileX:0'])
         self.assertResultsEqual(
             TestBearDependentOnFileBear,
             file_dict={'fileX': [], 'fileY': ['hello']},
-            expected=['fileX:0',
-                      'fileY:1',
-                      'TestFileBear - fileX:0',
+            expected=['TestFileBear - fileX:0',
                       'TestFileBear - fileY:1'])
         self.assertResultsEqual(
             TestBearDependentOnFileBear,
             file_dict={'fileX': [], 'fileY': ['hello'], 'fileZ': ['x\n', 'y']},
-            expected=['fileX:0',
-                      'fileY:1',
-                      'fileZ:2',
-                      'TestFileBear - fileX:0',
+            expected=['TestFileBear - fileX:0',
                       'TestFileBear - fileY:1',
                       'TestFileBear - fileZ:2'])
 
@@ -137,32 +127,22 @@ class DependencyBearTest(CoreTestBase):
         self.assertResultsEqual(
             TestBearDependentOnMultipleBears,
             file_dict={},
-            expected=['',
-                      'TestProjectBear (100) - '])
+            expected=['TestProjectBear (100) - '])
         self.assertResultsEqual(
             TestBearDependentOnMultipleBears,
             file_dict={'fileX': []},
-            expected=['fileX(0)',
-                      'TestProjectBear (100) - fileX(0)',
-                      'fileX:0',
+            expected=['TestProjectBear (100) - fileX(0)',
                       'TestFileBear (100) - fileX:0'])
         self.assertResultsEqual(
             TestBearDependentOnMultipleBears,
             file_dict={'fileX': [], 'fileY': ['hello']},
-            expected=['fileX(0), fileY(1)',
-                      'TestProjectBear (100) - fileX(0), fileY(1)',
-                      'fileX:0',
-                      'fileY:1',
+            expected=['TestProjectBear (100) - fileX(0), fileY(1)',
                       'TestFileBear (100) - fileX:0',
                       'TestFileBear (100) - fileY:1'])
         self.assertResultsEqual(
             TestBearDependentOnMultipleBears,
             file_dict={'fileX': [], 'fileY': ['hello'], 'fileZ': ['x\n', 'y']},
-            expected=['fileX(0), fileY(1), fileZ(2)',
-                      'TestProjectBear (100) - fileX(0), fileY(1), fileZ(2)',
-                      'fileX:0',
-                      'fileY:1',
-                      'fileZ:2',
+            expected=['TestProjectBear (100) - fileX(0), fileY(1), fileZ(2)',
                       'TestFileBear (100) - fileX:0',
                       'TestFileBear (100) - fileY:1',
                       'TestFileBear (100) - fileZ:2'])
@@ -177,35 +157,25 @@ class DependencyBearTest(CoreTestBase):
             TestBearDependentOnMultipleBears,
             section=section,
             file_dict={},
-            expected=['',
-                      'TestProjectBear (500) - '])
+            expected=['TestProjectBear (500) - '])
         self.assertResultsEqual(
             TestBearDependentOnMultipleBears,
             section=section,
             file_dict={'fileX': []},
-            expected=['fileX(0)',
-                      'TestProjectBear (500) - fileX(0)',
-                      'fileX:0',
+            expected=['TestProjectBear (500) - fileX(0)',
                       'TestFileBear (500) - fileX:0'])
         self.assertResultsEqual(
             TestBearDependentOnMultipleBears,
             section=section,
             file_dict={'fileX': [], 'fileY': ['hello']},
-            expected=['fileX(0), fileY(1)',
-                      'TestProjectBear (500) - fileX(0), fileY(1)',
-                      'fileX:0',
-                      'fileY:1',
+            expected=['TestProjectBear (500) - fileX(0), fileY(1)',
                       'TestFileBear (500) - fileX:0',
                       'TestFileBear (500) - fileY:1'])
         self.assertResultsEqual(
             TestBearDependentOnMultipleBears,
             section=section,
             file_dict={'fileX': [], 'fileY': ['hello'], 'fileZ': ['x\n', 'y']},
-            expected=['fileX(0), fileY(1), fileZ(2)',
-                      'TestProjectBear (500) - fileX(0), fileY(1), fileZ(2)',
-                      'fileX:0',
-                      'fileY:1',
-                      'fileZ:2',
+            expected=['TestProjectBear (500) - fileX(0), fileY(1), fileZ(2)',
                       'TestFileBear (500) - fileX:0',
                       'TestFileBear (500) - fileY:1',
                       'TestFileBear (500) - fileZ:2'])
@@ -246,7 +216,7 @@ class DependencyBearOnThreadPoolExecutorTest(DependencyBearTest):
                 section=section,
                 file_dict=filedict1,
                 cache=cache,
-                expected=['file.txt:0', 'TestFileBear - file.txt:0'])
+                expected=['TestFileBear - file.txt:0'])
 
             dependency_mock.assert_called_once_with(ANY, 'file.txt', [])
             dependant_mock.assert_called_once_with(
@@ -267,7 +237,7 @@ class DependencyBearOnThreadPoolExecutorTest(DependencyBearTest):
                     section=section,
                     file_dict=filedict1,
                     cache=cache,
-                    expected=['file.txt:0', 'TestFileBear - file.txt:0'])
+                    expected=['TestFileBear - file.txt:0'])
 
                 self.assertFalse(dependency_mock.called)
                 self.assertFalse(dependant_mock.called)
@@ -283,8 +253,7 @@ class DependencyBearOnThreadPoolExecutorTest(DependencyBearTest):
                 section=section,
                 file_dict=filedict2,
                 cache=cache,
-                expected=['file.txt:1', 'file2.txt:1',
-                          'TestFileBear - file.txt:1',
+                expected=['TestFileBear - file.txt:1',
                           'TestFileBear - file2.txt:1'])
 
             self.assertEqual(dependency_mock.call_count, 2)
@@ -304,8 +273,7 @@ class DependencyBearOnThreadPoolExecutorTest(DependencyBearTest):
                 section=section,
                 file_dict=filedict2,
                 cache=cache,
-                expected=['file.txt:1', 'file2.txt:1',
-                          'TestFileBear - file.txt:1',
+                expected=['TestFileBear - file.txt:1',
                           'TestFileBear - file2.txt:1'])
 
             self.assertFalse(dependency_mock.called)
@@ -323,8 +291,7 @@ class DependencyBearOnThreadPoolExecutorTest(DependencyBearTest):
                 section=section,
                 file_dict=filedict3,
                 cache=cache,
-                expected=['file.txt:1', 'file2.txt:0',
-                          'TestFileBear - file.txt:1',
+                expected=['TestFileBear - file.txt:1',
                           'TestFileBear - file2.txt:0'])
 
             dependency_mock.assert_called_once_with(ANY, 'file2.txt', [])
