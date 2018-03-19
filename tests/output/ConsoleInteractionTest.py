@@ -755,7 +755,7 @@ file
             print_results(
                 self.log_printer,
                 Section(''),
-                [Result('ClangCloneDetectionBear',
+                [Result('Bear_for_detecting_clone',
                         'Clone Found',
                         affected_code)],
                 {abspath('some_file'): ['line ' + str(i + 1) + '\n'
@@ -775,7 +775,7 @@ some_file
 [   5] li{0}{3}
 [   6] li{0}{4}
 [   7] li{0}{5}
-**** ClangCloneDetectionBear [Section:  | Severity: NORMAL] ****
+**** Bear_for_detecting_clone [Section:  | Severity: NORMAL] ****
 !    ! {6}\n""".format(highlight_text(self.no_color, 'ne',
                                       BackgroundSourceRangeStyle, self.lexer),
                        highlight_text(self.no_color, ' 1', NoColorStyle,
