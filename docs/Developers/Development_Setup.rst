@@ -99,7 +99,7 @@ master branch from and all of its dependencies with pip3 using
     (coala-venv)$ git clone https://github.com/coala/coala
     (coala-venv)$ cd coala
     (coala-venv)$ pip3 install .
-    (coala-venv)$ cd -
+    (coala-venv)$ cd ..
     (coala-venv)$ git clone https://github.com/coala/coala-bears
     (coala-venv)$ cd coala-bears
     (coala-venv)$ pip3 install .
