@@ -96,6 +96,7 @@ Example:
    | Keeping subject lines at this length ensures that they are
      readable, and explains the change in a concise way.
 -  Should describe the *change* - the action being done in the commit.
+-  Should not include WIP prefix.
 -  Should have a tag and a short description separated by a colon (``:``)
 
    -  **Tag**
