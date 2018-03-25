@@ -1,5 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor
 import logging
+import sys
 import unittest
 import unittest.mock
 
@@ -39,25 +40,6 @@ class TestBearBase(Bear):
         # multiprocessing to transfer objects to the other process, which
         # instantiates a new section on each transfer.
         return ((self, self.section.name, self.file_dict), {}),
-
-
-class MultiTaskBear(Bear):
-    BEAR_DEPS = set()
-
-    def __init__(self, section, file_dict, tasks_count=1):
-        Bear.__init__(self, section, file_dict)
-        self.tasks_count = tasks_count
-
-    def analyze(self, run_id):
-        return [run_id]
-
-    def generate_tasks(self):
-        # Choose single task parallelization for simplicity. Also use the
-        # section name as a parameter instead of the section itself, as compare
-        # operations on tests do not succeed on them due to the pickling of
-        # multiprocessing to transfer objects to the other process, which
-        # instantiates a new section on each transfer.
-        return (((i,), {}) for i in range(self.tasks_count))
 
 
 class CustomTasksBear(Bear):
@@ -112,6 +94,19 @@ class BearH_NeedsG(TestBearBase):
     BEAR_DEPS = {BearG_NeedsF}
 
 
+class BearI_NeedsA_NeedsBDuringRuntime(TestBearBase):
+    BEAR_DEPS = {BearA}
+
+    def __init__(self, section, filedict):
+        super().__init__(section, filedict)
+
+        self.BEAR_DEPS.add(BearB)
+
+
+class BearJ_NeedsI(TestBearBase):
+    BEAR_DEPS = {BearI_NeedsA_NeedsBDuringRuntime}
+
+
 class MultiResultBear(TestBearBase):
 
     def analyze(self, bear, section_name, file_dict):
@@ -134,10 +129,18 @@ class DynamicTaskBear(TestBearBase):
         return (((i,), {}) for i in range(tasks_count))
 
 
+# Define those classes at module level to make them picklable.
+for i in range(100):
+    classname = 'NoTasksBear{}'.format(i)
+    generated_type = type(classname,
+                          (Bear,),
+                          dict(generate_tasks=lambda self: tuple()))
+
+    setattr(sys.modules[__name__], classname, generated_type)
+
+
 class DependentOnMultipleZeroTaskBearsTestBear(TestBearBase):
-    BEAR_DEPS = {type('NoTasksBear{}'.format(i),
-                      (Bear,),
-                      dict(generate_tasks=lambda self: tuple()))
+    BEAR_DEPS = {getattr(sys.modules[__name__], 'NoTasksBear{}'.format(i))
                  for i in range(100)} | {MultiResultBear}
 
 
@@ -447,7 +450,8 @@ class CoreTest(CoreTestBase):
 
     def test_run_simple(self):
         # Test single bear without dependencies.
-        bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=1)
+        bear = CustomTasksBear(self.section1, self.filedict1,
+                               tasks=[(0,)])
 
         results = self.execute_run({bear})
 
@@ -522,7 +526,8 @@ class CoreTest(CoreTestBase):
         # Test exception in result handler. The core needs to retry to invoke
         # the handler and then exit correctly if no more results and bears are
         # left.
-        bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=10)
+        bear = CustomTasksBear(self.section1, self.filedict1,
+                               tasks=[(x,) for x in range(10)])
 
         on_result = unittest.mock.Mock(side_effect=ValueError)
 
@@ -556,7 +561,8 @@ class CoreTest(CoreTestBase):
         with self.assertLogs(logging.getLogger()) as cm:
             results = self.execute_run(
                 {FailingBear(self.section1, self.filedict1),
-                 MultiTaskBear(self.section1, self.filedict1, tasks_count=3)})
+                 CustomTasksBear(self.section1, self.filedict1,
+                                 tasks=[(x,) for x in range(3)])})
 
         self.assertEqual(len(cm.output), 1)
         self.assertTrue(cm.output[0].startswith(
@@ -567,7 +573,8 @@ class CoreTest(CoreTestBase):
     def test_run_bear_with_multiple_tasks(self):
         # Test when bear is not completely finished because it has multiple
         # tasks.
-        bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=3)
+        bear = CustomTasksBear(self.section1, self.filedict1,
+                               tasks=[(x,) for x in range(3)])
 
         results = self.execute_run({bear})
 
@@ -594,7 +601,7 @@ class CoreTest(CoreTestBase):
         self.assertEqual(bear_failing.dependency_results, {})
 
     def test_run_bear_with_0_tasks(self):
-        bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=0)
+        bear = CustomTasksBear(self.section1, self.filedict1, tasks=[])
 
         # This shall not block forever.
         results = self.execute_run({bear})
@@ -646,7 +653,8 @@ class CoreTest(CoreTestBase):
     def test_run_heavy_cpu_load(self):
         # No normal computer should expose 100 cores at once, so we can test
         # if the scheduler works properly.
-        bear = MultiTaskBear(self.section1, self.filedict1, tasks_count=100)
+        bear = CustomTasksBear(self.section1, self.filedict1,
+                               tasks=[(x,) for x in range(100)])
 
         results = self.execute_run({bear})
 
@@ -657,6 +665,49 @@ class CoreTest(CoreTestBase):
 
     def test_run_empty(self):
         self.execute_run(set())
+
+    def test_bears_with_runtime_dependencies(self):
+        bear = BearI_NeedsA_NeedsBDuringRuntime(self.section1, self.filedict1)
+
+        results = self.execute_run({bear})
+
+        self.assertTestResultsEqual(
+            results,
+            [(BearA.name, self.section1.name, self.filedict1),
+             (BearB.name, self.section1.name, self.filedict1),
+             (BearI_NeedsA_NeedsBDuringRuntime.name, self.section1.name,
+              self.filedict1)])
+
+        self.assertEqual(len(bear.dependency_results), 2)
+
+        self.assertTestResultsEqual(
+            bear.dependency_results[BearA],
+            [(BearA.name, self.section1.name, self.filedict1)])
+
+        self.assertTestResultsEqual(
+            bear.dependency_results[BearB],
+            [(BearB.name, self.section1.name, self.filedict1)])
+
+        # See whether this also works with a bear using the bear with runtime
+        # dependencies itself as a dependency.
+        bear = BearJ_NeedsI(self.section1, self.filedict1)
+
+        results = self.execute_run({bear})
+
+        self.assertTestResultsEqual(
+            results,
+            [(BearA.name, self.section1.name, self.filedict1),
+             (BearB.name, self.section1.name, self.filedict1),
+             (BearI_NeedsA_NeedsBDuringRuntime.name, self.section1.name,
+              self.filedict1),
+             (BearJ_NeedsI.name, self.section1.name, self.filedict1)])
+
+        self.assertEqual(len(bear.dependency_results), 1)
+
+        self.assertTestResultsEqual(
+            bear.dependency_results[BearI_NeedsA_NeedsBDuringRuntime],
+            [(BearI_NeedsA_NeedsBDuringRuntime.name, self.section1.name,
+              self.filedict1)])
 
 
 # Execute the same tests from CoreTest, but use a ThreadPoolExecutor instead.
@@ -673,9 +724,9 @@ class CoreOnThreadPoolExecutorTest(CoreTest):
 # executors / having the control over executors.
 class CoreOnSpecificExecutorTest(CoreTestBase):
     def test_custom_executor_closed_after_run(self):
-        bear = MultiTaskBear(Section('test-section'),
-                             {'some-file': []},
-                             tasks_count=1)
+        bear = CustomTasksBear(Section('test-section'),
+                               {'some-file': []},
+                               tasks=[(0,)])
 
         # The executor should be closed regardless how many bears are passed.
         for bears in [set(), {bear}]:

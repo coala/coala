@@ -59,7 +59,7 @@ each file:
         def run(self,
                 filename,
                 file):
-            logging.debug("Hello World! Checking file", filename, ".")
+            logging.debug("Hello World! Checking file")
 
 This bear is stored at ``./bears/HelloWorldBear.py``
 
