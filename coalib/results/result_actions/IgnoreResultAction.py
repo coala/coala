@@ -61,7 +61,7 @@ class IgnoreResultAction(ResultAction):
             source_range.start.line,
             original_file_dict[filename][source_range.start.line-1],
             original_file_dict[filename][source_range.start.line-1].rstrip() +
-            '  ' + ignore_comment)
+            ignore_comment)
 
         if filename in file_diff_dict:
             ignore_diff = file_diff_dict[filename] + ignore_diff
