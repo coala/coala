@@ -71,7 +71,7 @@ def highlight_text(no_color, text, style, lexer=TextLexer()):
 
 
 STR_GET_VAL_FOR_SETTING = ('Please enter a value for the setting \"{}\" ({}) '
-                           'needed by {} for section \"{}\": ')
+                           'needed by {} for section \"{}\":')
 STR_LINE_DOESNT_EXIST = ('The line belonging to the following result '
                          'cannot be printed because it refers to a line '
                          "that doesn't seem to exist in the given file.")
@@ -597,7 +597,10 @@ def acquire_settings(log_printer, settings_names_dict, section):
     for setting_name, arr in sorted(settings_names_dict.items(),
                                     key=lambda x: (join_names(x[1][1:]), x[0])):
         value = require_setting(setting_name, arr, section)
-        result.update({setting_name: value} if value is not None else {})
+        while value is None:
+            print('You have not entered any value.')
+            value = require_setting(setting_name, arr, section)
+        result.update({setting_name: value})
 
     return result
 
