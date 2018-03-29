@@ -78,7 +78,7 @@ class ResultAction:
         create a section out of the inputs from the user and use
         apply_from_section to apply
 
-        :return A FunctionMetadata object.
+        :return: A FunctionMetadata object.
         """
         data = FunctionMetadata.from_function(
             cls.apply,
