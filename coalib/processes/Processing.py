@@ -138,7 +138,9 @@ def autoapply_actions(results,
             action = default_actions[result.origin]
         except KeyError:
             for bear_glob in default_actions:
-                if fnmatch(result.origin, bear_glob):
+                if fnmatch(result.origin, '**'.join([glob.replace('*', '**')
+                                                     for glob in
+                                                     bear_glob.split('**')])):
                     action = default_actions[bear_glob]
                     break
             else:
