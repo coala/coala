@@ -194,7 +194,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         self.assertRaises(TypeError, acquire_settings,
                           self.log_printer, 0, curr_section)
 
-        with simulate_console_inputs('n', 'a', 'o') as generator:
+        with simulate_console_inputs('n', 'a', 'o', '', 'a') as generator:
             self.assertEqual(acquire_settings(self.log_printer,
                                               {'setting': ['help text',
                                                            'SomeBear']},
@@ -216,7 +216,14 @@ class ConsoleInteractionTest(unittest.TestCase):
                                               curr_section),
                              {'setting': 'o'})
 
-            self.assertEqual(generator.last_input, 2)
+            self.assertEqual(acquire_settings(self.log_printer,
+                                              {'setting': ['help text',
+                                                           'SomeBear',
+                                                           'AnotherBear']},
+                                              curr_section),
+                             {'setting': 'a'})
+
+            self.assertEqual(generator.last_input, 4)
 
     def test_print_diffs_info(self):
         file_dict = {'a': ['a\n', 'b\n', 'c\n'], 'b': ['old_first\n']}
