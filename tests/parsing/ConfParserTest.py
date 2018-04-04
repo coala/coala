@@ -76,10 +76,11 @@ class ConfParserTest(unittest.TestCase):
     def test_parse_default_section_deprecated(self):
         default_should = OrderedDict([
             ('setting', 'without_section')])
+        self.sections.popitem(last=False)
 
         key, val = self.sections.popitem(last=False)
         self.assertTrue(isinstance(val, Section))
-        self.assertEqual(key, 'default')
+        self.assertEqual(key, 'no section provided')
 
         is_dict = OrderedDict()
         for k in val:
@@ -101,6 +102,7 @@ class ConfParserTest(unittest.TestCase):
             ('escaped_,comma', 'escaped_.dot')])
 
         # Pop off the default section.
+        self.sections.popitem(last=False)
         self.sections.popitem(last=False)
 
         key, val = self.sections.popitem(last=False)
@@ -125,6 +127,7 @@ class ConfParserTest(unittest.TestCase):
         # Pop off the default and foo section.
         self.sections.popitem(last=False)
         self.sections.popitem(last=False)
+        self.sections.popitem(last=False)
 
         key, val = self.sections.popitem(last=False)
         self.assertTrue(isinstance(val, Section))
@@ -145,6 +148,7 @@ class ConfParserTest(unittest.TestCase):
             ('comment4', '')])
 
         # Pop off the default, foo and makefiles section.
+        self.sections.popitem(last=False)
         self.sections.popitem(last=False)
         self.sections.popitem(last=False)
         self.sections.popitem(last=False)

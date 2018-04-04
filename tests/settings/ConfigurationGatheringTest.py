@@ -114,7 +114,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
             arg_list=[])
 
         self.assertEqual(str(sections['test']),
-                         "test {value : '1', testval : '5'}")
+                         "test {value : '1'}")
 
         Constants.system_coafile = tmp
 
@@ -132,7 +132,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
             arg_list=[])
 
         self.assertEqual(str(sections['test']),
-                         "test {value : '1', testval : '5'}")
+                         "test {value : '1'}")
 
         Constants.user_coafile = tmp
 
@@ -295,7 +295,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                  'child_dir')
         with change_directory(child_dir):
             sections, targets = load_configuration([], self.log_printer)
-            self.assertIn('value', sections['cli'])
+            self.assertIn('value', sections['no section provided'])
 
             sections, targets = load_configuration(
                 ['--no-config'],

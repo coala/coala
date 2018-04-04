@@ -85,7 +85,6 @@ class ConfParser:
 
     def __parse_lines(self, lines, origin):
         current_section_name = 'default'
-        current_section = self.get_section(current_section_name)
         current_keys = []
         no_section = True
 
@@ -105,6 +104,9 @@ class ConfParser:
                 current_section = self.get_section(current_section_name, True)
                 current_keys = []
                 continue
+            elif current_section_name == 'default':
+                current_section_name = 'NO SECTION PROVIDED'
+                current_section = self.get_section(current_section_name, True)
 
             if comment == '' and keys == [] and value == '':
                 self.__add_comment(current_section, '', origin)
@@ -118,16 +120,20 @@ class ConfParser:
                     logging.warning('A setting does not have a section.'
                                     'This is a deprecated feature please '
                                     'put this setting in a section defined'
-                                    ' with `[<your-section-name]` in a '
+                                    ' with `[<your-section-name>]` in a '
                                     'configuration file.')
                 if key == '':
                     continue
 
                 if key in current_section.contents and keys != []:
-                    logging.warning('{} setting has already been defined in '
-                                    'section {}. The previous setting will be '
-                                    'overridden.'.format(key,
-                                                         current_section.name))
+                    logging.warning('{} setting has already been defined {}'
+                                    '. The previous setting will be '
+                                    'overridden.'.format(
+                                        key, 'in section {}'.format(
+                                            current_section.name) if
+                                        current_section.name != 'NO SECTION '
+                                        'PROVIDED'
+                                        else 'outside the section'))
 
                 if section_override == '':
                     current_section.add_or_create_setting(
