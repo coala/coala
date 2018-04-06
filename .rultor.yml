@@ -8,7 +8,8 @@ docker:
 merge:
   fast-forward: only
   script:
-    - python3 .misc/adjust_version_number.py coalib/VERSION -b `date --utc +%Y%m%d%H%M%S`
+    - DATE=`date --utc +%Y%m%d%H%M%S`
+    - python3 .misc/adjust_version_number.py bears/VERSION -b "$DATE"
     - bash .misc/check_maintainership.sh
     - bash .misc/deploy.pypi.sh
 

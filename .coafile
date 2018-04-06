@@ -137,3 +137,7 @@ cs_keywords =
 bears = KeywordBear
 language = python 3
 keywords = urlopen
+
+[yml]
+bears = YAMLLintBear
+files = **.yml, **.yaml
