@@ -127,7 +127,7 @@ if __name__ == '__main__':
               'Operating System :: OS Independent',
 
               'Programming Language :: Python :: Implementation :: CPython',
-              'Programming Language :: Python :: 3.4.4',
+              'Programming Language :: Python :: 3.4',
               'Programming Language :: Python :: 3.5',
               'Programming Language :: Python :: 3 :: Only',
 
