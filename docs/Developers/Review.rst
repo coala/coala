@@ -81,7 +81,7 @@ The review process for coala is as follows:
    to step one.
 5. All commits are acknowledged and fit linearly onto master. All
    continuous integration services (as described below) pass. A maintainer
-   may leave the ``@rultor merge`` command to get the PR merged automatically.
+   may leave the ``@gitmate-bot ff`` command to get the PR merged automatically.
 
 Automated Review Process
 ------------------------
