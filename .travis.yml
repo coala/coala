@@ -17,6 +17,10 @@ jobs:
       env: UNSUPPORTED=true
       script: .misc/check_unsupported.sh
       if: branch = master AND type = push
+    - python: 3.4.3
+      env: UNSUPPORTED=true
+      script: .misc/check_unsupported.sh
+      if: branch = master AND type = push
 
 env:
   global:
