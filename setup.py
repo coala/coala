@@ -79,7 +79,7 @@ if __name__ == '__main__':
     if platform.system() != 'Windows':
         data_files = [('man/man1', ['coala.1'])]
     else:
-        data_files = [('man/man1', [])]
+        data_files = None
 
     setup(name='coala',
           version=VERSION,
