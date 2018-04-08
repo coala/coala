@@ -25,6 +25,7 @@ from coalib.settings.ConfigurationGathering import (
     gather_configuration,
     get_filtered_bears,
     load_configuration,
+    warn_nonexistent_targets,
 )
 from coalib.settings.Setting import Setting
 from coalib.misc.Constants import get_system_coafile
@@ -480,3 +481,51 @@ class ConfigurationGatheringCollectionTest(unittest.TestCase):
         self.assertEqual(str(local_bears['cli'][1]),
                          "<class 'LineCountTestBear.LineCountTestBear'>")
         self.assertEqual(len(global_bears['cli']), 0)
+
+    def test_warn_nonexistent_targets(self):
+        section_without_bears = Section('only files')
+        section_without_bears.append(
+            Setting('files', '*.js, **/*.js, **/**/*.js'))
+        with self.assertRaises(SystemExit):
+            warn_nonexistent_targets(
+                [], {'only files': section_without_bears},
+                log_printer=self.log_printer)
+
+        section_without_files = Section('only bears')
+        section_without_files.append(Setting('bears', 'DummyBear'))
+        with self.assertRaises(SystemExit):
+            warn_nonexistent_targets(
+                [], {'only bears': section_without_files},
+                log_printer=self.log_printer)
+
+        section_without_files_bears = Section('nothing')
+        with self.assertRaises(SystemExit):
+            warn_nonexistent_targets(
+                [], {'nothing': section_without_files_bears},
+                log_printer=self.log_printer)
+
+        section_with_files_bears = Section('everything')
+        section_with_files_bears.append(Setting('bears', 'DummyBear'))
+        section_with_files_bears.append(
+            Setting('files', '*.js, **/*.js, **/**/*.js'))
+        raised = False
+        try:
+            warn_nonexistent_targets(
+                [], {'everything': section_with_files_bears},
+                log_printer=self.log_printer)
+        except SystemExit:
+            raised = True
+        self.assertFalse(raised)
+
+    def test_gather_configuration_with_only_global_bears(self):
+        args = (lambda *args: True, self.log_printer)
+        sections, local_bears, global_bears, targets = (
+            gather_configuration(
+                *args,
+                arg_list=['-b PyromaBear']))
+        print(global_bears)
+        print(local_bears)
+        print(sections)
+        print(targets)
+        self.assertEqual(str(global_bears['cli']),
+                         "[<class 'PyromaaBear.PyromaBear'>]")

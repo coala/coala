@@ -493,8 +493,12 @@ def gather_configuration(acquire_settings,
     local_bears, global_bears = fill_settings(sections,
                                               targets,
                                               acquire_settings)
+
+    only_global_bears = any(global_bears.values()) and not any(
+        local_bears.values())
     save_sections(sections)
-    warn_nonexistent_targets(targets, sections)
+    if not only_global_bears:
+        warn_nonexistent_targets(targets, sections)
 
     return (sections,
             local_bears,
