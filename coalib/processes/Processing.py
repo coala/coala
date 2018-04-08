@@ -3,6 +3,7 @@ import logging
 import os
 import platform
 import queue
+import re
 import subprocess
 
 from coala_utils.string_processing.StringConverter import StringConverter
@@ -469,7 +470,7 @@ def get_ignore_scope(line, keyword):
                     occurrence of it will be considered for the scope.
     :return:        A list of lower cased bearnames or an empty list (-> "all")
     """
-    toignore = line[line.rfind(keyword) + len(keyword):]
+    toignore = line[line.find(keyword) + len(keyword):]
     if toignore.startswith('all'):
         return []
     else:
@@ -513,14 +514,22 @@ def yield_ignore_ranges(file_dict):
                                    len(file[line_number-1])))
 
                 else:
-                    for ignore_stmt in ['ignore ', 'noqa ', 'noqa']:
+                    for ignore_stmt in ['ignore\n', 'noqa\n',
+                                        'noqa ', 'ignore ']:
                         if ignore_stmt in line:
-                            end_line = min(line_number + 1, len(file))
-                            yield (get_ignore_scope(line, ignore_stmt),
+                            manip_line = re.sub('[^A-Za-z0-9]+', '', line)
+                            end_line = (min(line_number + 1, len(file))
+                                        if manip_line.strip().startswith(
+                                                ignore_stmt.strip())
+                                        else line_number)
+                            ignore_scope = ([] if ignore_stmt.endswith('\n')
+                                            else get_ignore_scope(
+                                                    line, ignore_stmt))
+                            yield (ignore_scope,
                                    SourceRange.from_values(
                                        filename,
                                        line_number, 1,
-                                       end_line, len(file[end_line-1])))
+                                       end_line, len(file[end_line-1])-1))
                             break
 
         if stop_ignoring is False and start is not None:
