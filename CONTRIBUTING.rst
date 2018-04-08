@@ -1,12 +1,12 @@
 How to contribute
 =================
 
-Welcome to *coala*! The following guidelines will give you a short overview
-over how we handle issues and PRs in this repository. *coala* is maintained
+Welcome to *COALA*! The following guidelines will give you a short overview
+over how we handle issues and PRs in this repository. *COALA* is maintained
 by a growing community and newcomers are always welcome!
 
 We appreciate all valuable contributions - bug reports, documentation and
-design enhancements issues as well as pull Requests to make *coala* more
+design enhancements issues as well as pull Requests to make *COALA* more
 convenient, functional and bug free.
 
 To begin contributing have a look at the open issues labeled with
