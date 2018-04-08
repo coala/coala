@@ -582,6 +582,155 @@ class LinterComponentTest(unittest.TestCase):
 
         self.assertEqual(results, expected)
 
+    def test_normalize_numbers(self):
+        # Test when `normalize_column_numbers` is True while
+        # `normalize_line_numbers` is False.
+        test_output = ('12:4-14:0-Serious issue (error) -> ORIGIN=X -> D\n'
+                       '1:0-1:1-This is a warning (warning) -> ORIGIN=Y -> A\n'
+                       '813:77-1024:32-Just a note (info) -> ORIGIN=Z -> C\n')
+        regex = (r'(?P<line>\d+):(?P<column>\d+)-'
+                 r'(?P<end_line>\d+):(?P<end_column>\d+)-'
+                 r'(?P<message>.*) \((?P<severity>.*)\) -> '
+                 r'ORIGIN=(?P<origin>.*) -> (?P<additional_info>.*)')
+
+        uut = (linter(sys.executable,
+                      normalize_column_numbers=True,
+                      output_format='regex',
+                      output_regex=regex)
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        sample_file = 'some-file.xtx'
+        results = list(uut.process_output(test_output, sample_file, ['']))
+        expected = [Result.from_values('EmptyTestLinter (X)',
+                                       'Serious issue',
+                                       sample_file,
+                                       12, 5, 14, 1,
+                                       RESULT_SEVERITY.MAJOR,
+                                       additional_info='D'),
+                    Result.from_values('EmptyTestLinter (Y)',
+                                       'This is a warning',
+                                       sample_file,
+                                       1, 1, 1, 2,
+                                       RESULT_SEVERITY.NORMAL,
+                                       additional_info='A'),
+                    Result.from_values('EmptyTestLinter (Z)',
+                                       'Just a note',
+                                       sample_file,
+                                       813, 78, 1024, 33,
+                                       RESULT_SEVERITY.INFO,
+                                       additional_info='C')]
+
+        self.assertEqual(results, expected)
+
+        # Test when `normalize_line_numbers` is True while
+        # `normalize_column_numbers` is False.
+        test_output = ('0:4-14:1-Serious issue (error) -> ORIGIN=X -> D\n'
+                       '0:1-0:2-This is a warning (warning) -> ORIGIN=Y -> A\n'
+                       '813:77-1024:32-Just a note (info) -> ORIGIN=Z -> C\n')
+
+        uut = (linter(sys.executable,
+                      normalize_line_numbers=True,
+                      output_format='regex',
+                      output_regex=regex)
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        sample_file = 'some-file.xtx'
+        results = list(uut.process_output(test_output, sample_file, ['']))
+        expected = [Result.from_values('EmptyTestLinter (X)',
+                                       'Serious issue',
+                                       sample_file,
+                                       1, 4, 15, 1,
+                                       RESULT_SEVERITY.MAJOR,
+                                       additional_info='D'),
+                    Result.from_values('EmptyTestLinter (Y)',
+                                       'This is a warning',
+                                       sample_file,
+                                       1, 1, 1, 2,
+                                       RESULT_SEVERITY.NORMAL,
+                                       additional_info='A'),
+                    Result.from_values('EmptyTestLinter (Z)',
+                                       'Just a note',
+                                       sample_file,
+                                       814, 77, 1025, 32,
+                                       RESULT_SEVERITY.INFO,
+                                       additional_info='C')]
+
+        self.assertEqual(results, expected)
+
+        # Test when `normalize_line_numbers` and
+        # `normalize_column_numbers` are both True.
+        test_output = ('0:4-14:1-Serious issue (error) -> ORIGIN=X -> D\n'
+                       '0:0-0:1-This is a warning (warning) -> ORIGIN=Y -> A\n'
+                       '813:77-1024:32-Just a note (info) -> ORIGIN=Z -> C\n')
+
+        uut = (linter(sys.executable,
+                      normalize_line_numbers=True,
+                      normalize_column_numbers=True,
+                      output_format='regex',
+                      output_regex=regex)
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        sample_file = 'some-file.xtx'
+        results = list(uut.process_output(test_output, sample_file, ['']))
+        expected = [Result.from_values('EmptyTestLinter (X)',
+                                       'Serious issue',
+                                       sample_file,
+                                       1, 5, 15, 2,
+                                       RESULT_SEVERITY.MAJOR,
+                                       additional_info='D'),
+                    Result.from_values('EmptyTestLinter (Y)',
+                                       'This is a warning',
+                                       sample_file,
+                                       1, 1, 1, 2,
+                                       RESULT_SEVERITY.NORMAL,
+                                       additional_info='A'),
+                    Result.from_values('EmptyTestLinter (Z)',
+                                       'Just a note',
+                                       sample_file,
+                                       814, 78, 1025, 33,
+                                       RESULT_SEVERITY.INFO,
+                                       additional_info='C')]
+
+        self.assertEqual(results, expected)
+
+        # Test default settings: when `normalize_line_numbers` and
+        # `normalize_column_numbers` are both False.
+        test_output = ('1:4-14:1-Serious issue (error) -> ORIGIN=X -> D\n'
+                       '1:1-1:2-This is a warning (warning) -> ORIGIN=Y -> A\n'
+                       '813:77-1024:32-Just a note (info) -> ORIGIN=Z -> C\n')
+
+        uut = (linter(sys.executable,
+                      output_format='regex',
+                      output_regex=regex)
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        sample_file = 'some-file.xtx'
+        results = list(uut.process_output(test_output, sample_file, ['']))
+        expected = [Result.from_values('EmptyTestLinter (X)',
+                                       'Serious issue',
+                                       sample_file,
+                                       1, 4, 14, 1,
+                                       RESULT_SEVERITY.MAJOR,
+                                       additional_info='D'),
+                    Result.from_values('EmptyTestLinter (Y)',
+                                       'This is a warning',
+                                       sample_file,
+                                       1, 1, 1, 2,
+                                       RESULT_SEVERITY.NORMAL,
+                                       additional_info='A'),
+                    Result.from_values('EmptyTestLinter (Z)',
+                                       'Just a note',
+                                       sample_file,
+                                       813, 77, 1024, 32,
+                                       RESULT_SEVERITY.INFO,
+                                       additional_info='C')]
+
+        self.assertEqual(results, expected)
+
     def test_minimal_regex(self):
         uut = (linter(sys.executable,
                       output_format='regex',

@@ -230,6 +230,27 @@ Normally, providing a severity-map is not needed, as coala has a default
 severity-map which recognizes many common words used for severities. Check out
 the API documentation for keywords supported!
 
+Normalize Line or Column Numbers
+--------------------------------
+
+coala uses 1-based line & column convention, i.e. the first line and the first
+column are 1. However, some linters use 0-based convention. For example,
+``pylint`` uses 1-based line convention and 0-based column convention. The
+options ``normalize_line_numbers`` and ``normalize_column_numbers``
+can help us easily map linter's convention to coala's. They are ``False``
+by default. If ``normalize_line_numbers`` is ``True``, line numbers would be
+increased by one. If ``normalize_column_numbers`` is ``True``, column numbers
+would be increased by one.
+
+Note ``pylint`` uses 0-based column convention.
+We need to map that to coala's convention as follows:
+
+::
+
+    @linter(...
+            normalize_column_numbers = True,
+            ...)
+
 Suggest Corrections Using the ``corrected`` and ``unified-diff`` Output Formats
 -------------------------------------------------------------------------------
 

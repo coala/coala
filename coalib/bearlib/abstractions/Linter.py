@@ -36,6 +36,8 @@ def _prepare_options(options, bear_class):
                        'use_stdin',
                        'use_stdout',
                        'use_stderr',
+                       'normalize_line_numbers',
+                       'normalize_column_numbers',
                        'config_suffix',
                        'executable_check_fail_info',
                        'prerequisite_check_command',
@@ -304,6 +306,14 @@ def _create_linter(klass, options):
                 groups[variable] = (None
                                     if groups.get(variable, None) is None else
                                     int(groups[variable]))
+
+            def add_one(x): return None if x is None else x + 1
+            if options['normalize_line_numbers']:
+                for variable in ('line', 'end_line'):
+                    groups[variable] = add_one(groups[variable])
+            if options['normalize_column_numbers']:
+                for variable in ('column', 'end_column'):
+                    groups[variable] = add_one(groups[variable])
 
             if 'origin' in groups:
                 groups['origin'] = '{} ({})'.format(klass.__name__,
@@ -751,6 +761,8 @@ def linter(executable: str,
            use_stdin: bool = False,
            use_stdout: bool = True,
            use_stderr: bool = False,
+           normalize_line_numbers: bool = False,
+           normalize_column_numbers: bool = False,
            config_suffix: str = '',
            executable_check_fail_info: str = '',
            prerequisite_check_command: tuple = (),
@@ -866,6 +878,12 @@ def linter(executable: str,
         Incompatible with ``global_bear=True``.
     :param use_stderr:
         Whether to use the stderr output stream.
+    :param normalize_line_numbers:
+        Whether to normalize line numbers (increase by one) to fit
+        coala's one-based convention.
+    :param normalize_column_numbers:
+        Whether to normalize column numbers (increase by one) to fit
+        coala's one-based convention.
     :param config_suffix:
         The suffix-string to append to the filename of the configuration file
         created when ``generate_config`` is supplied. Useful if your executable
@@ -969,6 +987,8 @@ def linter(executable: str,
     options['use_stdin'] = use_stdin
     options['use_stdout'] = use_stdout
     options['use_stderr'] = use_stderr
+    options['normalize_line_numbers'] = normalize_line_numbers
+    options['normalize_column_numbers'] = normalize_column_numbers
     options['config_suffix'] = config_suffix
     options['executable_check_fail_info'] = executable_check_fail_info
     options['prerequisite_check_command'] = prerequisite_check_command
