@@ -78,6 +78,9 @@ STR_LINE_DOESNT_EXIST = ('The line belonging to the following result '
 STR_PROJECT_WIDE = 'Project wide:'
 STR_ENTER_NUMBER = 'Enter number (Ctrl-{} to exit): '.format(
     'Z' if platform.system() == 'Windows' else 'D')
+STR_WARNING = '\033[91m'
+STR_ENDC = '\033[0m'
+STR_INVALID_OPTION = '*** Invalid Option: ({}) ***\n'
 FILE_NAME_COLOR = 'blue'
 FILE_LINES_COLOR = 'blue'
 CAPABILITY_COLOR = 'green'
@@ -658,28 +661,27 @@ def choose_action(console_printer, actions, apply_single=False):
 
             choice = input(line)
             choice = str(choice)
-
+            
             for c in choice:
                 c = str(c)
                 actions_desc_len = len(actions_desc)
                 if c.isnumeric():
                     for i, action in enumerate(actions, 0):
-                        c = int(c)
-                        if i == c:
+                        if i == int(c):
                             actions_desc.append(action.desc)
                             actions_name.append(action.name)
                             break
                 elif c.isalpha():
                     c = c.upper()
-                    c = '(' + c + ')'
+                    str_c = '(' + c + ')'
                     for i, action in enumerate(actions, 1):
-                        if c in action.desc:
+                        if str_c in action.desc:
                             actions_desc.append(action.desc)
                             actions_name.append(action.name)
                             break
                 if actions_desc_len == len(actions_desc):
-                    console_printer.print(format_lines(
-                        'Please enter a valid letter.', symbol='['))
+                    console_printer.print(STR_WARNING +
+                            STR_INVALID_OPTION.format(c) + STR_ENDC)
 
             if not choice:
                 actions_desc.append(DoNothingAction().get_metadata().desc)
