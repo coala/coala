@@ -39,6 +39,10 @@ jobs:
           command: python -m pytest
 
       - run:
+          name: install-shellcheck
+          command: sudo apt-get install shellcheck
+
+      - run:
           name: coala-ci
           when: always
           command: |

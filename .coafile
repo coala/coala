@@ -141,3 +141,9 @@ keywords = urlopen
 [yml]
 bears = YAMLLintBear
 files = **.yml, **.yaml
+
+[bash]
+bears = ShellCheckBear
+files = **.sh
+shell = bash
+shellcheck_ignore = SC2046, SC2154
