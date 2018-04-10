@@ -120,11 +120,11 @@ JSON output is also very common:
 
     @linter(executable='my_tool')
     class MyBear:
-    def process_output(self, output, filename, file):
-        for issue in json.loads(output):
-            yield Result.from_values(origin=self,
-                                     message=issue["message"],
-                                     file=filename)
+        def process_output(self, output, filename, file):
+            for issue in json.loads(output):
+                yield Result.from_values(origin=self,
+                                        message=issue["message"],
+                                        file=filename)
 
 Additional Prerequisite Check
 -----------------------------
