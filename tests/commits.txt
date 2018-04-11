@@ -1,0 +1,100 @@
+coafile: Add test for shortlog regex
+Writing_Good_Commits.rst: Edit Commit Messages
+Writing_Good_Commits.rst: Reword line
+Bear.py: Include filename on which the bear failed
+DefaultArgParser.py: Change order of logging
+Instructions to add CI to fork
+AppveyorCI: Require 100% test coverage
+AppveyorCI: Install clang
+Use codecov-python
+logging.py: Remove unnecessary import
+circle.yml: Add csslint
+Bear.py: Modify get_non_optional_settings
+ConfParser: Deprecate settings without section
+ConfigurationGathering: Disable default section
+Setting: Raise exception if `to_append` is true
+requirements: Update coala-utils version
+CliParsing: Move to 'cli' section
+ConfWriter: Add setting appending
+LineParser: Add append(+=) parsing
+Section: Add settings appending
+ConfigurationGathering: Add section inheritance
+Redundancy.py: Change 'deco' to 'docs'
+.travis.yml: Add csslint
+Collectors.icollect: Cache results of globs
+TestUtilities.py: Return stdout, stderr separately
+Revert "LICENSE: Remove boilerplate stuff"
+PULL_REQUEST_TEMPLATE: Name newcomer friendlier
+Writing_Good_Commits.rst: Rephrase Line
+RELEASE_NOTES: Fix malformed heading
+RELEASE_NOTES: Add release ascii
+RELEASE_NOTES: Add 0.10 release notes
+Add ShellCommandResult for accessing return codes
+ConsoleInteraction: Remove format_str (deprecated)
+Shell: Use shutil.which on Windows
+coafile: Blacklist urllib
+coafile: Remove trailing whitespace
+.travis.yml: Replace 3.6-dev with 3.6
+.travis.yml: De-activate OSX job
+Fix bare exception clauses
+Revert "coafile: Fix shortlog regex"
+DefaultArgParser.py: Add Default log level to help
+Shell.py: Remove call_without_output
+requirements.txt: Pin requests properly
+Pull template: Add branch button warning
+ConsoleInteraction.py: Show file path of bear
+docs: Add link to Code of Conduct
+Useful_Links.rst: Add Useful_Links.rst
+Bear.py: Rewrite download_cached_file in requests
+.travis.yml: Move unsupported Python versions
+requirements.txt: Upgrade dependency_management
+Result.py: Format message if arguments provided
+Writing_Linter_Bears.rst: Grammatical Error fix
+Result.py: Add message arguments
+Diff.py: Deprecate change_line method
+Language.py: Ignore whitespace in lookup
+JSON Mode: Add ``--log-json`` flag
+coala_main: Remove Redundant Logging
+Logging: Move logging to own module
+Newcomers_Guide.rst: Add link for review
+Newcomers_Guide.rst: Improve in note
+coafile: Fix shortlog regex
+coafile: Change python3 to python 3
+coafile: Fix regex in commit section
+Globbing.py: Add test for the sequence ([xy])
+Bear.py: Correct the maintainers_emails method
+AppveyorCI: Remove unneeded cache directories
+Newcomers_Guide.rst: Emphasize on low issues
+CSharp: Add fields for CSharp language support
+AppveyorCI: Remove astroid as not used
+ConsoleInteraction.py: Use dot in place of bullet
+README.rst: Resize asciinema demo image
+.travis.yml: Add exclude branch 'sils/*'
+ConfigurationGathering: Rename default_section
+Writing_Native_Bears.rst: Change in filename
+OpenEditorAction: Add emacs
+ConsoleInteraction.py: Move join_names upstream
+Requirements.txt dependency_management 0.3.0
+Writing_Documentation.rst: Add rst tutorial
+Linter: Keep .__module__ name of decorated classes
+docs: Update review documentation
+README: Add mention about coala-quickstart
+Writing_Good_Commits.rst: Update Issue reference
+Newcomers_Guide.rst: Specify the assign command
+External_Bears.rst: Change to "coala --json"
+coala_settings: Remove "Documentation" from title
+CliParsingTest.py: Use unittest.asserRaisesRegex
+Bear.py: Remove a paragraph from docstring
+.coafile: Add css section
+custom.css: Fix linting errors
+ConfWriter.py: Check if param for -c is dir
+Newcomers_Guide.rst: Fix a typo
+IgnoreResultAction: Add Multiline comment support
+DefaultArgParser: Modify help string
+requirements.txt: Update dependecy_management
+OpenEditorAction: Emit warning for unknown editors
+Development_Setup.rst: Update commands
+Newcomers_Guide: Add command for test-requirements
+Newcomers_Guide: Add references to Dev Setup Notes
+RELEASE_NOTES.rst: Add 0.9.1 release notes
+Writing_Linter_Bears: Add url to api documentation
