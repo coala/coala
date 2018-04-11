@@ -256,6 +256,14 @@ repository, go to the official repository of coala/coala-bears and click on the
 where ``myfork`` is the name of your fork, and ``fork_link`` is a link to your
 fork repository.
 
+You can also add a remote pointing to the original coala repository by
+running:
+
+::
+    $ git remote add upstream repo_link
+
+where ``repo_link`` is the link to the original coala repository.
+
 .. note::
    It is important that you **DO NOT** make your changes on the master branch
    of your forked repository to avoid the following cases:
@@ -321,6 +329,18 @@ Step 4. Sending Your Changes
 
    Your current branch will have an asterisk (\*) next to it. Ensure that there
    is no asterisk next to the master branch.
+
+   Also make sure that your local clone is up-to-date with the original coala
+   repository before pushing. To do that, run
+
+   ::
+
+         $ git fetch upstream
+         $ git checkout master
+         $ git rebase upstream/master
+
+   where ``upstream`` is the original coala remote. You may need to force
+   push the repository the first time after rebasing.
 
 Now that you've fixed the issue, you've tested it, and you think it is ready
 to be merged, create a commit and push it to your fork, using:
