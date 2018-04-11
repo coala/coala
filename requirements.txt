@@ -1,4 +1,5 @@
 appdirs~=1.4
+cli_helpers~=1.0.2
 coala_utils~=0.7.0
 colorlog>=2.7,<4.0
 dependency_management~=0.4.0
