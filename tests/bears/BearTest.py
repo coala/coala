@@ -19,6 +19,7 @@ from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
 from coalib.results.Result import Result
+from coalib.results.TextPosition import ZeroOffsetError
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.processes.communication.LogMessage import LogMessage
 from coalib.settings.Section import Section
@@ -64,6 +65,30 @@ class TypedTestBear(Bear):
     def run(self, something: int):
         self.was_executed = True
         return []
+
+
+class ZeroOffsetLocalBear(LocalBear):
+
+    def __init__(self, section, queue, error_message):
+        Bear.__init__(self, section, queue)
+        self.error_message = error_message
+
+    def run(self, filename, file):
+        raise ZeroOffsetError(self.error_message)
+
+
+class ZeroOffsetGlobalBear(Bear):
+
+    def __init__(self, section, queue, error_message):
+        Bear.__init__(self, section, queue)
+        self.error_message = error_message
+
+    @staticmethod
+    def kind():
+        return BEAR_KIND.GLOBAL
+
+    def run(self):
+        raise ZeroOffsetError(self.error_message)
 
 
 class BearWithPrerequisites(Bear):
@@ -248,6 +273,72 @@ class BearTest(BearTestBase):
                            'Bear GlobalBear failed to run. Take a look at '
                            'debug messages (`-V`) for further '
                            'information.')
+
+    def test_zero_line_offset_LocalBear(self):
+        error_message = 'Line offset cannot be zero.'
+        self.uut = ZeroOffsetLocalBear(self.settings,
+                                       self.queue,
+                                       error_message)
+        self.uut.execute('filename.py', 'file\n')
+        self.check_message(LOG_LEVEL.DEBUG)
+        self.check_message(LOG_LEVEL.ERROR,
+                           'Bear ZeroOffsetLocalBear violated one-based '
+                           'offset convention.', error_message)
+
+    def test_zero_column_offset_LocalBear(self):
+        error_message = 'Column offset cannot be zero.'
+        self.uut = ZeroOffsetLocalBear(self.settings,
+                                       self.queue,
+                                       error_message)
+        self.uut.execute('filename.py', 'file\n')
+        self.check_message(LOG_LEVEL.DEBUG)
+        self.check_message(LOG_LEVEL.ERROR,
+                           'Bear ZeroOffsetLocalBear violated one-based '
+                           'offset convention.', error_message)
+
+    def test_zero_line_and_column_offset_LocalBear(self):
+        error_message = 'Line and column offset cannot be zero.'
+        self.uut = ZeroOffsetLocalBear(self.settings,
+                                       self.queue,
+                                       error_message)
+        self.uut.execute('filename.py', 'file\n')
+        self.check_message(LOG_LEVEL.DEBUG)
+        self.check_message(LOG_LEVEL.ERROR,
+                           'Bear ZeroOffsetLocalBear violated one-based '
+                           'offset convention.', error_message)
+
+    def test_zero_line_offset_GlobalBear(self):
+        error_message = 'Line offset cannot be zero.'
+        self.uut = ZeroOffsetGlobalBear(self.settings,
+                                        self.queue,
+                                        error_message)
+        self.uut.execute()
+        self.check_message(LOG_LEVEL.DEBUG)
+        self.check_message(LOG_LEVEL.ERROR,
+                           'Bear ZeroOffsetGlobalBear violated one-based '
+                           'offset convention.', error_message)
+
+    def test_zero_column_offset_GlobalBear(self):
+        error_message = 'Column offset cannot be zero.'
+        self.uut = ZeroOffsetGlobalBear(self.settings,
+                                        self.queue,
+                                        error_message)
+        self.uut.execute()
+        self.check_message(LOG_LEVEL.DEBUG)
+        self.check_message(LOG_LEVEL.ERROR,
+                           'Bear ZeroOffsetGlobalBear violated one-based '
+                           'offset convention.', error_message)
+
+    def test_zero_line_and_column_offset_GlobalBear(self):
+        error_message = 'Line and column offset cannot be zero.'
+        self.uut = ZeroOffsetGlobalBear(self.settings,
+                                        self.queue,
+                                        error_message)
+        self.uut.execute()
+        self.check_message(LOG_LEVEL.DEBUG)
+        self.check_message(LOG_LEVEL.ERROR,
+                           'Bear ZeroOffsetGlobalBear violated one-based '
+                           'offset convention.', error_message)
 
     def test_inconvertible(self):
         self.uut = TypedTestBear(self.settings, self.queue)

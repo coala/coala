@@ -11,7 +11,7 @@ class TextRangeTest(unittest.TestCase):
             TextRange(TextPosition(3, 4), TextPosition(2, 8))
 
         with self.assertRaises(ValueError):
-            TextRange(TextPosition(0, 10), TextPosition(0, 7))
+            TextRange(TextPosition(1, 10), TextPosition(1, 7))
 
         with self.assertRaises(TypeError):
             TextRange(None, TextPosition(20, 80))
@@ -20,7 +20,7 @@ class TextRangeTest(unittest.TestCase):
             TextRange('string', TextPosition(200, 800))
 
         with self.assertRaises(TypeError):
-            TextRange(TextPosition(5, 0), 'schtring')
+            TextRange(TextPosition(5, 1), 'schtring')
 
     def test_properties(self):
         uut = TextRange(TextPosition(7, 2), TextPosition(7, 3))
@@ -36,18 +36,18 @@ class TextRangeTest(unittest.TestCase):
     def test_from_values(self):
         # Check if invalid ranges still fail.
         with self.assertRaises(ValueError):
-            TextRange.from_values(0, 10, 0, 7)
+            TextRange.from_values(1, 10, 1, 7)
 
-        uut = TextRange.from_values(1, 0, 7, 3)
-        self.assertEqual(uut.start, TextPosition(1, 0))
+        uut = TextRange.from_values(1, 1, 7, 3)
+        self.assertEqual(uut.start, TextPosition(1, 1))
         self.assertEqual(uut.end, TextPosition(7, 3))
 
-        uut = TextRange.from_values(1, 0, None, 88)
-        self.assertEqual(uut.start, TextPosition(1, 0))
-        self.assertEqual(uut.end, TextPosition(1, 0))
+        uut = TextRange.from_values(1, 1, None, 88)
+        self.assertEqual(uut.start, TextPosition(1, 1))
+        self.assertEqual(uut.end, TextPosition(1, 1))
 
-        uut = TextRange.from_values(1, 0, 7, None)
-        self.assertEqual(uut.start, TextPosition(1, 0))
+        uut = TextRange.from_values(1, 1, 7, None)
+        self.assertEqual(uut.start, TextPosition(1, 1))
         self.assertEqual(uut.end, TextPosition(7, None))
 
         # Test defaults.

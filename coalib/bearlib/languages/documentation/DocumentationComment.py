@@ -222,7 +222,7 @@ class DocumentationComment:
         >>> str(DocumentationComment.from_metadata(
         ...         parsed_doc, python_default,
         ...         python_default.markers[0], '    ',
-        ...         TextPosition(0, 0)))
+        ...         TextPosition(1, 1)))
         '\nDescription\n:param age: Age\n'
 
         :param doccomment:

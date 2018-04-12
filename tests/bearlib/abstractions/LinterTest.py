@@ -503,10 +503,10 @@ class LinterComponentTest(unittest.TestCase):
 
     def test_process_output_regex(self):
         # Also test the case when an unknown severity is matched.
-        test_output = ('12:4-14:0-Serious issue (error) -> ORIGIN=X -> D\n'
-                       '0:0-0:1-This is a warning (warning) -> ORIGIN=Y -> A\n'
-                       '813:77-1024:32-Just a note (info) -> ORIGIN=Z -> C\n'
-                       '0:0-0:0-Some unknown sev (???) -> ORIGIN=W -> B\n')
+        test_output = ('13:5-15:1-Serious issue (error) -> ORIGIN=X -> D\n'
+                       '1:1-1:2-This is a warning (warning) -> ORIGIN=Y -> A\n'
+                       '814:78-1025:33-Just a note (info) -> ORIGIN=Z -> C\n'
+                       '1:1-1:1-Some unknown sev (???) -> ORIGIN=W -> B\n')
         regex = (r'(?P<line>\d+):(?P<column>\d+)-'
                  r'(?P<end_line>\d+):(?P<end_column>\d+)-'
                  r'(?P<message>.*) \((?P<severity>.*)\) -> '
@@ -524,25 +524,25 @@ class LinterComponentTest(unittest.TestCase):
         expected = [Result.from_values('EmptyTestLinter (X)',
                                        'Serious issue',
                                        sample_file,
-                                       12, 4, 14, 0,
+                                       13, 5, 15, 1,
                                        RESULT_SEVERITY.MAJOR,
                                        additional_info='D'),
                     Result.from_values('EmptyTestLinter (Y)',
                                        'This is a warning',
                                        sample_file,
-                                       0, 0, 0, 1,
+                                       1, 1, 1, 2,
                                        RESULT_SEVERITY.NORMAL,
                                        additional_info='A'),
                     Result.from_values('EmptyTestLinter (Z)',
                                        'Just a note',
                                        sample_file,
-                                       813, 77, 1024, 32,
+                                       814, 78, 1025, 33,
                                        RESULT_SEVERITY.INFO,
                                        additional_info='C'),
                     Result.from_values('EmptyTestLinter (W)',
                                        'Some unknown sev',
                                        sample_file,
-                                       0, 0, 0, 0,
+                                       1, 1, 1, 1,
                                        RESULT_SEVERITY.NORMAL,
                                        additional_info='B')]
 
@@ -553,12 +553,12 @@ class LinterComponentTest(unittest.TestCase):
 
         # Test when providing a sequence as output.
         test_output = ['',
-                       '12:4-14:0-Serious issue (error) -> ORIGIN=X -> XYZ\n']
+                       '13:5-15:1-Serious issue (error) -> ORIGIN=X -> XYZ\n']
         results = list(uut.process_output(test_output, sample_file, ['']))
         expected = [Result.from_values('EmptyTestLinter (X)',
                                        'Serious issue',
                                        sample_file,
-                                       12, 4, 14, 0,
+                                       13, 5, 15, 1,
                                        RESULT_SEVERITY.MAJOR,
                                        additional_info='XYZ')]
 
@@ -576,7 +576,7 @@ class LinterComponentTest(unittest.TestCase):
         expected = [Result.from_values('EmptyTestLinter (X)',
                                        'Hello world',
                                        sample_file,
-                                       12, 4, 14, 0,
+                                       13, 5, 15, 1,
                                        RESULT_SEVERITY.MAJOR,
                                        additional_info='XYZ')]
 
@@ -826,17 +826,17 @@ class LocalLinterReallifeTest(unittest.TestCase):
         expected = [Result.from_values(uut,
                                        "Invalid char ('0')",
                                        self.testfile_path,
-                                       3, 0, 3, 1,
+                                       4, 1, 4, 2,
                                        RESULT_SEVERITY.MAJOR),
                     Result.from_values(uut,
                                        "Invalid char ('.')",
                                        self.testfile_path,
-                                       5, 0, 5, 1,
+                                       6, 1, 6, 2,
                                        RESULT_SEVERITY.MAJOR),
                     Result.from_values(uut,
                                        "Invalid char ('p')",
                                        self.testfile_path,
-                                       9, 0, 9, 1,
+                                       10, 1, 10, 2,
                                        RESULT_SEVERITY.MAJOR)]
 
         self.assertEqual(results, expected)
@@ -870,12 +870,12 @@ class LocalLinterReallifeTest(unittest.TestCase):
         expected = [Result.from_values(uut,
                                        "Invalid char ('X')",
                                        self.testfile2_path,
-                                       0, 0, 0, 1,
+                                       1, 1, 1, 2,
                                        RESULT_SEVERITY.MAJOR),
                     Result.from_values(uut,
                                        "Invalid char ('i')",
                                        self.testfile2_path,
-                                       4, 0, 4, 1,
+                                       5, 1, 5, 2,
                                        RESULT_SEVERITY.MAJOR)]
 
         self.assertEqual(results, expected)
@@ -958,17 +958,17 @@ class LocalLinterReallifeTest(unittest.TestCase):
         expected = [Result.from_values(uut,
                                        'Invalid char provided!',
                                        self.testfile_path,
-                                       3, 0, 3, 1,
+                                       4, 1, 4, 2,
                                        RESULT_SEVERITY.MAJOR),
                     Result.from_values(uut,
                                        'Invalid char provided!',
                                        self.testfile_path,
-                                       5, 0, 5, 1,
+                                       6, 1, 6, 2,
                                        RESULT_SEVERITY.MAJOR),
                     Result.from_values(uut,
                                        'Invalid char provided!',
                                        self.testfile_path,
-                                       9, 0, 9, 1,
+                                       10, 1, 10, 2,
                                        RESULT_SEVERITY.MAJOR)]
 
         self.assertEqual(results, expected)
