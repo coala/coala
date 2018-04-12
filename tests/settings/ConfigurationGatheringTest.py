@@ -96,7 +96,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         get_system_coafile(system_coafile_path)
 
         capture.check(
-            ('root', 'WARNING', 'Filename deafult_coafile has been deprecated. '
+            ('root', 'WARNING', 'Filename default_coafile has been deprecated. '
              'Please use system_coafile instead.')
         )
 
