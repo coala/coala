@@ -7,7 +7,7 @@ jobs:
     steps: &build
       - checkout
       - restore_cache:
-          key: dependency-cache-{{ checksum "requirements.txt" }}
+          key: coala-cache-{{ checksum "requirements.txt" }}
 
       - run:
           name: env
@@ -62,11 +62,11 @@ jobs:
           command: python setup.py docs
 
       - save_cache:
-          key: dependency-cache-{{ checksum "requirements.txt" }}
+          key: coala-cache-{{ checksum "requirements.txt" }}
           paths:
-            - "$HOME/nltk_data"
+            - "../nltk_data"
             - "docs/_build"
-            - "$HOME/.cache/pip"
+            - "../.cache/pip"
 
   python-3.5:
     docker:
