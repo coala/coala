@@ -6,7 +6,7 @@ from coalib.results.TextRange import TextRange
 
 class TextRangeTest(unittest.TestCase):
 
-    def test_fail_instantiation(self):
+    def test_fail_instantation(self):
         with self.assertRaises(ValueError):
             TextRange(TextPosition(3, 4), TextPosition(2, 8))
 

@@ -17,7 +17,7 @@ class DocstyleDefinitionTest(unittest.TestCase):
     dummy_docstring_type_regex = DocstringTypeRegex('class', 'def')
     dummy_docstring_position = 'top'
 
-    def test_fail_instantiation(self):
+    def test_fail_instantation(self):
         with self.assertRaises(ValueError):
             DocstyleDefinition('PYTHON', 'doxyGEN',
                                (('##', '#'),), self.dummy_metadata,
