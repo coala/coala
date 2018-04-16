@@ -316,7 +316,11 @@ def print_result(console_printer,
                                                      file_diff_dict,
                                                      section)
                 cli_actions = tuple(action for action in cli_actions
-                                    if not isinstance(action, ShowPatchAction))
+                                    if not (isinstance(action, ShowPatchAction)
+                                            or
+                                            isinstance(action,
+                                                       ShowAppliedPatchesAction)
+                                            ))
             else:
                 print_diffs_info(result.diffs, console_printer)
         acquire_actions_and_apply(console_printer,
