@@ -280,7 +280,8 @@ class Diff:
         list_unified_diff = list(difflib.unified_diff(
             self._file,
             self._raw_modified(),
-            tofile=self.rename if isinstance(self.rename, str) else ''))
+            fromfile='{}',
+            tofile=self.rename if isinstance(self.rename, str) else '{}'))
 
         return ''.join(self._generate_linebreaks(list_unified_diff))
 
