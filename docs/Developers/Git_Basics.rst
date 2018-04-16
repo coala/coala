@@ -451,6 +451,10 @@ While rebasing, you may come across mid-rebase conflicts. For information
 regarding how to resolve mid-rebase conflicts, please check this
 `tutorial <http://gitforteams.com/resources/rebasing.html>`_.
 
+http://ohshitgit.com/ contains helpful Git snippets for recovering from various
+common Git issues. It is a great resource to check out when something has gone
+wrong.
+
 If at any stage you are confused, or have an issue, do not close your Pull
 Request. Instead, contact us on gitter so that we can help you resolve your
 problem.
