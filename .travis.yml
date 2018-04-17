@@ -12,11 +12,15 @@ jobs:
     - python: 2.7
       env: UNSUPPORTED=true
       script: .misc/check_unsupported.sh
-      if: branch = master
+      if: branch = master AND type = push
     - python: 3.3
       env: UNSUPPORTED=true
       script: .misc/check_unsupported.sh
-      if: branch = master
+      if: branch = master AND type = push
+    - python: 3.4.3
+      env: UNSUPPORTED=true
+      script: .misc/check_unsupported.sh
+      if: branch = master AND type = push
 
 env:
   global:
@@ -57,12 +61,16 @@ before_install:
   - if [[ $TRAVIS_OS_NAME == osx ]]; then pip install -r requirements.txt; fi
 
   # For bears in .coafile requiring npm dependencies
-  - npm install
+  - npm install --no-save
 
 before_script:
   # Restore the original requirements.txt
   - mv requirements.orig requirements.txt
   - python .misc/check_setuptools.py
+  - git clone https://github.com/moremoban/setupmobans ../setupmobans
+  - git clone https://gitlab.com/coala/mobans ../coala-mobans
+  - moban
+  - git diff --exit-code
 
 script:
   - py.test

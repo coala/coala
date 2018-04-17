@@ -32,7 +32,7 @@ class BearWithDependencies(Bear):
 
 class BearWithAnalysis(Bear):
 
-    def analyze(self, x: int, y: int, z: int=33):
+    def analyze(self, x: int, y: int, z: int = 33):
         """
         Analyzes stuff.
 

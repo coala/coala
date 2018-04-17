@@ -679,7 +679,7 @@ def choose_action(console_printer, actions, apply_single=False):
                             break
                 if actions_desc_len == len(actions_desc):
                     console_printer.print(format_lines(
-                        'Please enter a valid letter.', symbol='['))
+                        'Please enter a valid letter or number.', symbol='['))
 
             if not choice:
                 actions_desc.append(DoNothingAction().get_metadata().desc)
@@ -702,7 +702,7 @@ def try_to_apply_action(action_name,
     Try to apply the given action.
 
     :param action_name:     The name of the action.
-    :param choose_action:   The action object that will be applied.
+    :param chosen_action:   The action object that will be applied.
     :param console_printer: Object to print messages on the console.
     :param section:         Currently active section.
     :param metadata_list:   Contains metadata for all the actions.

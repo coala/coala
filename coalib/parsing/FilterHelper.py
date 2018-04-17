@@ -15,6 +15,22 @@ def _filter_section_bears(bears, args, filter_name):
 
 
 def apply_filter(filter_name, filter_args, all_bears=None):
+    """
+    Returns bears after filtering based on ``filter_args``. It returns
+    all bears if nothing is present in ``filter_args``.
+
+    :param filter_name:
+        Name of the filter.
+    :param filter_args:
+        Arguments of the filter to be passed in.
+        For example:
+        ``['c', 'java']``
+    :param all_bears:
+        List of bears on which filter is to be applied.
+        All the bears are loaded automatically by default.
+    :return:
+        Filtered bears based on a single filter.
+    """
     if all_bears is None:
         from coalib.settings.ConfigurationGathering import (
             get_all_bears)

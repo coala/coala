@@ -8,6 +8,7 @@ import shutil
 from subprocess import check_call, CalledProcessError, DEVNULL
 from types import MappingProxyType
 
+from cli_helpers.utils import strip_ansi
 from coalib.bearlib.abstractions.LinterClass import LinterClass
 from coalib.bears.LocalBear import LocalBear
 from coalib.bears.GlobalBear import GlobalBear
@@ -38,7 +39,8 @@ def _prepare_options(options, bear_class):
                        'config_suffix',
                        'executable_check_fail_info',
                        'prerequisite_check_command',
-                       'global_bear'}
+                       'global_bear',
+                       'strip_ansi'}
 
     if not options['use_stdout'] and not options['use_stderr']:
         raise ValueError('No output streams provided at all.')
@@ -668,7 +670,8 @@ def _create_linter(klass, options):
                     (options['use_stdout'], options['use_stderr'])))
                 if len(output) == 1:
                     output = output[0]
-
+                if options['strip_ansi']:
+                    output = strip_ansi(output)
                 process_output_kwargs = FunctionMetadata.filter_parameters(
                     self._get_process_output_metadata(), kwargs)
                 return self.process_output(output, filename, file,
@@ -744,14 +747,15 @@ def _create_linter(klass, options):
 
 @enforce_signature
 def linter(executable: str,
-           global_bear: bool=False,
-           use_stdin: bool=False,
-           use_stdout: bool=True,
-           use_stderr: bool=False,
-           config_suffix: str='',
-           executable_check_fail_info: str='',
-           prerequisite_check_command: tuple=(),
-           output_format: (str, None)=None,
+           global_bear: bool = False,
+           use_stdin: bool = False,
+           use_stdout: bool = True,
+           use_stderr: bool = False,
+           config_suffix: str = '',
+           executable_check_fail_info: str = '',
+           prerequisite_check_command: tuple = (),
+           output_format: (str, None) = None,
+           strip_ansi: bool = False,
            **options):
     """
     Decorator that creates a ``Bear`` that is able to process results from
@@ -949,6 +953,9 @@ def linter(executable: str,
         output-format is given. If a negative distance is given, every change
         will be yielded as an own diff, even if they are right beneath each
         other. By default this value is ``1``.
+    :param strip_ansi:
+        Supresses colored output from linters when enabled by stripping the
+        ascii characters around the text.
     :raises ValueError:
         Raised when invalid options are supplied.
     :raises TypeError:
@@ -966,5 +973,6 @@ def linter(executable: str,
     options['executable_check_fail_info'] = executable_check_fail_info
     options['prerequisite_check_command'] = prerequisite_check_command
     options['global_bear'] = global_bear
+    options['strip_ansi'] = strip_ansi
 
     return partial(_create_linter, options=options)

@@ -212,9 +212,6 @@ understands it. This is possible via the ``severity_map`` parameter of
                           'I': RESULT_SEVERITY.INFO},
             ...)
 
-``coalib.results.RESULT_SEVERITY`` contains three different values, ``Info``,
-``Warning`` and ``Error`` you can use.
-
 We can test our bear like this
 
 ::

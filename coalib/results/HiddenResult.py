@@ -22,16 +22,16 @@ class HiddenResult(Result):
     def __init__(self,
                  origin,
                  contents,
-                 message: str='',
-                 affected_code: (tuple, list)=(),
-                 severity: int=RESULT_SEVERITY.NORMAL,
-                 additional_info: str='',
+                 message: str = '',
+                 affected_code: (tuple, list) = (),
+                 severity: int = RESULT_SEVERITY.NORMAL,
+                 additional_info: str = '',
                  debug_msg='',
-                 diffs: (dict, None)=None,
-                 confidence: int=100,
-                 aspect: (aspectbase, None)=None,
-                 message_arguments: dict={},
-                 applied_actions: dict={}):
+                 diffs: (dict, None) = None,
+                 confidence: int = 100,
+                 aspect: (aspectbase, None) = None,
+                 message_arguments: dict = {},
+                 applied_actions: dict = {}):
         """
         Creates a new HiddenResult. The contents can be accessed with
         obj.contents later.

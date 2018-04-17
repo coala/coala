@@ -51,7 +51,7 @@ At coala we are looking heavily at the maintainability of the code.
 
     Code is more often read than written!
 
-We need good code. In order to do that we are verifying that every
+We need good code and for achieving it, we ensure that every
 change to our code (i.e. the commits) is making it better.
 
 What Makes a Good Commit
@@ -96,6 +96,7 @@ Example:
    | Keeping subject lines at this length ensures that they are
      readable, and explains the change in a concise way.
 -  Should describe the *change* - the action being done in the commit.
+-  Should not include WIP prefix.
 -  Should have a tag and a short description separated by a colon (``:``)
 
    -  **Tag**

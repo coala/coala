@@ -314,6 +314,38 @@ class LinterComponentTest(unittest.TestCase):
         process_output_mock.assert_called_once_with(('hello stdout\n',
                                                      'hello stderr\n'), '', [])
 
+    def test_strip_ansi(self):
+        process_output_mock = Mock()
+
+        class TestLinter:
+
+            @staticmethod
+            def process_output(output, filename, file):
+                process_output_mock(output, filename, file)
+
+            @staticmethod
+            def create_arguments(filename, file, config_file):
+                code = '\n'.join(['import sys',
+                                  "blue = '\033[94m'",
+                                  "print(blue + 'Hello blue')"])
+                return '-c', code
+
+        uut = (linter(sys.executable, use_stdout=True, strip_ansi=True)
+               (TestLinter)
+               (self.section, None))
+        uut.run('', [])
+
+        process_output_mock.assert_called_once_with('Hello blue\n', '', [])
+        process_output_mock.reset_mock()
+
+        uut = (linter(sys.executable, use_stdout=True, strip_ansi=False)
+               (TestLinter)
+               (self.section, None))
+        uut.run('', [])
+
+        process_output_mock.assert_called_once_with(
+            '\033[94mHello blue\n', '', [])
+
     def test_process_output_corrected(self):
         uut = (linter(sys.executable, output_format='corrected')
                (self.EmptyTestLinter)
@@ -643,18 +675,18 @@ class LinterComponentTest(unittest.TestCase):
         class Handler:
 
             @staticmethod
-            def generate_config(filename, file, some_default: str='x'):
+            def generate_config(filename, file, some_default: str = 'x'):
                 generate_config_mock(filename, file, some_default)
                 return None
 
             @staticmethod
-            def create_arguments(filename, file, config_file, default: int=3):
+            def create_arguments(filename, file, config_file, default: int = 3):
                 create_arguments_mock(
                     filename, file, config_file, default)
                 return '-c', "print('hello')"
 
             @staticmethod
-            def process_output(output, filename, file, xxx: int=64):
+            def process_output(output, filename, file, xxx: int = 64):
                 process_output_mock(output, filename, file, xxx)
 
         uut = linter(sys.executable)(Handler)(self.section, None)

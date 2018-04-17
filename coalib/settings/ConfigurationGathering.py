@@ -239,10 +239,9 @@ def load_configuration(arg_list,
         cli_sections['cli'].add_or_create_setting(
             Setting('config', PathArg(find_user_config(os.getcwd()))))
 
-    targets = []
     # We don't want to store targets argument back to file, thus remove it
-    for item in list(cli_sections['cli'].contents.pop('targets', '')):
-        targets.append(item.lower())
+    targets = [item.lower() for item in list(
+        cli_sections['cli'].contents.pop('targets', ''))]
 
     if bool(cli_sections['cli'].get('no_config', 'False')):
         sections = cli_sections

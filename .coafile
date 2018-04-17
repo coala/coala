@@ -30,7 +30,8 @@ remove_all_unused_imports = true
 
 [autopep8]
 bears = PEP8Bear, PycodestyleBear
-pycodestyle_ignore = E303, E121, E123, E126, E133, E226, E241, E242, E704, W503
+pycodestyle_ignore = E303, E121, E123, E126, E133, E226, E242, E704,
+                     W503, W504, W605
 
 default_actions = PEP8Bear: ApplyPatchAction
 
@@ -123,6 +124,10 @@ files =
     **.sh, .travis.yml, circle.yml, setup.cfg, ./docs/_static/custom.css
 ignore = node_modules/**
 
+[jinja2]
+bears = Jinja2Bear
+files = **.jj2
+
 [TODOS]
 enabled = False
 
@@ -137,3 +142,13 @@ cs_keywords =
 bears = KeywordBear
 language = python 3
 keywords = urlopen
+
+[yml]
+bears = YAMLLintBear
+files = **.yml, **.yaml
+
+[bash]
+bears = ShellCheckBear
+files = **.sh
+shell = bash
+shellcheck_ignore = SC2046, SC2154

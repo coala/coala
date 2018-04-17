@@ -44,7 +44,7 @@ class ContextManagersTest(unittest.TestCase):
         p = subprocess.Popen([sys.executable,
                               '-c',
                               'import time'])
-        with subprocess_timeout(p, 0.5) as timedout:
+        with subprocess_timeout(p, 1) as timedout:
             retval = p.wait()
             self.assertEqual(timedout.value, False)
         self.assertEqual(retval, 0)

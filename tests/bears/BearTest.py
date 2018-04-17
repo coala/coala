@@ -85,7 +85,7 @@ class BearWithPrerequisites(Bear):
 
 class StandAloneBear(Bear):
 
-    def run(self, x: int, y: int, z: int=33):
+    def run(self, x: int, y: int, z: int = 33):
         """
         Test run.
         :param x: First value.
@@ -139,7 +139,7 @@ class BearWithLanguage(Bear):
     def kind():
         return BEAR_KIND.GLOBAL
 
-    def run(self, language: language=language('Python 3.4')):
+    def run(self, language: language = language('Python 3.4')):
         yield language
 
 

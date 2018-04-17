@@ -68,7 +68,7 @@ class FileCache:
             self,
             log_printer,
             project_dir: str,
-            flush_cache: bool=False):
+            flush_cache: bool = False):
         """
         Initialize FileCache.
 

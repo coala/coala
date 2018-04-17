@@ -4,6 +4,7 @@ coverage-env-plugin~=0.1
 coverage-config-reload-plugin~=0.2
 codecov~=2.0.5
 freezegun~=0.3.9
+moban~=0.0.9
 pytest~=3.1.1
 pytest-cov~=2.2
 pytest-env~=0.6.0

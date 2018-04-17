@@ -15,7 +15,7 @@ class TestFileBear(FileBear):
 
 class TestFileBearWithParameters(FileBear):
 
-    def analyze(self, filename, file, results_per_file: int=1):
+    def analyze(self, filename, file, results_per_file: int = 1):
         for i in range(results_per_file):
             yield filename + str(i)
 

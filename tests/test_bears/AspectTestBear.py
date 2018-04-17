@@ -16,7 +16,7 @@ class AspectTestBear(
     LANGUAGES = {'Python'}
     LICENSE = 'AGPL-3.0'
 
-    def run(self, filename, file, config: str=''):
+    def run(self, filename, file, config: str = ''):
         """
         Bear that have aspect.
 

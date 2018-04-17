@@ -206,5 +206,5 @@ class LocalBearTestHelper(unittest.TestCase):
     def test_exception(self):
 
         with self.assertRaises(AssertionError), execute_bear(
-                self.uut,  'Luke', files[0]) as result:
+                self.uut, 'Luke', files[0]) as result:
             pass

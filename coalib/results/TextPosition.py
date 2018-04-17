@@ -7,7 +7,7 @@ from coala_utils.decorators import (
 class TextPosition:
 
     @enforce_signature
-    def __init__(self, line: (int, None)=None, column: (int, None)=None):
+    def __init__(self, line: (int, None) = None, column: (int, None) = None):
         """
         Creates a new TextPosition object that represents the position inside
         a string with line/column numbers.

@@ -65,6 +65,13 @@ The review process for coala is as follows:
    ``corobo mark wip <URL>`` or ``corobo mark pending <URL>``.
 3. The developers will acknowledge the commits by writing
 
+   * In case a member is reviewing it:
+
+    - ``Looks good to me`` better known as ``LGTM`` in case the commit is
+      ready.
+
+   * In case a maintainer is reviewing it:
+
     - ``ack commit_SHA`` or ``commit_SHA is ready``, in case the commit is
       ready, or
     - ``unack commit_SHA`` or ``commit_SHA needs work`` in case it is not ready
@@ -81,7 +88,7 @@ The review process for coala is as follows:
    to step one.
 5. All commits are acknowledged and fit linearly onto master. All
    continuous integration services (as described below) pass. A maintainer
-   may leave the ``@rultor merge`` command to get the PR merged automatically.
+   may leave the ``@gitmate-bot ff`` command to get the PR merged automatically.
 
 Automated Review Process
 ------------------------
