@@ -13,7 +13,11 @@ def format_lines(lines, symbol='', line_nr=''):
 
 class ShowAppliedPatchesAction(ResultAction):
 
+<<<<<<< kwsohn2
+    SUCCESS_MESSAGE = 'Showing applied patches'
+=======
     SUCCESS_MESSAGE = 'Applied patches shown'
+>>>>>>> master
 
     is_applicable = staticmethod(ShowPatchAction.is_applicable)
 
@@ -31,24 +35,26 @@ class ShowAppliedPatchesAction(ResultAction):
         FILE_DICT_INDEX = 1
         FILE_DIFF_DICT_INDEX = 2
         SECTION_INDEX = 3
-
+        current_patches = []
         for key, val in applied_actions.items():
             this_result = val[RESULT_INDEX]
             this_section = val[SECTION_INDEX]
             color_res = RESULT_SEVERITY_COLORS[this_result.severity]
-            console_printer.print('\n**** {bear} [Section: {section}] ***'
-                                  '*\n**** Action Applied: {action} ****\n'
-                                  .format(bear=this_result.origin,
-                                          section=this_section.name,
-                                          action=key),
-                                  color=color_res)
-            console_printer.print(format_lines('[Severity: {sev}]'.format(
-                sev=RESULT_SEVERITY.__str__(this_result.severity)), '!'),
-                  color=color_res)
-            show_patch_action.apply_from_section(val[RESULT_INDEX],
-                                                 val[FILE_DICT_INDEX],
-                                                 val[FILE_DIFF_DICT_INDEX],
-                                                 val[SECTION_INDEX])
-            console_printer.print(
-                '\n**************\n', color=color_res)
+
+            if this_result not in current_patches:
+                console_printer.print('\n**** {bear} [Section: {section}] ***'
+                                      '*\n**** Action Applied: {action} ****\n'
+                                      .format(bear=this_result.origin,
+                                              section=this_section.name,
+                                              action=key),
+                                      color=color_res)
+                console_printer.print(format_lines('[Severity: {sev}]'.format(
+                    sev=RESULT_SEVERITY.__str__(this_result.severity)), '!'),
+                    color=color_res)
+                show_patch_action.apply_from_section(val[RESULT_INDEX],
+                                                   val[FILE_DICT_INDEX],
+                                                   val[FILE_DIFF_DICT_INDEX],
+                                                   val[SECTION_INDEX])
+                console_printer.print('\n**************\n', color=color_res)
+                current_patches.append(this_result)
         return True
