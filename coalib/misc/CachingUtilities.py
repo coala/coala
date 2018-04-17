@@ -128,7 +128,7 @@ def hash_id(text):
 
 def get_settings_hash(sections,
                       targets=[],
-                      ignore_settings: list=['disable_caching']):
+                      ignore_settings: list = ['disable_caching']):
     """
     Compute and return a unique hash for the settings.
 

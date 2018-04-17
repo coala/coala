@@ -16,7 +16,7 @@ class TestProjectBear(ProjectBear):
 
 class TestProjectBearWithParameters(ProjectBear):
 
-    def analyze(self, files, prefix: str='---'):
+    def analyze(self, files, prefix: str = '---'):
         yield '\n'.join(prefix + filename + ':' + str(files[filename])
                         for filename in sorted(files))
 

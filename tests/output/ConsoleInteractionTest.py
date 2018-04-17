@@ -75,7 +75,7 @@ class TestBear(Bear):
     CAN_FIX = {'Formatting'}
     LANGUAGES = list(sorted({'F#', 'Shakespearean Programming Language'}))
 
-    def run(self, setting1, setting2: int=None):
+    def run(self, setting1, setting2: int = None):
         """
         Test bear Description.
 
@@ -109,7 +109,7 @@ class SomeBear(Bear):
 
 class SomeOtherBear(Bear):
 
-    def run(self, setting: int=None):
+    def run(self, setting: int = None):
         """
         This is a Bear.
         :param setting: This is an optional setting.

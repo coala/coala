@@ -747,15 +747,15 @@ def _create_linter(klass, options):
 
 @enforce_signature
 def linter(executable: str,
-           global_bear: bool=False,
-           use_stdin: bool=False,
-           use_stdout: bool=True,
-           use_stderr: bool=False,
-           config_suffix: str='',
-           executable_check_fail_info: str='',
-           prerequisite_check_command: tuple=(),
-           output_format: (str, None)=None,
-           strip_ansi: bool=False,
+           global_bear: bool = False,
+           use_stdin: bool = False,
+           use_stdout: bool = True,
+           use_stderr: bool = False,
+           config_suffix: str = '',
+           executable_check_fail_info: str = '',
+           prerequisite_check_command: tuple = (),
+           output_format: (str, None) = None,
+           strip_ansi: bool = False,
            **options):
     """
     Decorator that creates a ``Bear`` that is able to process results from

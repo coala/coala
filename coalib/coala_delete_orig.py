@@ -8,7 +8,7 @@ from coalib.settings.Section import Section
 from coalib.parsing.Globbing import glob_escape
 
 
-def main(log_printer=None, section: Section=None):
+def main(log_printer=None, section: Section = None):
     configure_logging()
 
     start_path = get_config_directory(section)

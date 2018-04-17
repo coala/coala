@@ -13,12 +13,14 @@ class FunctionMetadata:
     @enforce_signature
     def __init__(self,
                  name: str,
-                 desc: str='',
-                 retval_desc: str='',
-                 non_optional_params: (dict, None)=None,
-                 optional_params: (dict, None)=None,
-                 omit: (set, tuple, list, frozenset)=frozenset(),
-                 deprecated_params: (set, tuple, list, frozenset)=frozenset()):
+                 desc: str = '',
+                 retval_desc: str = '',
+                 non_optional_params: (dict, None) = None,
+                 optional_params: (dict, None) = None,
+                 omit: (set, tuple, list, frozenset) = frozenset(),
+                 deprecated_params:
+                     (set, tuple, list, frozenset) = frozenset()
+                 ):
         """
         Creates the FunctionMetadata object.
 

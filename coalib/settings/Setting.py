@@ -155,12 +155,12 @@ class Setting(StringConverter):
     def __init__(self,
                  key,
                  value,
-                 origin: str='',
-                 strip_whitespaces: bool=True,
-                 list_delimiters: Iterable=(',', ';'),
-                 from_cli: bool=False,
-                 remove_empty_iter_elements: bool=True,
-                 to_append: bool=False):
+                 origin: str = '',
+                 strip_whitespaces: bool = True,
+                 list_delimiters: Iterable = (',', ';'),
+                 from_cli: bool = False,
+                 remove_empty_iter_elements: bool = True,
+                 to_append: bool = False):
         """
         Initializes a new Setting,
 

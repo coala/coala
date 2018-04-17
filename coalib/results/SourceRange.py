@@ -11,7 +11,7 @@ class SourceRange(TextRange):
     @enforce_signature
     def __init__(self,
                  start: SourcePosition,
-                 end: (SourcePosition, None)=None):
+                 end: (SourcePosition, None) = None):
         """
         Creates a new SourceRange.
 
@@ -52,7 +52,7 @@ class SourceRange(TextRange):
     def from_absolute_position(cls,
                                file: str,
                                position_start: AbsolutePosition,
-                               position_end: (AbsolutePosition, None)=None):
+                               position_end: (AbsolutePosition, None) = None):
         """
         Creates a SourceRange from a start and end positions.
 

@@ -7,7 +7,7 @@ from coalib.settings.Setting import Setting
 
 class TestClass:
 
-    def __init__(self, param1, param2, param3=5, param4: int=6):
+    def __init__(self, param1, param2, param3=5, param4: int = 6):
         """
         Description
 

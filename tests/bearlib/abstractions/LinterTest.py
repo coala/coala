@@ -675,18 +675,18 @@ class LinterComponentTest(unittest.TestCase):
         class Handler:
 
             @staticmethod
-            def generate_config(filename, file, some_default: str='x'):
+            def generate_config(filename, file, some_default: str = 'x'):
                 generate_config_mock(filename, file, some_default)
                 return None
 
             @staticmethod
-            def create_arguments(filename, file, config_file, default: int=3):
+            def create_arguments(filename, file, config_file, default: int = 3):
                 create_arguments_mock(
                     filename, file, config_file, default)
                 return '-c', "print('hello')"
 
             @staticmethod
-            def process_output(output, filename, file, xxx: int=64):
+            def process_output(output, filename, file, xxx: int = 64):
                 process_output_mock(output, filename, file, xxx)
 
         uut = linter(sys.executable)(Handler)(self.section, None)

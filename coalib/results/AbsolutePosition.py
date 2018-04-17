@@ -6,8 +6,8 @@ class AbsolutePosition(TextPosition):
 
     @enforce_signature
     def __init__(self,
-                 text: (tuple, list, None)=None,
-                 position: (int, None)=None):
+                 text: (tuple, list, None) = None,
+                 position: (int, None) = None):
         """
         Creates an AbsolutePosition object that represents the index of a
         character in a string.

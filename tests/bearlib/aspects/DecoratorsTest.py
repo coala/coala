@@ -17,8 +17,8 @@ class RunDecoratedBear(LocalBear):
         minimum_clone_tokens=get_aspect('Clone').min_clone_tokens,
     )
     def run(self,
-            remove_unreachable_code: bool=False,
-            minimum_clone_tokens: int=10,
+            remove_unreachable_code: bool = False,
+            minimum_clone_tokens: int = 10,
             ):
         return [remove_unreachable_code, minimum_clone_tokens]
 

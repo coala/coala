@@ -5,7 +5,7 @@ from coala_utils.decorators import enforce_signature
 class SpacingHelper(SectionCreatable):
     DEFAULT_TAB_WIDTH = 4
 
-    def __init__(self, tab_width: int=DEFAULT_TAB_WIDTH):
+    def __init__(self, tab_width: int = DEFAULT_TAB_WIDTH):
         """
         Creates a helper object for spacing operations.
 
