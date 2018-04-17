@@ -139,3 +139,5 @@ URL_REGEX = re.compile(
     r'(?::\d+)?'  # optional port number
     r'(?:/?|[/?]\S+)$',  # path
     re.IGNORECASE)
+
+EXCLUDE_PREFIX = '!'

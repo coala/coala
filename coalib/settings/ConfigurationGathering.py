@@ -240,9 +240,14 @@ def load_configuration(arg_list,
             Setting('config', PathArg(find_user_config(os.getcwd()))))
 
     targets = []
+    exclude_sections = []
     # We don't want to store targets argument back to file, thus remove it
     for item in list(cli_sections['cli'].contents.pop('targets', '')):
-        targets.append(item.lower())
+        if item.startswith(Constants.EXCLUDE_PREFIX):
+            exclude_sections.append(
+                item[len(Constants.EXCLUDE_PREFIX):].lower())
+        else:
+            targets.append(item.lower())
 
     if bool(cli_sections['cli'].get('no_config', 'False')):
         sections = cli_sections
@@ -282,6 +287,13 @@ def load_configuration(arg_list,
                             'coafile to avoid any unexpected behavior.')
 
         sections = merge_section_dicts(sections, cli_sections)
+
+    for section_name in exclude_sections:
+        if section_name in sections:
+            del sections[section_name]
+        else:
+            logging.warning('The {} section doesn\'t exist, ignoring it.'
+                            .format(section_name))
 
     for name, section in list(sections.items()):
         section.set_default_section(sections)

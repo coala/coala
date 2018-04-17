@@ -257,6 +257,34 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         self.assertEqual(targets, ['cli', 'test1', 'test2'])
 
+    def test_exclude_sections(self):
+        current_dir = os.path.abspath(os.path.dirname(__file__))
+        test_dir = os.path.join(current_dir, 'section_manager_test_files')
+        logger = logging.getLogger()
+
+        with change_directory(test_dir):
+            sections, local_bears, global_bears, targets = gather_configuration(
+                lambda *args: True,
+                self.log_printer,
+                arg_list=['!all.python', '-c', 'inherit_coafile'])
+            self.assertNotIn('all.python', sections)
+
+        with change_directory(test_dir):
+            sections, local_bears, global_bears, targets = gather_configuration(
+                lambda *args: True,
+                self.log_printer,
+                arg_list=['!java.test', '!all.c', '-c', 'inherit_coafile'])
+            self.assertNotIn('java.test', sections)
+            self.assertNotIn('all.c', sections)
+
+        with change_directory(test_dir), \
+                self.assertLogs(logger, 'WARNING') as cm:
+            sections, local_bears, global_bears, targets = gather_configuration(
+                lambda *args: True,
+                self.log_printer,
+                arg_list=['!not_section', '-c', 'inherit_coafile'])
+            self.assertRaises(KeyError, lambda: sections['not_section'])
+
     def test_find_user_config(self):
         current_dir = os.path.abspath(os.path.dirname(__file__))
         c_file = os.path.join(current_dir,
