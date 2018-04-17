@@ -4,6 +4,7 @@ from os.path import relpath
 from coala_utils.decorators import (
     enforce_signature, generate_ordering, generate_repr, get_public_members)
 from coalib.bearlib.aspects import aspectbase
+from coalib.results.result_actions.ResultAction import ResultAction
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 
@@ -24,6 +25,7 @@ from coalib.results.SourceRange import SourceRange
                    'message_base',
                    'message_arguments',
                    'aspect',
+                   'actions',
                    'additional_info',
                    'diffs',
                    'debug_msg',
@@ -49,6 +51,26 @@ class Result:
     >>> r.message
     'spam and eggs'
 
+    Result can optionally be supplied with multiple result actions.
+
+    >>> xyz_action = ResultAction()
+    >>> r.actions = xyz_action
+    >>> len(r.actions)
+    1
+
+    It is also possible to add or remove actions.
+
+    >>> foo_action = ResultAction()
+    >>> bar_action = ResultAction()
+    >>> r.add_actions(foo_action, bar_action)
+    >>> len(r.actions)
+    3
+
+    >>> r.remove_actions(xyz_action, foo_action)
+    >>> len(r.actions)
+    1
+
+
     """
 
     @enforce_signature
@@ -62,6 +84,7 @@ class Result:
                  diffs: (dict, None) = None,
                  confidence: int = 100,
                  aspect: (aspectbase, None) = None,
+                 actions: list=[],
                  message_arguments: dict = {},
                  applied_actions: dict = {}):
         """
@@ -102,6 +125,8 @@ class Result:
         :raises KeyError:
             Raised when message_base can not be formatted with
             message_arguments.
+        :param actions:
+            A list of ``ResultAction`` instances associated with the result.
         """
         origin = origin or ''
         if not isinstance(origin, str):
@@ -129,6 +154,24 @@ class Result:
         if self.aspect and not self.additional_info:
             self.additional_info = '{} {}'.format(
                 aspect.docs.importance_reason, aspect.docs.fix_suggestions)
+        self._actions = actions
+
+    @property
+    def actions(self):
+        return tuple(self._actions)
+
+    @actions.setter
+    @enforce_signature
+    def actions(self, value: (ResultAction, list)):
+        self._actions = value if type(value) == list else [value]
+
+    def add_actions(self, *values: ResultAction):
+        for action in values:
+            self._actions.append(action)
+
+    def remove_actions(self, *values: ResultAction):
+        for action in values:
+            self._actions.remove(action)
 
     @property
     def message(self):
@@ -162,6 +205,7 @@ class Result:
                     diffs: (dict, None) = None,
                     confidence: int = 100,
                     aspect: (aspectbase, None) = None,
+                    actions: list=[],
                     message_arguments: dict = {}):
         """
         Creates a result with only one SourceRange with the given start and end
@@ -203,6 +247,8 @@ class Result:
             should be a leaf of the aspect tree! (If you have a node, spend
             some time figuring out which of the leafs exactly your result
             belongs to.)
+        :param actions:
+            A list of ``ResultAction`` instances associated with the result.
         """
         range = SourceRange.from_values(file,
                                         line,
@@ -219,6 +265,7 @@ class Result:
                    diffs=diffs,
                    confidence=confidence,
                    aspect=aspect,
+                   actions=actions,
                    message_arguments=message_arguments)
 
     def to_string_dict(self):
