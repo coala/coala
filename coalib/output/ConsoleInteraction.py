@@ -93,6 +93,8 @@ CLI_ACTIONS = (OpenEditorAction(),
                ShowAppliedPatchesAction(),
                GeneratePatchesAction())
 DIFF_EXCERPT_MAX_SIZE = 4
+APPLY_SINGLE = 1
+APPLY_SINGLE_ACTION = 'NONE'
 
 
 def color_letter(console_printer, line):
@@ -640,13 +642,53 @@ def choose_action(console_printer, actions, apply_single=False):
                             with the description of the actions.
     """
     actions.insert(0, DoNothingAction().get_metadata())
+    # Print the option message only one time if apply_single is selected.
+    global APPLY_SINGLE
+    global APPLY_SINGLE_ACTION
     actions_desc = []
     actions_name = []
+    if(apply_single and APPLY_SINGLE == 1):
+        APPLY_SINGLE += 1
+        while True:
+            for i, action in enumerate(actions, 0):
+                output = '{:>2}. {}' if i != 0 else '*{}. {}'
+                color_letter(console_printer, format_lines(output.format(
+                    i, action.desc), symbol='['))
+
+            line = format_lines(STR_ENTER_NUMBER, symbol='[')
+
+            choice = input(line)
+            choice = str(choice)
+
+            for c in choice:
+                c = str(c)
+                if c.isnumeric():
+                    for i, action in enumerate(actions, 0):
+                        c = int(c)
+                        if i == c:
+                            APPLY_SINGLE_ACTION = action.desc
+                            return(action.desc, action.name)
+                            break
+                elif c.isalpha():
+                    c = c.upper()
+                    c = '(' + c + ')'
+                    for i, action in enumerate(actions, 1):
+                        if c in action.desc:
+                            APPLY_SINGLE_ACTION = action.desc
+                            return(action.desc, action.name)
+                if actions_desc_len == len(actions_desc):
+                    console_printer.print(format_lines(
+                        'Please enter a valid letter.', symbol='['))
+
+            if not choice:
+                return(DoNothingAction().get_metadata().desc,
+                       DoNothingAction().get_metadata().name)
+
     if apply_single:
         for i, action in enumerate(actions, 0):
-            if apply_single == action.desc:
-                return ([action.desc], [action.name])
-        return (['Do (N)othing'], ['Do (N)othing'])
+            if APPLY_SINGLE_ACTION == action.desc:
+                return (action.desc, action.name)
+        return ('Do (N)othing', 'Do (N)othing')
     else:
         while True:
             for i, action in enumerate(actions, 0):
@@ -780,10 +822,10 @@ def ask_for_action_and_apply(console_printer,
                                                apply_single)
 
     if apply_single:
-        if apply_single == 'Do (N)othing':
+        if actions_desc == 'Do (N)othing':
             return False
         for index, action_details in enumerate(metadata_list, 1):
-            if apply_single == action_details.desc:
+            if actions_desc == action_details.desc:
                 action_name, section = get_action_info(
                     section, metadata_list[index - 1], failed_actions)
                 chosen_action = action_dict[action_details.name]
@@ -798,6 +840,7 @@ def ask_for_action_and_apply(console_printer,
                                     file_diff_dict,
                                     file_dict,
                                     applied_actions)
+                break
         return False
     else:
         for action_choice, action_choice_name in zip(actions_desc,
