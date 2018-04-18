@@ -115,7 +115,7 @@ def get_system_coafile(coalib_root):
     if os.path.isfile(os.path.join(coalib_root, 'system_coafile')):
         return os.path.join(coalib_root, 'system_coafile')
     else:
-        logging.warning('Filename deafult_coafile has been deprecated. '
+        logging.warning('Filename default_coafile has been deprecated. '
                         'Please use system_coafile instead.')
         return os.path.join(coalib_root, 'default_coafile')
 
