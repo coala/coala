@@ -76,6 +76,21 @@ class coalaJSONTest(unittest.TestCase):
             output = json.loads(stdout)
             self.assertEqual(len(output['bears']), TEST_BEARS_COUNT)
             self.assertFalse(stderr)
+            self.assertEqual(output,
+                             {'bears': ['AspectTestBear',
+                                        'DependentBear',
+                                        'EchoBear',
+                                        'ErrorTestBear',
+                                        'JavaTestBear',
+                                        'LineCountTestBear',
+                                        'RaiseTestBear',
+                                        'SpaceConsistencyTestBear',
+                                        'TestBear',
+                                        'TestDepBearA',
+                                        'TestDepBearAA',
+                                        'TestDepBearBDependsA',
+                                        'TestDepBearCDependsB',
+                                        'TestDepBearDependsAAndAA']})
 
     def test_show_language_bears(self):
         with bear_test_module():
@@ -90,7 +105,7 @@ class coalaJSONTest(unittest.TestCase):
     def test_show_bears_attributes(self):
         with bear_test_module():
             retval, stdout, stderr = execute_coala(
-                coala.main, 'coala', '--json', '-B', '-I')
+                coala.main, 'coala', '--json', '-B', '-I', '--show-details')
             self.assertEqual(retval, 0)
             output = json.loads(stdout)
             # Get JavaTestBear
@@ -104,7 +119,6 @@ class coalaJSONTest(unittest.TestCase):
                              )
             self.assertTrue(bear['metadata']['optional_params'])
             self.assertFalse(bear['metadata']['non_optional_params'])
-            self.assertFalse(stderr)
 
     @unittest.mock.patch('coalib.parsing.DefaultArgParser.get_all_bears_names')
     @unittest.mock.patch('coalib.collecting.Collectors.icollect_bears')

@@ -53,6 +53,10 @@ jobs:
             ./coala --non-interactive
 
       - run:
+          name: command-test
+          command: coala -B json
+
+      - run:
           name: codecov
           when: always
           command: python -m codecov
