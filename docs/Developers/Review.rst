@@ -83,6 +83,7 @@ The review process for coala is as follows:
     .. note::
 
         Only one acknowledgment is needed per commit i.e ``ack commit_SHA``.
+        Unack is used for disapprove commit that is ack-ed by someone else.
 
 4. If the commits are not linearly mergeable into master, rebase and go
    to step one.
@@ -149,7 +150,8 @@ review, please comment on the pull request directly as follows:
    "unack" or "needs work" (all case-insensitive) and contains at least
    the first 6 characters of each passing commit hash delimited by
    spaces, commas, or forward slashes (the commit URLs from GitHub
-   satisfy the commit hash requirements).
+   satisfy the commit hash requirements).unack is used for disapprove 
+   commit that is ack-ed by someone else.
 
 .. note::
 
