@@ -114,8 +114,8 @@ bears = CSSLintBear
 files = docs/_static/**.css
 
 [rst]
-bears = reSTLintBear
-files = README.rst
+bears = reSTLintBear, RSTcheckBear	
+files = README.rst, docs/**/*.rst
 
 [rstcheck]
 bears = RSTcheckBear
