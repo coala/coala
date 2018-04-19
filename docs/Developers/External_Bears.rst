@@ -77,33 +77,34 @@ one to make.
    The wrapper should look similar to the code block presented below. Some code
    has been cleaned for convenience of explanation.
 
-.. note::
+   .. note::
 
-    The ``LICENSE`` specified applies only to the python code. You can license
-    your executable however you see fit.
+       The ``LICENSE`` specified applies only to the python code. You can
+       license your executable however you see fit.
 
-::
+   ::
 
-    import os
+       import os
 
-    from coalib.bearlib.abstractions.ExternalBearWrap import external_bear_wrap
+       from coalib.bearlib.abstractions.ExternalBearWrap import (
+           external_bear_wrap)
 
 
-    @external_bear_wrap(executable='coalaCheck_cpp',
+       @external_bear_wrap(executable='coalaCheck_cpp',
                         settings={})
-    class coalaCheckBear:
-        """
-        Checks for coala written with uppercase 'C'
-        """
-        LANGUAGES = {'All'}
-        REQUIREMENTS = {''}
-        AUTHORS = {'Me'}
-        AUTHORS_EMAILS = {'me@mail.com'}
-        LICENSE = 'AGPL'
+       class coalaCheckBear:
+           """
+           Checks for coala written with uppercase 'C'
+           """
+           LANGUAGES = {'All'}
+           REQUIREMENTS = {''}
+           AUTHORS = {'Me'}
+           AUTHORS_EMAILS = {'me@mail.com'}
+           LICENSE = 'AGPL'
 
-        @staticmethod
-        def create_arguments():
-            return ()
+           @staticmethod
+           def create_arguments():
+               return ()
 
 6. Since the input will be a JSON string some kind of JSON class is needed.
    nlohmann's JSON library (
@@ -113,33 +114,33 @@ one to make.
    about nlohmann's JSON library is that you can parse JSON directly
    from stdin like this:
 
-::
+   ::
 
-    #include <iostream>
+       #include <iostream>
 
-    #include "json.hpp"
+       #include "json.hpp"
 
-    using json = nlohmann::json;
-    using namespace std;
+       using json = nlohmann::json;
+       using namespace std;
 
-    json in;
+       json in;
 
-    int main() {
+       int main() {
 
-        cin >> in;
+           cin >> in;
 
-        cout << in;
+           cout << in;
 
-        return 0;
-    }
+           return 0;
+       }
 
 8. Create a ``Makefile``. The JSON library requires C++11 so a sample
    ``Makefile`` would look like this:
 
-::
+   ::
 
-    build: coalaCheck.cpp
-        g++ -std=c++11 -o coalaCheck_cpp coalaCheck.cpp
+       build: coalaCheck.cpp
+           g++ -std=c++11 -o coalaCheck_cpp coalaCheck.cpp
 
 9. Compile and test the binary by giving it a JSON string. It should print the
    JSON string back at ``stdout``.
@@ -150,29 +151,29 @@ one to make.
 11. Create a result adding function, also an init function proves quite useful
     for initializing the output json.
 
-::
+    ::
 
-    #include <iostream>
-    #include <string>
+        #include <iostream>
+        #include <string>
 
-    #include "json.hpp"
+        #include "json.hpp"
 
-    using json = nlohmann::json;
-    using namespace std;
+        using json = nlohmann::json;
+        using namespace std;
 
-    json in;
-    json out;
-    string origin;
+        json in;
+        json out;
+        string origin;
 
-    void init_results(string bear_name) {
-        origin = bear_name;
-        out["results"] = json::array({});
-    }
+        void init_results(string bear_name) {
+            origin = bear_name;
+            out["results"] = json::array({});
+        }
 
-    void add_result(string message, int line, int column, int severity) {
-        json result = {
-            {"origin", origin},
-            {"message", message},
+        void add_result(string message, int line, int column, int severity) {
+            json result = {
+                {"origin", origin},
+                {"message", message},
                 {"affected_code", json::array({{
                     {"file", in["filename"]},
                     {"start", {
@@ -186,52 +187,52 @@ one to make.
                         {"line", line}
                     }}
                 }})},
-            {"severity", severity}
-        };
-        out["results"] += result;
-    }
+                {"severity", severity}
+            };
+            out["results"] += result;
+        }
 
-    int main() {
+        int main() {
 
-        cin >> in;
+            cin >> in;
 
-        init_results("coalaCheckBear");
+            init_results("coalaCheckBear");
 
-        cout << out;
-        return 0;
-    }
+            cout << out;
+            return 0;
+        }
 
-.. note::
+    .. note::
 
-    The ``C++`` operators and syntax are not well suited for JSON manipulation
-    but nlohmann's JSON lib makes it as easy as possible.
+        The ``C++`` operators and syntax are not well suited for JSON
+        manipulation but nlohmann's JSON lib makes it as easy as possible.
 
 12. Iterate over the lines and check for ``"coala"`` with an uppercase ``"C"``.
     Use ``string``'s ``find`` function like so:
 
-::
+    ::
 
-    #include <iostream>
-    #include <string>
+        #include <iostream>
+        #include <string>
 
-    #include "json.hpp"
+        #include "json.hpp"
 
-    using json = nlohmann::json;
-    using namespace std;
+        using json = nlohmann::json;
+        using namespace std;
 
-    json in;
-    json out;
-    string origin;
+        json in;
+        json out;
+        string origin;
 
-    void init_results(string bear_name) {
-        origin = bear_name;
-        out["results"] = json::array({});
-    }
+        void init_results(string bear_name) {
+            origin = bear_name;
+            out["results"] = json::array({});
+        }
 
-    void add_result(string message, int line, int column, int severity) {
-        json result = {
-            {"origin", origin},
-            {"message", message},
+        void add_result(string message, int line, int column, int severity) {
+            json result = {
+                {"origin", origin},
+                {"message", message},
                 {"affected_code", json::array({{
                     {"file", in["filename"]},
                     {"start", {
@@ -245,50 +246,50 @@ one to make.
                         {"line", line}
                     }}
                 }})},
-            {"severity", severity}
-        };
-        out["results"] += result;
-    }
-
-    int main() {
-
-        cin >> in;
-
-        init_results("coalaCheckBear");
-
-        int i = 0;
-        for (auto it=in["file"].begin(); it !=in["file"].end(); it++) {
-            i++;
-            string line = *it;
-            size_t found = line.find("Coala");
-            while (found != string::npos) {
-                add_result("Did you mean 'coala'?", i, found, 2);
-                found = line.find("Coala", found+1);
-            }
+                {"severity", severity}
+            };
+            out["results"] += result;
         }
 
-        cout << out;
+        int main() {
 
-        return 0;
-    }
+            cin >> in;
+
+            init_results("coalaCheckBear");
+
+            int i = 0;
+            for (auto it=in["file"].begin(); it !=in["file"].end(); it++) {
+                i++;
+                string line = *it;
+                size_t found = line.find("Coala");
+                while (found != string::npos) {
+                    add_result("Did you mean 'coala'?", i, found, 2);
+                    found = line.find("Coala", found+1);
+                }
+            }
+
+            cout << out;
+
+            return 0;
+        }
 
 13. After building the executable it has to be added to the ``PATH`` env
     variable. It is possible to modify the wrapper and give it the full
     path. Add the current directory to the ``PATH`` like so:
 
-::
+    ::
 
-    $ export PATH=$PATH:$PWD
+        $ export PATH=$PATH:$PWD
 
-The last step is to test if everything is working properly. This is the
-testfile used in this tutorial (
-`testfile <https://raw.githubusercontent.com/Redridge/coalaCheckBear-cpp/master/testfile>`__).
+    The last step is to test if everything is working properly. This is the
+    testfile used in this tutorial (
+    `testfile <https://raw.githubusercontent.com/Redridge/coalaCheckBear-cpp/master/testfile>`__).
 
 14. Execute the Bear by running:
 
-::
+    ::
 
-    $ coala -d . -b coalaCheckBear -f testfile
+        $ coala -d . -b coalaCheckBear -f testfile
 
 .. note::
 
@@ -305,92 +306,93 @@ uses a script that needs another binary to run (e.g. python, bash, node).
 1. Run ``coala-bears-create -ext`` but supply ``node`` as the
    executable name.
 
-.. note::
+   .. note::
 
-  This tutorial uses ``node v6.2.2``. It should work with older versions too
-  but we suggest that you update.
+       This tutorial uses ``node v6.2.2``. It should work with older versions
+       too but we suggest that you update.
 
-When another binary is needed to run the source code, the ``create_arguments``
-method comes in handy.
+   When another binary is needed to run the source code, the
+   ``create_arguments`` method comes in handy.
 
 2. Add the source code file as an argument to the ``create_arguments`` method
    (so that the command becomes ``node coalaCheck.js``).
 
-The ``create_arguments`` method returns a tuple so if only one
-argument is added then a comma has to be used at the end
-(e.g. ``(one_item,)``).
+   The ``create_arguments`` method returns a tuple so if only one
+   argument is added then a comma has to be used at the end
+   (e.g. ``(one_item,)``).
 
-.. note::
+   .. note::
 
-    The ``LICENSE`` specified applies only to the python code. You can license
-    your executable however you see fit.
+       The ``LICENSE`` specified applies only to the python code. You can
+       license your executable however you see fit.
 
-::
+   ::
 
-    import os
+       import os
 
-    from coalib.bearlib.abstractions.ExternalBearWrap import external_bear_wrap
+       from coalib.bearlib.abstractions.ExternalBearWrap import (
+           external_bear_wrap)
 
 
-    @external_bear_wrap(executable='node',
-                        settings={})
-    class coalaCheckBear:
-        """
-        Checks for coala written with uppercase 'C'
-        """
-        LANGUAGES = {'All'}
-        REQUIREMENTS = {'node'}
-        AUTHORS = {'Me'}
-        AUTHORS_EMAILS = {'me@mail.com'}
-        LICENSE = 'AGPL'
+       @external_bear_wrap(executable='node',
+                           settings={})
+       class coalaCheckBear:
+           """
+           Checks for coala written with uppercase 'C'
+           """
+           LANGUAGES = {'All'}
+           REQUIREMENTS = {'node'}
+           AUTHORS = {'Me'}
+           AUTHORS_EMAILS = {'me@mail.com'}
+           LICENSE = 'AGPL'
 
-        @staticmethod
-        def create_arguments():
-            return ('coalaCheck.js',)
+           @staticmethod
+           def create_arguments():
+               return ('coalaCheck.js',)
 
 3. Create ``coalaCheck.js`` and add basic I/O handling.
 
-::
+   ::
 
-    var input = "";
+       var input = "";
 
-    console.log = (msg) => {
-        process.stdout.write(`${msg}\n`);
-    };
+       console.log = (msg) => {
+           process.stdout.write(`${msg}\n`);
+       };
 
-    process.stdin.setEncoding('utf8');
+       process.stdin.setEncoding('utf8');
 
-    process.stdin.on('readable', () => {
-        var chunk = process.stdin.read();
-        if (chunk !== null) {
-            input += chunk;
-        }
-    });
+       process.stdin.on('readable', () => {
+           var chunk = process.stdin.read();
+           if (chunk !== null) {
+               input += chunk;
+           }
+       });
 
-    process.stdin.on('end', () => {
-        input = JSON.parse(input);
-        console.log(JSON.stringify(input));
-    });
+       process.stdin.on('end', () => {
+           input = JSON.parse(input);
+           console.log(JSON.stringify(input));
+       });
 
 4. The I/O can be tested by running ``node coalaCheck.js`` and
    supplying a valid JSON string in the stdin.
 5. Add the init and the add result functions.
 
-::
+   ::
 
-    var out = {};
-    var origin;
+       var out = {};
+       var origin;
 
-    init_results = (bear_name) => {
-        origin = bear_name;
-        out["results"] = [];
-    };
+       init_results = (bear_name) => {
+           origin = bear_name;
+           out["results"] = [];
+       };
 
-    add_result = (message, line, column, severity) => {
-        var result = {
-            "origin": origin,
-            "message": message,
-            "affected_code": [{
+       add_result = (message, line, column, severity) => {
+           var result = {
+               "origin": origin,
+               "message": message,
+               "affected_code": [{
                     "file": input["filename"],
                     "start": {
                         "column": column,
@@ -402,35 +404,35 @@ argument is added then a comma has to be used at the end
                         "file": input["filename"],
                         "line": line
                     }
-                }],
-            "severity": severity
-        };
-        out["results"].push(result)
-    };
+               }],
+               "severity": severity
+           };
+           out["results"].push(result)
+       };
 
 6. Iterate over the lines and check for ``"coala"`` spelled with a capital
    ``"C"``. The final source should look like this:
 
-::
+   ::
 
-    var input = "";
-    var out = {};
-    var origin;
+       var input = "";
+       var out = {};
+       var origin;
 
-    console.log = (msg) => {
-        process.stdout.write(`${msg}\n`);
-    };
+       console.log = (msg) => {
+           process.stdout.write(`${msg}\n`);
+       };
 
-    init_results = (bear_name) => {
-        origin = bear_name;
-        out["results"] = [];
-    };
+       init_results = (bear_name) => {
+           origin = bear_name;
+           out["results"] = [];
+       };
 
-    add_result = (message, line, column, severity) => {
-        var result = {
-            "origin": origin,
-            "message": message,
-            "affected_code": [{
+       add_result = (message, line, column, severity) => {
+           var result = {
+               "origin": origin,
+               "message": message,
+               "affected_code": [{
                     "file": input["filename"],
                     "start": {
                         "column": column,
@@ -442,34 +444,35 @@ argument is added then a comma has to be used at the end
                         "file": input["filename"],
                         "line": line
                     }
-                }],
-            "severity": severity
-        };
-        out["results"].push(result)
-    };
+               }],
+               "severity": severity
+           };
+           out["results"].push(result)
+       };
 
-    process.stdin.setEncoding('utf8');
+       process.stdin.setEncoding('utf8');
 
-    process.stdin.on('readable', () => {
-        var chunk = process.stdin.read();
-        if (chunk !== null) {
-            input += chunk;
-        }
-    });
+       process.stdin.on('readable', () => {
+           var chunk = process.stdin.read();
+           if (chunk !== null) {
+               input += chunk;
+           }
+       });
 
-    process.stdin.on('end', () => {
-        input = JSON.parse(input);
-        init_results("coalaCheckBear");
-        for (i in input["file"]) {
-            var line = input["file"][i];
-            var found = line.indexOf("Coala");
-            while (found != -1) {
-                add_result("Did you mean 'coala'?", parseInt(i)+1, found+1, 2);
-                found = line.indexOf("Coala", found+1)
-            }
-        }
-        console.log(JSON.stringify(out));
-    });
+       process.stdin.on('end', () => {
+           input = JSON.parse(input);
+           init_results("coalaCheckBear");
+           for (i in input["file"]) {
+               var line = input["file"][i];
+               var found = line.indexOf("Coala");
+               while (found != -1) {
+                   add_result("Did you mean 'coala'?",
+                              parseInt(i)+1, found+1, 2);
+                   found = line.indexOf("Coala", found+1)
+               }
+           }
+           console.log(JSON.stringify(out));
+       });
 
 
 In order to run this Bear there is no need to add the source code to the path
