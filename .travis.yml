@@ -83,7 +83,6 @@ script:
       sed -i.bak '/bears = GitCommitBear/d' .coafile
     fi
   - coala --non-interactive
-  - coala -B --json
   - python setup.py docs
 
 after_success:
