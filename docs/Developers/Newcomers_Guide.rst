@@ -329,7 +329,17 @@ Step 4. Sending Your Changes
    is no asterisk next to the master branch.
 
 Now that you've fixed the issue, you've tested it, and you think it is ready
-to be merged, create a commit and push it to your fork, using:
+to be merged, create a commit by using this git command. 
+
+  ::
+
+      $ git commit -m "commit message"
+
+
+The commit message should be desciptive but precise to give an idea about the intent 
+for the changes you have made.
+
+After making your commit, push it to your fork, using:
 
 ::
 
