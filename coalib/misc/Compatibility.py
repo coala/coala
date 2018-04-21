@@ -1,4 +1,5 @@
 import json
+# JSONDecodeError class is available starting from Python 3.5.x.
 try:
     # JSONDecodeError class is available since Python 3.5.x.
     JSONDecodeError = json.decoder.JSONDecodeError
