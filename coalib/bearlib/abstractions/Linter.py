@@ -668,10 +668,10 @@ def _create_linter(klass, options):
                 output = tuple(compress(
                     output,
                     (options['use_stdout'], options['use_stderr'])))
+                if options['strip_ansi']:
+                    output = tuple(map(strip_ansi, output))
                 if len(output) == 1:
                     output = output[0]
-                if options['strip_ansi']:
-                    output = strip_ansi(output)
                 process_output_kwargs = FunctionMetadata.filter_parameters(
                     self._get_process_output_metadata(), kwargs)
                 return self.process_output(output, filename, file,

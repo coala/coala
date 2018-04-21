@@ -327,24 +327,35 @@ class LinterComponentTest(unittest.TestCase):
             def create_arguments(filename, file, config_file):
                 code = '\n'.join(['import sys',
                                   "blue = '\033[94m'",
-                                  "print(blue + 'Hello blue')"])
+                                  "print(blue + 'Hello blue')",
+                                  "red = '\033[31m'",
+                                  "print(red + 'Hello red', file=sys.stderr)"])
                 return '-c', code
 
-        uut = (linter(sys.executable, use_stdout=True, strip_ansi=True)
-               (TestLinter)
-               (self.section, None))
-        uut.run('', [])
+        # use_stdout, use_stderr, strip_ansi, expected result
+        scenarios = [
+            (True, False, True, 'Hello blue\n'),
+            (True, False, False, '\033[94mHello blue\n'),
+            (False, True, True, 'Hello red\n'),
+            (False, True, False, '\033[31mHello red\n'),
+            (True, True, True, ('Hello blue\n',
+                                'Hello red\n')),
+            (True, True, False, ('\033[94mHello blue\n',
+                                 '\033[31mHello red\n')),
+        ]
 
-        process_output_mock.assert_called_once_with('Hello blue\n', '', [])
-        process_output_mock.reset_mock()
+        for use_stdout, use_stderr, strip_ansi, expected_result in scenarios:
+            uut = (linter(sys.executable,
+                          use_stdout=use_stdout,
+                          use_stderr=use_stderr,
+                          strip_ansi=strip_ansi)
+                   (TestLinter)
+                   (self.section, None))
+            uut.run('', [])
 
-        uut = (linter(sys.executable, use_stdout=True, strip_ansi=False)
-               (TestLinter)
-               (self.section, None))
-        uut.run('', [])
-
-        process_output_mock.assert_called_once_with(
-            '\033[94mHello blue\n', '', [])
+            process_output_mock.assert_called_once_with(
+                expected_result, '', [])
+            process_output_mock.reset_mock()
 
     def test_process_output_corrected(self):
         uut = (linter(sys.executable, output_format='corrected')
