@@ -13,7 +13,7 @@ jobs:
           name: env
           command: |
             echo "export NVM_DIR=$HOME/.nvm" >> $BASH_ENV
-            echo "export PATH=$PATH:~/.local/bin" >> $BASH_ENV
+            echo "export PATH=~/.local/bin:$PATH" >> $BASH_ENV
 
       - run:
           name: install-csslint
