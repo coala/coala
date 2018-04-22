@@ -913,7 +913,7 @@ def linter(executable: str,
           ``output_regex``.
         - ``'corrected'``: The output is the corrected of the given file. Diffs
           are then generated to supply patches for results.
-        - ``'unified_diff'``: The output is the unified diff of the corrections.
+        - ``'unified-diff'``: The output is the unified diff of the corrections.
           Patches are then supplied for results using this output.
 
         Passing something else raises a ``ValueError``.
@@ -956,18 +956,18 @@ def linter(executable: str,
         used inside ``output_regex`` and this parameter is given.
     :param diff_severity:
         The severity to use for all results if ``output_format`` is
-        ``'corrected'`` or ``'unified_diff'``. By default this value is
+        ``'corrected'`` or ``'unified-diff'``. By default this value is
         ``coalib.results.RESULT_SEVERITY.NORMAL``. The given value needs to be
         defined inside ``coalib.results.RESULT_SEVERITY``.
     :param result_message:
         The message-string to use for all results. Can be used only together
-        with ``corrected`` or ``unified_diff`` or ``regex`` output format.
-        When using ``corrected`` or ``unified_diff``, the default value is
+        with ``corrected`` or ``unified-diff`` or ``regex`` output format.
+        When using ``corrected`` or ``unified-diff``, the default value is
         ``'Inconsistency found.'``, while for ``regex`` this static message is
         disabled and the message matched by ``output_regex`` is used instead.
     :param diff_distance:
         Number of unchanged lines that are allowed in between two changed lines
-        so they get yielded as one diff if ``corrected`` or ``unified_diff``
+        so they get yielded as one diff if ``corrected`` or ``unified-diff``
         output-format is given. If a negative distance is given, every change
         will be yielded as an own diff, even if they are right beneath each
         other. By default this value is ``1``.
