@@ -132,6 +132,8 @@ For the Reviewers
    Bears require special attention during testing.
    `Testing Bears <http://api.coala.io/en/latest/Developers/Testing_Bears.html>`__
    provides a guideline for how to test bears.
+-  As a good practice, check if the changes in PR are not pushed
+   from the master branch
 
 .. note::
 
