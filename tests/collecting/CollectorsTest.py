@@ -36,8 +36,6 @@ class CollectFilesTest(unittest.TestCase):
         with LogCapture() as capture:
             self.assertEqual(collect_files(file_paths=['invalid_path'],
                                            log_printer=self.log_printer,
-                                           ignored_file_paths=None,
-                                           limit_file_paths=None,
                                            section_name='section'), [])
         capture.check(
             ('root', 'WARNING', 'No files matching \'invalid_path\' were '
