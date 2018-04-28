@@ -29,4 +29,5 @@ from .definitions.Swift import Swift
 from .definitions.Vala import Vala
 from .definitions.TypeScript import TypeScript
 from .definitions.Shell import Shell
+from .definitions.Jinja2 import Jinja2
 # Stop ignoring PyUnusedCodeBear
