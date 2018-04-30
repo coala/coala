@@ -74,6 +74,10 @@ class BearWithPrerequisitesOverride(Bear):
 
 class BearTest(unittest.TestCase):
 
+    def setUp(self):
+        super().setUp()
+        self.teapot_url = 'https://httpstat.us/418'
+
     def tearDown(self):
         defined_bears = [
             value
@@ -221,9 +225,9 @@ class BearTest(unittest.TestCase):
 
     def test_download_cached_file_status_code_error(self):
         exc = requests.exceptions.HTTPError
-        with self.assertRaisesRegex(exc, '418 Client Error'):
+        with self.assertRaisesRegex(exc, '^418 '):
             Bear.download_cached_file(
-                'http://httpbin.org/status/418', 'test.html')
+                self.teapot_url, 'test.html')
 
     def test_json(self):
         result = BearWithAnalysis.__json__()

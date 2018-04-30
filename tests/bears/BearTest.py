@@ -489,6 +489,9 @@ class BearDownloadTest(BearTestBase):
         super().setUp()
         self.mock_url = 'https://test.com'
         self.filename = 'test.html'
+        self.teapot_url = 'https://httpstat.us/418'
+        # https://www.google.com/teapot and
+        # http://httpbin.org/status/418 also work
         self.file_location = join(self.uut.data_dir, self.filename)
 
     def test_connection_timeout_mocked(self):
@@ -521,9 +524,9 @@ class BearDownloadTest(BearTestBase):
 
     def test_status_code_error(self):
         exc = requests.exceptions.HTTPError
-        with self.assertRaisesRegex(exc, '418 Client Error'):
+        with self.assertRaisesRegex(exc, '^418 '):
             self.uut.download_cached_file(
-                'http://httpbin.org/status/418', self.filename)
+                self.teapot_url, self.filename)
 
     def test_download_cached_file(self):
         mock_url = 'https://test.com'
