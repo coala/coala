@@ -38,6 +38,7 @@ configuration:
   template_dir:
     - .moban.dt/
     - ../coala-mobans/templates/
+    - ../coala-mobans/assets/
     - ../setupmobans/templates/
   configuration: .moban.yaml
   configuration_dir: ../coala-mobans/
@@ -45,3 +46,5 @@ targets:
   - setup.py: core-setup.py.jj2
   - requirements.txt: requirements.txt.jj2
   - coalib/VERSION: VERSION.jj2
+  - runtime.txt: runtime.txt
+  - netlify.toml: docs/netlify.toml
