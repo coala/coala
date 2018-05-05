@@ -63,8 +63,6 @@ def pickle_load(log_printer, identifier, fallback=None):
     Get the data stored in ``filename`` present in the user
     config directory. Example usage:
 
-    >>> from pyprint.NullPrinter import NullPrinter
-    >>> from coalib.output.printers.LogPrinter import LogPrinter
     >>> test_data = {'answer': 42}
     >>> pickle_dump(None, 'test_project', test_data)
     True
