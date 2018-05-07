@@ -46,7 +46,12 @@ class ConfigurationGatheringTest(unittest.TestCase):
         # Needed so coala doesn't error out
         self.min_args = ['-f', '*.java', '-b', 'JavaTestBear']
 
+        self.original_user_coafile = Constants.user_coafile
+        self.original_system_coafile = Constants.system_coafile
+
     def tearDown(self):
+        Constants.user_coafile = self.original_user_coafile
+        Constants.system_coafile = self.original_system_coafile
         close_objects(self.log_printer)
 
     def test_gather_configuration(self):
@@ -101,7 +106,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
         )
 
     def test_system_coafile_parsing(self):
-        tmp = Constants.system_coafile
 
         Constants.system_coafile = os.path.abspath(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
@@ -116,11 +120,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
         self.assertEqual(str(sections['test']),
                          "test {value : '1', testval : '5'}")
 
-        Constants.system_coafile = tmp
-
     def test_user_coafile_parsing(self):
-        tmp = Constants.user_coafile
-
         Constants.user_coafile = os.path.abspath(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             'section_manager_test_files',
@@ -134,8 +134,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
         self.assertEqual(str(sections['test']),
                          "test {value : '1', testval : '5'}")
 
-        Constants.user_coafile = tmp
-
     def test_nonexistent_file(self):
         filename = 'bad.one/test\neven with bad chars in it'
         with self.assertRaises(SystemExit):
@@ -143,7 +141,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                  self.log_printer,
                                  arg_list=['-S', 'config=' + filename])
 
-        tmp = Constants.system_coafile
         Constants.system_coafile = filename
 
         with self.assertRaises(SystemExit):
@@ -151,10 +148,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                  self.log_printer,
                                  arg_list=[])
 
-        Constants.system_coafile = tmp
-
     def test_merge(self):
-        tmp = Constants.system_coafile
         Constants.system_coafile = os.path.abspath(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             'section_manager_test_files',
@@ -196,8 +190,6 @@ class ConfigurationGatheringTest(unittest.TestCase):
                          "test-4 {bears : 'TestBear'}")
         self.assertEqual(str(sections['test-5']),
                          "test-5 {bears : 'TestBear2'}")
-
-        Constants.system_coafile = tmp
 
     def test_merge_defaults(self):
         with make_temp() as temporary:
