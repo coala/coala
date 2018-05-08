@@ -496,16 +496,39 @@ give us one, by passing the parameter ``global_bear=True``:
     @linter(executable='some_tool',
             global_bear=True,
             output_format='regex',
-            output_regex=r'<filename>: <message>'')
+            output_regex=r'<filename>: <message>')
     class SomeToolBear:
         @staticmethod
         def create_arguments(config_file):
-            pass
+            return []
 
 The ``create_arguments`` method takes no ``filename`` and ``file`` in this case
 since there is no file context. You can still make coala aware of the file an
 issue was detected in, by using the ``filename`` named group in
 your ``output_regex`` if relevant to the wrapped tool.
+
+As mentioned before, ``create_arguments`` doesn't have to be a static method.
+In this case remember to prepend ``self`` to the parameters in the signature:
+
+::
+
+    from coalib.bearlib.abstractions.Linter import linter
+
+    @linter(executable='some_tool',
+            global_bear=True,
+            output_format='regex',
+            output_regex=r'<filename>: <message>')
+    class PythonTestBear:
+        def create_arguments(self, config_file):
+            return '--lint', self.file_dict.keys()
+
+You can access the complete list of files using ``self.file_dict`` which return
+a dictionary of ``{filename: file contents}``.
+Pay attention that putting the complete list of files on the command line will
+cause breakages when the length of the command line exceeds the OS permitted
+length, or the complete list of files is greater than the OS permitted number
+of arguments.
+For more information, check `here <https://www.in-ulm.de/~mascheck/various/argmax/>`_.
 
 Where to Find More...
 ---------------------
