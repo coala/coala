@@ -56,8 +56,18 @@ To run our tests, you can also use ``python3 setup.py test``
 
 .. note::
 
-    You will not get a test coverage of 100% - the coverage on the
-    website is merged for several python versions.
+    You may not get a test coverage of 100% locally. The coverage
+    published on `codecov.io <https://codecov.io/gh/coala/>`__ (GitHub
+    Projects) and `codecov.io <https://codecov.io/gl/coala/>`__ (GitLab
+    Projects) are actually merged results for several python versions.
+    The results are merged from different OS. Appveyor results
+    provide coverage of Windows specific lines, and Travis/Circle
+    provide coverage of Unix specific lines. Also, the lack of tests that
+    developers often forget to write is typically why one will see test
+    coverage not reach 100%. Thus, your test coverage can 'pass' without
+    reaching 100%. If you make changes to the code, then you should
+    concentrate on getting 100% coverage on the changes made rather than
+    worrying about the coverage of the whole project.
 
 Using test coverage
 -------------------
