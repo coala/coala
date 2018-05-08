@@ -138,7 +138,12 @@ def load_config_file(filename, log_printer=None, silent=False):
                                           file=filename,
                                           found='does not exist'))
                 sys.exit(2)
-
+        return {'default': Section('default')}
+    except PermissionError:
+        if not silent:
+            logging.error("""coala doesn't have permission to read
+                          configuration file""")
+            sys.exit(2)
         return {'default': Section('default')}
 
 
