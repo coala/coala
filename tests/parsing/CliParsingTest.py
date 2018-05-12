@@ -71,3 +71,8 @@ class CliParserTest(unittest.TestCase):
         with self.assertRaisesRegex(SystemExit, '2') as cm:
             check_conflicts(sections)
             self.assertEqual(cm.exception.code, 2)
+
+        sections = parse_cli(arg_list=['--no-config', '--config', '.coafile'])
+        with self.assertRaisesRegex(SystemExit, '2') as cm:
+            check_conflicts(sections)
+            self.assertEqual(cm.exception.code, 2)
