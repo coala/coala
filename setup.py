@@ -139,7 +139,6 @@ if __name__ == '__main__':
               'Environment :: Console',
               'Environment :: MacOS X',
               'Environment :: Win32 (MS Windows)',
-              'Environment :: X11 Applications :: Gnome',
 
               'Intended Audience :: Science/Research',
               'Intended Audience :: Developers',
