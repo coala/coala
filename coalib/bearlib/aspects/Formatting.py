@@ -381,6 +381,7 @@ class Quotation:
 
         string = 'coala is always written with lowercase c.'
         string = "coala is always written with lowercase c."
+        string = "'coala' is always written with lowercase 'c'."
         """
         example_language = 'Python'
         importance_reason = """
@@ -391,5 +392,7 @@ class Quotation:
         Choosing a preferred quotation and using it everywhere (if possible).
         """
     preferred_quotation = Taste[str](
-        'Represents the preferred quotation',
+        'Represents the preferred quotation marks.'
+        'It ensures that every string contains the selected style of quotes, '
+        'except where there is a delimiter collision.',
         ('\'', '"'), default='\'')
