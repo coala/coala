@@ -114,13 +114,19 @@ source in the future.
 Building Documentation
 ----------------------
 
-You should run this command before trying to build the documentation:
+You need to have the required dependencies installed, run this command to
+install the required dependency:
 
 ::
 
     (coala-venv)$ pip3 install -r docs-requirements.txt
 
-Once you have done so, you can build the documentation by entering the docs
-directory and running ``python3 setup.py docs``. The documentation
-on the coala website is in
-the ``coala`` (not ``coala-bears``) repository.
+Once finished, run this command to build the documentation:
+
+::
+
+    (coala-venv)$ python3 setup.py docs
+
+The documentation on the https://docs.coala.io/en/latest/ is in the ``coala``
+repository (not ``coala-bears``) repository. Most coala repos have generated
+sphinx docs.
