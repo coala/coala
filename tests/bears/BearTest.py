@@ -536,8 +536,8 @@ class BearDownloadTest(BearTestBase):
         filename = self.filename
         file_location = self.file_location
 
-        with freeze_time('2017-01-01') as frozen_datetime, \
-                requests_mock.Mocker() as reqmock:
+        with freeze_time('2017-01-01') as frozen_datetime, (
+                requests_mock.Mocker()) as reqmock:
 
             reqmock.get(mock_url, text=mock_text)
             self.assertFalse(isfile(file_location))

@@ -38,8 +38,8 @@ class coalaJSONTest(unittest.TestCase):
                             'coala must return nonzero when errors occured')
 
     def test_find_issues(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
+        with bear_test_module(), (
+                prepare_file(['#fixme'], None)) as (lines, filename):
             retval, stdout, stderr = execute_coala(coala.main, 'coala',
                                                    '--json', '-c', os.devnull,
                                                    '-b', 'LineCountTestBear',

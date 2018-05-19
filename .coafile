@@ -12,9 +12,11 @@ use_spaces = True
 # will be executed sequentially; also we need the LineLengthBear to double
 # check the line length because PEP8Bear sometimes isn't able to correct the
 # linelength.
-bears = SpaceConsistencyBear, QuotesBear
+bears = SpaceConsistencyBear, QuotesBear, KeywordBear
 language = Python
 preferred_quotation = '
+keywords =
+regex_keyword = \\\$
 
 default_actions = **: ApplyPatchAction
 

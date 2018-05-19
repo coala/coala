@@ -152,9 +152,9 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
         if cls is Language:
             assert len(args) == 1
             arg = args[0]
-            assert isclass(arg), \
-                'This decorator is made for classes. Did you mean to use ' \
-                '`Language[%s]`?' % (repr(arg[0]),)
+            assert isclass(arg), (
+                'This decorator is made for classes. Did you mean to use '(
+                    '`Language[%s]`?' % (repr(arg[0]),)))
 
             class SubLanguageMeta(type(cls)):
                 # Override __getattr__ of the LanguageMeta to get a dict with
@@ -271,8 +271,8 @@ class Language(metaclass=LanguageMeta):
     the class:
 
     >>> Language.TrumpScript.comment_delimiter
-    OrderedDict([(<Version('2.7')>, '#'), (<Version('3.3')>, '#'), \
-(<Version('3.4')>, '#'), (<Version('3.5')>, '#'), (<Version('3.6')>, '#')])
+    OrderedDict([(<Version('2.7')>, '#'), (<Version('3.3')>, '#'), (
+(<Version('3.4')>, '#'), (<Version('3.5')>, '#'), (<Version('3.6')>, '#')]))
 
     Any nonexistent item will of course not be served:
 

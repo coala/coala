@@ -53,8 +53,8 @@ class coalaCITest(unittest.TestCase):
         self.test_nonexistent(debug=True)
 
     def test_find_no_issues(self, debug=False):
-        with bear_test_module(), \
-                prepare_file(['#include <a>'], None) as (lines, filename):
+        with bear_test_module(), (
+                prepare_file(['#include <a>'], None)) as (lines, filename):
             retval, stdout, stderr = execute_coala(coala.main, 'coala',
                                                    '--non-interactive',
                                                    '-c', os.devnull,
@@ -75,8 +75,8 @@ class coalaCITest(unittest.TestCase):
                              'coala must return zero when successful')
 
     def test_section_ordering(self, debug=False):
-        with bear_test_module(), \
-                prepare_file(['#include <a>'], None) as (lines, filename):
+        with bear_test_module(), (
+                prepare_file(['#include <a>'], None)) as (lines, filename):
             retval, stdout, stderr = execute_coala(
                     coala.main, 'coala', 'b', 'a',
                     '--non-interactive', '-S',
@@ -111,8 +111,8 @@ class coalaCITest(unittest.TestCase):
         self.test_find_no_issues(debug=True)
 
     def test_find_issues(self, debug=False):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
+        with bear_test_module(), (
+                prepare_file(['#fixme'], None)) as (lines, filename):
             retval, stdout, stderr = execute_coala(coala.main, 'coala',
                                                    '--non-interactive',
                                                    '-c', os.devnull,
@@ -130,8 +130,8 @@ class coalaCITest(unittest.TestCase):
         self.test_find_issues(debug=True)
 
     def test_show_patch(self, debug=False):
-        with bear_test_module(), \
-             prepare_file(['\t#include <a>'], None) as (lines, filename):
+        with bear_test_module(), (
+             prepare_file(['\t#include <a>'], None)) as (lines, filename):
             retval, stdout, stderr = execute_coala(
                 coala.main, 'coala', '--non-interactive',
                 '-c', os.devnull,
@@ -161,8 +161,8 @@ class coalaCITest(unittest.TestCase):
                                 'coala was expected to return non-zero')
 
     def test_additional_parameters_settings(self, debug=False):
-        with bear_test_module(), \
-             prepare_file(['\t#include <a>'], None) as (lines, filename):
+        with bear_test_module(), (
+             prepare_file(['\t#include <a>'], None)) as (lines, filename):
             retval, stdout, stderr = execute_coala(
                  coala.main, 'coala',
                  '--non-interactive', '-S',
@@ -187,8 +187,8 @@ class coalaCITest(unittest.TestCase):
 
     def test_limit_files_affirmative(self):
         sample_text = '\t#include <a>'
-        with open('match.cpp', 'w') as match, \
-                open('noMatch.cpp', 'w') as no_match:
+        with open('match.cpp', 'w') as match, (
+                open('noMatch.cpp', 'w')) as no_match:
             match.write(sample_text)
             no_match.write(sample_text)
         with bear_test_module():
@@ -209,8 +209,8 @@ class coalaCITest(unittest.TestCase):
                              'autofixes the code.')
 
     def test_limit_files_negative(self):
-        with bear_test_module(), \
-                prepare_file(['\t#include <a>'], None) as (lines, filename):
+        with bear_test_module(), (
+                prepare_file(['\t#include <a>'], None)) as (lines, filename):
             retval, stdout, stderr = execute_coala(
                 coala.main, 'coala', '--non-interactive',
                 '-c', os.devnull,

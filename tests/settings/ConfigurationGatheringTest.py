@@ -317,8 +317,8 @@ class ConfigurationGatheringTest(unittest.TestCase):
         test_dir = os.path.join(current_dir, 'section_manager_test_files')
         logger = logging.getLogger()
 
-        with change_directory(test_dir), \
-                self.assertLogs(logger, 'WARNING') as cm:
+        with change_directory(test_dir), (
+                self.assertLogs(logger, 'WARNING')) as cm:
             sections, _, _, _ = gather_configuration(
                 lambda *args: True,
                 self.log_printer,

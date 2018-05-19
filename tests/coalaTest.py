@@ -29,8 +29,8 @@ class coalaTest(unittest.TestCase):
         sys.argv = self.old_argv
 
     def test_coala(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
+        with bear_test_module(), (
+                prepare_file(['#fixme'], None)) as (lines, filename):
             retval, stdout, stderr = execute_coala(
                              coala.main,
                              'coala', '-c', os.devnull,
@@ -48,10 +48,10 @@ class coalaTest(unittest.TestCase):
                                 'coala must return nonzero when errors occured')
 
     def test_coala2(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
-            with simulate_console_inputs('a', 'n') as generator, \
-                    retrieve_stdout() as sio:
+        with bear_test_module(), (
+                prepare_file(['#fixme'], None)) as (lines, filename):
+            with simulate_console_inputs('a', 'n') as generator, (
+                    retrieve_stdout()) as sio:
                 retval, stdout, stderr = execute_coala(
                                  coala.main,
                                  'coala', '-c', os.devnull,
@@ -70,10 +70,10 @@ class coalaTest(unittest.TestCase):
                                     'occured')
 
     def test_coala3(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
-            with simulate_console_inputs('1', 'n') as generator, \
-                    retrieve_stdout() as sio:
+        with bear_test_module(), (
+                prepare_file(['#fixme'], None)) as (lines, filename):
+            with simulate_console_inputs('1', 'n') as generator, (
+                    retrieve_stdout()) as sio:
                 retval, stdout, stderr = execute_coala(
                                  coala.main,
                                  'coala', '-c', os.devnull,
@@ -92,10 +92,10 @@ class coalaTest(unittest.TestCase):
                                     'occured')
 
     def test_coala4(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
-            with simulate_console_inputs('x', 'n') as generator, \
-                    retrieve_stdout() as sio:
+        with bear_test_module(), (
+                prepare_file(['#fixme'], None)) as (lines, filename):
+            with simulate_console_inputs('x', 'n') as generator, (
+                    retrieve_stdout()) as sio:
                 retval, stdout, stderr = execute_coala(
                                  coala.main,
                                  'coala', '-c', os.devnull,
@@ -114,8 +114,8 @@ class coalaTest(unittest.TestCase):
                                     'occured')
 
     def test_coala_aspect(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
+        with bear_test_module(), (
+                prepare_file(['#fixme'], None)) as (lines, filename):
             retval, stdout, stderr = execute_coala(
                              coala.main,
                              'coala', '-c', os.devnull,
@@ -241,8 +241,8 @@ class coalaTest(unittest.TestCase):
             self.assertIn('No bears to show.', stdout)
 
     def test_run_coala_no_autoapply(self, debug=False):
-        with bear_test_module(), \
-                prepare_file(['#fixme  '], None) as (lines, filename):
+        with bear_test_module(), (
+                prepare_file(['#fixme  '], None)) as (lines, filename):
             self.assertEqual(
                 1,
                 len(run_coala(
@@ -281,8 +281,8 @@ class coalaTest(unittest.TestCase):
 
     def test_logged_error_causes_non_zero_exitcode(self):
         configure_logging()
-        with bear_test_module(), \
-                prepare_file(['#fixme  '], None) as (lines, filename):
+        with bear_test_module(), (
+                prepare_file(['#fixme  '], None)) as (lines, filename):
             _, exitcode, _ = run_coala(
                 console_printer=ConsolePrinter(),
                 log_printer=LogPrinter(),
@@ -297,8 +297,8 @@ class coalaTest(unittest.TestCase):
             assert exitcode == 1
 
     def test_coala_with_color(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
+        with bear_test_module(), (
+                prepare_file(['#fixme'], None)) as (lines, filename):
             retval, stdout, stderr = execute_coala(
                 coala.main, 'coala')
             errors = filter(bool, stderr.split('\n'))
@@ -310,8 +310,8 @@ class coalaTest(unittest.TestCase):
                 retval, 0, 'coala must return zero when there are no errors')
 
     def test_coala_without_color(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
+        with bear_test_module(), (
+                prepare_file(['#fixme'], None)) as (lines, filename):
 
             retval, stdout, stderr = execute_coala(
                              coala.main, 'coala', '-N')
@@ -324,8 +324,8 @@ class coalaTest(unittest.TestCase):
                 retval, 0, 'coala must return zero when there are no errors')
 
     def test_coala_ignore_file(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
+        with bear_test_module(), (
+                prepare_file(['#fixme'], None)) as (lines, filename):
             retval, stdout, stderr = execute_coala(
                     coala.main, 'coala',
                     '-c', os.devnull,

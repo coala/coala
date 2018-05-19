@@ -197,8 +197,8 @@ class BearTest(unittest.TestCase):
         filename = 'test.html'
         file_location = join(uut.data_dir, filename)
 
-        with freeze_time('2017-01-01') as frozen_datetime, \
-                requests_mock.Mocker() as reqmock:
+        with freeze_time('2017-01-01') as frozen_datetime, (
+                requests_mock.Mocker()) as reqmock:
 
             reqmock.get(mock_url, text=mock_text)
             self.assertFalse(isfile(file_location))

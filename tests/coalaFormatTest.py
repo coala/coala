@@ -22,8 +22,8 @@ class coalaFormatTest(unittest.TestCase):
         self.assertIn('usage: coala', stdout)
 
     def test_line_count(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
+        with bear_test_module(), (
+                prepare_file(['#fixme'], None)) as (lines, filename):
             retval, stdout, stderr = execute_coala(coala.main, 'coala',
                                                    '--format', '-c',
                                                    os.devnull, '-f', filename,
@@ -37,8 +37,8 @@ class coalaFormatTest(unittest.TestCase):
             self.assertFalse(stderr)
 
     def test_format_ci_combination(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
+        with bear_test_module(), (
+                prepare_file(['#fixme'], None)) as (lines, filename):
             retval, stdout, stderr = execute_coala(coala.main, 'coala',
                                                    '--format', '--ci', '-c',
                                                    os.devnull, '-f', filename,
