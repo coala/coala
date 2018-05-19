@@ -37,8 +37,8 @@ class Result:
     Result messages can also have arguments. The message is python
     style formatted with these arguments.
 
-    >>> r = Result('origin','{arg1} and {arg2}', \
-           message_arguments={'arg1': 'foo', 'arg2': 'bar'})
+    >>> r = Result('origin','{arg1} and {arg2}', (
+           message_arguments={'arg1': 'foo', 'arg2': 'bar'}))
     >>> r.message
     'foo and bar'
 

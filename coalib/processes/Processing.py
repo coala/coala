@@ -18,8 +18,8 @@ from coalib.results.Result import Result
 from coalib.results.result_actions.DoNothingAction import DoNothingAction
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
-from coalib.results.result_actions.ShowAppliedPatchesAction \
-    import ShowAppliedPatchesAction
+from coalib.results.result_actions.ShowAppliedPatchesAction import (
+    ShowAppliedPatchesAction)
 from coalib.results.result_actions.GeneratePatchesAction import (
     GeneratePatchesAction)
 from coalib.results.result_actions.PrintDebugMessageAction import (

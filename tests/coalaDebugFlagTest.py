@@ -59,9 +59,9 @@ class coalaDebugFlagTest(unittest.TestCase):
 
     def test_no_ipdb(self, mocked_mode_json):
         mocked_mode_json.side_effect = None
-        with bear_test_module(), \
-                prepare_file(['#fixme  '], None) as (lines, filename), \
-                self.pipReqIsNotInstalledMock():
+        with bear_test_module(), (
+                prepare_file(['#fixme  '], None)) as (lines, filename), (
+                self.pipReqIsNotInstalledMock()):
             # additionally use RaiseTestBear to verify independency from
             # failing bears
             status, stdout, stderr = execute_coala(
@@ -76,14 +76,14 @@ class coalaDebugFlagTest(unittest.TestCase):
     def test_bear__init__raises(self, mocked_mode_json):
         mocked_mode_json.side_effect = None
         mocked_ipdb = self.ipdbMock()
-        with bear_test_module(), \
-                prepare_file(['#fixme  '], None) as (lines, filename), \
-                self.pipReqIsInstalledMock(), \
-                patch.dict('sys.modules', ipdb=mocked_ipdb), \
+        with bear_test_module(), (
+                prepare_file(['#fixme  '], None)) as (lines, filename), (
+                self.pipReqIsInstalledMock()), (
+                patch.dict('sys.modules', ipdb=mocked_ipdb)), (
                 self.assertRaisesRegex(
                     RuntimeError,
                     r'^The bear ErrorTestBear does not fulfill all '
-                    r"requirements\. 'I_do_not_exist' is not installed\.$"):
+                    r"requirements\. 'I_do_not_exist' is not installed\.$")):
             execute_coala(
                 coala.main, 'coala', '--debug',
                 '-c', os.devnull,
@@ -95,12 +95,12 @@ class coalaDebugFlagTest(unittest.TestCase):
     def test_bear_run_raises(self, mocked_mode_json):
         mocked_mode_json.side_effect = None
         mocked_ipdb = self.ipdbMock()
-        with bear_test_module(), \
-                prepare_file(['#fixme  '], None) as (lines, filename), \
-                self.pipReqIsInstalledMock(), \
-                patch.dict('sys.modules', ipdb=mocked_ipdb), \
+        with bear_test_module(), (
+                prepare_file(['#fixme  '], None)) as (lines, filename), (
+                self.pipReqIsInstalledMock()), (
+                patch.dict('sys.modules', ipdb=mocked_ipdb)), (
                 self.assertRaisesRegex(
-                    RuntimeError, r"^That's all the RaiseTestBear can do\.$"):
+                    RuntimeError, r"^That's all the RaiseTestBear can do\.$")):
             execute_coala(
                 coala.main, 'coala', '--debug',
                 '-c', os.devnull,
@@ -112,12 +112,12 @@ class coalaDebugFlagTest(unittest.TestCase):
     def test_coala_main_mode_json_launches_ipdb(self, mocked_mode_json):
         mocked_mode_json.side_effect = RuntimeError('Mocked mode_json fails.')
         mocked_ipdb = self.ipdbMock()
-        with bear_test_module(), \
-                prepare_file(['#fixme  '], None) as (lines, filename), \
-                self.pipReqIsInstalledMock(), \
-                patch.dict('sys.modules', ipdb=mocked_ipdb), \
+        with bear_test_module(), (
+                prepare_file(['#fixme  '], None)) as (lines, filename), (
+                self.pipReqIsInstalledMock()), (
+                patch.dict('sys.modules', ipdb=mocked_ipdb)), (
                 self.assertRaisesRegex(RuntimeError,
-                                       r'^Mocked mode_json fails\.$'):
+                                       r'^Mocked mode_json fails\.$')):
             # additionally use RaiseTestBear to verify independency from
             # failing bears
             execute_coala(

@@ -17,8 +17,8 @@ def typechain(*args):
     >>> function("str")
     Traceback (most recent call last):
         ...
-    ValueError: Couldn't convert value 'str' to any specified type or find it \
-in specified values.
+    ValueError: Couldn't convert value 'str' to any specified type or find it (
+in specified values.)
 
     :raises TypeError:  Raises when either no functions are specified for
                         checking.

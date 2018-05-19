@@ -30,8 +30,8 @@ from coalib.results.Result import Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.DoNothingAction import DoNothingAction
-from coalib.results.result_actions.ShowAppliedPatchesAction \
-    import ShowAppliedPatchesAction
+from coalib.results.result_actions.ShowAppliedPatchesAction import (
+    ShowAppliedPatchesAction)
 from coalib.results.result_actions.GeneratePatchesAction import (
     GeneratePatchesAction)
 from coalib.results.result_actions.ResultAction import ResultAction
@@ -361,8 +361,8 @@ class ConsoleInteractionTest(unittest.TestCase):
             self.assertEqual(generator.last_input, 4)
 
     def test_print_affected_files(self):
-        with retrieve_stdout() as stdout, \
-                make_temp() as some_file:
+        with retrieve_stdout() as stdout, (
+                make_temp()) as some_file:
             file_dict = {some_file: ['1\n', '2\n', '3\n']}
             affected_code = (SourceRange.from_values(some_file),)
             print_affected_files(self.console_printer,
@@ -379,8 +379,8 @@ class ConsoleInteractionTest(unittest.TestCase):
             diff = Diff(file_dict[testfile_path])
             diff.delete_line(2)
             diff.change_line(3, '3\n', '3_changed\n')
-            with simulate_console_inputs('a', 'n') as generator, \
-                    retrieve_stdout() as sio:
+            with simulate_console_inputs('a', 'n') as generator, (
+                    retrieve_stdout()) as sio:
                 ApplyPatchAction.is_applicable = staticmethod(
                     lambda *args: True)
                 acquire_actions_and_apply(self.console_printer,
@@ -404,8 +404,8 @@ class ConsoleInteractionTest(unittest.TestCase):
             ApplyPatchAction.is_applicable = staticmethod(lambda *args: True)
             cli_actions = [ApplyPatchAction(), InvalidateTestAction()]
 
-            with simulate_console_inputs('a', 'o', 'n') as generator, \
-                    retrieve_stdout() as sio:
+            with simulate_console_inputs('a', 'o', 'n') as generator, (
+                    retrieve_stdout()) as sio:
                 acquire_actions_and_apply(self.console_printer,
                                           Section(''),
                                           self.file_diff_dict,
@@ -429,8 +429,8 @@ class ConsoleInteractionTest(unittest.TestCase):
             diff = Diff(file_dict[testfile_path])
             diff.delete_line(2)
             diff.change_line(3, '3\n', '3_changed\n')
-            with simulate_console_inputs('a', 'n') as generator, \
-                    retrieve_stdout() as sio:
+            with simulate_console_inputs('a', 'n') as generator, (
+                    retrieve_stdout()) as sio:
                 ApplyPatchAction.is_applicable = staticmethod(
                     lambda *args: True)
                 acquire_actions_and_apply(self.console_printer,
@@ -454,8 +454,8 @@ class ConsoleInteractionTest(unittest.TestCase):
             ApplyPatchAction.is_applicable = staticmethod(lambda *args: True)
             cli_actions = [ApplyPatchAction(), InvalidateTestAction()]
 
-            with simulate_console_inputs('a') as generator, \
-                    retrieve_stdout() as sio:
+            with simulate_console_inputs('a') as generator, (
+                    retrieve_stdout()) as sio:
                 acquire_actions_and_apply(self.console_printer,
                                           Section(''),
                                           self.file_diff_dict,
@@ -604,8 +604,8 @@ class ConsoleInteractionTest(unittest.TestCase):
             diff = Diff(file_dict[testfile_path])
             diff.delete_line(2)
             diff.change_line(3, '3\n', '3_changed\n')
-            with simulate_console_inputs(1, 2, 3) as generator, \
-                    retrieve_stdout() as stdout:
+            with simulate_console_inputs(1, 2, 3) as generator, (
+                    retrieve_stdout()) as stdout:
                 ApplyPatchAction.is_applicable = staticmethod(
                     lambda *args: True)
                 print_results_no_input(self.log_printer,

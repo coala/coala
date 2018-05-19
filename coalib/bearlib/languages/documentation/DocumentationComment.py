@@ -257,10 +257,10 @@ class DocumentationComment:
         This function just assembles the documentation comment
         itself, without the markers and indentation.
 
-        >>> from coalib.bearlib.languages.documentation.DocumentationComment \
-        ...     import DocumentationComment
-        >>> from coalib.bearlib.languages.documentation.DocstyleDefinition \
-        ...     import DocstyleDefinition
+        >>> from coalib.bearlib.languages.documentation.DocumentationComment (
+        ...     import DocumentationComment)
+        >>> from coalib.bearlib.languages.documentation.DocstyleDefinition (
+        ...     import DocstyleDefinition)
         >>> from coalib.results.TextPosition import TextPosition
         >>> Description = DocumentationComment.Description
         >>> Parameter = DocumentationComment.Parameter

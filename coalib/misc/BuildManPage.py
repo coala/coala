@@ -26,8 +26,8 @@ class BuildManPage(Command):
 
     You can then use the following setup command to produce a man page::
 
-        $ python setup.py build_manpage --output=coala.1 \
-            --parser=coalib.parsing.DefaultArgParser:default_arg_parser
+        $ python setup.py build_manpage --output=coala.1 (
+            --parser=coalib.parsing.DefaultArgParser:default_arg_parser)
 
     If automatically want to build the man page every time you invoke
     your build, add to your ``setup.cfg`` the following::

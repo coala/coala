@@ -58,8 +58,8 @@ def execute_bear(bear, *args, **kwargs):
 
             bear_output_generator = bear.execute(*args, **kwargs)
 
-        assert bear_output_generator is not None, \
-            'Bear returned None on execution\n'
+        assert bear_output_generator is not None, (
+            'Bear returned None on execution\n')
         yield bear_output_generator
     except Exception as err:
         msg = []
@@ -94,10 +94,10 @@ def get_results(local_bear,
     with prepare_file(lines, filename,
                       force_linebreaks=force_linebreaks,
                       create_tempfile=create_tempfile,
-                      tempfile_kwargs=tempfile_kwargs) as (file, fname), \
+                      tempfile_kwargs=tempfile_kwargs) as (file, fname), (
         execute_bear(local_bear, fname, file, dependency_results=deps_results,
                      **local_bear.get_metadata().filter_parameters(settings)
-                     ) as bear_output:
+                     )) as bear_output:
         return bear_output
 
 
