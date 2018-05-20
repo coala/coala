@@ -10,3 +10,4 @@ requests~=2.12
 setuptools>=21.0.0
 testfixtures~=5.3.1
 unidiff~=0.5.2
+colorit
