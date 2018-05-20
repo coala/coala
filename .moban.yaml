@@ -11,6 +11,7 @@ branch: master
 command_line_interface: coala
 package_module: coalib
 rtd_maintainer: L.S., F.N., M.K.
+ci_directory: .misc
 
 entry_points:
   console_scripts:
@@ -48,3 +49,5 @@ targets:
   - coalib/VERSION: VERSION.jj2
   - runtime.txt: runtime.txt
   - netlify.toml: docs/netlify.toml
+  - .misc/appveyor.yml: ci/appveyor.yml.jj2
+  - .misc/run_with_env.cmd: run_with_env.cmd
