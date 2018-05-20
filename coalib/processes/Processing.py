@@ -4,6 +4,7 @@ import os
 import platform
 import queue
 import subprocess
+import logging
 
 from coala_utils.string_processing.StringConverter import StringConverter
 from coala_utils.FileUtils import detect_encoding
@@ -380,6 +381,15 @@ def instantiate_processes(section,
                              and the arguments passed to each process which are
                              the same for each object.
     """
+    try:
+        debug_bears = section['debug_bears'].value
+    except IndexError:
+        debug_bears = False
+
+    if str(debug_bears)=='False':
+        debug_bears = False
+    else:
+        debug_bears = debug_bears
     filename_list = collect_files(
         glob_list(section.get('files', '')),
         None,
@@ -393,7 +403,7 @@ def instantiate_processes(section,
     complete_file_dict = get_file_dict(complete_filename_list,
                                        allow_raw_files=use_raw_files)
 
-    if debug:
+    if debug or debug_bears:
         from . import DebugProcessing as processing
     else:
         import multiprocessing as processing
@@ -439,7 +449,6 @@ def instantiate_processes(section,
     file_dict = {filename: complete_file_dict[filename]
                  for filename in filename_list
                  if filename in complete_file_dict}
-
     bear_runner_args = {'file_name_queue': filename_queue,
                         'local_bear_list': local_bear_list,
                         'global_bear_list': global_bear_list,
@@ -450,7 +459,8 @@ def instantiate_processes(section,
                         'message_queue': message_queue,
                         'control_queue': control_queue,
                         'timeout': 0.1,
-                        'debug': debug}
+                        'debug': debug,
+                        'debug_bears': debug_bears}
 
     fill_queue(filename_queue, file_dict.keys())
     fill_queue(global_bear_queue, range(len(global_bear_list)))
@@ -587,6 +597,10 @@ def process_queues(processes,
     :return:                   Return True if all bears execute successfully and
                                Results were delivered to the user. Else False.
     """
+    try:
+        debug_bears = section['debug_bears'].value
+    except IndexError:
+        debug_bears = False
     file_diff_dict = {}
     retval = False
     # Number of processes working on local/global bears. They are count down
@@ -599,7 +613,7 @@ def process_queues(processes,
     ignore_ranges = list(yield_ignore_ranges(file_dict))
 
     # One process is the logger thread (if not in debug mode)
-    while local_processes > (1 if not debug else 0):
+    while local_processes > (1 if not (debug or debug_bears) else 0):
         try:
             control_elem, index = control_queue.get(timeout=0.1)
 
@@ -751,7 +765,18 @@ def execute_section(section,
                              results (bear names are key) as well as the
                              file dictionary.
     """
-    if debug:
+    try:
+        debug_bears = section['debug_bears'].value
+    except IndexError:
+        debug_bears = False
+
+    if str(debug_bears)=='False':
+        debug_bears = False
+    else:
+        debug_bears = debug_bears
+
+
+    if debug or debug_bears:
         running_processes = 1
     else:
         try:
@@ -791,7 +816,7 @@ def execute_section(section,
 
     logger_thread = LogPrinterThread(arg_dict['message_queue'])
     # Start and join the logger thread along with the processes to run bears
-    if not debug:
+    if not (debug or debug_bears):
         # in debug mode the logging messages are directly processed by the
         # message_queue
         processes.append(logger_thread)
@@ -799,6 +824,7 @@ def execute_section(section,
     for runner in processes:
         runner.start()
 
+    # import pdb; pdb.set_trace()
     try:
         return (process_queues(processes,
                                arg_dict['control_queue'],
@@ -816,7 +842,7 @@ def execute_section(section,
                 arg_dict['global_result_dict'],
                 arg_dict['file_dict'])
     finally:
-        if not debug:
+        if not (debug or debug_bears):
             # in debug mode multiprocessing and logger_thread are disabled
             # ==> no need for following actions
             logger_thread.running = False

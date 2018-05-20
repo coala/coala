@@ -4,7 +4,9 @@ from functools import wraps
 from .taste import Taste
 from .meta import aspectclass
 from coalib.settings.FunctionMetadata import FunctionMetadata
-
+import pdb
+db = pdb.Pdb()
+db.prompt = '(coala-debugger)'
 
 def map_setting_to_aspect(**aspectable_setting):
     """
@@ -24,7 +26,7 @@ def map_setting_to_aspect(**aspectable_setting):
         as value.
     """
     def _func_decorator(func):
-        @wraps(func)
+
         def _new_func(self, *args, **kwargs):
             if self.section.aspects:
                 aspects = self.section.aspects
@@ -41,6 +43,10 @@ def map_setting_to_aspect(**aspectable_setting):
                             kwargs[arg] = aspect_instance.tastes[
                                 aspect_value.name]
 
+            debug_bears = kwargs.get('debug_bears')
+            if debug_bears:
+                kwargs.pop('debug_bears')
+                db.runcall(self.func,*args,**kwargs)
             return func(self, *args, **kwargs)
 
         # Keep metadata

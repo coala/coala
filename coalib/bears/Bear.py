@@ -4,6 +4,7 @@ from functools import partial
 from os import makedirs
 from os.path import join, abspath, exists
 import requests
+import types
 from appdirs import user_data_dir
 
 from pyprint.Printer import Printer
@@ -18,8 +19,29 @@ from coalib.results.TextPosition import ZeroOffsetError
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 from coalib.settings.ConfigurationGathering import get_config_directory
-
+import logging
 from .meta import bearclass
+import pdb
+import colorit
+db = pdb.Pdb()
+db.prompt = colorit.color_front('(coala-debugger)',50,200,50)
+def debug_mode_function(func,*args,**kwargs):
+    x = func(*args, **kwargs)
+    results = []
+    print("start pdb")
+    try:
+        while True:
+                '''
+                As the Bear run() method is a “generator” so we will use “next()” function
+                (builtin function to get next value in generators) in pdb.runcall() to step
+                directly in run() method of Bear and advantage is
+                it will not stop at first yield of generator because It will trace the ‘next()’
+                iterator and stop it when it raise the ‘StopIteration’ error.
+                '''
+                result = db.runcall(next, x)
+                results.append(result)
+    except StopIteration:
+        return results
 
 
 class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
@@ -274,6 +296,70 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     def run(self, *args, dependency_results=None, **kwargs):
         raise NotImplementedError
 
+    def parenthesis_split(self, sentence, separator=',',
+                          lparen='(', rparen=')'):
+        nb_brackets = 0
+        sentence = sentence.strip(separator)
+        final = [0]
+        try:
+            for i, c in enumerate(sentence):
+                if c == lparen:
+                    nb_brackets += 1
+                elif c == rparen:
+                    nb_brackets -= 1
+                elif c == separator and nb_brackets == 0:
+                    final.append(i)
+                if nb_brackets < 0:
+                    raise ValueError('Invalid arguments to --debug-bears')
+            final.append(len(sentence))
+            if nb_brackets > 0:
+                raise ValueError('Invalid arguments to --debug-bears')
+        except ValueError as err:
+            self.err(err.args[0])
+            return
+        return([sentence[i:j].strip(separator) for i, j in zip(final,
+                                                               final[1:])])
+
+    def debugger_config(self,*args,**kwargs):
+        if ('linter' in str(self)) and (isinstance(self.run(*args, **kwargs), types.GeneratorType)):
+            db.runcall(self.run,*args,**kwargs)
+            debug_mode_function(self.run,*args,**kwargs)
+        elif (isinstance(self.run(*args, **kwargs), types.GeneratorType)):
+            debug_mode_function(self.run,*args,**kwargs)
+        elif (isinstance(self.run(*args, **kwargs),(types.NoneType,types.StringType))) and (u'wrapping_function of' in str(self.run)) or (u'_new_func of' in str(self.run)):
+            kwargs['debug_bears'] = debug_bears
+            return None,args,kwargs
+        else:
+            db.runcall(self.run,*args,**kwargs)
+
+
+    def setup_debuger(self,*args,**kwargs):
+        debug_bears = kwargs.get('debug_bears')
+        value_list = self.parenthesis_split(str(debug_bears))
+        first_value_list = str(value_list[0]).lower().strip()
+        kwargs.pop('debug_bears')
+        if debug_bears is False:
+            return None,args,kwargs
+        elif first_value_list=='true':
+            self.debugger_config(*args,*kwargs)
+        elif str(self.__class__.__name__) in value_list:
+            self.debugger_config(*args,*kwargs)
+        else:
+            logging.info("Passed the Bear name as a argument to debug")
+
+            # if ('linter' in str(self)) and (isinstance(self.run(*args, **kwargs), types.GeneratorType)):
+            #     db.runcall(self.run,*args,**kwargs)
+            #     debug_mode_function(self.run,*args,**kwargs)
+            # elif (isinstance(self.run(*args, **kwargs), types.GeneratorType)):
+            #     debug_mode_function(self.run,*args,**kwargs)
+            # elif (isinstance(self.run(*args, **kwargs),(types.NoneType,types.StringType))) and (u'wrapping_function of' in str(self.run)) or (u'_new_func of' in str(self.run)):
+            #     kwargs['debug_bears'] = debug_bears
+            #     return None,args,kwargs
+            # else:
+            #     db.runcall(self.run,*args,**kwargs)
+
+            # if (u'wrapping_function of' in str(self.run)) or (u'_new_func of' in str(self.run)):
+        return None,args,kwargs
     def run_bear_from_section(self, args, kwargs):
         try:
             # Don't get `language` setting from `section.contents`
@@ -288,7 +374,11 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
                 self.name), str(err))
             return
 
-        return self.run(*args, **kwargs)
+        debug_bears_results, args, kwargs = self.setup_debuger(
+            *args, **kwargs)
+
+        return debug_bears_results if debug_bears_results else self.run(
+            *args, **kwargs)
 
     def execute(self, *args, debug=False, **kwargs):
         name = self.name

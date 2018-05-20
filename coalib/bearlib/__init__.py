@@ -7,9 +7,11 @@ while offering the best possible flexibility.
 import logging
 from functools import wraps
 
+import pdb
 from coalib.settings.FunctionMetadata import FunctionMetadata
 
-
+db = pdb.Pdb()
+db.prompt = '(coala-debugger)'
 def _do_nothing(x): return x
 
 
@@ -99,7 +101,6 @@ def deprecate_settings(**depr_args):
 
         logged_deprecated_args = set()
 
-        @wraps(func)
         def wrapping_function(*args, **kwargs):
             for arg, depr_value in wrapping_function.__metadata__.depr_values:
                 deprecated_arg = depr_value[0]
@@ -119,6 +120,12 @@ def deprecate_settings(**depr_args):
                     else:
                         kwargs[arg] = depr_arg_value
                     del kwargs[deprecated_arg]
+            debug_bears = kwargs.get('debug_bears')
+            if debug_bears:
+                kwargs.pop('debug_bears')
+                db.runcall(func,*args,**kwargs)
+
+
             return func(*args, **kwargs)
 
         new_metadata = FunctionMetadata.from_function(func)
