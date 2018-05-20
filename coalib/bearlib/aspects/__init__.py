@@ -77,7 +77,7 @@ class aspectsModule(ModuleType):
             return None
 
     def __getitem__(self, aspectname):
-        regex = re.compile('(^|\.)%s$' % aspectname.lower())
+        regex = re.compile(r'(^|\.)%s$' % aspectname.lower())
         matches = []
 
         def search(aspects):

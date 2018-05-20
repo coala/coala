@@ -305,7 +305,7 @@ class coalaTest(unittest.TestCase):
             # Every error message must start with characters
             # used for coloring.
             for err in errors:
-                self.assertNotRegex(err, '^\[WARNING\]')
+                self.assertNotRegex(err, r'^\[WARNING\]')
             self.assertEqual(
                 retval, 0, 'coala must return zero when there are no errors')
 
@@ -319,7 +319,7 @@ class coalaTest(unittest.TestCase):
             # Any error message must not start with characters
             # used for coloring.
             for err in errors:
-                self.assertRegex(err, '^\[WARNING\]')
+                self.assertRegex(err, r'^\[WARNING\]')
             self.assertEqual(
                 retval, 0, 'coala must return zero when there are no errors')
 

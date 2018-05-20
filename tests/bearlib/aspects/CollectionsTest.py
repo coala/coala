@@ -146,7 +146,7 @@ class AspectListTest(unittest.TestCase):
 
         with self.assertRaisesRegex(
                 ValueError,
-                "^AspectList._remove\(x\): <aspectclass 'Root.Metadata'> "
+                r"^AspectList._remove\(x\): <aspectclass 'Root.Metadata'> "
                 'not in list.$'):
             aspectlist._remove(Metadata)
 

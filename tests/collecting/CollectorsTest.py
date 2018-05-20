@@ -344,9 +344,9 @@ class CollectBearsTest(unittest.TestCase):
                 [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL])
         self.assertRegex(log.output[0],
                          'coala cannot find bear that could analyze the '
-                         'following aspects: \['
-                         "'Root\.Redundancy\.UnusedVariable\.UnusedParameter'"
-                         '\]')
+                         r'following aspects: \['
+                         r"'Root\.Redundancy\.UnusedVariable\.UnusedParameter'"
+                         r'\]')
 
         self.assertEqual(global_bears, [])
         self.assertEqual(str(local_bears),
