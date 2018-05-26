@@ -93,15 +93,17 @@ arguments.
 
     ``bad_file`` here is same as ``bad_file`` in the above example.
 
-``check_validity`` asserts if your bear yields any results for a particular
-check with a list of strings. First a *Section* and your Bear
-(in this case ``TooManyLinesBear``) is ``setUp``. Now your *Section* consists
-by default *Settings*. You can append any *Setting* depending on your test.
-Validate a check by passing your bear, lines to check as parameters
-(pass a few other parameters if necessary) to ``check_validity``. The method
-``self.check_validity(self.uut, ["import os"])`` asserts if your bear
-``self.uut`` yields a result when a list of strings ``["import os"]`` is
-passed.
+``check_validity`` asserts if your bear does not yield any results
+for a particular check with a list of strings. First a *Section*
+and your Bear (in this case ``TooManyLinesBear``) is ``setUp``. Now your
+*Section* consists by default *Settings*. You can append any *Setting*
+depending on your test. Validate a check by passing your bear, lines to check
+as parameters (pass a few other parameters if necessary) to ``check_validity``.
+The method ``self.check_validity(self.uut, ["import os"])`` asserts if your
+bear ``self.uut`` does not yield a result when a list of strings
+``["import os"]`` is passed. The method
+``self.check_validity(self.uut, bad_file, valid=False)`` asserts if your bear
+``self.uut`` yields a result when ``bad_file`` is passed.
 
 **EXAMPLE 3** using ``LocalBearTestHelper.check_results``
 
