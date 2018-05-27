@@ -45,6 +45,7 @@ configuration:
 targets:
   - setup.py: core-setup.py.jj2
   - requirements.txt: requirements.txt.jj2
+  - test-requirements.txt: test-requirements.txt.jj2
   - coalib/VERSION: VERSION.jj2
   - runtime.txt: runtime.txt
   - netlify.toml: docs/netlify.toml

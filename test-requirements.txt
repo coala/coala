@@ -16,5 +16,5 @@ pytest-reqs~=0.0.6
 pytest-timeout~=1.2.0
 pytest-xdist~=1.15
 requests-mock~=1.2
-pip>=9.0.0,<10
+pip!=9.0.2, !=10.0.*
 wheel~=0.29
