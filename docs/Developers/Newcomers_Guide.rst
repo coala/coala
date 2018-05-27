@@ -301,6 +301,20 @@ coala project directory:
 
     $ pip3 install -r test-requirements.txt -r requirements.txt
 
+Its always best to run Pytests after running the requirement dependencies before you run coala.
+To do that, run the following command:
+
+::
+
+    $ pytest
+
+In case of an error with running pytest.
+Try:
+
+::
+
+    $ python3 -m pytest
+
 After that, you can run coala by simply typing
 
 ::
