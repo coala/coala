@@ -301,6 +301,20 @@ coala project directory:
 
     $ pip3 install -r test-requirements.txt -r requirements.txt
 
+
+After the test dependencies have been installed
+run pytest to test your changes locally:
+
+::
+
+    $ pytest
+
+Incase pytest gives you an error, try;
+
+::
+
+    $ python3 -m pytest
+
 After that, you can run coala by simply typing
 
 ::
