@@ -6,7 +6,10 @@ from pkgutil import iter_modules
 from types import ModuleType
 
 from .base import aspectbase
-from .decorators import map_setting_to_aspect
+from .decorators import (
+    map_setting_to_aspect,
+    map_ambiguous_setting_to_aspect,
+)
 from .exceptions import (AspectTypeError, AspectNotFoundError,
                          MultipleAspectFoundError)
 from .meta import aspectclass
@@ -23,6 +26,7 @@ __all__ = ['Root', 'Taste', 'TasteError',
            'aspectclass', 'aspectbase', 'AspectTypeError',
            'AspectNotFoundError', 'MultipleAspectFoundError',
            'AspectList', 'map_setting_to_aspect',
+           'map_ambiguous_setting_to_aspect',
            ]
 
 
