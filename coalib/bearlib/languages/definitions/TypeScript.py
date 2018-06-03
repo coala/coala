@@ -24,4 +24,5 @@ class TypeScript:
                     'public', 'static', 'yield', 'any', 'boolean',
                     'constructor', 'declare', 'get',
                     'module', 'require', 'number', 'set',
-                    'string', 'symbol', 'type', 'from', 'of']
+                    'string', 'symbol', 'type', 'from', 'of',
+                    'abstract', 'never', 'object']
