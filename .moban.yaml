@@ -40,7 +40,6 @@ configuration:
     - .moban.dt/
     - ../coala-mobans/templates/
     - ../coala-mobans/assets/
-    - ../setupmobans/templates/
   configuration: .moban.yaml
   configuration_dir: ../coala-mobans/
 targets:

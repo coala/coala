@@ -5,22 +5,48 @@ python:
   - 3.5
   - 3.6
 
+stages:
+  - test
+  - moban
+  - name: unsupported
+    if: branch = master AND type = push
+
+.check_moban: &check_moban
+  python: 3.6
+  stage: moban
+  before_install: false
+  install: pip install moban
+  before_script: false
+  script: .misc/check_moban.sh
+  after_success: false
+  after_failure: false
+  if: branch != master OR type = pull_request
+
 jobs:
   include:
     # OSX build removed due to long build startup delays
     # Restore matrix job entry from d2d67fab to test OSX
     - python: 2.7
-      env: UNSUPPORTED=true
+      stage: unsupported
       script: .misc/check_unsupported.sh
-      if: branch = master AND type = push
     - python: 3.3
-      env: UNSUPPORTED=true
+      stage: unsupported
       script: .misc/check_unsupported.sh
-      if: branch = master AND type = push
     - python: 3.4.3
-      env: UNSUPPORTED=true
+      stage: unsupported
       script: .misc/check_unsupported.sh
+    - python: 3.6
+      stage: moban
+      install: pip install moban
+      before_install: false
+      before_script: false
+      script: .misc/check_moban.sh
+      after_success: false
+      after_failure: false
       if: branch = master AND type = push
+    - *check_moban
+  allow_failures:
+    - *check_moban
 
 env:
   global:
@@ -67,10 +93,6 @@ before_script:
   # Restore the original requirements.txt
   - mv requirements.orig requirements.txt
   - python .misc/check_setuptools.py
-  - git clone https://github.com/moremoban/setupmobans ../setupmobans
-  - git clone https://gitlab.com/coala/mobans ../coala-mobans
-  - moban
-  - git diff --exit-code
 
 script:
   - py.test
