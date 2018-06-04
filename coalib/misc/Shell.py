@@ -15,7 +15,8 @@ class ShellCommandResult(tuple):
 
     It additionally stores the return ``.code``:
 
-    >>> process = Popen(['python', '-c',
+    >>> import sys
+    >>> process = Popen([sys.executable, '-c',
     ...                  'import sys; print(sys.stdin.readline().strip() +'
     ...                  '                  " processed")'],
     ...                 stdin=PIPE, stdout=PIPE, stderr=PIPE,
