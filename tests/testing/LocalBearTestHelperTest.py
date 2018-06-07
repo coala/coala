@@ -48,7 +48,7 @@ class LocalBearCheckResultsTest(Helper):
             self.check_results(self.uut, ['a', 'b'], ['a', 'b', None],
                                check_order=True)
 
-    def test_good_assertComparableObjectsEqual(self):
+    def test_good_check_results(self):
         self.uut = LineCountTestBear(Section('name'), Queue())
         file_content = 'a\nb\nc'
         with prepare_file(file_content.splitlines(), filename=None,
@@ -63,7 +63,7 @@ class LocalBearCheckResultsTest(Helper):
                                filename=fname,
                                create_tempfile=False)
 
-    def test_bad_assertComparableObjectsEqual(self):
+    def test_bad_check_results(self):
         with self.assertRaises(AssertionError) as cm:
             self.uut = LineCountTestBear(Section('name'), Queue())
             file_content = 'a\nb\nc'
@@ -78,19 +78,12 @@ class LocalBearCheckResultsTest(Helper):
                                     file=fname)],
                                    filename=fname,
                                    create_tempfile=False)
-        self.assertEqual('\'LineCountTestBear\' != \'LineCountTestBea\'\n'
-                         '- LineCountTestBear\n'
-                         '?                 -\n'
-                         '+ LineCountTestBea\n'
-                         ' : origin mismatch.\n\n'
-                         '\'This file has 3 lines.\' != \'This file has 2 '
-                         'lines.\'\n'
-                         '- This file has 3 lines.\n'
-                         '?               ^\n'
-                         '+ This file has 2 lines.\n'
-                         '?               ^\n'
-                         ' : message_base mismatch.\n\n',
-                         str(cm.exception))
+        self.assertEqual('origin mismatch: LineCountTestBear, This file '
+                         'has 3 lines. != LineCountTestBea, This file '
+                         'has 2 lines.\n\n'
+                         'message_base mismatch: LineCountTestBear, This '
+                         'file has 3 lines. != LineCountTestBea, This '
+                         'file has 2 lines.\n\n', str(cm.exception))
 
 
 class LocalBearTestCheckLineResultCountTest(Helper):

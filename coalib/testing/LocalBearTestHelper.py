@@ -6,9 +6,9 @@ from unittest.mock import patch
 import pytest
 
 from coalib.bearlib.abstractions.LinterClass import LinterClass
+from coalib.testing.BaseTestHelper import BaseTestHelper
 from coalib.testing.BearTestHelper import generate_skip_decorator
 from coalib.bears.LocalBear import LocalBear
-from coala_utils.Comparable import Comparable
 from coala_utils.ContextManagers import prepare_file
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
@@ -101,7 +101,7 @@ def get_results(local_bear,
         return bear_output
 
 
-class LocalBearTestHelper(unittest.TestCase):
+class LocalBearTestHelper(BaseTestHelper, unittest.TestCase):
     """
     This is a helper class for simplification of testing of local bears.
 
@@ -110,28 +110,6 @@ class LocalBearTestHelper(unittest.TestCase):
 
     If you miss some methods, get in contact with us, we'll be happy to help!
     """
-
-    def assertComparableObjectsEqual(self, observed_result, expected_result):
-        if len(observed_result) == len(expected_result):
-            messages = ''
-            for observed, expected in zip(observed_result, expected_result):
-                if (isinstance(observed, Comparable)
-                    and isinstance(expected, Comparable)) and (
-                            type(observed) is type(expected)):
-                    for attribute in type(observed).__compare_fields__:
-                        try:
-                            self.assertEqual(
-                                getattr(observed, attribute),
-                                getattr(expected, attribute),
-                                msg='{} mismatch.'.format(attribute))
-                        except AssertionError as ex:
-                            messages += (str(ex) + '\n\n')
-                else:
-                    self.assertEqual(observed_result, expected_result)
-            if messages:
-                raise AssertionError(messages)
-        else:
-            self.assertEqual(observed_result, expected_result)
 
     def check_validity(self,
                        local_bear,
@@ -193,6 +171,7 @@ class LocalBearTestHelper(unittest.TestCase):
         :param create_tempfile:  Whether to save lines in tempfile if needed.
         :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
         """
+        assert isinstance(self, BaseTestHelper)
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
                               LocalBear,
@@ -242,6 +221,7 @@ class LocalBearTestHelper(unittest.TestCase):
                                  from which settings will be created that will
                                  be made available for the tested bear.
         """
+        assert isinstance(self, BaseTestHelper)
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
                               LocalBear,
@@ -260,10 +240,10 @@ class LocalBearTestHelper(unittest.TestCase):
                                   tempfile_kwargs=tempfile_kwargs,
                                   settings=settings)
         if not check_order:
-            self.assertComparableObjectsEqual(
+            self.assert_result_equal(
                 sorted(bear_output), sorted(results))
         else:
-            self.assertComparableObjectsEqual(bear_output, results)
+            self.assert_result_equal(bear_output, results)
 
         return bear_output
 
