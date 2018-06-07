@@ -61,6 +61,10 @@ jobs:
           name: sphinx-build
           command: python setup.py docs
 
+      - run:
+          name: check-man
+          command: .ci/check_man.sh
+
       - save_cache:
           key: coala-cache-{{ checksum "requirements.txt" }}
           paths:

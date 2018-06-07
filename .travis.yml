@@ -106,6 +106,7 @@ script:
     fi
   - coala --non-interactive
   - python setup.py docs
+  - .ci/check_man.sh
 
 after_success:
   - codecov
