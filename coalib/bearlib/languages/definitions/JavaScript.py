@@ -11,3 +11,4 @@ class JavaScript:
     multiline_string_delimiters = {}
     indent_types = {'{': '}'}
     encapsulators = {'(': ')', '[': ']'}
+    string_delimiter_escape = {'"': '\\"', "'": "\\'"}

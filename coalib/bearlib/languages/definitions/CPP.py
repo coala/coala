@@ -29,3 +29,4 @@ class CPP:
         'while', 'xor', 'xor_eq', '#include', '#define', '#undef', '#ifdef',
         '#ifndef', '#if', '#endif', '#else', '#elif', '#line', '#pragma']
     special_chars = list(r'+-*/.;\,()[]{}\=<>|&^~?%!')
+    string_delimiter_escape = {'"': '\\"'}
