@@ -35,6 +35,9 @@ dependencies:
   - testfixtures~=5.3.1
   - unidiff~=0.5.2
 
+gitignore_extra_rulesets:
+  - node
+
 configuration:
   template_dir:
     - .moban.dt/
@@ -43,6 +46,7 @@ configuration:
   configuration: .moban.yaml
   configuration_dir: ../coala-mobans/
 targets:
+  - .gitignore: core-gitignore.jj2
   - setup.py: core-setup.py.jj2
   - requirements.txt: requirements.txt.jj2
   - test-requirements.txt: test-requirements.txt.jj2

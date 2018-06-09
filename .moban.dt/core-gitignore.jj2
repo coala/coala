@@ -1,0 +1,7 @@
+{% extends 'gitignore.jj2' %}
+{% block extra %}
+# man pages
+coala.1
+
+{% include 'gitignore/coala.gitignore' %}
+{% endblock %}
