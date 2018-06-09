@@ -12,7 +12,7 @@ indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 
-# 2 space indentation for yml fies and package.json
+# 2 space indentation for yml files and package.json
 [{package.json,*.yml}]
 indent_style = space
 indent_size = 2

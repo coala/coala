@@ -11,6 +11,6 @@ class ExceptionsTest(unittest.TestCase):
         self.assertEqual(get_exitcode(AssertionError()), 255)
         self.assertEqual(get_exitcode(SystemExit(999)), 999)
         self.assertEqual(get_exitcode(VersionConflict(
-            'libclang-py3 0.3', 'libclang-py3==0.2')), 13)
+            'version 1.0', 'version 2.0')), 13)
         self.assertEqual(get_exitcode(EOFError()), 0)
         self.assertEqual(get_exitcode(None), 0)

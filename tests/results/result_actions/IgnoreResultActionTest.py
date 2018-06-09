@@ -114,3 +114,21 @@ class IgnoreResultActionTest(unittest.TestCase):
                         'coala does not support Ignore in "dothraki".',
                         log.output[0]
                     )
+
+    def test_ignore_jinja2(self):
+        uut = IgnoreResultAction()
+        with make_temp() as f_a:
+            file_dict = {
+                f_a: ['1\n', '2\n']
+            }
+
+            file_diff_dict = {}
+
+            # Test ignore comment in jinja2
+            uut.apply(Result.from_values('else', 'msg', f_a, 1),
+                      file_dict, file_diff_dict, 'jinja2')
+            self.assertEqual(
+                file_diff_dict[f_a].modified,
+                ['1  {# Ignore else #}\n', '2\n'])
+            with open(f_a, 'r') as f:
+                self.assertEqual(file_diff_dict[f_a].modified, f.readlines())

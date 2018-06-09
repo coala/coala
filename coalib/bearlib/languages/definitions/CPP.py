@@ -28,4 +28,4 @@ class CPP:
         'unsigned', 'using', 'virtual', 'void', 'volatile', 'wchar_t',
         'while', 'xor', 'xor_eq', '#include', '#define', '#undef', '#ifdef',
         '#ifndef', '#if', '#endif', '#else', '#elif', '#line', '#pragma']
-    special_chars = list('+-*/.;\,()[]{}\=<>|&^~?%!')
+    special_chars = list(r'+-*/.;\,()[]{}\=<>|&^~?%!')

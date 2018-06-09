@@ -109,4 +109,4 @@ def issubaspect(subaspect, aspect):
                     aspect, aspectclass) else type(aspect).__qualname__)
     subaspect_qualname = (subaspect.__qualname__ if isinstance(
                     subaspect, aspectclass) else type(subaspect).__qualname__)
-    return re.match(aspect_qualname+'(\.|$)', subaspect_qualname) is not None
+    return re.match(aspect_qualname+r'(\.|$)', subaspect_qualname) is not None

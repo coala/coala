@@ -639,7 +639,6 @@ def choose_action(console_printer, actions, apply_single=False):
                             actions that needs to be applied and a list with
                             with the description of the actions.
     """
-    actions.insert(0, DoNothingAction().get_metadata())
     actions_desc = []
     actions_name = []
     if apply_single:
@@ -679,7 +678,7 @@ def choose_action(console_printer, actions, apply_single=False):
                             break
                 if actions_desc_len == len(actions_desc):
                     console_printer.print(format_lines(
-                        'Please enter a valid letter.', symbol='['))
+                        'Please enter a valid letter or number.', symbol='['))
 
             if not choice:
                 actions_desc.append(DoNothingAction().get_metadata().desc)
@@ -702,7 +701,7 @@ def try_to_apply_action(action_name,
     Try to apply the given action.
 
     :param action_name:     The name of the action.
-    :param choose_action:   The action object that will be applied.
+    :param chosen_action:   The action object that will be applied.
     :param console_printer: Object to print messages on the console.
     :param section:         Currently active section.
     :param metadata_list:   Contains metadata for all the actions.
@@ -725,9 +724,10 @@ def try_to_apply_action(action_name,
                                          file_dict,
                                          file_diff_dict,
                                          section)
-        console_printer.print(
-            format_lines(chosen_action.SUCCESS_MESSAGE, symbol='['),
-            color=SUCCESS_COLOR)
+        if not isinstance(chosen_action, DoNothingAction):
+            console_printer.print(
+                format_lines(chosen_action.SUCCESS_MESSAGE, symbol='['),
+                color=SUCCESS_COLOR)
         applied_actions[action_name] = [copy.copy(result), copy.copy(
             file_dict),
                                     copy.copy(file_diff_dict),
@@ -776,12 +776,14 @@ def ask_for_action_and_apply(console_printer,
                             another action, False otherwise.
                             If apply_single isn't set, always return False.
     """
+    do_nothing_action = DoNothingAction()
+    metadata_list.insert(0, do_nothing_action.get_metadata())
+    action_dict[do_nothing_action.get_metadata().name] = DoNothingAction()
+
     actions_desc, actions_name = choose_action(console_printer, metadata_list,
                                                apply_single)
 
     if apply_single:
-        if apply_single == 'Do (N)othing':
-            return False
         for index, action_details in enumerate(metadata_list, 1):
             if apply_single == action_details.desc:
                 action_name, section = get_action_info(
@@ -802,8 +804,6 @@ def ask_for_action_and_apply(console_printer,
     else:
         for action_choice, action_choice_name in zip(actions_desc,
                                                      actions_name):
-            if action_choice == 'Do (N)othing':
-                return False
             chosen_action = action_dict[action_choice_name]
             action_choice_made = action_choice
             for index, action_details in enumerate(metadata_list, 1):
@@ -822,6 +822,8 @@ def ask_for_action_and_apply(console_printer,
                                         file_dict,
                                         applied_actions)
 
+            if action_choice == 'Do (N)othing':
+                return False
     return True
 
 
@@ -954,7 +956,12 @@ def print_bears(bears,
     if args and args.json:
         from coalib.output.JSONEncoder import create_json_encoder
         JSONEncoder = create_json_encoder(use_relpath=args.relpath)
-        json_output = {'bears': results}
+        json_output = {}
+        if args.show_details:
+            json_output['bears'] = results
+        else:
+            json_output['bears'] = [bear.name for bear in results]
+
         import json
         json_formatted_output = json.dumps(json_output,
                                            cls=JSONEncoder,

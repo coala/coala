@@ -7,6 +7,10 @@ from tests.test_bears.TestBearDep import (TestDepBearBDependsA,
                                           TestDepBearCDependsB,
                                           TestDepBearDependsAAndAA)
 from coalib.bearlib.abstractions.Linter import linter
+from tests.test_bears.LineCountTestBear import LineCountTestBear
+from coala_utils.ContextManagers import prepare_file
+from coalib.results.Result import Result
+from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.testing.LocalBearTestHelper import verify_local_bear, execute_bear
@@ -38,6 +42,55 @@ class LocalBearCheckResultsTest(Helper):
         with self.assertRaises(AssertionError):
             self.check_results(self.uut, ['a', 'b'], ['b', 'a'],
                                check_order=True)
+
+    def test_result_inequality(self):
+        with self.assertRaises(AssertionError):
+            self.check_results(self.uut, ['a', 'b'], ['a', 'b', None],
+                               check_order=True)
+
+    def test_good_assertComparableObjectsEqual(self):
+        self.uut = LineCountTestBear(Section('name'), Queue())
+        file_content = 'a\nb\nc'
+        with prepare_file(file_content.splitlines(), filename=None,
+                          create_tempfile=True) as (file, fname):
+            self.check_results(self.uut,
+                               file_content.splitlines(),
+                               [Result.from_values(
+                                origin='LineCountTestBear',
+                                message='This file has 3 lines.',
+                                severity=RESULT_SEVERITY.INFO,
+                                file=fname)],
+                               filename=fname,
+                               create_tempfile=False)
+
+    def test_bad_assertComparableObjectsEqual(self):
+        with self.assertRaises(AssertionError) as cm:
+            self.uut = LineCountTestBear(Section('name'), Queue())
+            file_content = 'a\nb\nc'
+            with prepare_file(file_content.splitlines(), filename=None,
+                              create_tempfile=True) as (file, fname):
+                self.check_results(self.uut,
+                                   file_content.splitlines(),
+                                   [Result.from_values(
+                                    origin='LineCountTestBea',
+                                    message='This file has 2 lines.',
+                                    severity=RESULT_SEVERITY.INFO,
+                                    file=fname)],
+                                   filename=fname,
+                                   create_tempfile=False)
+        self.assertEqual('\'LineCountTestBear\' != \'LineCountTestBea\'\n'
+                         '- LineCountTestBear\n'
+                         '?                 -\n'
+                         '+ LineCountTestBea\n'
+                         ' : origin mismatch.\n\n'
+                         '\'This file has 3 lines.\' != \'This file has 2 '
+                         'lines.\'\n'
+                         '- This file has 3 lines.\n'
+                         '?               ^\n'
+                         '+ This file has 2 lines.\n'
+                         '?               ^\n'
+                         ' : message_base mismatch.\n\n',
+                         str(cm.exception))
 
 
 class LocalBearTestCheckLineResultCountTest(Helper):
@@ -153,5 +206,5 @@ class LocalBearTestHelper(unittest.TestCase):
     def test_exception(self):
 
         with self.assertRaises(AssertionError), execute_bear(
-                self.uut,  'Luke', files[0]) as result:
+                self.uut, 'Luke', files[0]) as result:
             pass

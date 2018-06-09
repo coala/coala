@@ -195,6 +195,10 @@ class Bear:
         self.section = section
         self.file_dict = file_dict
 
+        # Copy the bears specified in Bear.BEAR_DEPS to this instance, so
+        # runtime modifications are allowed.
+        self.BEAR_DEPS = set(self.BEAR_DEPS)
+
         self._dependency_results = defaultdict(list)
 
         self.setup_dependencies()

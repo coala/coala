@@ -13,12 +13,14 @@ class FunctionMetadata:
     @enforce_signature
     def __init__(self,
                  name: str,
-                 desc: str='',
-                 retval_desc: str='',
-                 non_optional_params: (dict, None)=None,
-                 optional_params: (dict, None)=None,
-                 omit: (set, tuple, list, frozenset)=frozenset(),
-                 deprecated_params: (set, tuple, list, frozenset)=frozenset()):
+                 desc: str = '',
+                 retval_desc: str = '',
+                 non_optional_params: (dict, None) = None,
+                 optional_params: (dict, None) = None,
+                 omit: (set, tuple, list, frozenset) = frozenset(),
+                 deprecated_params:
+                     (set, tuple, list, frozenset) = frozenset()
+                 ):
         """
         Creates the FunctionMetadata object.
 
@@ -35,7 +37,7 @@ class FunctionMetadata:
                                     the default value. To preserve the order,
                                     use OrderedDict.
         :param omit:                A set of parameters to omit.
-        :param deprecared_params:   A list of params that are deprecated.
+        :param deprecated_params:   A list of params that are deprecated.
         """
         if non_optional_params is None:
             non_optional_params = OrderedDict()

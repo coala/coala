@@ -42,7 +42,7 @@ class IgnoreResultAction(ResultAction):
                 'seem to exist.')
 
     def apply(self, result, original_file_dict, file_diff_dict, language: str,
-              no_orig: bool=False):
+              no_orig: bool = False):
         """
         Add (I)gnore comment
         """

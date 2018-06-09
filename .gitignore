@@ -38,3 +38,17 @@ Goopfile.lock
 venv/
 rultor_secrets.sh
 .vscode
+rultor_secrets.sh
+
+#Ignore tags created by ctags, etags and gtags
+TAGS
+.TAGS
+!TAGS/
+tags
+.tags
+!tags/
+gtags.files
+GTAGS
+GRTAGS
+GPATH
+GSYMS

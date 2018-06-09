@@ -25,6 +25,7 @@ from coalib.results.SourceRange import SourceRange
                    'message_arguments',
                    'aspect',
                    'additional_info',
+                   'diffs',
                    'debug_msg',
                    'applied_actions')
 class Result:
@@ -54,15 +55,15 @@ class Result:
     def __init__(self,
                  origin,
                  message: str,
-                 affected_code: (tuple, list)=(),
-                 severity: int=RESULT_SEVERITY.NORMAL,
-                 additional_info: str='',
+                 affected_code: (tuple, list) = (),
+                 severity: int = RESULT_SEVERITY.NORMAL,
+                 additional_info: str = '',
                  debug_msg='',
-                 diffs: (dict, None)=None,
-                 confidence: int=100,
-                 aspect: (aspectbase, None)=None,
-                 message_arguments: dict={},
-                 applied_actions: dict={}):
+                 diffs: (dict, None) = None,
+                 confidence: int = 100,
+                 aspect: (aspectbase, None) = None,
+                 message_arguments: dict = {},
+                 applied_actions: dict = {}):
         """
         :param origin:
             Class name or creator object of this object.
@@ -151,17 +152,17 @@ class Result:
                     origin,
                     message: str,
                     file: str,
-                    line: (int, None)=None,
-                    column: (int, None)=None,
-                    end_line: (int, None)=None,
-                    end_column: (int, None)=None,
-                    severity: int=RESULT_SEVERITY.NORMAL,
-                    additional_info: str='',
+                    line: (int, None) = None,
+                    column: (int, None) = None,
+                    end_line: (int, None) = None,
+                    end_column: (int, None) = None,
+                    severity: int = RESULT_SEVERITY.NORMAL,
+                    additional_info: str = '',
                     debug_msg='',
-                    diffs: (dict, None)=None,
-                    confidence: int=100,
-                    aspect: (aspectbase, None)=None,
-                    message_arguments: dict={}):
+                    diffs: (dict, None) = None,
+                    confidence: int = 100,
+                    aspect: (aspectbase, None) = None,
+                    message_arguments: dict = {}):
         """
         Creates a result with only one SourceRange with the given start and end
         locations.

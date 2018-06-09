@@ -21,8 +21,9 @@ class SubAspectTest:
 
     def test__init__unavailable_taste(
             self, SubAspect, SubAspect_taste_values):
-        with pytest.raises(TasteError):
+        with pytest.raises(TasteError) as exc:
             SubAspect('cs', **SubAspect_taste_values)
+        assert exc.match('is not available')
 
     def test_tastes(self, SubAspect, SubAspect_tastes):
         for language in ['py', 'cs']:
@@ -33,8 +34,9 @@ class SubAspectTest:
                     assert getattr(aspect, name) == taste_values[name] \
                         == taste.default
                 else:
-                    with pytest.raises(TasteError):
+                    with pytest.raises(TasteError) as exc:
                         getattr(aspect, name)
+                    assert exc.match('is not available')
                     assert name not in taste_values
 
     def test__eq__(self, RootAspect, SubAspect, SubAspect_taste_values):

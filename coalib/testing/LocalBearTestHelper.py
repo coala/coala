@@ -8,6 +8,7 @@ import pytest
 from coalib.bearlib.abstractions.LinterClass import LinterClass
 from coalib.testing.BearTestHelper import generate_skip_decorator
 from coalib.bears.LocalBear import LocalBear
+from coala_utils.Comparable import Comparable
 from coala_utils.ContextManagers import prepare_file
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
@@ -109,6 +110,28 @@ class LocalBearTestHelper(unittest.TestCase):
 
     If you miss some methods, get in contact with us, we'll be happy to help!
     """
+
+    def assertComparableObjectsEqual(self, observed_result, expected_result):
+        if len(observed_result) == len(expected_result):
+            messages = ''
+            for observed, expected in zip(observed_result, expected_result):
+                if (isinstance(observed, Comparable)
+                    and isinstance(expected, Comparable)) and (
+                            type(observed) is type(expected)):
+                    for attribute in type(observed).__compare_fields__:
+                        try:
+                            self.assertEqual(
+                                getattr(observed, attribute),
+                                getattr(expected, attribute),
+                                msg='{} mismatch.'.format(attribute))
+                        except AssertionError as ex:
+                            messages += (str(ex) + '\n\n')
+                else:
+                    self.assertEqual(observed_result, expected_result)
+            if messages:
+                raise AssertionError(messages)
+        else:
+            self.assertEqual(observed_result, expected_result)
 
     def check_validity(self,
                        local_bear,
@@ -248,16 +271,6 @@ class LocalBearTestHelper(unittest.TestCase):
                               list,
                               msg='The given results are not a list.')
 
-        if results in [[], ()]:
-            msg = ("The local bear '{}' yields a result although it "
-                   "shouldn't.".format(local_bear.__class__.__name__))
-            check_order = True
-        else:
-            msg = ("The local bear '{}' doesn't yield the right results."
-                   .format(local_bear.__class__.__name__))
-            if check_order:
-                msg += ' Or the order may be wrong.'
-
         bear_output = get_results(local_bear, lines,
                                   filename=filename,
                                   force_linebreaks=force_linebreaks,
@@ -265,9 +278,10 @@ class LocalBearTestHelper(unittest.TestCase):
                                   tempfile_kwargs=tempfile_kwargs,
                                   settings=settings)
         if not check_order:
-            self.assertEqual(sorted(bear_output), sorted(results), msg=msg)
+            self.assertComparableObjectsEqual(
+                sorted(bear_output), sorted(results))
         else:
-            self.assertEqual(bear_output, results, msg=msg)
+            self.assertComparableObjectsEqual(bear_output, results)
 
         return bear_output
 

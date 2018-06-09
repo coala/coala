@@ -14,6 +14,7 @@ from coala_utils.decorators import (enforce_signature, classproperty,
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.output.printers.LogPrinter import LogPrinterMixin
 from coalib.results.Result import Result
+from coalib.results.TextPosition import ZeroOffsetError
 from coalib.settings.FunctionMetadata import FunctionMetadata
 from coalib.settings.Section import Section
 from coalib.settings.ConfigurationGathering import get_config_directory
@@ -309,6 +310,10 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         except (Exception, SystemExit) as exc:
             if debug and not isinstance(exc, SystemExit):
                 raise
+
+            if isinstance(exc, ZeroOffsetError):
+                self.err('Bear {} violated one-based offset convention.'
+                         .format(name), str(exc))
 
             if self.kind() == BEAR_KIND.LOCAL:
                 self.err('Bear {} failed to run on file {}. Take a look '

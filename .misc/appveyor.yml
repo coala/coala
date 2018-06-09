@@ -7,14 +7,12 @@ environment:
 
   matrix:
     - PYTHON: "C:\\Python34"
-      PYTHON_VERSION: "3.4"
+      PYTHON_VERSION: "3.4.4"
       PYTHON_ARCH: "32"
-      LLVM_VERSION: 3.4.1
 
     - PYTHON: "C:\\Python34-x64"
-      PYTHON_VERSION: "3.4"
+      PYTHON_VERSION: "3.4.4"
       PYTHON_ARCH: "64"
-      LLVM_VERSION: 3.4.1
 
 cache:
   - "C:\\pip_cache"
@@ -27,16 +25,14 @@ install:
   # Prepend newly installed Python to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
-  - set PATH=C:\LLVM\bin;%PYTHON%;%PYTHON%\Scripts;%PATH%;C:\Program Files\Git\mingw64\bin
+  - set PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%;C:\Program Files\Git\mingw64\bin
 
   # Check that we have the expected version and architecture for Python
   - "python --version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
 
-  - "%CMD_IN_ENV% pip install --cache-dir=C:\\pip_cache -r requirements.txt -r test-requirements.txt"
-
-  - curl -fsSL http://llvm.org/releases/%LLVM_VERSION%/LLVM-%LLVM_VERSION%-win32.exe -o LLVM.exe
-  - 7z x LLVM.exe -oC:\LLVM
+  - "%CMD_IN_ENV% python -m pip install --cache-dir=C:\\pip_cache \
+     -r requirements.txt -r test-requirements.txt"
 
 build: false  # Not a C# project, build stuff at the test step instead.
 

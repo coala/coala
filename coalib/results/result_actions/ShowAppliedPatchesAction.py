@@ -13,7 +13,7 @@ def format_lines(lines, symbol='', line_nr=''):
 
 class ShowAppliedPatchesAction(ResultAction):
 
-    SUCCESS_MESSAGE = 'All actions have been applied'
+    SUCCESS_MESSAGE = 'Applied patches shown'
 
     is_applicable = staticmethod(ShowPatchAction.is_applicable)
 

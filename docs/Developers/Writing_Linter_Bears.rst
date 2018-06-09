@@ -16,7 +16,7 @@ integrate linters in your bears.
   Bear. If you want to write a global linter Bear, for a tool that does not
   run once for each file, but only once for the whole project, you can still
   go through the steps and then read about the differences of global linter
-  Bears at :ref:`global_bears`.
+  Bears at `global_bears`_.
 
 Why is This Useful?
 -------------------
@@ -212,9 +212,6 @@ understands it. This is possible via the ``severity_map`` parameter of
                           'I': RESULT_SEVERITY.INFO},
             ...)
 
-``coalib.results.RESULT_SEVERITY`` contains three different values, ``Info``,
-``Warning`` and ``Error`` you can use.
-
 We can test our bear like this
 
 ::
@@ -232,6 +229,27 @@ We can test our bear like this
 Normally, providing a severity-map is not needed, as coala has a default
 severity-map which recognizes many common words used for severities. Check out
 the API documentation for keywords supported!
+
+Normalize Line or Column Numbers
+--------------------------------
+
+coala uses 1-based line & column convention, i.e. the first line and the first
+column are 1. However, some linters use 0-based convention. For example,
+``pylint`` uses 1-based line convention and 0-based column convention. The
+options ``normalize_line_numbers`` and ``normalize_column_numbers``
+can help us easily map linter's convention to coala's. They are ``False``
+by default. If ``normalize_line_numbers`` is ``True``, line numbers would be
+increased by one. If ``normalize_column_numbers`` is ``True``, column numbers
+would be increased by one.
+
+Note ``pylint`` uses 0-based column convention.
+We need to map that to coala's convention as follows:
+
+::
+
+    @linter(...
+            normalize_column_numbers = True,
+            ...)
 
 Suggest Corrections Using the ``corrected`` and ``unified-diff`` Output Formats
 -------------------------------------------------------------------------------
@@ -412,7 +430,7 @@ gather information by using these values. Our bear now looks like:
       https://pylint.org/
       """
 
-      LANGUAGES = {"Python", "Python 2", "Python 3"}
+      LANGUAGES = {'Python', 'Python 2', 'Python 3'}
       REQUIREMENTS = {PipRequirement('pylint', '1.*')}
       AUTHORS = {'The coala developers'}
       AUTHORS_EMAILS = {'coala-devel@googlegroups.com'}
@@ -451,7 +469,7 @@ To use our `pylint_rcfile` setting we can do
 
 ::
 
-    $ coala --bear-dirs=. --bears=PythonTutorialBear \
+    $ coala --bear-dirs=. --bears=PylintTutorialBear \
     > -S pylint_rcfile=my_rcfile --files=sample.py
 
 You now know how to write a linter Bear and also how to use it in your
@@ -478,16 +496,39 @@ give us one, by passing the parameter ``global_bear=True``:
     @linter(executable='some_tool',
             global_bear=True,
             output_format='regex',
-            output_regex=r'<filename>: <message>'')
+            output_regex=r'<filename>: <message>')
     class SomeToolBear:
         @staticmethod
         def create_arguments(config_file):
-            pass
+            return []
 
 The ``create_arguments`` method takes no ``filename`` and ``file`` in this case
 since there is no file context. You can still make coala aware of the file an
 issue was detected in, by using the ``filename`` named group in
 your ``output_regex`` if relevant to the wrapped tool.
+
+As mentioned before, ``create_arguments`` doesn't have to be a static method.
+In this case remember to prepend ``self`` to the parameters in the signature:
+
+::
+
+    from coalib.bearlib.abstractions.Linter import linter
+
+    @linter(executable='some_tool',
+            global_bear=True,
+            output_format='regex',
+            output_regex=r'<filename>: <message>')
+    class PythonTestBear:
+        def create_arguments(self, config_file):
+            return '--lint', self.file_dict.keys()
+
+You can access the complete list of files using ``self.file_dict`` which return
+a dictionary of ``{filename: file contents}``.
+Pay attention that putting the complete list of files on the command line will
+cause breakages when the length of the command line exceeds the OS permitted
+length, or the complete list of files is greater than the OS permitted number
+of arguments.
+For more information, check `here <https://www.in-ulm.de/~mascheck/various/argmax/>`_.
 
 Where to Find More...
 ---------------------

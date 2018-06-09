@@ -1,7 +1,6 @@
 import json
 import logging
 import unittest
-import unittest.case
 
 from unidiff.errors import UnidiffParseError
 
@@ -548,25 +547,6 @@ class DiffTest(unittest.TestCase):
         diff_string = '\n'.join(diff)
         with self.assertRaises(UnidiffParseError):
             self.uut = Diff.from_unified_diff(diff_string, source)
-
-    def test_from_clang_fixit(self):
-        try:
-            from clang.cindex import Index, LibclangError
-        except ImportError as err:
-            raise unittest.case.SkipTest(str(err))
-
-        joined_file = 'struct { int f0; }\nx = { f0 :1 };\n'
-        file = joined_file.splitlines(True)
-        fixed_file = ['struct { int f0; }\n', 'x = { .f0 = 1 };\n']
-        try:
-            tu = Index.create().parse('t.c', unsaved_files=[
-                ('t.c', joined_file)])
-        except LibclangError as err:
-            raise unittest.case.SkipTest(str(err))
-
-        fixit = tu.diagnostics[0].fixits[0]
-        clang_fixed_file = Diff.from_clang_fixit(fixit, file).modified
-        self.assertEqual(fixed_file, clang_fixed_file)
 
     def test_equality(self):
         a = ['first', 'second', 'third']

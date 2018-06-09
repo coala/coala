@@ -1,13 +1,22 @@
 import unittest
 
-from coalib.results.TextPosition import TextPosition
+from coalib.results.TextPosition import TextPosition, ZeroOffsetError
 
 
 class TextPositionTest(unittest.TestCase):
 
-    def test_fail_instantation(self):
+    def test_fail_instantiation(self):
         with self.assertRaises(ValueError):
             TextPosition(None, 2)
+
+        with self.assertRaises(ZeroOffsetError):
+            TextPosition(0, 2)
+
+        with self.assertRaises(ZeroOffsetError):
+            TextPosition(2, 0)
+
+        with self.assertRaises(ZeroOffsetError):
+            TextPosition(0, 0)
 
         with self.assertRaises(TypeError):
             TextPosition('hello', 3)

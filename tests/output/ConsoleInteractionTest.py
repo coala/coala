@@ -14,7 +14,6 @@ from coalib.bears.Bear import Bear
 from coalib import coala
 from coala_utils.ContextManagers import (
     make_temp, retrieve_stdout, simulate_console_inputs)
-from coala_utils.decorators import check_logs
 from coalib.output.ConsoleInteraction import (
     acquire_actions_and_apply, acquire_settings, get_action_info, nothing_done,
     print_affected_files, print_result, print_results,
@@ -76,7 +75,7 @@ class TestBear(Bear):
     CAN_FIX = {'Formatting'}
     LANGUAGES = list(sorted({'F#', 'Shakespearean Programming Language'}))
 
-    def run(self, setting1, setting2: int=None):
+    def run(self, setting1, setting2: int = None):
         """
         Test bear Description.
 
@@ -110,7 +109,7 @@ class SomeBear(Bear):
 
 class SomeOtherBear(Bear):
 
-    def run(self, setting: int=None):
+    def run(self, setting: int = None):
         """
         This is a Bear.
         :param setting: This is an optional setting.
@@ -755,7 +754,7 @@ file
             print_results(
                 self.log_printer,
                 Section(''),
-                [Result('ClangCloneDetectionBear',
+                [Result('Bear_for_detecting_clone',
                         'Clone Found',
                         affected_code)],
                 {abspath('some_file'): ['line ' + str(i + 1) + '\n'
@@ -775,7 +774,7 @@ some_file
 [   5] li{0}{3}
 [   6] li{0}{4}
 [   7] li{0}{5}
-**** ClangCloneDetectionBear [Section:  | Severity: NORMAL] ****
+**** Bear_for_detecting_clone [Section:  | Severity: NORMAL] ****
 !    ! {6}\n""".format(highlight_text(self.no_color, 'ne',
                                       BackgroundSourceRangeStyle, self.lexer),
                        highlight_text(self.no_color, ' 1', NoColorStyle,
@@ -869,6 +868,8 @@ class ShowBearsTest(unittest.TestCase):
 
     def setUp(self):
         self.console_printer = ConsolePrinter(print_colored=False)
+        self.logs = LogCapture()
+        self.logs.__enter__()
 
     deprecation_messages = [('root',
                              'WARNING',
@@ -877,14 +878,17 @@ class ShowBearsTest(unittest.TestCase):
                              'WARNING',
                              'show_params parameter is deprecated')]
 
-    @check_logs(*deprecation_messages)
+    def tearDown(self):
+        self.logs.__exit__(None, None, None)
+
     def test_show_bear_minimal(self):
         with retrieve_stdout() as stdout:
             show_bear(
                 SomelocalBear, False, False, self.console_printer)
             self.assertEqual(stdout.getvalue(), 'SomelocalBear\n')
 
-    @check_logs(*deprecation_messages)
+        self.logs.check(*self.deprecation_messages)
+
     def test_show_bear_desc_only(self):
         with retrieve_stdout() as stdout:
             show_bear(
@@ -893,7 +897,8 @@ class ShowBearsTest(unittest.TestCase):
                 stdout.getvalue(),
                 'SomelocalBear\n  Some local-bear Description.\n\n')
 
-    @check_logs(*deprecation_messages)
+        self.logs.check(*self.deprecation_messages)
+
     def test_show_bear_details_only(self):
         with retrieve_stdout() as stdout:
             show_bear(
@@ -911,7 +916,8 @@ class ShowBearsTest(unittest.TestCase):
                              'can fix.\n\n  Path:\n   ' +
                              repr(SomelocalBear.source_location) + '\n\n')
 
-    @check_logs(*deprecation_messages)
+        self.logs.check(*self.deprecation_messages)
+
     def test_show_bear_long_without_content(self):
         with retrieve_stdout() as stdout:
             show_bear(
@@ -930,7 +936,8 @@ class ShowBearsTest(unittest.TestCase):
                              'can fix.\n\n  Path:\n   ' +
                              repr(SomelocalBear.source_location) + '\n\n')
 
-    @check_logs(*deprecation_messages)
+        self.logs.check(*self.deprecation_messages)
+
     def test_show_bear_with_content(self):
         with retrieve_stdout() as stdout:
             show_bear(TestBear, True, True, self.console_printer)
@@ -950,7 +957,8 @@ class ShowBearsTest(unittest.TestCase):
                              '  Can fix:\n   * Formatting\n\n  Path:\n   ' +
                              repr(TestBear.source_location) + '\n\n')
 
-    @check_logs(*deprecation_messages)
+        self.logs.check(*self.deprecation_messages)
+
     def test_show_bear_settings_only(self):
         with retrieve_stdout() as stdout:
             args = default_arg_parser().parse_args(['--show-settings'])
@@ -963,20 +971,23 @@ class ShowBearsTest(unittest.TestCase):
                              '   * setting2: Optional Setting. ('
                              "Optional, defaults to 'None'.)\n\n")
 
-    @check_logs(*deprecation_messages)
+        self.logs.check(*self.deprecation_messages)
+
     def test_show_bears_empty(self):
         with retrieve_stdout() as stdout:
             show_bears({}, {}, True, True, self.console_printer)
             self.assertIn('No bears to show.', stdout.getvalue())
 
-    @check_logs(*deprecation_messages)
+        self.logs.check(*self.deprecation_messages)
+
     def test_show_bears_with_json(self):
         args = default_arg_parser().parse_args(['--json'])
         with retrieve_stdout() as stdout:
             show_bears({}, {}, True, True, self.console_printer, args)
             self.assertEqual('{\n  "bears": []\n}\n', stdout.getvalue())
 
-    @check_logs(*deprecation_messages)
+        self.logs.check(*self.deprecation_messages)
+
     @patch('coalib.output.ConsoleInteraction.show_bear')
     def test_show_bears(self, show_bear):
         local_bears = OrderedDict([('default', [SomelocalBear]),
@@ -988,7 +999,8 @@ class ShowBearsTest(unittest.TestCase):
                                           self.console_printer,
                                           None)
 
-    @check_logs(*(deprecation_messages*5))
+        self.logs.check(*self.deprecation_messages)
+
     def test_show_bears_sorted(self):
         local_bears = OrderedDict([('default', [SomelocalBear]),
                                    ('test', [aSomelocalBear])])
@@ -1003,6 +1015,8 @@ class ShowBearsTest(unittest.TestCase):
                              'BSomeglobalBear\n'
                              'SomeglobalBear\n'
                              'SomelocalBear\n')
+
+        self.logs.check(*(self.deprecation_messages*5))
 
     def test_show_bears_capabilities(self):
         with retrieve_stdout() as stdout:

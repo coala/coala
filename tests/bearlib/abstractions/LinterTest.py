@@ -314,6 +314,49 @@ class LinterComponentTest(unittest.TestCase):
         process_output_mock.assert_called_once_with(('hello stdout\n',
                                                      'hello stderr\n'), '', [])
 
+    def test_strip_ansi(self):
+        process_output_mock = Mock()
+
+        class TestLinter:
+
+            @staticmethod
+            def process_output(output, filename, file):
+                process_output_mock(output, filename, file)
+
+            @staticmethod
+            def create_arguments(filename, file, config_file):
+                code = '\n'.join(['import sys',
+                                  "blue = '\033[94m'",
+                                  "print(blue + 'Hello blue')",
+                                  "red = '\033[31m'",
+                                  "print(red + 'Hello red', file=sys.stderr)"])
+                return '-c', code
+
+        # use_stdout, use_stderr, strip_ansi, expected result
+        scenarios = [
+            (True, False, True, 'Hello blue\n'),
+            (True, False, False, '\033[94mHello blue\n'),
+            (False, True, True, 'Hello red\n'),
+            (False, True, False, '\033[31mHello red\n'),
+            (True, True, True, ('Hello blue\n',
+                                'Hello red\n')),
+            (True, True, False, ('\033[94mHello blue\n',
+                                 '\033[31mHello red\n')),
+        ]
+
+        for use_stdout, use_stderr, strip_ansi, expected_result in scenarios:
+            uut = (linter(sys.executable,
+                          use_stdout=use_stdout,
+                          use_stderr=use_stderr,
+                          strip_ansi=strip_ansi)
+                   (TestLinter)
+                   (self.section, None))
+            uut.run('', [])
+
+            process_output_mock.assert_called_once_with(
+                expected_result, '', [])
+            process_output_mock.reset_mock()
+
     def test_process_output_corrected(self):
         uut = (linter(sys.executable, output_format='corrected')
                (self.EmptyTestLinter)
@@ -460,10 +503,10 @@ class LinterComponentTest(unittest.TestCase):
 
     def test_process_output_regex(self):
         # Also test the case when an unknown severity is matched.
-        test_output = ('12:4-14:0-Serious issue (error) -> ORIGIN=X -> D\n'
-                       '0:0-0:1-This is a warning (warning) -> ORIGIN=Y -> A\n'
-                       '813:77-1024:32-Just a note (info) -> ORIGIN=Z -> C\n'
-                       '0:0-0:0-Some unknown sev (???) -> ORIGIN=W -> B\n')
+        test_output = ('13:5-15:1-Serious issue (error) -> ORIGIN=X -> D\n'
+                       '1:1-1:2-This is a warning (warning) -> ORIGIN=Y -> A\n'
+                       '814:78-1025:33-Just a note (info) -> ORIGIN=Z -> C\n'
+                       '1:1-1:1-Some unknown sev (???) -> ORIGIN=W -> B\n')
         regex = (r'(?P<line>\d+):(?P<column>\d+)-'
                  r'(?P<end_line>\d+):(?P<end_column>\d+)-'
                  r'(?P<message>.*) \((?P<severity>.*)\) -> '
@@ -481,25 +524,25 @@ class LinterComponentTest(unittest.TestCase):
         expected = [Result.from_values('EmptyTestLinter (X)',
                                        'Serious issue',
                                        sample_file,
-                                       12, 4, 14, 0,
+                                       13, 5, 15, 1,
                                        RESULT_SEVERITY.MAJOR,
                                        additional_info='D'),
                     Result.from_values('EmptyTestLinter (Y)',
                                        'This is a warning',
                                        sample_file,
-                                       0, 0, 0, 1,
+                                       1, 1, 1, 2,
                                        RESULT_SEVERITY.NORMAL,
                                        additional_info='A'),
                     Result.from_values('EmptyTestLinter (Z)',
                                        'Just a note',
                                        sample_file,
-                                       813, 77, 1024, 32,
+                                       814, 78, 1025, 33,
                                        RESULT_SEVERITY.INFO,
                                        additional_info='C'),
                     Result.from_values('EmptyTestLinter (W)',
                                        'Some unknown sev',
                                        sample_file,
-                                       0, 0, 0, 0,
+                                       1, 1, 1, 1,
                                        RESULT_SEVERITY.NORMAL,
                                        additional_info='B')]
 
@@ -510,12 +553,12 @@ class LinterComponentTest(unittest.TestCase):
 
         # Test when providing a sequence as output.
         test_output = ['',
-                       '12:4-14:0-Serious issue (error) -> ORIGIN=X -> XYZ\n']
+                       '13:5-15:1-Serious issue (error) -> ORIGIN=X -> XYZ\n']
         results = list(uut.process_output(test_output, sample_file, ['']))
         expected = [Result.from_values('EmptyTestLinter (X)',
                                        'Serious issue',
                                        sample_file,
-                                       12, 4, 14, 0,
+                                       13, 5, 15, 1,
                                        RESULT_SEVERITY.MAJOR,
                                        additional_info='XYZ')]
 
@@ -533,9 +576,158 @@ class LinterComponentTest(unittest.TestCase):
         expected = [Result.from_values('EmptyTestLinter (X)',
                                        'Hello world',
                                        sample_file,
-                                       12, 4, 14, 0,
+                                       13, 5, 15, 1,
                                        RESULT_SEVERITY.MAJOR,
                                        additional_info='XYZ')]
+
+        self.assertEqual(results, expected)
+
+    def test_normalize_numbers(self):
+        # Test when `normalize_column_numbers` is True while
+        # `normalize_line_numbers` is False.
+        test_output = ('12:4-14:0-Serious issue (error) -> ORIGIN=X -> D\n'
+                       '1:0-1:1-This is a warning (warning) -> ORIGIN=Y -> A\n'
+                       '813:77-1024:32-Just a note (info) -> ORIGIN=Z -> C\n')
+        regex = (r'(?P<line>\d+):(?P<column>\d+)-'
+                 r'(?P<end_line>\d+):(?P<end_column>\d+)-'
+                 r'(?P<message>.*) \((?P<severity>.*)\) -> '
+                 r'ORIGIN=(?P<origin>.*) -> (?P<additional_info>.*)')
+
+        uut = (linter(sys.executable,
+                      normalize_column_numbers=True,
+                      output_format='regex',
+                      output_regex=regex)
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        sample_file = 'some-file.xtx'
+        results = list(uut.process_output(test_output, sample_file, ['']))
+        expected = [Result.from_values('EmptyTestLinter (X)',
+                                       'Serious issue',
+                                       sample_file,
+                                       12, 5, 14, 1,
+                                       RESULT_SEVERITY.MAJOR,
+                                       additional_info='D'),
+                    Result.from_values('EmptyTestLinter (Y)',
+                                       'This is a warning',
+                                       sample_file,
+                                       1, 1, 1, 2,
+                                       RESULT_SEVERITY.NORMAL,
+                                       additional_info='A'),
+                    Result.from_values('EmptyTestLinter (Z)',
+                                       'Just a note',
+                                       sample_file,
+                                       813, 78, 1024, 33,
+                                       RESULT_SEVERITY.INFO,
+                                       additional_info='C')]
+
+        self.assertEqual(results, expected)
+
+        # Test when `normalize_line_numbers` is True while
+        # `normalize_column_numbers` is False.
+        test_output = ('0:4-14:1-Serious issue (error) -> ORIGIN=X -> D\n'
+                       '0:1-0:2-This is a warning (warning) -> ORIGIN=Y -> A\n'
+                       '813:77-1024:32-Just a note (info) -> ORIGIN=Z -> C\n')
+
+        uut = (linter(sys.executable,
+                      normalize_line_numbers=True,
+                      output_format='regex',
+                      output_regex=regex)
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        sample_file = 'some-file.xtx'
+        results = list(uut.process_output(test_output, sample_file, ['']))
+        expected = [Result.from_values('EmptyTestLinter (X)',
+                                       'Serious issue',
+                                       sample_file,
+                                       1, 4, 15, 1,
+                                       RESULT_SEVERITY.MAJOR,
+                                       additional_info='D'),
+                    Result.from_values('EmptyTestLinter (Y)',
+                                       'This is a warning',
+                                       sample_file,
+                                       1, 1, 1, 2,
+                                       RESULT_SEVERITY.NORMAL,
+                                       additional_info='A'),
+                    Result.from_values('EmptyTestLinter (Z)',
+                                       'Just a note',
+                                       sample_file,
+                                       814, 77, 1025, 32,
+                                       RESULT_SEVERITY.INFO,
+                                       additional_info='C')]
+
+        self.assertEqual(results, expected)
+
+        # Test when `normalize_line_numbers` and
+        # `normalize_column_numbers` are both True.
+        test_output = ('0:4-14:1-Serious issue (error) -> ORIGIN=X -> D\n'
+                       '0:0-0:1-This is a warning (warning) -> ORIGIN=Y -> A\n'
+                       '813:77-1024:32-Just a note (info) -> ORIGIN=Z -> C\n')
+
+        uut = (linter(sys.executable,
+                      normalize_line_numbers=True,
+                      normalize_column_numbers=True,
+                      output_format='regex',
+                      output_regex=regex)
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        sample_file = 'some-file.xtx'
+        results = list(uut.process_output(test_output, sample_file, ['']))
+        expected = [Result.from_values('EmptyTestLinter (X)',
+                                       'Serious issue',
+                                       sample_file,
+                                       1, 5, 15, 2,
+                                       RESULT_SEVERITY.MAJOR,
+                                       additional_info='D'),
+                    Result.from_values('EmptyTestLinter (Y)',
+                                       'This is a warning',
+                                       sample_file,
+                                       1, 1, 1, 2,
+                                       RESULT_SEVERITY.NORMAL,
+                                       additional_info='A'),
+                    Result.from_values('EmptyTestLinter (Z)',
+                                       'Just a note',
+                                       sample_file,
+                                       814, 78, 1025, 33,
+                                       RESULT_SEVERITY.INFO,
+                                       additional_info='C')]
+
+        self.assertEqual(results, expected)
+
+        # Test default settings: when `normalize_line_numbers` and
+        # `normalize_column_numbers` are both False.
+        test_output = ('1:4-14:1-Serious issue (error) -> ORIGIN=X -> D\n'
+                       '1:1-1:2-This is a warning (warning) -> ORIGIN=Y -> A\n'
+                       '813:77-1024:32-Just a note (info) -> ORIGIN=Z -> C\n')
+
+        uut = (linter(sys.executable,
+                      output_format='regex',
+                      output_regex=regex)
+               (self.EmptyTestLinter)
+               (self.section, None))
+
+        sample_file = 'some-file.xtx'
+        results = list(uut.process_output(test_output, sample_file, ['']))
+        expected = [Result.from_values('EmptyTestLinter (X)',
+                                       'Serious issue',
+                                       sample_file,
+                                       1, 4, 14, 1,
+                                       RESULT_SEVERITY.MAJOR,
+                                       additional_info='D'),
+                    Result.from_values('EmptyTestLinter (Y)',
+                                       'This is a warning',
+                                       sample_file,
+                                       1, 1, 1, 2,
+                                       RESULT_SEVERITY.NORMAL,
+                                       additional_info='A'),
+                    Result.from_values('EmptyTestLinter (Z)',
+                                       'Just a note',
+                                       sample_file,
+                                       813, 77, 1024, 32,
+                                       RESULT_SEVERITY.INFO,
+                                       additional_info='C')]
 
         self.assertEqual(results, expected)
 
@@ -643,18 +835,18 @@ class LinterComponentTest(unittest.TestCase):
         class Handler:
 
             @staticmethod
-            def generate_config(filename, file, some_default: str='x'):
+            def generate_config(filename, file, some_default: str = 'x'):
                 generate_config_mock(filename, file, some_default)
                 return None
 
             @staticmethod
-            def create_arguments(filename, file, config_file, default: int=3):
+            def create_arguments(filename, file, config_file, default: int = 3):
                 create_arguments_mock(
                     filename, file, config_file, default)
                 return '-c', "print('hello')"
 
             @staticmethod
-            def process_output(output, filename, file, xxx: int=64):
+            def process_output(output, filename, file, xxx: int = 64):
                 process_output_mock(output, filename, file, xxx)
 
         uut = linter(sys.executable)(Handler)(self.section, None)
@@ -783,17 +975,17 @@ class LocalLinterReallifeTest(unittest.TestCase):
         expected = [Result.from_values(uut,
                                        "Invalid char ('0')",
                                        self.testfile_path,
-                                       3, 0, 3, 1,
+                                       4, 1, 4, 2,
                                        RESULT_SEVERITY.MAJOR),
                     Result.from_values(uut,
                                        "Invalid char ('.')",
                                        self.testfile_path,
-                                       5, 0, 5, 1,
+                                       6, 1, 6, 2,
                                        RESULT_SEVERITY.MAJOR),
                     Result.from_values(uut,
                                        "Invalid char ('p')",
                                        self.testfile_path,
-                                       9, 0, 9, 1,
+                                       10, 1, 10, 2,
                                        RESULT_SEVERITY.MAJOR)]
 
         self.assertEqual(results, expected)
@@ -827,12 +1019,12 @@ class LocalLinterReallifeTest(unittest.TestCase):
         expected = [Result.from_values(uut,
                                        "Invalid char ('X')",
                                        self.testfile2_path,
-                                       0, 0, 0, 1,
+                                       1, 1, 1, 2,
                                        RESULT_SEVERITY.MAJOR),
                     Result.from_values(uut,
                                        "Invalid char ('i')",
                                        self.testfile2_path,
-                                       4, 0, 4, 1,
+                                       5, 1, 5, 2,
                                        RESULT_SEVERITY.MAJOR)]
 
         self.assertEqual(results, expected)
@@ -915,17 +1107,17 @@ class LocalLinterReallifeTest(unittest.TestCase):
         expected = [Result.from_values(uut,
                                        'Invalid char provided!',
                                        self.testfile_path,
-                                       3, 0, 3, 1,
+                                       4, 1, 4, 2,
                                        RESULT_SEVERITY.MAJOR),
                     Result.from_values(uut,
                                        'Invalid char provided!',
                                        self.testfile_path,
-                                       5, 0, 5, 1,
+                                       6, 1, 6, 2,
                                        RESULT_SEVERITY.MAJOR),
                     Result.from_values(uut,
                                        'Invalid char provided!',
                                        self.testfile_path,
-                                       9, 0, 9, 1,
+                                       10, 1, 10, 2,
                                        RESULT_SEVERITY.MAJOR)]
 
         self.assertEqual(results, expected)

@@ -52,7 +52,7 @@ Using virtualenv
 NOTE:
 If you have both Python 3 and Python 2 installed try this command
 it creates an isolated Python 3 environment called coala-venv
-in your current directory, as coala only works for Python >= 3.4
+in your current directory, as coala only works for Python >= 3.4.4
 ::
 
     $ virtualenv coala-venv -p $(which python3)
@@ -64,7 +64,7 @@ in your current directory, as coala only works for Python >= 3.4
         (coala-venv)$ deactivate # to exit the environment
 
 - After this, you can start
-  `installing from git <https://api.coala.io/en/latest/Developers/Development_Setup.html#id1>`_.
+  `installing from git <https://api.coala.io/en/latest/Developers/Development_Setup.html#id1>`__.
 
 Repositories
 ------------
@@ -91,25 +91,19 @@ https://gitlab.com/coala/coala-utils/
 Installing from Git
 -------------------
 
-We recommend first installing the latest development snapshot of coala's
-master branch from and all of its dependencies with pip3 using
+We recommend installing coala and coala-bears from the master branch for
+latest updates and its dependencies with pip3 using the commands given below.
+The ``-e`` tag installs the project in the editable mode from the given path.
 
 ::
 
     (coala-venv)$ git clone https://github.com/coala/coala
     (coala-venv)$ cd coala
-    (coala-venv)$ pip3 install .
-    (coala-venv)$ cd -
+    (coala-venv)$ pip3 install -e .
+    (coala-venv)$ cd ..
     (coala-venv)$ git clone https://github.com/coala/coala-bears
     (coala-venv)$ cd coala-bears
-    (coala-venv)$ pip3 install .
-
-Once you have forked the repository you would like to modify, you can
-install a repository-backed version of the repository using
-
-::
-
-    (coala-venv)$ pip3 install -e <path/to/forked/repository>
+    (coala-venv)$ pip3 install -e .
 
 You will then be able to edit the repository and have the changes take effect
 in your virtualenv immediately. You will also be able to use pip3 to manage
@@ -127,5 +121,6 @@ You should run this command before trying to build the documentation:
     (coala-venv)$ pip3 install -r docs-requirements.txt
 
 Once you have done so, you can build the documentation by entering the docs
-directory and running ``make``. The documentation on the coala website is in
+directory and running ``python3 setup.py docs``. The documentation
+on the coala website is in
 the ``coala`` (not ``coala-bears``) repository.

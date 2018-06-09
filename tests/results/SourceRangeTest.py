@@ -1,5 +1,4 @@
 import unittest
-from collections import namedtuple
 from os.path import abspath
 
 from coalib.results.SourcePosition import SourcePosition
@@ -27,20 +26,6 @@ class SourceRangeTest(unittest.TestCase):
         uut = SourceRange.from_values('B', start_line=2, end_line=4)
         self.assertEqual(uut.start, self.result_fileB_line2)
         self.assertEqual(uut.end, self.result_fileB_line4)
-
-    def test_from_clang_range(self):
-        # Simulating a clang SourceRange is easier than setting one up without
-        # actually parsing a complete C file.
-        ClangRange = namedtuple('ClangRange', 'start end')
-        ClangPosition = namedtuple('ClangPosition', 'file line column')
-        ClangFile = namedtuple('ClangFile', 'name')
-        file = ClangFile('t.c')
-        start = ClangPosition(file, 1, 2)
-        end = ClangPosition(file, 3, 4)
-
-        uut = SourceRange.from_clang_range(ClangRange(start, end))
-        compare = SourceRange.from_values('t.c', 1, 2, 3, 4)
-        self.assertEqual(uut, compare)
 
     def test_from_absolute_position(self):
         text = ('a\n', 'b\n')

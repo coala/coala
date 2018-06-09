@@ -3,11 +3,13 @@ import logging
 import os
 import pkg_resources
 import itertools
+import re
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Importers import iimport_objects
 from coala_utils.decorators import yield_once
 from coalib.misc.Exceptions import log_exception
+from coalib.misc.IterUtilities import partition
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.Globbing import fnmatch, iglob, glob_escape
 
@@ -36,15 +38,17 @@ def _import_bears(file_path, kinds):
 
 
 @yield_once
-def icollect(file_paths, ignored_globs=None, match_cache={}):
+def icollect(file_paths, ignored_globs=None, match_cache={},
+             match_function=fnmatch):
     """
     Evaluate globs in file paths and return all matching files.
 
-    :param file_paths:    File path or list of such that can include globs
-    :param ignored_globs: List of globs to ignore when matching files
-    :param match_cache:   Dictionary to use for caching results
-    :return:              Iterator that yields tuple of path of a matching
-                          file, the glob where it was found
+    :param file_paths:      File path or list of such that can include globs
+    :param ignored_globs:   List of globs to ignore when matching files
+    :param match_cache:     Dictionary to use for caching results
+    :param match_function:  The function to use for glob matching
+    :return:                Iterator that yields tuple of path of a matching
+                            file, the glob where it was found
     """
     if isinstance(file_paths, str):
         file_paths = [file_paths]
@@ -54,8 +58,45 @@ def icollect(file_paths, ignored_globs=None, match_cache={}):
             match_cache[file_path] = list(iglob(file_path))
 
         for match in match_cache[file_path]:
-            if not ignored_globs or not fnmatch(match, ignored_globs):
+            if not ignored_globs or not match_function(match, ignored_globs):
                 yield match, file_path
+
+
+def match_dir_or_file_pattern(path, ignore_patterns=None):
+    """
+    Tries to match the given path with the directory (substring match) or file
+    (enforced full match) patterns.
+
+    :param path:                Valid file path
+    :param ignore_patterns:     List of regex patterns that match a file or a
+                                directory
+    :return:                    True if any of the given pattern match
+    """
+    def escape(pattern):
+        return pattern.replace('\\', '\\\\')
+
+    expanded_ignores = list_glob_results(ignore_patterns)
+
+    file_patterns, dir_patterns = partition(
+        expanded_ignores,
+        os.path.isfile)
+
+    return (
+        any((re.match(escape(pattern), path) for pattern in dir_patterns)) or
+        any((re.fullmatch(escape(pattern), path) for pattern in file_patterns)))
+
+
+def list_glob_results(values=None):
+    """
+    Expands the globs of all given values and concatenates the results.
+
+    :param values:  List of file-globs or files.
+    :return:        List of matched files.
+    """
+    return functools.reduce(
+        lambda seed, value: seed + list(iglob(value)),
+        values if values else (),
+        [])
 
 
 def collect_files(file_paths, log_printer=None, ignored_file_paths=None,
@@ -72,8 +113,11 @@ def collect_files(file_paths, log_printer=None, ignored_file_paths=None,
     limit_fnmatch = (functools.partial(fnmatch, globs=limit_file_paths)
                      if limit_file_paths else lambda fname: True)
 
-    valid_files = list(filter(lambda fname: os.path.isfile(fname[0]),
-                              icollect(file_paths, ignored_file_paths)))
+    valid_files = list(
+        filter(lambda fname: os.path.isfile(fname[0]),
+               icollect(file_paths,
+                        ignored_file_paths,
+                        match_function=match_dir_or_file_pattern)))
 
     # Find globs that gave no files and warn the user
     if valid_files:
@@ -176,6 +220,23 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer=None,
         index = kinds.index(_get_kind(bear))
         bears_found[index].append(bear)
         bear_globs_with_bears.add(glob)
+
+    unused_globs = set(bear_globs) - set(bear_globs_with_bears)
+    suffix_globs = {}
+
+    for glob in unused_globs:
+        if glob is not '**' and glob is not '*':
+            if glob.endswith('bear'):  # pragma nt: no cover
+                new_glob = glob[:-4] + 'B' + glob[-3:]
+                suffix_globs[new_glob] = glob
+            elif not glob.endswith('Bear'):
+                suffix_globs[glob + 'Bear'] = glob
+
+    for bear, glob in icollect_bears(bear_dirs,
+                                     set(suffix_globs.keys()), kinds):
+        index = kinds.index(_get_kind(bear))
+        bears_found[index].append(bear)
+        bear_globs_with_bears.add(suffix_globs[glob])
 
     if warn_if_unused_glob:
         _warn_if_unused_glob(bear_globs, bear_globs_with_bears,

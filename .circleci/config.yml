@@ -1,0 +1,82 @@
+version: 2
+jobs:
+  python-3.4:
+    docker:
+      - image: circleci/python:3.4
+
+    steps: &build
+      - checkout
+      - restore_cache:
+          key: coala-cache-{{ checksum "requirements.txt" }}
+
+      - run:
+          name: env
+          command: |
+            echo "export NVM_DIR=$HOME/.nvm" >> $BASH_ENV
+            echo "export PATH=~/.local/bin:$PATH" >> $BASH_ENV
+
+      - run:
+          name: install-csslint
+          command: |
+            curl -o- \
+            https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh\
+            | bash
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            nvm install 8
+            npm install -g csslint
+
+      - run:
+          name: dependencies
+          command: |
+            pip install --user \
+            -r requirements.txt \
+            -r docs-requirements.txt \
+            -r test-requirements.txt
+
+      - run:
+          name: pytest
+          when: always
+          command: python -m pytest
+
+      - run:
+          name: install-shellcheck
+          command: sudo apt-get install shellcheck
+
+      - run:
+          name: coala-ci
+          when: always
+          command: |
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            pip install --user .
+            pip install --user coala-bears[alldeps] --pre -U
+            pip install --user "packaging~=16.8"
+            ./coala --non-interactive
+
+      - run:
+          name: codecov
+          when: always
+          command: python -m codecov
+
+      - run:
+          name: sphinx-build
+          command: python setup.py docs
+
+      - save_cache:
+          key: coala-cache-{{ checksum "requirements.txt" }}
+          paths:
+            - "../nltk_data"
+            - "docs/_build"
+            - "../.cache/pip"
+
+  python-3.5:
+    docker:
+      - image: circleci/python:3.5
+
+    steps: *build
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - python-3.4
+      - python-3.5

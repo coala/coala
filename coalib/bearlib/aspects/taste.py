@@ -48,8 +48,8 @@ class Taste(metaclass=TasteMeta):
     cast_type = str
 
     @enforce_signature
-    def __init__(self, description: str='', suggested_values: tuple=(),
-                 default=None, languages: tuple=()):
+    def __init__(self, description: str = '', suggested_values: tuple = (),
+                 default=None, languages: tuple = ()):
         """
         Creates a new taste that can be optionally only available for the
         given `languages`, which must be language identifiers supported by

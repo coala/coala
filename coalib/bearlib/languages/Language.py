@@ -422,8 +422,11 @@ class Language(metaclass=LanguageMeta):
 
     def __contains__(self, item):
         item = Language[item]
+        item_versions = set(item.versions)
+        versions = set(self.versions)
         return (type(self) is type(item)
-                and set(item.versions).issubset(set(self.versions)))
+                and (item_versions.issubset(versions)
+                     or item_versions.issuperset(versions)))
 
     def __reduce__(self):
         return (Language.__getitem__, (str(self),))

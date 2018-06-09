@@ -1,20 +1,26 @@
 sudo: false
 language: python
 python:
-  - 3.4
+  - 3.4.4
   - 3.5
   - 3.6
 
-matrix:
+jobs:
   include:
     # OSX build removed due to long build startup delays
     # Restore matrix job entry from d2d67fab to test OSX
     - python: 2.7
       env: UNSUPPORTED=true
       script: .misc/check_unsupported.sh
+      if: branch = master AND type = push
     - python: 3.3
       env: UNSUPPORTED=true
       script: .misc/check_unsupported.sh
+      if: branch = master AND type = push
+    - python: 3.4.3
+      env: UNSUPPORTED=true
+      script: .misc/check_unsupported.sh
+      if: branch = master AND type = push
 
 env:
   global:
@@ -25,13 +31,6 @@ cache:
   directories:
     - node_modules
     - docs/_build
-
-addons:
-  apt:
-    packages:
-      - clang-3.4
-    sources:
-      - llvm-toolchain-precise
 
 before_install:
   - if [[ $TRAVIS_OS_NAME == osx ]]; then TRAVIS_PYTHON_VERSION=3.5; fi
@@ -62,12 +61,16 @@ before_install:
   - if [[ $TRAVIS_OS_NAME == osx ]]; then pip install -r requirements.txt; fi
 
   # For bears in .coafile requiring npm dependencies
-  - npm install
+  - npm install --no-save
 
 before_script:
   # Restore the original requirements.txt
   - mv requirements.orig requirements.txt
   - python .misc/check_setuptools.py
+  - git clone https://github.com/moremoban/setupmobans ../setupmobans
+  - git clone https://gitlab.com/coala/mobans ../coala-mobans
+  - moban
+  - git diff --exit-code
 
 script:
   - py.test

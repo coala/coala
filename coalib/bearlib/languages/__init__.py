@@ -18,6 +18,7 @@ from .definitions.Java import Java
 from .definitions.JavaScript import JavaScript
 from .definitions.JSP import JSP
 from .definitions.Matlab import Matlab
+from .definitions.Markdown import Markdown
 from .definitions.ObjectiveC import ObjectiveC
 from .definitions.PHP import PHP
 from .definitions.PLSQL import PLSQL
@@ -28,4 +29,5 @@ from .definitions.Swift import Swift
 from .definitions.Vala import Vala
 from .definitions.TypeScript import TypeScript
 from .definitions.Shell import Shell
+from .definitions.Jinja2 import Jinja2
 # Stop ignoring PyUnusedCodeBear

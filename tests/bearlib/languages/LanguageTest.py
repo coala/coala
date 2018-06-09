@@ -17,6 +17,18 @@ class LanguageTest(unittest.TestCase):
         cpp_unpickled = pickle.loads(cpp_str)
         self.assertEqual(str(cpp), str(cpp_unpickled))
 
+    def test_contains_method(self):
+        # Test alias
+        self.assertTrue('py' in Language[Language.Python])
+        # Test version
+        self.assertTrue('python' in Language[Language.Python == 3])
+        # Test string parse
+        self.assertTrue('python' in Language['python 3'])
+        # Test version exclusion
+        self.assertFalse('py 2' in Language['py 3'])
+        # More complex version exclusion test
+        self.assertFalse('py 2.7, 3.4' in Language['py 3'])
+
 
 class LanguageAttributeErrorTest(unittest.TestCase):
 

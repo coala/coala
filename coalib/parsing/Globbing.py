@@ -198,6 +198,8 @@ def fnmatch(name, globs):
     """
     Tests whether name matches one of the given globs.
 
+    An empty glob will match nothing and return false.
+
     :param name:  File or directory name
     :param globs: Glob string with wildcards or list of globs
     :return:      Boolean: Whether or not name is matched by glob
@@ -217,7 +219,7 @@ def fnmatch(name, globs):
     globs = (globs,) if isinstance(globs, str) else tuple(globs)
 
     if len(globs) == 0:
-        return True
+        return False
 
     name = os.path.normcase(name)
 

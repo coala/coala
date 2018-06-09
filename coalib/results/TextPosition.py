@@ -2,12 +2,16 @@ from coala_utils.decorators import (
     enforce_signature, generate_ordering, generate_repr)
 
 
+class ZeroOffsetError(ValueError):
+    pass
+
+
 @generate_repr('line', 'column')
 @generate_ordering('line', 'column')
 class TextPosition:
 
     @enforce_signature
-    def __init__(self, line: (int, None)=None, column: (int, None)=None):
+    def __init__(self, line: (int, None) = None, column: (int, None) = None):
         """
         Creates a new TextPosition object that represents the position inside
         a string with line/column numbers.
@@ -20,6 +24,13 @@ class TextPosition:
         """
         if line is None and column is not None:
             raise ValueError('A column can only be set if a line is set.')
+
+        if line == 0 and column == 0:
+            raise ZeroOffsetError('Line and column offset cannot be zero.')
+        elif line == 0:
+            raise ZeroOffsetError('Line offset cannot be zero.')
+        elif column == 0:
+            raise ZeroOffsetError('Column offset cannot be zero.')
 
         self._line = line
         self._column = column

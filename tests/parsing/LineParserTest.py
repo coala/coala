@@ -45,7 +45,7 @@ class LineParserTest(unittest.TestCase):
                             output_keys=[('a', 'b'), ('', r'\a.\b c')])
 
     def test_escaping(self):
-        self.check_data_set("hello = world\ # yes here's a space",
+        self.check_data_set(r"hello = world\ # yes here's a space",
                             output_keys=[('', 'hello')],
                             output_value='world\\ ',
                             output_comment="# yes here's a space")
@@ -123,4 +123,4 @@ class LineParserTest(unittest.TestCase):
             self.uut.parse('')
 
         self.assertRegex(cm.output[0], 'WARNING:root:The parse method of '
-                                       'LineParser is deprecated\.*')
+                                       r'LineParser is deprecated\.*')

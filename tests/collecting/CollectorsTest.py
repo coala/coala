@@ -3,6 +3,7 @@ import os
 import pkg_resources
 import unittest
 
+from functools import partial
 from pyprint.ConsolePrinter import ConsolePrinter
 
 from testfixtures import LogCapture
@@ -35,8 +36,6 @@ class CollectFilesTest(unittest.TestCase):
         with LogCapture() as capture:
             self.assertEqual(collect_files(file_paths=['invalid_path'],
                                            log_printer=self.log_printer,
-                                           ignored_file_paths=None,
-                                           limit_file_paths=None,
                                            section_name='section'), [])
         capture.check(
             ('root', 'WARNING', 'No files matching \'invalid_path\' were '
@@ -85,6 +84,32 @@ class CollectFilesTest(unittest.TestCase):
                                            'py_files',
                                            'file2.py')]),
                          [])
+
+    def test_ignored_dirs(self):
+        def dir_base(*args):
+            return os.path.normcase(os.path.join(self.collectors_test_dir,
+                                                 'others', *args))
+
+        files_to_check = [dir_base('*', '*2.py'),
+                          dir_base('**', '*.pyc'),
+                          dir_base('*', '*1.c')]
+        ignore = dir_base('py_files', '')
+        collect_files_partial = partial(collect_files,
+                                        files_to_check)
+        self.assertEqual(
+            collect_files_partial(ignored_file_paths=[ignore]),
+            [dir_base('c_files', 'file1.c')])
+        self.assertEqual(
+            collect_files_partial(ignored_file_paths=[ignore.rstrip(os.sep)]),
+            [dir_base('c_files', 'file1.c')])
+        self.assertEqual(
+            collect_files_partial(
+                ignored_file_paths=[dir_base('py_files', '**')]),
+            [dir_base('c_files', 'file1.c')])
+        self.assertEqual(
+            collect_files_partial(
+                ignored_file_paths=[dir_base('py_files', '*')]),
+            [dir_base('c_files', 'file1.c')])
 
     def test_limited(self):
         self.assertEqual(
@@ -271,6 +296,16 @@ class CollectBearsTest(unittest.TestCase):
             ['other_kind'],
             self.log_printer)[0]), 0)
 
+    def test_bear_suffix(self):
+        self.assertEqual(
+            len(collect_bears(os.path.join(self.collectors_test_dir, 'bears'),
+                              ['namebear'], ['kind'],
+                              self.log_printer)[0]), 1)
+        self.assertEqual(
+            len(collect_bears(os.path.join(self.collectors_test_dir, 'bears'),
+                              ['name'], ['kind'],
+                              self.log_printer)[0]), 1)
+
     def test_all_bears_from_sections(self):
         test_section = Section('test_section')
         test_section.bear_dirs = lambda: os.path.join(self.collectors_test_dir,
@@ -309,9 +344,9 @@ class CollectBearsTest(unittest.TestCase):
                 [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL])
         self.assertRegex(log.output[0],
                          'coala cannot find bear that could analyze the '
-                         'following aspects: \['
-                         "'Root\.Redundancy\.UnusedVariable\.UnusedParameter'"
-                         '\]')
+                         r'following aspects: \['
+                         r"'Root\.Redundancy\.UnusedVariable\.UnusedParameter'"
+                         r'\]')
 
         self.assertEqual(global_bears, [])
         self.assertEqual(str(local_bears),

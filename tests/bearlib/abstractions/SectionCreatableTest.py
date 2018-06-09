@@ -9,8 +9,8 @@ class TestObject(SectionCreatable):
     def __init__(self,
                  setting_one: int,
                  raw_setting,
-                 setting_two: bool=False,
-                 setting_three: list=[1, 2],
+                 setting_two: bool = False,
+                 setting_three: list = [1, 2],
                  opt_raw_set=5):
         SectionCreatable.__init__(self)
         assert isinstance(setting_one, int)

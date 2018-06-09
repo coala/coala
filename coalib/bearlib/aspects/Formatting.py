@@ -63,7 +63,7 @@ class LineLength:
         example = """
         print('The length of this line is 38')
         """
-        example_langague = 'Python'
+        example_language = 'Python'
         importance_reason = """
         Too long lines make code very difficult to read and maintain.
         """

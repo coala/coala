@@ -74,6 +74,39 @@ class coalaCITest(unittest.TestCase):
             self.assertEqual(retval, 0,
                              'coala must return zero when successful')
 
+    def test_section_ordering(self, debug=False):
+        with bear_test_module(), \
+                prepare_file(['#include <a>'], None) as (lines, filename):
+            retval, stdout, stderr = execute_coala(
+                    coala.main, 'coala', 'b', 'a',
+                    '--non-interactive', '-S',
+                    'a.bears=SpaceConsistencyTestBear',
+                    'a.files={}'.format(filename),
+                    'a.use_spaces=True',
+                    'b.bears=SpaceConsistencyTestBear',
+                    'b.files={}'.format(filename),
+                    'b.use_spaces=True',
+                    '-c', os.devnull,
+                    debug=debug)
+            stdout_list = stdout.splitlines(True)
+            self.assertEqual('Executing section b...\n', stdout_list[0])
+            self.assertEqual('Executing section a...\n', stdout_list[1])
+
+            retval, stdout, stderr = execute_coala(
+                    coala.main, 'coala', 'a', 'b',
+                    '--non-interactive', '-S',
+                    'a.bears=SpaceConsistencyTestBear',
+                    'a.files={}'.format(filename),
+                    'a.use_spaces=True',
+                    'b.bears=SpaceConsistencyTestBear',
+                    'b.files={}'.format(filename),
+                    'b.use_spaces=True',
+                    '-c', os.devnull,
+                    debug=debug)
+            stdout_list = stdout.splitlines(True)
+            self.assertEqual('Executing section a...\n', stdout_list[0])
+            self.assertEqual('Executing section b...\n', stdout_list[1])
+
     def test_find_no_issues_debug(self):
         self.test_find_no_issues(debug=True)
 
@@ -127,6 +160,23 @@ class coalaCITest(unittest.TestCase):
             self.assertNotEqual(retval, 0,
                                 'coala was expected to return non-zero')
 
+    def test_additional_parameters_settings(self, debug=False):
+        with bear_test_module(), \
+             prepare_file(['\t#include <a>'], None) as (lines, filename):
+            retval, stdout, stderr = execute_coala(
+                 coala.main, 'coala',
+                 '--non-interactive', '-S',
+                 'name.bears=SpaceConsistencyTestBear',
+                 'name.files={}'.format(filename),
+                 'name.enabled=False',
+                 '-c', os.devnull,
+                 debug=debug)
+            self.assertEqual('Executing section cli...\n', stdout)
+            self.assertNotIn('During execution, we found that some required '
+                             'settings were not provided.', stderr)
+            self.assertEqual(retval, 0,
+                             'coala was expected to return zero')
+
     def test_fail_acquire_settings_debug(self):
         with self.assertRaisesRegex(
                 AssertionError,
@@ -172,3 +222,16 @@ class coalaCITest(unittest.TestCase):
             self.assertFalse(stderr)
             self.assertEqual(retval, 0,
                              'coala must return zero when successful')
+
+    def test_bear_dirs(self):
+        with prepare_file(['random_text'], None) as (lines, filename):
+            retval, stdout, stderr = execute_coala(
+                    coala.main, 'coala', '--non-interactive',
+                    '-c', os.devnull,
+                    '--bear-dirs', 'tests/test_bears',
+                    '-b', 'LineCountTestBear',
+                    '-f', filename)
+            self.assertIn('This file has 1 lines.', stdout)
+            self.assertIn('This result has no patch attached.', stderr)
+            self.assertNotEqual(retval, 0,
+                                'coala must return nonzero when errors occured')

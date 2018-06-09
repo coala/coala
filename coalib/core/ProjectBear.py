@@ -21,12 +21,6 @@ class ProjectBear(Bear):
 
         self._kwargs = self.get_metadata().create_params_from_section(section)
 
-    def execute_task(self, args, kwargs):
-        # To optimize performance a bit and memory usage, we use args and
-        # kwargs from this class instance, instead of passing them via the
-        # task.
-        return Bear.execute_task(self, (self.file_dict,), self._kwargs)
-
     @classmethod
     def get_metadata(cls):
         """
@@ -39,4 +33,4 @@ class ProjectBear(Bear):
             omit={'self', 'files'})
 
     def generate_tasks(self):
-        return (tuple(), {}),
+        return ((self.file_dict,), self._kwargs),

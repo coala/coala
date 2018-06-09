@@ -305,7 +305,7 @@ class coalaTest(unittest.TestCase):
             # Every error message must start with characters
             # used for coloring.
             for err in errors:
-                self.assertNotRegex(err, '^\[WARNING\]')
+                self.assertNotRegex(err, r'^\[WARNING\]')
             self.assertEqual(
                 retval, 0, 'coala must return zero when there are no errors')
 
@@ -319,6 +319,20 @@ class coalaTest(unittest.TestCase):
             # Any error message must not start with characters
             # used for coloring.
             for err in errors:
-                self.assertRegex(err, '^\[WARNING\]')
+                self.assertRegex(err, r'^\[WARNING\]')
+            self.assertEqual(
+                retval, 0, 'coala must return zero when there are no errors')
+
+    def test_coala_ignore_file(self):
+        with bear_test_module(), \
+                prepare_file(['#fixme'], None) as (lines, filename):
+            retval, stdout, stderr = execute_coala(
+                    coala.main, 'coala',
+                    '-c', os.devnull,
+                    '--non-interactive',
+                    '-f', filename,
+                    '--ignore', filename,
+                    '-b', 'LineCountTestBear')
+            self.assertEqual(stdout, 'Executing section cli...\n')
             self.assertEqual(
                 retval, 0, 'coala must return zero when there are no errors')

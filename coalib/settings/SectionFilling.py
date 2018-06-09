@@ -61,6 +61,7 @@ def fill_section(section, acquire_settings, log_printer, bears):
 
 
 def fill_settings(sections,
+                  targets,
                   acquire_settings,
                   log_printer=None,
                   fill_section_method=fill_section,
@@ -72,6 +73,8 @@ def fill_settings(sections,
     This will retrieve all bears and their dependencies.
 
     :param sections:            The sections to fill up, modified in place.
+    :param targets:             List of section names to be executed which are
+                                passed from cli.
     :param acquire_settings:    The method to use for requesting settings. It
                                 will get a parameter which is a dictionary with
                                 the settings name as key and a list containing
@@ -107,11 +110,12 @@ def fill_settings(sections,
         section_global_bears = Dependencies.resolve(section_global_bears)
         all_bears = copy.deepcopy(section_local_bears)
         all_bears.extend(section_global_bears)
-        fill_section_method(section,
-                            acquire_settings,
-                            None,
-                            all_bears,
-                            **kwargs)
+        if section.is_enabled(targets):
+            fill_section_method(section,
+                                acquire_settings,
+                                None,
+                                all_bears,
+                                **kwargs)
 
         local_bears[section_name] = section_local_bears
         global_bears[section_name] = section_global_bears

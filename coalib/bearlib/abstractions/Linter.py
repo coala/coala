@@ -8,6 +8,7 @@ import shutil
 from subprocess import check_call, CalledProcessError, DEVNULL
 from types import MappingProxyType
 
+from cli_helpers.utils import strip_ansi
 from coalib.bearlib.abstractions.LinterClass import LinterClass
 from coalib.bears.LocalBear import LocalBear
 from coalib.bears.GlobalBear import GlobalBear
@@ -35,10 +36,13 @@ def _prepare_options(options, bear_class):
                        'use_stdin',
                        'use_stdout',
                        'use_stderr',
+                       'normalize_line_numbers',
+                       'normalize_column_numbers',
                        'config_suffix',
                        'executable_check_fail_info',
                        'prerequisite_check_command',
-                       'global_bear'}
+                       'global_bear',
+                       'strip_ansi'}
 
     if not options['use_stdout'] and not options['use_stderr']:
         raise ValueError('No output streams provided at all.')
@@ -303,6 +307,14 @@ def _create_linter(klass, options):
                                     if groups.get(variable, None) is None else
                                     int(groups[variable]))
 
+            def add_one(x): return None if x is None else x + 1
+            if options['normalize_line_numbers']:
+                for variable in ('line', 'end_line'):
+                    groups[variable] = add_one(groups[variable])
+            if options['normalize_column_numbers']:
+                for variable in ('column', 'end_column'):
+                    groups[variable] = add_one(groups[variable])
+
             if 'origin' in groups:
                 groups['origin'] = '{} ({})'.format(klass.__name__,
                                                     groups['origin'].strip())
@@ -343,7 +355,7 @@ def _create_linter(klass, options):
             correction results.
 
             :param diff:
-                An instance of ``coalib.results.Diff`` object containing
+                A ``coalib.results.Diff`` object containing
                 differences of the file named ``filename``.
             :param filename:
                 The name of the file currently being corrected.
@@ -666,9 +678,10 @@ def _create_linter(klass, options):
                 output = tuple(compress(
                     output,
                     (options['use_stdout'], options['use_stderr'])))
+                if options['strip_ansi']:
+                    output = tuple(map(strip_ansi, output))
                 if len(output) == 1:
                     output = output[0]
-
                 process_output_kwargs = FunctionMetadata.filter_parameters(
                     self._get_process_output_metadata(), kwargs)
                 return self.process_output(output, filename, file,
@@ -744,14 +757,17 @@ def _create_linter(klass, options):
 
 @enforce_signature
 def linter(executable: str,
-           global_bear: bool=False,
-           use_stdin: bool=False,
-           use_stdout: bool=True,
-           use_stderr: bool=False,
-           config_suffix: str='',
-           executable_check_fail_info: str='',
-           prerequisite_check_command: tuple=(),
-           output_format: (str, None)=None,
+           global_bear: bool = False,
+           use_stdin: bool = False,
+           use_stdout: bool = True,
+           use_stderr: bool = False,
+           normalize_line_numbers: bool = False,
+           normalize_column_numbers: bool = False,
+           config_suffix: str = '',
+           executable_check_fail_info: str = '',
+           prerequisite_check_command: tuple = (),
+           output_format: (str, None) = None,
+           strip_ansi: bool = False,
            **options):
     """
     Decorator that creates a ``Bear`` that is able to process results from
@@ -862,6 +878,12 @@ def linter(executable: str,
         Incompatible with ``global_bear=True``.
     :param use_stderr:
         Whether to use the stderr output stream.
+    :param normalize_line_numbers:
+        Whether to normalize line numbers (increase by one) to fit
+        coala's one-based convention.
+    :param normalize_column_numbers:
+        Whether to normalize column numbers (increase by one) to fit
+        coala's one-based convention.
     :param config_suffix:
         The suffix-string to append to the filename of the configuration file
         created when ``generate_config`` is supplied. Useful if your executable
@@ -891,7 +913,7 @@ def linter(executable: str,
           ``output_regex``.
         - ``'corrected'``: The output is the corrected of the given file. Diffs
           are then generated to supply patches for results.
-        - ``'unified_diff'``: The output is the unified diff of the corrections.
+        - ``'unified-diff'``: The output is the unified diff of the corrections.
           Patches are then supplied for results using this output.
 
         Passing something else raises a ``ValueError``.
@@ -934,21 +956,24 @@ def linter(executable: str,
         used inside ``output_regex`` and this parameter is given.
     :param diff_severity:
         The severity to use for all results if ``output_format`` is
-        ``'corrected'`` or ``'unified_diff'``. By default this value is
+        ``'corrected'`` or ``'unified-diff'``. By default this value is
         ``coalib.results.RESULT_SEVERITY.NORMAL``. The given value needs to be
         defined inside ``coalib.results.RESULT_SEVERITY``.
     :param result_message:
         The message-string to use for all results. Can be used only together
-        with ``corrected`` or ``unified_diff`` or ``regex`` output format.
-        When using ``corrected`` or ``unified_diff``, the default value is
+        with ``corrected`` or ``unified-diff`` or ``regex`` output format.
+        When using ``corrected`` or ``unified-diff``, the default value is
         ``'Inconsistency found.'``, while for ``regex`` this static message is
         disabled and the message matched by ``output_regex`` is used instead.
     :param diff_distance:
         Number of unchanged lines that are allowed in between two changed lines
-        so they get yielded as one diff if ``corrected`` or ``unified_diff``
+        so they get yielded as one diff if ``corrected`` or ``unified-diff``
         output-format is given. If a negative distance is given, every change
         will be yielded as an own diff, even if they are right beneath each
         other. By default this value is ``1``.
+    :param strip_ansi:
+        Supresses colored output from linters when enabled by stripping the
+        ascii characters around the text.
     :raises ValueError:
         Raised when invalid options are supplied.
     :raises TypeError:
@@ -962,9 +987,12 @@ def linter(executable: str,
     options['use_stdin'] = use_stdin
     options['use_stdout'] = use_stdout
     options['use_stderr'] = use_stderr
+    options['normalize_line_numbers'] = normalize_line_numbers
+    options['normalize_column_numbers'] = normalize_column_numbers
     options['config_suffix'] = config_suffix
     options['executable_check_fail_info'] = executable_check_fail_info
     options['prerequisite_check_command'] = prerequisite_check_command
     options['global_bear'] = global_bear
+    options['strip_ansi'] = strip_ansi
 
     return partial(_create_linter, options=options)

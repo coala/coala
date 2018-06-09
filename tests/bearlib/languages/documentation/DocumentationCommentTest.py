@@ -3,7 +3,7 @@ import unittest
 from coalib.bearlib.languages.documentation.DocstyleDefinition import (
     DocstyleDefinition)
 from coalib.bearlib.languages.documentation.DocumentationComment import (
-    DocumentationComment)
+    DocumentationComment, _find_references, SPHINX_REF)
 from coalib.bearlib.languages.documentation.DocBaseClass import (
     DocBaseClass)
 from tests.bearlib.languages.documentation.TestUtils import (
@@ -17,6 +17,7 @@ class DocumentationCommentTest(unittest.TestCase):
     Parameter = DocumentationComment.Parameter
     ExceptionValue = DocumentationComment.ExceptionValue
     ReturnValue = DocumentationComment.ReturnValue
+    Reference = DocumentationComment.Reference
 
     Metadata = DocstyleDefinition.Metadata
     ClassPadding = DocstyleDefinition.ClassPadding
@@ -92,6 +93,14 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
 
         self.assertEqual(assembled_docs, original)
 
+    def test_find_references(self):
+        line = ('In the :mod:`test`, both the classes :class:`Foo` and '
+                ':class:`Bar` have a :const:`ONE` and a :meth:`TWO`. There is '
+                'a funny :exc:`FunnyExc` as well.')
+        expected = [('Module', 7), ('Class', 37), ('Class', 54),
+                    ('Constant', 74), ('Method', 93), ('Exception', 123)]
+        self.assertEqual(_find_references(line, SPHINX_REF), expected)
+
 
 class PythonDocumentationCommentTest(DocumentationCommentTest):
 
@@ -141,6 +150,23 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
                ' :return: something2 ')
         expected = [self.ReturnValue(desc=' something1 \n'),
                     self.ReturnValue(desc=' something2 ')]
+        self.check_docstring(doc, expected)
+
+    def test_reference_default(self):
+        doc = ' A :class:` Foo.Bar.x` which does foo.'
+        expected = [self.Reference(type_ref='Class', ref_addr='Foo.Bar.x')]
+        self.check_docstring(doc, expected)
+
+    def test_multiple_references(self):
+        doc = ('In the :mod:`test`, both the classes :class:`Foo` and'
+               ':class:`Bar` have a :const:`ONE` and a :meth:`TWO`. There is a'
+               'funny :exc:`FunnyExc` as well.')
+        expected = [self.Reference(type_ref='Module', ref_addr='test'),
+                    self.Reference(type_ref='Class', ref_addr='Foo'),
+                    self.Reference(type_ref='Class', ref_addr='Bar'),
+                    self.Reference(type_ref='Constant', ref_addr='ONE'),
+                    self.Reference(type_ref='Method', ref_addr='TWO'),
+                    self.Reference(type_ref='Exception', ref_addr='FunnyExc')]
         self.check_docstring(doc, expected)
 
     def test_python_default(self):
