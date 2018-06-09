@@ -8,12 +8,16 @@ import shutil
 from subprocess import check_call, CalledProcessError, DEVNULL
 from types import MappingProxyType
 
+from cli_helpers.utils import strip_ansi
+from coalib.bearlib.abstractions.LinterClass import LinterClass
 from coalib.bears.LocalBear import LocalBear
+from coalib.bears.GlobalBear import GlobalBear
 from coala_utils.ContextManagers import make_temp
 from coala_utils.decorators import assert_right_type, enforce_signature
 from coalib.misc.Shell import run_shell_command
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
+from coalib.results.SourceRange import SourceRange
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.settings.FunctionMetadata import FunctionMetadata
 
@@ -32,14 +36,19 @@ def _prepare_options(options, bear_class):
                        'use_stdin',
                        'use_stdout',
                        'use_stderr',
+                       'normalize_line_numbers',
+                       'normalize_column_numbers',
                        'config_suffix',
                        'executable_check_fail_info',
-                       'prerequisite_check_command'}
+                       'prerequisite_check_command',
+                       'global_bear',
+                       'strip_ansi'}
 
     if not options['use_stdout'] and not options['use_stderr']:
         raise ValueError('No output streams provided at all.')
 
-    if options['output_format'] == 'corrected':
+    if (options['output_format'] == 'corrected' or
+            options['output_format'] == 'unified-diff'):
         if (
                 'diff_severity' in options and
                 options['diff_severity'] not in RESULT_SEVERITY.reverse):
@@ -64,6 +73,7 @@ def _prepare_options(options, bear_class):
             'origin',
             'message',
             'severity',
+            'filename',
             'line',
             'column',
             'end_line',
@@ -137,6 +147,10 @@ def _prepare_options(options, bear_class):
 
         allowed_options.add('prerequisite_check_fail_message')
 
+    if options['global_bear'] and options['use_stdin']:
+        raise ValueError('Incompatible arguments provided:'
+                         "'use_stdin' and 'global_bear' can't both be True.")
+
     # Check for illegal superfluous options.
     superfluous_options = options.keys() - allowed_options
     if superfluous_options:
@@ -155,7 +169,7 @@ def _create_linter(klass, options):
             return '<{} linter class (wrapping {!r})>'.format(
                 cls.__name__, options['executable'])
 
-    class LinterBase(LocalBear, metaclass=LinterMeta):
+    class LinterBase(metaclass=LinterMeta):
 
         @staticmethod
         def generate_config(filename, file):
@@ -180,26 +194,6 @@ def _create_linter(klass, options):
                 The config-file-contents as a string or ``None``.
             """
             return None
-
-        @staticmethod
-        def create_arguments(filename, file, config_file):
-            """
-            Creates the arguments for the linter.
-
-            You can provide additional keyword arguments and defaults. These
-            will be interpreted as required settings that need to be provided
-            through a coafile-section.
-
-            :param filename:
-                The name of the file the linter-tool shall process.
-            :param file:
-                The contents of the file.
-            :param config_file:
-                The path of the config-file if used. ``None`` if unused.
-            :return:
-                A sequence of arguments to feed the linter-tool with.
-            """
-            raise NotImplementedError
 
         @staticmethod
         def get_executable():
@@ -283,7 +277,8 @@ def _create_linter(klass, options):
             :param match:
                 The regex match object.
             :param filename:
-                The name of the file this match belongs to.
+                The name of the file this match belongs to or ``None`` for
+                project scope.
             :param severity_map:
                 The dict to use to map the severity-match to an actual
                 ``RESULT_SEVERITY``.
@@ -312,22 +307,78 @@ def _create_linter(klass, options):
                                     if groups.get(variable, None) is None else
                                     int(groups[variable]))
 
+            def add_one(x): return None if x is None else x + 1
+            if options['normalize_line_numbers']:
+                for variable in ('line', 'end_line'):
+                    groups[variable] = add_one(groups[variable])
+            if options['normalize_column_numbers']:
+                for variable in ('column', 'end_column'):
+                    groups[variable] = add_one(groups[variable])
+
             if 'origin' in groups:
                 groups['origin'] = '{} ({})'.format(klass.__name__,
                                                     groups['origin'].strip())
 
-            # Construct the result.
-            return Result.from_values(
-                origin=groups.get('origin', self),
-                message=(groups.get('message', '').strip()
-                         if result_message is None else result_message),
-                file=filename,
-                severity=groups['severity'],
-                line=groups['line'],
-                column=groups['column'],
-                end_line=groups['end_line'],
-                end_column=groups['end_column'],
-                additional_info=groups.get('additional_info', '').strip())
+            # GlobalBears do not pass a filename to the function. But they can
+            # still give one through the regex
+            if filename is None:
+                filename = groups.get('filename', None)
+
+            # Construct the result. If we have a filename, we
+            # use Result.from_values otherwise generate a project
+            # scope result.
+            result_params = {
+                'origin': groups.get('origin', self),
+                'message': (groups.get('message', '').strip()
+                            if result_message is None else result_message),
+                'severity': groups['severity'],
+                'additional_info': groups.get('additional_info', '').strip()
+            }
+
+            if filename:
+                range = SourceRange.from_values(filename,
+                                                groups['line'],
+                                                groups['column'],
+                                                groups['end_line'],
+                                                groups['end_column'])
+                result_params['affected_code'] = (range,)
+            return Result(**result_params)
+
+        def process_diff(self,
+                         diff,
+                         filename,
+                         diff_severity,
+                         result_message,
+                         diff_distance):
+            """
+            Processes the given ``coalib.results.Diff`` object and yields
+            correction results.
+
+            :param diff:
+                A ``coalib.results.Diff`` object containing
+                differences of the file named ``filename``.
+            :param filename:
+                The name of the file currently being corrected.
+            :param diff_severity:
+                The severity to use for generating results.
+            :param result_message:
+                The message to use for generating results.
+            :param diff_distance:
+                Number of unchanged lines that are allowed in between two
+                changed lines so they get yielded as one diff. If a negative
+                distance is given, every change will be yielded as an own diff,
+                even if they are right beneath each other.
+            :return:
+                An iterator returning results containing patches for the
+                file to correct.
+            """
+            for splitted_diff in diff.split_diff(distance=diff_distance):
+                yield Result(self,
+                             result_message,
+                             affected_code=splitted_diff.affected_code(
+                                 filename),
+                             diffs={filename: splitted_diff},
+                             severity=diff_severity)
 
         def process_output_corrected(self,
                                      output,
@@ -358,15 +409,50 @@ def _create_linter(klass, options):
                 An iterator returning results containing patches for the
                 file to correct.
             """
-            for diff in Diff.from_string_arrays(
-                file,
-                output.splitlines(keepends=True)).split_diff(
-                    distance=diff_distance):
-                yield Result(self,
-                             result_message,
-                             affected_code=diff.affected_code(filename),
-                             diffs={filename: diff},
-                             severity=diff_severity)
+            return self.process_diff(
+                Diff.from_string_arrays(
+                    file,
+                    output.splitlines(keepends=True)),
+                filename,
+                diff_severity,
+                result_message,
+                diff_distance)
+
+        def process_output_unified_diff(self,
+                                        output,
+                                        filename,
+                                        file,
+                                        diff_severity=RESULT_SEVERITY.NORMAL,
+                                        result_message='Inconsistency found.',
+                                        diff_distance=1):
+            """
+            Processes the executable's output as a unified diff.
+
+            :param output:
+                The output of the program as a string containing the
+                unified diff for correction.
+            :param filename:
+                The filename of the file currently being corrected.
+            :param file:
+                The contents of the file currently being corrected.
+            :param diff_severity:
+                The severity to use for generating results.
+            :param result_message:
+                The message-string to use for generating results.
+            :param diff_distance:
+                Number of unchanged lines that are allowed in between two
+                changed lines so they get yielded as one diff. If a negative
+                distance is given, every change will be yielded as an own diff,
+                even if they are right beneath each other.
+            :return:
+                An iterator returning results containing patches for the
+                file to correct.
+            """
+            return self.process_diff(Diff.from_unified_diff(output, file),
+                                     filename,
+                                     diff_severity,
+                                     result_message,
+                                     diff_distance)
 
         def process_output_regex(
                 self, output, filename, file, output_regex,
@@ -402,6 +488,8 @@ def _create_linter(klass, options):
                 of the following named groups (via ``(?P<name>...)``) to
                 provide a good result:
 
+                - filename - The name of the linted file. This is relevant for
+                    global bears only.
                 - line - The line where the issue starts.
                 - column - The column where the issue starts.
                 - end_line - The line where the issue ends.
@@ -459,6 +547,16 @@ def _create_linter(klass, options):
                 _processing_function = partialmethod(
                     process_output_corrected, **_process_output_args)
 
+            elif options['output_format'] == 'unified-diff':
+                _process_output_args = {
+                    key: options[key]
+                    for key in ('result_message', 'diff_severity',
+                                'diff_distance')
+                    if key in options}
+
+                _processing_function = partialmethod(
+                    process_output_unified_diff, **_process_output_args)
+
             else:
                 assert options['output_format'] == 'regex'
 
@@ -471,7 +569,7 @@ def _create_linter(klass, options):
                 _processing_function = partialmethod(
                     process_output_regex, **_process_output_args)
 
-            def process_output(self, output, filename, file):
+            def process_output(self, output, filename=None, file=None):
                 """
                 Processes the output of the executable and yields results
                 accordingly.
@@ -484,9 +582,11 @@ def _create_linter(klass, options):
                     the selected output stream). If both are ``True``, a tuple
                     is placed with ``(stdout, stderr)``.
                 :param filename:
-                    The name of the file currently processed.
+                    The name of the file currently processed or ``None`` for
+                    project scope.
                 :param file:
-                    The contents of the file (line-splitted).
+                    The contents of the file (line-splitted) or ``None`` for
+                    project scope.
                 """
                 if isinstance(output, str):
                     output = (output,)
@@ -497,15 +597,17 @@ def _create_linter(klass, options):
 
         @classmethod
         @contextmanager
-        def _create_config(cls, filename, file, **kwargs):
+        def _create_config(cls, filename=None, file=None, **kwargs):
             """
             Provides a context-manager that creates the config file if the
             user provides one and cleans it up when done with linting.
 
             :param filename:
-                The filename of the file.
+                The filename of the file being linted. ``None`` for project
+                scope.
             :param file:
-                The file contents.
+                The content of the file being linted. ``None`` for project
+                scope.
             :param kwargs:
                 Section settings passed from ``run()``.
             :return:
@@ -521,7 +623,17 @@ def _create_linter(klass, options):
                         fl.write(content)
                     yield config_file
 
-        def run(self, filename, file, **kwargs):
+        def run(self, filename=None, file=None, **kwargs):
+            """
+            Runs the wrapped tool.
+
+            :param filename:
+                The filename of the file being linted. ``None`` for project
+                scope.
+            :param file:
+                The content of the file being linted. ``None`` for project
+                scope.
+            """
             # Get the **kwargs params to forward to `generate_config()`
             # (from `_create_config()`).
             generate_config_kwargs = FunctionMetadata.filter_parameters(
@@ -536,8 +648,16 @@ def _create_linter(klass, options):
                     FunctionMetadata.filter_parameters(
                         self._get_create_arguments_metadata(), kwargs))
 
-                args = self.create_arguments(filename, file, config_file,
-                                             **create_arguments_kwargs)
+                # The interface of create_arguments is different for local
+                # and global bears, therefore we must check here, what kind
+                # of bear we have.
+                if isinstance(self, LocalBear):
+                    args = self.create_arguments(filename,
+                                                 file, config_file,
+                                                 **create_arguments_kwargs)
+                else:
+                    args = self.create_arguments(config_file,
+                                                 **create_arguments_kwargs)
 
                 try:
                     args = tuple(args)
@@ -547,7 +667,8 @@ def _create_linter(klass, options):
                     return
 
                 arguments = (self.get_executable(),) + args
-                self.debug("Running '{}'".format(' '.join(arguments)))
+                self.debug("Running '{}'".format(
+                    ' '.join(str(arg) for arg in arguments)))
 
                 output = run_shell_command(
                     arguments,
@@ -557,9 +678,10 @@ def _create_linter(klass, options):
                 output = tuple(compress(
                     output,
                     (options['use_stdout'], options['use_stderr'])))
+                if options['strip_ansi']:
+                    output = tuple(map(strip_ansi, output))
                 if len(output) == 1:
                     output = output[0]
-
                 process_output_kwargs = FunctionMetadata.filter_parameters(
                     self._get_process_output_metadata(), kwargs)
                 return self.process_output(output, filename, file,
@@ -569,43 +691,113 @@ def _create_linter(klass, options):
             return '<{} linter object (wrapping {!r}) at {}>'.format(
                 type(self).__name__, self.get_executable(), hex(id(self)))
 
+    class LocalLinterMeta(type(LinterBase), type(LocalBear)):
+        """
+        Solving base metaclasses conflict for ``LocalLinterBase``.
+        """
+
+    class LocalLinterBase(LinterBase, LocalBear, metaclass=LocalLinterMeta):
+
+        @staticmethod
+        def create_arguments(filename, file, config_file):
+            """
+            Creates the arguments for the linter.
+
+            You can provide additional keyword arguments and defaults. These
+            will be interpreted as required settings that need to be provided
+            through a coafile-section.
+
+            :param filename:
+                The name of the file the linter-tool shall process.
+            :param file:
+                The contents of the file.
+            :param config_file:
+                The path of the config-file if used. ``None`` if unused.
+            :return:
+                A sequence of arguments to feed the linter-tool with.
+            """
+            raise NotImplementedError
+
+    class GlobalLinterMeta(type(LinterBase), type(GlobalBear)):
+        """
+        Solving base metaclasses conflict for ``GlobalLinterBase``.
+        """
+
+    class GlobalLinterBase(LinterBase, GlobalBear, metaclass=GlobalLinterMeta):
+
+        @staticmethod
+        def create_arguments(config_file):
+            """
+            Creates the arguments for the linter.
+
+            You can provide additional keyword arguments and defaults. These
+            will be interpreted as required settings that need to be provided
+            through a coafile-section. This is the file agnostic version for
+            global bears.
+
+            :param config_file:
+                The path of the config-file if used. ``None`` if unused.
+            :return:
+                A sequence of arguments to feed the linter-tool with.
+            """
+            raise NotImplementedError
+
+    LinterBaseClass = (
+        GlobalLinterBase if options['global_bear'] else LocalLinterBase
+    )
     # Mixin the linter into the user-defined interface, otherwise
     # `create_arguments` and other methods would be overridden by the
     # default version.
-    result_klass = type(klass.__name__, (klass, LinterBase), {
+    result_klass = type(klass.__name__, (klass, LinterBaseClass), {
         '__module__': klass.__module__})
     result_klass.__doc__ = klass.__doc__ or ''
+    LinterClass.register(result_klass)
     return result_klass
 
 
 @enforce_signature
 def linter(executable: str,
-           use_stdin: bool=False,
-           use_stdout: bool=True,
-           use_stderr: bool=False,
-           config_suffix: str='',
-           executable_check_fail_info: str='',
-           prerequisite_check_command: tuple=(),
-           output_format: (str, None)=None,
+           global_bear: bool = False,
+           use_stdin: bool = False,
+           use_stdout: bool = True,
+           use_stderr: bool = False,
+           normalize_line_numbers: bool = False,
+           normalize_column_numbers: bool = False,
+           config_suffix: str = '',
+           executable_check_fail_info: str = '',
+           prerequisite_check_command: tuple = (),
+           output_format: (str, None) = None,
+           strip_ansi: bool = False,
            **options):
     """
-    Decorator that creates a ``LocalBear`` that is able to process results from
-    an external linter tool.
+    Decorator that creates a ``Bear`` that is able to process results from
+    an external linter tool. Depending on the value of ``global_bear`` this
+    can either be a ``LocalBear`` or a ``GlobalBear``.
 
     The main functionality is achieved through the ``create_arguments()``
-    function that constructs the command-line-arguments that get parsed to your
+    function that constructs the command-line-arguments that get passed to your
     executable.
 
-    >>> @linter("xlint", output_format="regex", output_regex="...")
+    >>> @linter('xlint', output_format='regex', output_regex='...')
     ... class XLintBear:
     ...     @staticmethod
     ...     def create_arguments(filename, file, config_file):
-    ...         return "--lint", filename
+    ...         return '--lint', filename
+
+    Or for a ``GlobalBear`` without the ``filename`` and ``file``:
+
+    >>> @linter('ylint',
+    ...         global_bear=True,
+    ...         output_format='regex',
+    ...         output_regex='...')
+    ... class YLintBear:
+    ...     def create_arguments(self, config_file):
+    ...         return '--lint', self.file_dict.keys()
 
     Requiring settings is possible like in ``Bear.run()`` with supplying
     additional keyword arguments (and if needed with defaults).
 
-    >>> @linter("xlint", output_format="regex", output_regex="...")
+    >>> @linter('xlint', output_format='regex', output_regex='...')
     ... class XLintBear:
     ...     @staticmethod
     ...     def create_arguments(filename,
@@ -613,36 +805,36 @@ def linter(executable: str,
     ...                          config_file,
     ...                          lintmode: str,
     ...                          enable_aggressive_lints: bool=False):
-    ...         arguments = ("--lint", filename, "--mode=" + lintmode)
+    ...         arguments = ('--lint', filename, '--mode=' + lintmode)
     ...         if enable_aggressive_lints:
-    ...             arguments += ("--aggressive",)
+    ...             arguments += ('--aggressive',)
     ...         return arguments
 
     Sometimes your tool requires an actual file that contains configuration.
     ``linter`` allows you to just define the contents the configuration shall
     contain via ``generate_config()`` and handles everything else for you.
 
-    >>> @linter("xlint", output_format="regex", output_regex="...")
+    >>> @linter('xlint', output_format='regex', output_regex='...')
     ... class XLintBear:
     ...     @staticmethod
     ...     def generate_config(filename,
     ...                         file,
     ...                         lintmode,
     ...                         enable_aggressive_lints):
-    ...         modestring = ("aggressive"
+    ...         modestring = ('aggressive'
     ...                       if enable_aggressive_lints else
-    ...                       "non-aggressive")
-    ...         contents = ("<xlint>",
-    ...                     "    <mode>" + lintmode + "</mode>",
-    ...                     "    <aggressive>" + modestring + "</aggressive>",
-    ...                     "</xlint>")
-    ...         return "\\n".join(contents)
+    ...                       'non-aggressive')
+    ...         contents = ('<xlint>',
+    ...                     '    <mode>' + lintmode + '</mode>',
+    ...                     '    <aggressive>' + modestring + '</aggressive>',
+    ...                     '</xlint>')
+    ...         return '\\n'.join(contents)
     ...
     ...     @staticmethod
     ...     def create_arguments(filename,
     ...                          file,
     ...                          config_file):
-    ...         return "--lint", filename, "--config", config_file
+    ...         return '--lint', filename, '--config', config_file
 
     As you can see you don't need to copy additional keyword-arguments you
     introduced from ``create_arguments()`` to ``generate_config()`` and
@@ -659,6 +851,11 @@ def linter(executable: str,
     inputs a tuple with ``(stdout, stderr)``. Providing ``use_stdout=False``
     and ``use_stderr=False`` raises a ``ValueError``. By default ``use_stdout``
     is ``True`` and ``use_stderr`` is ``False``.
+
+    Every ``linter`` is also a subclass of the ``LinterClass`` class.
+
+    >>> issubclass(XLintBear, LinterClass)
+    True
 
     Documentation:
     Bear description shall be provided at class level.
@@ -678,8 +875,15 @@ def linter(executable: str,
         command-line-interface.
     :param use_stdout:
         Whether to use the stdout output stream.
+        Incompatible with ``global_bear=True``.
     :param use_stderr:
         Whether to use the stderr output stream.
+    :param normalize_line_numbers:
+        Whether to normalize line numbers (increase by one) to fit
+        coala's one-based convention.
+    :param normalize_column_numbers:
+        Whether to normalize column numbers (increase by one) to fit
+        coala's one-based convention.
     :param config_suffix:
         The suffix-string to append to the filename of the configuration file
         created when ``generate_config`` is supplied. Useful if your executable
@@ -695,6 +899,10 @@ def linter(executable: str,
         A custom message that gets displayed when ``check_prerequisites``
         fails while invoking ``prerequisite_check_command``. Can only be
         provided together with ``prerequisite_check_command``.
+    :param global_bear:
+        Whether the created bear should be a ``GlobalBear`` or not. Global
+        bears will be run once on the whole project, instead of once per file.
+        Incompatible with ``use_stdin=True``.
     :param output_format:
         The output format of the underlying executable. Valid values are
 
@@ -705,6 +913,8 @@ def linter(executable: str,
           ``output_regex``.
         - ``'corrected'``: The output is the corrected of the given file. Diffs
           are then generated to supply patches for results.
+        - ``'unified-diff'``: The output is the unified diff of the corrections.
+          Patches are then supplied for results using this output.
 
         Passing something else raises a ``ValueError``.
     :param output_regex:
@@ -713,6 +923,8 @@ def linter(executable: str,
         following named groups (via ``(?P<name>...)``) to provide a good
         result:
 
+        - filename - The name of the linted file. This is relevant for
+            global bears only.
         - line - The line where the issue starts.
         - column - The column where the issue starts.
         - end_line - The line where the issue ends.
@@ -744,21 +956,24 @@ def linter(executable: str,
         used inside ``output_regex`` and this parameter is given.
     :param diff_severity:
         The severity to use for all results if ``output_format`` is
-        ``'corrected'``. By default this value is
+        ``'corrected'`` or ``'unified-diff'``. By default this value is
         ``coalib.results.RESULT_SEVERITY.NORMAL``. The given value needs to be
         defined inside ``coalib.results.RESULT_SEVERITY``.
     :param result_message:
         The message-string to use for all results. Can be used only together
-        with ``corrected`` or ``regex`` output format. When using
-        ``corrected``, the default value is ``"Inconsistency found."``, while
-        for ``regex`` this static message is disabled and the message matched
-        by ``output_regex`` is used instead.
+        with ``corrected`` or ``unified-diff`` or ``regex`` output format.
+        When using ``corrected`` or ``unified-diff``, the default value is
+        ``'Inconsistency found.'``, while for ``regex`` this static message is
+        disabled and the message matched by ``output_regex`` is used instead.
     :param diff_distance:
         Number of unchanged lines that are allowed in between two changed lines
-        so they get yielded as one diff if ``corrected`` output-format is
-        given. If a negative distance is given, every change will be yielded as
-        an own diff, even if they are right beneath each other. By default this
-        value is ``1``.
+        so they get yielded as one diff if ``corrected`` or ``unified-diff``
+        output-format is given. If a negative distance is given, every change
+        will be yielded as an own diff, even if they are right beneath each
+        other. By default this value is ``1``.
+    :param strip_ansi:
+        Supresses colored output from linters when enabled by stripping the
+        ascii characters around the text.
     :raises ValueError:
         Raised when invalid options are supplied.
     :raises TypeError:
@@ -772,8 +987,12 @@ def linter(executable: str,
     options['use_stdin'] = use_stdin
     options['use_stdout'] = use_stdout
     options['use_stderr'] = use_stderr
+    options['normalize_line_numbers'] = normalize_line_numbers
+    options['normalize_column_numbers'] = normalize_column_numbers
     options['config_suffix'] = config_suffix
     options['executable_check_fail_info'] = executable_check_fail_info
     options['prerequisite_check_command'] = prerequisite_check_command
+    options['global_bear'] = global_bear
+    options['strip_ansi'] = strip_ansi
 
     return partial(_create_linter, options=options)

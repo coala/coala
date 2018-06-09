@@ -8,14 +8,17 @@ class PrintDebugMessageAction(ResultAction):
 
     @staticmethod
     @enforce_signature
-    def is_applicable(result: Result, original_file_dict, file_diff_dict):
+    def is_applicable(result: Result,
+                      original_file_dict,
+                      file_diff_dict,
+                      applied_actions=()):
         if result.debug_msg != '':
             return True
         return 'There is no debug message.'
 
     def apply(self, result, original_file_dict, file_diff_dict):
         """
-        Print debug message
+        Print (D)ebug message
         """
         print(result.debug_msg)
 

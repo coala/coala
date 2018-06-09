@@ -9,19 +9,35 @@ from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
 class IgnoreResultActionTest(unittest.TestCase):
 
     def test_is_applicable(self):
+        prior_ignore = ('IgnoreResultAction')
+        associated_result = Result.from_values('origin', 'msg',
+                                               "file doesn't exist", 2)
 
         with self.assertRaises(TypeError) as context:
             IgnoreResultAction.is_applicable('str', {}, {})
+        with self.assertRaises(TypeError) as context:
+            IgnoreResultAction.is_applicable('str', {}, {}, prior_ignore)
+
+        self.assertEqual(
+            IgnoreResultAction.is_applicable(associated_result, {}, {}),
+            "The result is associated with source code that doesn't "
+            'seem to exist.')
 
         self.assertEqual(
             IgnoreResultAction.is_applicable(
-                Result.from_values('origin', 'msg', "file doesn't exist", 2),
+                associated_result,
                 {},
-                {}
-            ),
-            "The result is associated with source code that doesn't "
-            'seem to exist.'
-        )
+                {},
+                prior_ignore),
+            'An ignore comment was already added for this result.')
+
+        self.assertEqual(
+            IgnoreResultAction.is_applicable(
+                Result('', ''),
+                {},
+                {},
+                prior_ignore),
+            'An ignore comment was already added for this result.')
 
         self.assertEqual(
             IgnoreResultAction.is_applicable(
@@ -33,8 +49,15 @@ class IgnoreResultActionTest(unittest.TestCase):
         )
 
         with make_temp() as f_a:
-            self.assertTrue(IgnoreResultAction.is_applicable(
-                Result.from_values('origin', 'msg', f_a, 2), {}, {}))
+            result = Result.from_values('origin', 'msg', f_a, 2)
+            self.assertTrue(IgnoreResultAction.is_applicable(result, {}, {}))
+            self.assertEqual(
+                IgnoreResultAction.is_applicable(
+                    result,
+                    {},
+                    {},
+                    prior_ignore),
+                'An ignore comment was already added for this result.')
 
     def test_no_orig(self):
         uut = IgnoreResultAction()
@@ -91,3 +114,21 @@ class IgnoreResultActionTest(unittest.TestCase):
                         'coala does not support Ignore in "dothraki".',
                         log.output[0]
                     )
+
+    def test_ignore_jinja2(self):
+        uut = IgnoreResultAction()
+        with make_temp() as f_a:
+            file_dict = {
+                f_a: ['1\n', '2\n']
+            }
+
+            file_diff_dict = {}
+
+            # Test ignore comment in jinja2
+            uut.apply(Result.from_values('else', 'msg', f_a, 1),
+                      file_dict, file_diff_dict, 'jinja2')
+            self.assertEqual(
+                file_diff_dict[f_a].modified,
+                ['1  {# Ignore else #}\n', '2\n'])
+            with open(f_a, 'r') as f:
+                self.assertEqual(file_diff_dict[f_a].modified, f.readlines())

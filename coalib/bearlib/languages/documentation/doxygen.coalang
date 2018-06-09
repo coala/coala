@@ -36,14 +36,26 @@ doc-marker1 = """, , """
 doc-marker2 = \#\#, \#, \#
 param_start = @param\ # here's a space
 param_end = \ # here's a space
+exception_start = @raises\ # here's a space
+exception_end = \ # here's a space
 return_sep = @return\ # here's a space
+docstring_type_regex = class, def # defines class and function signature.
+docstring_position = bottom # defines position where docstring regex is found.
+class_padding = 1, 0
+function_padding = 1, 0
 
 [PYTHON3]
 doc-marker1 = """, , """
 doc-marker2 = \#\#, \#, \#
 param_start = @param\ # here's a space
 param_end = \ # here's a space
+exception_start = @raises\ # here's a space
+exception_end = \ # here's a space
 return_sep = @return\ # here's a space
+docstring_type_regex = class, def # defines class and function signature.
+docstring_position = bottom # defines position where docstring regex is found.
+class_padding = 1, 0
+function_padding = 1, 0
 
 [TCL]
 doc-marker = \#\#, \#, \#

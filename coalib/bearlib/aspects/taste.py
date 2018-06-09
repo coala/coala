@@ -11,7 +11,7 @@ class TasteError(AttributeError):
 
 class TasteMeta(type):
     """
-    Metaclass for :class:`coalib.bearlib.aspectclasses.Taste`
+    Metaclass for :class:`coalib.bearlib.aspects.Taste`
 
     Allows defining taste cast type via :meth:`.__getitem__`, like:
 
@@ -43,24 +43,31 @@ class Taste(metaclass=TasteMeta):
     (C#,)
 
     If no `languages` are given, they will be available for any language.
-    See :class:`coalib.bearlib.aspectclasses.Root` for further usage.
+    See :class:`coalib.bearlib.aspects.Root` for further usage.
     """
     cast_type = str
 
     @enforce_signature
-    def __init__(self, description: str='', suggested_values: tuple=(),
-                 default=None, languages: tuple=()):
+    def __init__(self, description: str = '', suggested_values: tuple = (),
+                 default=None, languages: tuple = ()):
         """
         Creates a new taste that can be optionally only available for the
         given `languages`, which must be language identifiers supported by
         :class:`coalib.bearlib.languages.Language`.
 
-        No need to specify name an cast type:
+        No need to specify the cast type:
 
         The taste name is defined by the taste's attribute name in an
         aspectclass definition.
 
         The value cast type is defined via indexing on class level.
+
+        :param description:         Description of the taste.
+        :param suggested_values:    A tuple containing the list of possible
+                                    values for the taste.
+        :param default:             Default value of the taste.
+        :param languages:           A tuple containing list of languages, for
+                                    which the taste is defined.
         """
         self.description = description
         self.suggested_values = suggested_values
@@ -87,5 +94,6 @@ class Taste(metaclass=TasteMeta):
         """
         if self.name in obj.__dict__:
             raise AttributeError(
-                "can't set taste values of aspectclass instances")
+                "A 'taste' value for this aspectclass instance "
+                'exists already.')
         obj.__dict__[self.name] = self.cast_type(value)

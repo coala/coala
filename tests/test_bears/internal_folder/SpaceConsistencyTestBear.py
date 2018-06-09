@@ -10,9 +10,9 @@ class SpaceConsistencyTestBear(LocalBear):
             filename,
             file,
             use_spaces: bool,
-            allow_trailing_whitespace: bool=False,
-            tab_width: int=SpacingHelper.DEFAULT_TAB_WIDTH,
-            enforce_newline_at_EOF: bool=True):
+            allow_trailing_whitespace: bool = False,
+            tab_width: int = SpacingHelper.DEFAULT_TAB_WIDTH,
+            enforce_newline_at_EOF: bool = True):
         '''
         Checks the space consistency for each line.
 

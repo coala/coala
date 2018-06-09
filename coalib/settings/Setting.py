@@ -1,8 +1,12 @@
 import os
-from collections import OrderedDict
+from collections import Iterable, OrderedDict
 
-from coala_utils.decorators import generate_repr
+from coala_utils.decorators import (
+    enforce_signature,
+    generate_repr,
+)
 from coala_utils.string_processing.StringConverter import StringConverter
+from coalib.bearlib.languages.Language import Language, UnknownLanguageError
 from coalib.parsing.Globbing import glob_escape
 
 
@@ -41,66 +45,122 @@ def glob_list(obj, *args, **kwargs):
     return obj.__glob_list__(*args, **kwargs)
 
 
+def language(name):
+    """
+    Convert a string into ``Language`` object.
+
+    :param name:        String containing language name.
+    :return:            ``Language`` object.
+    :raises ValueError: If the ``name`` contain invalid language name.
+    """
+    try:
+        return Language[name]
+    except UnknownLanguageError as e:
+        raise ValueError(e)
+
+
 def typed_list(conversion_func):
     """
-    Creates a function that converts a setting into a list of elements each
+    Creates a class that converts a setting into a list of elements each
     converted with the given conversion function.
 
     :param conversion_func: The conversion function that converts a string into
                             your desired list item object.
-    :return:                A conversion function.
+    :return:                An instance of the created conversion class.
     """
-    return lambda setting: [
-        conversion_func(StringConverter(elem)) for elem in setting]
+
+    class Converter:
+
+        def __call__(self, setting):
+            return [conversion_func(StringConverter(elem))
+                    for elem in setting]
+
+        def __repr__(self):
+            return 'typed_list(%s)' % conversion_func.__name__
+
+    return Converter()
+
+
+str_list = typed_list(str)
+
+
+int_list = typed_list(int)
+
+
+float_list = typed_list(float)
+
+
+bool_list = typed_list(bool)
 
 
 def typed_dict(key_type, value_type, default):
     """
-    Creates a function that converts a setting into a dict with the given
-    types.
+    Creates a class that converts a setting into a dict with the given types.
 
     :param key_type:   The type conversion function for the keys.
     :param value_type: The type conversion function for the values.
     :param default:    The default value to use if no one is given by the user.
-    :return:           A conversion function.
+    :return:           An instance of the created conversion class.
     """
-    return lambda setting: {
-        key_type(StringConverter(key)):
-        value_type(StringConverter(value)) if value != '' else default
-        for key, value in dict(setting).items()}
+
+    class Converter:
+
+        def __call__(self, setting):
+            return {key_type(StringConverter(key)):
+                    value_type(StringConverter(value))
+                    if value != '' else default
+                    for key, value in dict(setting).items()}
+
+        def __repr__(self):
+            return 'typed_dict(%s, %s, default=%s)' % (
+                key_type.__name__, value_type.__name__, default)
+
+    return Converter()
 
 
 def typed_ordered_dict(key_type, value_type, default):
     """
-    Creates a function that converts a setting into an ordered dict with the
+    Creates a class that converts a setting into an ordered dict with the
     given types.
 
     :param key_type:   The type conversion function for the keys.
     :param value_type: The type conversion function for the values.
     :param default:    The default value to use if no one is given by the user.
-    :return:           A conversion function.
+    :return:           An instance of the created conversion class.
     """
-    return lambda setting: OrderedDict(
-        (key_type(StringConverter(key)),
-         value_type(StringConverter(value)) if value != '' else default)
-        for key, value in OrderedDict(setting).items())
+
+    class Converter:
+
+        def __call__(self, setting):
+            return OrderedDict((key_type(StringConverter(key)),
+                                value_type(StringConverter(value))
+                                if value != '' else default)
+                               for key, value in OrderedDict(setting).items())
+
+        def __repr__(self):
+            return 'typed_ordered_dict(%s, %s, default=%s)' % (
+                key_type.__name__, value_type.__name__, default)
+
+    return Converter()
 
 
-@generate_repr('key', 'value', 'origin', 'from_cli')
+@generate_repr('key', 'value', 'origin', 'from_cli', 'to_append')
 class Setting(StringConverter):
     """
     A Setting consists mainly of a key and a value. It mainly offers many
     conversions into common data types.
     """
 
+    @enforce_signature
     def __init__(self,
                  key,
                  value,
-                 origin='',
-                 strip_whitespaces=True,
-                 list_delimiters=(',', ';'),
-                 from_cli=False,
-                 remove_empty_iter_elements=True):
+                 origin: str = '',
+                 strip_whitespaces: bool = True,
+                 list_delimiters: Iterable = (',', ';'),
+                 from_cli: bool = False,
+                 remove_empty_iter_elements: bool = True,
+                 to_append: bool = False):
         """
         Initializes a new Setting,
 
@@ -121,9 +181,11 @@ class Setting(StringConverter):
                                            CliParser.
         :param remove_empty_iter_elements: Whether to remove empty elements in
                                            iterable values.
+        :param to_append:                  The boolean value if setting value
+                                           needs to be appended to a setting in
+                                           the defaults of a section.
         """
-        if not isinstance(from_cli, bool):
-            raise TypeError('from_cli needs to be a boolean value.')
+        self.to_append = to_append
 
         StringConverter.__init__(
             self,
@@ -208,6 +270,13 @@ class Setting(StringConverter):
         """
         return [Setting.__glob__(elem, self.origin) for elem in self]
 
+    def __iter__(self, remove_backslashes=True):
+        if self.to_append:
+            raise ValueError('Iteration on this object is invalid because the '
+                             'value is incomplete. Please access the value of '
+                             'the setting in a section to iterate through it.')
+        return StringConverter.__iter__(self, remove_backslashes)
+
     @property
     def key(self):
         return self._key
@@ -219,3 +288,11 @@ class Setting(StringConverter):
             raise ValueError('An empty key is not allowed for a setting.')
 
         self._key = newkey
+
+    @StringConverter.value.getter
+    def value(self):
+        if self.to_append:
+            raise ValueError('This property is invalid because the value is '
+                             'incomplete. Please access the value of the '
+                             'setting in a section to get the complete value.')
+        return self._value

@@ -11,7 +11,7 @@ class SourceRange(TextRange):
     @enforce_signature
     def __init__(self,
                  start: SourcePosition,
-                 end: (SourcePosition, None)=None):
+                 end: (SourcePosition, None) = None):
         """
         Creates a new SourceRange.
 
@@ -48,24 +48,11 @@ class SourceRange(TextRange):
         return cls(start, end)
 
     @classmethod
-    def from_clang_range(cls, range):
-        """
-        Creates a SourceRange from a clang SourceRange object.
-
-        :param range: A cindex.SourceRange object.
-        """
-        return cls.from_values(range.start.file.name,
-                               range.start.line,
-                               range.start.column,
-                               range.end.line,
-                               range.end.column)
-
-    @classmethod
     @enforce_signature
     def from_absolute_position(cls,
                                file: str,
                                position_start: AbsolutePosition,
-                               position_end: (AbsolutePosition, None)=None):
+                               position_end: (AbsolutePosition, None) = None):
         """
         Creates a SourceRange from a start and end positions.
 
@@ -120,6 +107,47 @@ class SourceRange(TextRange):
                                        tr.end.line,
                                        tr.end.column)
 
+    @enforce_signature
+    def affected_source(self, file_dict: dict):
+        r"""
+        Tells which lines are affected in a specified file within a given range.
+
+        >>> from os.path import abspath
+        >>> sr = SourceRange.from_values('file_name', start_line=2, end_line=2)
+        >>> sr.affected_source({
+        ...     abspath('file_name'): ('def fun():\n', '    x = 2  \n')
+        ... })
+        ('    x = 2  \n',)
+
+        If more than one line is affected.
+
+        >>> sr = SourceRange.from_values('file_name', start_line=2, end_line=3)
+        >>> sr.affected_source({
+        ...     abspath('file_name'): ('def fun():\n',
+        ...                            '    x = 2  \n', '    print(x)  \n')
+        ... })
+        ('    x = 2  \n', '    print(x)  \n')
+
+        If the file indicated at the source range is not in the `file_dict` or
+        the lines are not given, this will return `None`:
+
+        >>> sr = SourceRange.from_values('file_name_not_present',
+        ...     start_line=2, end_line=2)
+        >>> sr.affected_source({abspath('file_name'):
+        ...     ('def fun():\n', '    x = 2  \n')})
+
+        :param file_dict:
+            It is a dictionary where the file names are the keys and
+            the contents of the files are the values(which is of type tuple).
+        :return:
+            A tuple of affected lines in the specified file.
+            If the file is not affected or the file is not present in
+            ``file_dict`` return ``None``.
+        """
+        if self.start.file in file_dict and self.start.line and self.end.line:
+            # line number starts from 1, index starts from 0
+            return file_dict[self.start.file][self.start.line - 1:self.end.line]
+
     def __json__(self, use_relpath=False):
         _dict = get_public_members(self)
         if use_relpath:
@@ -157,6 +185,10 @@ class SourceRange(TextRange):
                           ' : L{0.end.line} C{0.end.column}')
 
         return format_str.format(self)
+
+    def overlaps(self, other):
+        return (self.start.file == other.start.file
+                and super().overlaps(other))
 
     def __contains__(self, item):
         return (super().__contains__(item) and

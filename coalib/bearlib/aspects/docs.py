@@ -20,9 +20,9 @@ class Documentation:
     """
 
     @enforce_signature
-    def __init__(self, definition: str='', example: str='',
-                 example_language: str='', importance_reason: str='',
-                 fix_suggestions: str=''):
+    def __init__(self, definition: str = '', example: str = '',
+                 example_language: str = '', importance_reason: str = '',
+                 fix_suggestions: str = ''):
         """
         Contains documentation for an aspectclass.
 

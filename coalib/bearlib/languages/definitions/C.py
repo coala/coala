@@ -18,4 +18,4 @@ class C:
         'unsigned', 'void', 'volatile', 'while', '#include', '#define',
         '#undef', '#ifdef', '#ifndef', '#if', '#endif', '#else', '#elif',
         '#line', '#pragma']
-    special_chars = list('+-*/.;\,()[]{}\=<>|&^~?%!')
+    special_chars = list(r'+-*/.;\,()[]{}\=<>|&^~?%!')

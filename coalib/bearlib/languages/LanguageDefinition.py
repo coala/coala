@@ -4,6 +4,7 @@ from coala_utils.string_processing import escape
 
 from coalib.bearlib.abstractions.SectionCreatable import SectionCreatable
 from coalib.bearlib.languages import Language
+from coalib.bearlib.languages.Language import UnknownLanguageError
 from coalib.settings.Setting import Setting
 
 
@@ -80,7 +81,7 @@ class LanguageDefinition(SectionCreatable):
                 'functionality is not available anymore.')
         try:
             self.lang = Language[language].get_default_version()
-        except AttributeError:
+        except UnknownLanguageError:
             raise FileNotFoundError
 
     def __getitem__(self, item):

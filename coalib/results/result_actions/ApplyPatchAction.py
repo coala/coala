@@ -2,6 +2,8 @@ import shutil
 from os.path import isfile
 from os import remove
 
+from coala_utils.FileUtils import detect_encoding
+
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.results.result_actions.ResultAction import ResultAction
 
@@ -16,9 +18,9 @@ class ApplyPatchAction(ResultAction):
               result,
               original_file_dict,
               file_diff_dict,
-              no_orig: bool=False):
+              no_orig: bool = False):
         """
-        Apply patch
+        (A)pply patch
 
         :param no_orig: Whether or not to create .orig backup files
         """
@@ -40,14 +42,18 @@ class ApplyPatchAction(ResultAction):
                                  pre_patch_filename + '.orig')
 
             diff = file_diff_dict[filename]
-            if diff.delete or diff.rename:
-                if isfile(pre_patch_filename):
-                    remove(pre_patch_filename)
+
             if not diff.delete:
                 new_filename = (diff.rename
                                 if diff.rename is not False
                                 else filename)
-                with open(new_filename, mode='w', encoding='utf-8') as file:
+                with open(new_filename, mode='w',
+                          encoding=detect_encoding(pre_patch_filename)) as file:
                     file.writelines(diff.modified)
+
+            if diff.delete or diff.rename:
+                if diff.rename != pre_patch_filename and isfile(
+                        pre_patch_filename):
+                    remove(pre_patch_filename)
 
         return file_diff_dict

@@ -21,7 +21,7 @@ class ShowPatchActionTest(unittest.TestCase):
 
         self.test_result = Result('origin', 'message', diffs=self.diff_dict)
         self.section = Section('name')
-        self.section.append(Setting('colored', 'false'))
+        self.section.append(Setting('no_color', 'True'))
 
     def test_is_applicable(self):
         diff = Diff([], rename='new_name')
@@ -54,16 +54,13 @@ class ShowPatchActionTest(unittest.TestCase):
                                                          self.section),
                              {})
             self.assertEqual(stdout.getvalue(),
-                             '|----|    | a\n'
-                             '|    |++++| a\n'
-                             '|   1|   1| a\n'
-                             '|    |   2|+test\n'
-                             '|   2|   3| b\n'
-                             '|   3|    |-c\n'
-                             '|----|    | b\n'
-                             '|    |++++| b\n'
-                             '|    |   1|+first\n'
-                             '|   1|   2| old_first\n')
+                             '[----] a\n'
+                             '[++++] a\n'
+                             '[   2] test\n'
+                             '[   3] c\n'
+                             '[----] b\n'
+                             '[++++] b\n'
+                             '[   1] first\n')
 
     def test_apply_renaming_only(self):
         with retrieve_stdout() as stdout:
@@ -76,8 +73,8 @@ class ShowPatchActionTest(unittest.TestCase):
                                                          self.section),
                              {})
             self.assertEqual(stdout.getvalue(),
-                             '|----|    | ' + join('a', 'a') + '\n'
-                             '|    |++++| ' + join('b', 'b') + '\n')
+                             '[----] ' + join('a', 'a') + '\n'
+                             '[++++] ' + join('b', 'b') + '\n')
 
     def test_apply_empty(self):
         with retrieve_stdout() as stdout:
@@ -101,16 +98,13 @@ class ShowPatchActionTest(unittest.TestCase):
                                                          self.section),
                              previous_diffs)
             self.assertEqual(stdout.getvalue(),
-                             '|----|    | a\n'
-                             '|    |++++| a\n'
-                             '|   1|   1| a\n'
-                             '|    |   2|+test\n'
-                             '|   2|   3| b_changed\n'
-                             '|   3|    |-c\n'
-                             '|----|    | b\n'
-                             '|    |++++| b\n'
-                             '|    |   1|+first\n'
-                             '|   1|   2| old_first\n')
+                             '[----] a\n'
+                             '[++++] a\n'
+                             '[   2] test\n'
+                             '[   3] c\n'
+                             '[----] b\n'
+                             '[++++] b\n'
+                             '[   1] first\n')
 
     def test_apply_with_rename(self):
         with retrieve_stdout() as stdout:
@@ -131,12 +125,10 @@ class ShowPatchActionTest(unittest.TestCase):
                                                          self.section),
                              previous_diffs)
             self.assertEqual(stdout.getvalue(),
-                             '|----|    | a\n'
-                             '|    |++++| a.rename\n'
-                             '|   1|   1| a\n'
-                             '|    |   2|+test\n'
-                             '|   2|   3| b_changed\n'
-                             '|   3|    |-c\n'
-                             '|----|    | b\n'
-                             '|    |++++| /dev/null\n'
-                             '|   1|    |-old_first\n')
+                             '[----] a\n'
+                             '[++++] a.rename\n'
+                             '[   2] test\n'
+                             '[   3] c\n'
+                             '[----] b\n'
+                             '[++++] /dev/null\n'
+                             '[   1] old_first\n')

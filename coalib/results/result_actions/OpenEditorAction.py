@@ -8,6 +8,7 @@ from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.ResultAction import ResultAction
 from coala_utils.decorators import enforce_signature
+from coala_utils.FileUtils import detect_encoding
 
 
 """
@@ -36,6 +37,10 @@ For each editor the following info is stored:
 KNOWN_EDITORS = {
     # non-gui editors
     'vim': {
+        'file_arg_template': '{filename} +{line}',
+        'gui': False
+    },
+    'nvim': {
         'file_arg_template': '{filename} +{line}',
         'gui': False
     },
@@ -77,6 +82,10 @@ KNOWN_EDITORS = {
         'args': '--new',
         'gui': True
     },
+    'notepadqq': {
+        'file_arg_template': '{filename}',
+        'gui': True
+    },
     'subl': {
         'file_arg_template': '{filename}:{line}:{column}',
         'args': '--wait',
@@ -96,7 +105,10 @@ class OpenEditorAction(ResultAction):
 
     @staticmethod
     @enforce_signature
-    def is_applicable(result: Result, original_file_dict, file_diff_dict):
+    def is_applicable(result: Result,
+                      original_file_dict,
+                      file_diff_dict,
+                      applied_actions=()):
         """
         For being applicable, the result has to point to a number of files
         that have to exist i.e. have not been previously deleted.
@@ -145,7 +157,7 @@ class OpenEditorAction(ResultAction):
 
     def apply(self, result, original_file_dict, file_diff_dict, editor: str):
         """
-        Open file(s)
+        (O)pen file
 
         :param editor: The editor to open the file with.
         """
@@ -190,7 +202,7 @@ class OpenEditorAction(ResultAction):
 
         for original_name, file_info in filenames.items():
             filename = file_info['filename']
-            with open(filename, encoding='utf-8') as file:
+            with open(filename, encoding=detect_encoding(filename)) as file:
                 file_diff_dict[original_name] = Diff.from_string_arrays(
                     original_file_dict[original_name], file.readlines(),
                     rename=False if original_name == filename else filename)

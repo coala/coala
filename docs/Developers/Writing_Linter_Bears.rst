@@ -1,14 +1,22 @@
 Linter Bears
 ============
 
-Welcome. This tutorial aims to show you how to use the ``@linter`` decorator in
-order to integrate linters in your bears.
+Welcome. This tutorial aims to show you how to use the ``@linter`` (`ref
+<http://api.coala.io/en/latest/coalib.bearlib.abstractions.html#
+module-coalib.bearlib.abstractions.Linter>`__) decorator in order to
+integrate linters in your bears.
 
 .. note::
 
   If you are planning to create a bear that does static code analysis without
   wrapping a tool, please refer to
   :doc:`this link instead<Writing_Native_Bears>`.
+
+  This tutorial takes you through the process of writing a local linter
+  Bear. If you want to write a global linter Bear, for a tool that does not
+  run once for each file, but only once for the whole project, you can still
+  go through the steps and then read about the differences of global linter
+  Bears at `global_bears`_.
 
 Why is This Useful?
 -------------------
@@ -65,7 +73,8 @@ appropriate parameters. This is done inside ``create_arguments``,
 - ``file``: The contents of the file to process, given as a list of lines
   (including the return character).
 - ``config_file``: The absolute path to a config file to use. If no config file
-  is used, this parameter is ``None``. More on that later.
+  is used, this parameter is ``None``. Processing of the config file
+  is left to the Bear's implementation of the method.
 
 You can use these parameters to construct the command line arguments. The
 linter expects from you to return an argument sequence here. A tuple is
@@ -90,6 +99,8 @@ handling different output formats:
 - ``regex``: This parses issue messages yielded by the underlying executable.
 - ``corrected``: Auto-generates results from a fixed/corrected file provided by
   the tool.
+- ``unified-diff``: This auto-generates results from a unified-diff output
+  provided by the executable.
 
 In this tutorial we are going to use the ``regex`` output format. But before we
 continue with modifying our bear, we need to figure out how exactly output from
@@ -134,8 +145,9 @@ that is printed out.
 For the exact list of named groups ``@linter`` recognizes, see the `API
 documentation <https://api.coala.io/en/latest/>`__.
 
-For more info generally on regexes, see `Python re module
-<https://docs.python.org/3/library/re.html>`_.
+Please refer to `Python3 re module <https://docs.python.org/3/library/re.html>`_
+and `Dive into python <http://www.diveintopython3.net/regular-expressions.html>`_
+for information about regular expressions.
 
 Let's brush up our ``output_regex`` a bit to use even more information:
 
@@ -200,9 +212,6 @@ understands it. This is possible via the ``severity_map`` parameter of
                           'I': RESULT_SEVERITY.INFO},
             ...)
 
-``coalib.results.RESULT_SEVERITY`` contains three different values, ``Info``,
-``Warning`` and ``Error`` you can use.
-
 We can test our bear like this
 
 ::
@@ -221,10 +230,31 @@ Normally, providing a severity-map is not needed, as coala has a default
 severity-map which recognizes many common words used for severities. Check out
 the API documentation for keywords supported!
 
-Suggest Corrections Using the ``corrected`` Output Format
----------------------------------------------------------
+Normalize Line or Column Numbers
+--------------------------------
 
-This output format is very simple to use and doesn't require further setup from
+coala uses 1-based line & column convention, i.e. the first line and the first
+column are 1. However, some linters use 0-based convention. For example,
+``pylint`` uses 1-based line convention and 0-based column convention. The
+options ``normalize_line_numbers`` and ``normalize_column_numbers``
+can help us easily map linter's convention to coala's. They are ``False``
+by default. If ``normalize_line_numbers`` is ``True``, line numbers would be
+increased by one. If ``normalize_column_numbers`` is ``True``, column numbers
+would be increased by one.
+
+Note ``pylint`` uses 0-based column convention.
+We need to map that to coala's convention as follows:
+
+::
+
+    @linter(...
+            normalize_column_numbers = True,
+            ...)
+
+Suggest Corrections Using the ``corrected`` and ``unified-diff`` Output Formats
+-------------------------------------------------------------------------------
+
+These output formats are very simple to use and don't require further setup from
 your side inside the bear:
 
 ::
@@ -232,8 +262,16 @@ your side inside the bear:
     @linter(...
             output_format='corrected')
 
-If your underlying tool generates a corrected file, the class automatically
-generates patches for the changes made and yields results accordingly.
+or
+
+::
+
+    @linter(...
+            output_format='unified-diff')
+
+If your underlying tool generates a corrected file or a unified-diff of the
+corrections, the class automatically generates patches for the changes made and
+yields results accordingly.
 
 Adding Settings to our Bear
 ---------------------------
@@ -392,13 +430,14 @@ gather information by using these values. Our bear now looks like:
       https://pylint.org/
       """
 
-      LANGUAGES = {"Python", "Python 2", "Python 3"}
+      LANGUAGES = {'Python', 'Python 2', 'Python 3'}
       REQUIREMENTS = {PipRequirement('pylint', '1.*')}
       AUTHORS = {'The coala developers'}
       AUTHORS_EMAILS = {'coala-devel@googlegroups.com'}
       LICENSE = 'AGPL-3.0'
       CAN_DETECT = {'Unused Code', 'Formatting', 'Duplication', 'Security',
                     'Syntax'}
+      SEE_MORE = 'https://pylint.org/'
 
       @staticmethod
       def create_arguments(filename, file, config_file,
@@ -430,13 +469,66 @@ To use our `pylint_rcfile` setting we can do
 
 ::
 
-    $ coala --bear-dirs=. --bears=PythonTutorialBear \
-    > -S rcfile=my_rcfile --files=sample.py
+    $ coala --bear-dirs=. --bears=PylintTutorialBear \
+    > -S pylint_rcfile=my_rcfile --files=sample.py
 
 You now know how to write a linter Bear and also how to use it in your
 project.
 
 Congratulations!
+
+.. _global_bears:
+
+Global Linter Bears
+-------------------
+
+Some linting tools do not run on file level, i.e. once for each file, but on
+project level. They might check some properties of the directory structure or
+only check one specific file like the ``setup.py``.
+
+For these tools we need a ``GlobalBear`` and we can also use ``@linter`` to
+give us one, by passing the parameter ``global_bear=True``:
+
+::
+
+    from coalib.bearlib.abstractions.Linter import linter
+
+    @linter(executable='some_tool',
+            global_bear=True,
+            output_format='regex',
+            output_regex=r'<filename>: <message>')
+    class SomeToolBear:
+        @staticmethod
+        def create_arguments(config_file):
+            return []
+
+The ``create_arguments`` method takes no ``filename`` and ``file`` in this case
+since there is no file context. You can still make coala aware of the file an
+issue was detected in, by using the ``filename`` named group in
+your ``output_regex`` if relevant to the wrapped tool.
+
+As mentioned before, ``create_arguments`` doesn't have to be a static method.
+In this case remember to prepend ``self`` to the parameters in the signature:
+
+::
+
+    from coalib.bearlib.abstractions.Linter import linter
+
+    @linter(executable='some_tool',
+            global_bear=True,
+            output_format='regex',
+            output_regex=r'<filename>: <message>')
+    class PythonTestBear:
+        def create_arguments(self, config_file):
+            return '--lint', self.file_dict.keys()
+
+You can access the complete list of files using ``self.file_dict`` which return
+a dictionary of ``{filename: file contents}``.
+Pay attention that putting the complete list of files on the command line will
+cause breakages when the length of the command line exceeds the OS permitted
+length, or the complete list of files is greater than the OS permitted number
+of arguments.
+For more information, check `here <https://www.in-ulm.de/~mascheck/various/argmax/>`_.
 
 Where to Find More...
 ---------------------

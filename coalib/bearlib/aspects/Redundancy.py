@@ -8,6 +8,15 @@ class Redundancy:
     This aspect describes redundancy in your source code.
     """
     class docs:
+        example = """
+        int foo(int iX)
+        {
+            int iY = iX*2;
+
+            return iX*2;
+        }
+        """
+        example_language = 'C++'
         importance_reason = """
         Redundant code makes your code harder to read and understand.
         """
@@ -68,6 +77,15 @@ class Clone:
 class UnusedImport:
     """
     Unused imports are any kind of import/include that is not needed.
+
+    This aspect have following taste:
+
+    >>> len(UnusedImport.tastes)
+    1
+    >>> UnusedImport.remove_non_standard_import
+    <...Taste[bool] object at 0x...>
+    >>> UnusedImport.remove_non_standard_import.default
+    True
     """
     class docs:
         example = """
@@ -88,6 +106,11 @@ class UnusedImport:
         Usually, unused imports can simply be removed.
         """
 
+    remove_non_standard_import = Taste[bool](
+        "Remove ALL unused import, include those not from language's "
+        'standard library.',
+        (True, False), default=True)
+
 
 @Redundancy.subaspect
 class UnreachableCode:
@@ -95,7 +118,7 @@ class UnreachableCode:
     Unreachable code, sometimes called dead code, is source code that
     can never be executed during the program execution.
     """
-    class deco:
+    class docs:
         example = """
         def func():
             return True
@@ -160,6 +183,10 @@ class UnreachableStatement:
             print (id(a))
         """
         example_language = 'python'
+        importance_reason = """
+        We should always keep our codebase clean, having dead code uselessly
+        makes the code longer and ambiguous.
+        """
         fix_suggestions = """
         These statement can be remove without harming the code.
         """

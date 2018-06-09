@@ -15,7 +15,7 @@ Example of a good commit:
     It helps not writing more functions inside
     ``coalib`` for this.
 
-    Fixes https://github.com/coala/coala/issues/5861
+    Closes https://github.com/coala/coala/issues/5861
 
 - `setup.py: Change bears' entrypoint`: Describe the change in
    maximum of 50 characters.
@@ -23,8 +23,27 @@ Example of a good commit:
 - `This entrypoint.. ..for this`: Describe the reasoning of your changes
    in maximum of 72 characters per line.
 
-- `Fixes https://github.com/coala/coala/issues/5861`: Mention the URL
+- `Closes https://github.com/coala/coala/issues/5861`: Mention the URL
    of the issue it closes or fixes.
+
+::
+
+    configure.py: Fix docstring typo
+
+    This fixes the typo and changes
+    it from wether --> whether.
+
+    Fixes https://github.com/coala/coala/issues/4018
+
+- `configure.py: Fix docstring typo`: Describe the change in
+   maximum of 50 characters.
+
+- `This fixes.. ..whether.`: Describe the reasoning of your changes
+   in maximum of 72 characters per line.
+
+- `Closes https://github.com/coala/coala/issues/7971`: Mention the URL
+   of the issue it closes or fixes.
+
 
 At coala we are looking heavily at the maintainability of the code.
 
@@ -32,14 +51,13 @@ At coala we are looking heavily at the maintainability of the code.
 
     Code is more often read than written!
 
-It is obvious that we need good code. In order to do that we are
-verifying that every change to our code (i.e. the commits) is making it
-better.
+We need good code and for achieving it, we ensure that every
+change to our code (i.e. the commits) is making it better.
 
 What Makes a Good Commit
 ------------------------
 
-A good commit is atomic. It should describe only one change and not more.
+A good commit is atomic. It should describe one change and not more.
 
 Why? Because we may create more bugs if we had more changes per commit.
 
@@ -58,12 +76,10 @@ Example:
 
     setup.py: Change bears' entrypoint
 
-    This entrypoint ensures that coala discovers
-    the bears correctly.
-    It helps not writing more functions inside
-    ``coalib`` for this.
+    This entrypoint ensures that coala discovers the bears correctly.
+    It helps not writing more functions inside ``coalib`` for this.
 
-    Fixes https://github.com/coala/coala/issues/5861
+    Closes https://github.com/coala/coala/issues/5861
 
 Shortlog
 ~~~~~~~~
@@ -72,10 +88,15 @@ Example:
 
 ::
 
-    setup: Install .coafile via package_data
+    setup.py: Change bears' entrypoint
 
--  Maximum of 50 characters.
+.. _50:
+
+-  | Maximum of 50 characters.
+   | Keeping subject lines at this length ensures that they are
+     readable, and explains the change in a concise way.
 -  Should describe the *change* - the action being done in the commit.
+-  Should not include WIP prefix.
 -  Should have a tag and a short description separated by a colon (``:``)
 
    -  **Tag**
@@ -97,17 +118,22 @@ Example:
 
 ::
 
-    When installing the .coafile to distutils.sysconfig.get_python_lib, we
-    ignore that this is not the installation directory in every case. Thus
-    it is easier, more reliable and platform independent to let distutils
-    install it by itself.
+    This entrypoint ensures that coala discovers the bears correctly.
+    It helps not writing more functions inside ``coalib`` for this.
 
--  Maximum of 72 chars excluding newline for *each* line.
+.. _72:
+
+-  | Maximum of 72 chars excluding newline for *each* line.
+   | The recommendation is to add a line break at 72 characters,
+     so that Git has plenty of room to indent text while still
+     keeping everything under 80 characters overall.
 -  Not mandatory - but helps explain what you're doing.
 -  Should describe the reasoning for your changes. This is especially
    important for complex changes that are not self explanatory. This is also
    the right place to write about related bugs.
 -  First person should not be used here.
+
+The bot will complain if the 50_/72_ rule is not followed.
 
 Issue reference
 ~~~~~~~~~~~~~~~
@@ -116,7 +142,7 @@ Example:
 
 ::
 
-    Fixes https://github.com/coala/coala/issues/269
+    Fixes https://github.com/coala/coala/issues/5861
 
 -  Should use the ``Fixes`` keyword if your commit fixes a bug, or ``Closes``
    if it adds a feature/enhancement.
@@ -124,7 +150,8 @@ Example:
    between ``Fixes`` and ``Closes`` may be very small and subjective.
    If a specific issue may lead to an unintended behaviour from the user
    or from the program it should be considered a bug, and should be
-   addresed with ``Fixes``.
+   addresed with ``Fixes``. If an issue is labelled with ``type/bug``
+   you should always use ``Fixes``. For all other issues use ``Closes``.
 -  Should use full URL to the issue.
 -  There should be a single space between the ``Fixes`` or ``Closes`` and the
    URL.
@@ -165,6 +192,25 @@ Example 2 (implemented feature):
     This massively helps debugging linters.
 
     Closes https://github.com/coala/coala/issues/2060
+
+Example 3 (fixed typo):
+
+::
+
+    ConsoleInteraction.print_result: Fix docstring typo
+
+    wether --> whether.
+
+    Closes https://github.com/coala/coala/issues/4018
+
+Editing Commit Messages
+-----------------------
+
+If you have previously made a commit and update it on a later date,
+it is advisable to also update the commit message accordingly.
+
+In order to do this one can use the amend function as is described `here.
+<http://api.coala.io/en/latest/Developers/Git_Basics.html#follow-up>`_
 
 Why Do We Need Good Commits?
 ----------------------------

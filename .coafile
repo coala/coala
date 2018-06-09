@@ -1,5 +1,5 @@
 [Default]
-files = *.py, coalib/**/*.py, ./coala, tests/**/*.py
+files = *.py, coalib/**/*.py, ./coala, tests/**/*.py, docs/conf.py
 ignore =
     tests/bearlib/languages/documentation/documentation_extraction_testdata/*.py,
     tests/collecting/collectors_test_dir/bears/incorrect_bear.py,
@@ -12,14 +12,26 @@ use_spaces = True
 # will be executed sequentially; also we need the LineLengthBear to double
 # check the line length because PEP8Bear sometimes isn't able to correct the
 # linelength.
-bears = SpaceConsistencyBear, PyUnusedCodeBear, QuotesBear
+bears = SpaceConsistencyBear, QuotesBear
 language = Python
 preferred_quotation = '
 
-default_actions = *: ApplyPatchAction
- 
+default_actions = **: ApplyPatchAction
+
+[flakes]
+# Do not set default_action to ApplyPatchAction as it may lead to some
+# required imports being removed that might result in coala behaving weirdly.
+
+default_actions = *: ShowPatchAction
+
+bears = PyUnusedCodeBear
+language = Python
+remove_all_unused_imports = true
+
 [autopep8]
 bears = PEP8Bear, PycodestyleBear
+pycodestyle_ignore = E303, E121, E123, E126, E133, E226, E242, E704,
+                     W503, W504
 
 default_actions = PEP8Bear: ApplyPatchAction
 
@@ -30,17 +42,17 @@ ignore_length_regex = ^.*https?://
 [DOCS]
 bears = SpaceConsistencyBear, LineLengthBear
 
-files = docs/**/*.rst, CONTRIBUTING.rst, README.rst
+files = docs/**/*.rst,*.rst
 ignore = docs/API/**
 ignore_length_regex = ^.*https?://
 
-default_actions = SpaceConsistencyBear: ApplyPatchAction 
+default_actions = SpaceConsistencyBear: ApplyPatchAction
 
 [languagetool]
 enabled = False
 
 bears = LanguageToolBear
-files = docs/**/*.rst, CONTRIBUTING.rst, README.rst
+files = docs/**/*.rst,*.rst
 ignore = docs/API/**
 languagetool_disable_rules =
     EN_QUOTES,                          # `` for links in rst files
@@ -62,7 +74,7 @@ languagetool_disable_rules =
 [commit]
 bears = GitCommitBear
 shortlog_trailing_period = False
-shortlog_regex = ([^:]*[^: ]: [A-Z0-9*].*)
+shortlog_regex = ([^:]*|[^:]+[^ ]: [A-Z0-9*].*)
 
 [Pylint]
 enabled = False
@@ -105,12 +117,21 @@ files = docs/_static/**.css
 bears = reSTLintBear
 files = README.rst
 
+[rstcheck]
+bears = RSTcheckBear
+files = **.rst
+ignore = docs/Developers/coala_settings.rst
+
 [text]
 bears = SpaceConsistencyBear
 files =
     LICENSE, ISSUE_TEMPLATE, PULL_REQUEST_TEMPLATE.md, MANIFEST.in,
     **.sh, .travis.yml, circle.yml, setup.cfg, ./docs/_static/custom.css
 ignore = node_modules/**
+
+[jinja2]
+bears = Jinja2Bear
+files = **.jj2
 
 [TODOS]
 enabled = False
@@ -120,3 +141,19 @@ language = python 3
 
 ci_keywords, keywords = \#TODO, \# TODO, \#FIXME, \# FIXME
 cs_keywords =
+
+[urllib]
+# Encourage usage of requests library by blacklisting usage of urlopen()
+bears = KeywordBear
+language = python 3
+keywords = urlopen
+
+[yml]
+bears = YAMLLintBear
+files = **.yml, **.yaml
+
+[bash]
+bears = ShellCheckBear
+files = **.sh
+shell = bash
+shellcheck_ignore = SC2046, SC2154

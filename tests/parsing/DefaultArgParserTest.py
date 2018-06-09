@@ -23,11 +23,11 @@ class CustomFormatterTest(unittest.TestCase):
                           self.output,
                           flags=re.DOTALL)
         self.assertIsNotNone(match)
-        self.assertEquals(match.group(1), '-a [BOOL]')
+        self.assertEqual(match.group(1), '-a [BOOL]')
 
     def test_metavar_not_in_optional_args_sections(self):
         match = re.search('optional arguments:.+(-a, --all).*',
                           self.output,
                           flags=re.DOTALL)
         self.assertIsNotNone(match)
-        self.assertEquals(match.group(1), '-a, --all')
+        self.assertEqual(match.group(1), '-a, --all')

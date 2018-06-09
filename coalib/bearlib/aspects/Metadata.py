@@ -7,19 +7,41 @@ class Metadata:
     This describes any aspect that is related to metadata that is not
     inside your source code.
     """
+    class docs:
+        example = """
+        Commit message, commit message shortlog, commit message body, etc...
+        """
+        example_language = 'all'
+        importance_reason = """
+        Writing good documentation on each changes we make on our code is
+        always a good idea because it makes it easy to identify what went
+        wrong, what change breaks things or introduce code smells etc...
+        """
+        fix_suggestions = """
+        Enforcing good committing convention to make things consistence, can
+        be a fix for this.
+        """
 
 
 @Metadata.subaspect
 class CommitMessage:
     """
-    Your commit message is important documentation associated with your
-    source code. It can help you to identify bugs (e.g. through
-    `git bisect`) or find missing information about unknown source code
-    (through `git blame`).
-
-    Commit messages are also sometimes used to generate - or write
-    manually - release notes.
+    Your commit message the documentation associated with your source code.
     """
+    class docs:
+        example = 'YapfBear: Add `YapfBear`'
+        example_language = 'English'
+        importance_reason = """
+        Good commit messages can help you to identify bugs (e.g. through
+        `git bisect`) or find missing information about unknown source code
+        (through `git blame`).
+
+        Commit messages are also sometimes used to generate - or write
+        manually - release notes.
+        """
+        fix_suggestions = """
+        Enforce the use of commit messages.
+        """
 
 
 @CommitMessage.subaspect
@@ -41,10 +63,20 @@ class Emptiness:
 @CommitMessage.subaspect
 class Shortlog:
     """
-    Your commit shortlog is the first line of your commit message. It is
-    the most crucial part and summarizes the change in the shortest possible
-    manner.
+    Your commit shortlog is the first line of your commit message.
     """
+    class docs:
+        example = """
+        FIX: Describe change further
+        """
+        example_language = 'English'
+        importance_reason = """
+        It is the most crucial part and summarizes the change in the shortest
+        possible manner.
+        """
+        fix_suggestions = """
+        Enforce concise, meaningful and clear commit messages' shortlogs.
+        """
 
 
 @Shortlog.subaspect
@@ -193,6 +225,28 @@ class Body:
     """
     Your commit body may contain an elaborate description of your commit.
     """
+    class docs:
+        example = """
+        CI: Revert requests breakage workaround
+
+        # This is the commit message body
+
+        This reverts "CI: Workaround requests un-vendoring of chardet"
+        commit 638bff9cd85bedb7e2e8c6184b41f547eca4f97c.
+
+        The broken bear VintBear has been disabled.
+
+        Related to https://github.com/coala/coala/issues/4277
+        """
+        example_language = 'English'
+        importance_reason = """
+        Sometimes the commit message shortlog do not give enough information
+        on the code, in that case it is a good idea to have give some more
+        information in the commit message body.
+        """
+        fix_suggestions = """
+        Enforce detailed, clear and meaningful commit messages' bodies.
+        """
 
 
 @Body.subaspect

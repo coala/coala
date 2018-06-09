@@ -1,6 +1,7 @@
 import os
 from collections import OrderedDict
 from types import MappingProxyType
+import logging
 
 from coalib.misc import Constants
 from coalib.parsing.LineParser import LineParser
@@ -15,11 +16,14 @@ class ConfParser:
                  comment_seperators=('#',),
                  key_delimiters=(',', ' '),
                  section_name_surroundings=MappingProxyType({'[': ']'}),
-                 remove_empty_iter_elements=True):
-        self.line_parser = LineParser(key_value_delimiters,
-                                      comment_seperators,
-                                      key_delimiters,
-                                      section_name_surroundings)
+                 remove_empty_iter_elements=True,
+                 key_value_append_delimiters=('+=',)):
+        self.line_parser = LineParser(
+            key_value_delimiters,
+            comment_seperators,
+            key_delimiters,
+            section_name_surroundings,
+            key_value_append_delimiters=key_value_append_delimiters)
 
         self.__remove_empty_iter_elements = remove_empty_iter_elements
 
@@ -63,8 +67,7 @@ class ConfParser:
         if not create_if_not_exists:
             raise IndexError
 
-        retval = self.sections[key] = Section(str(name),
-                                              self.sections['default'])
+        retval = self.sections[key] = Section(str(name))
         return retval
 
     @staticmethod
@@ -84,14 +87,20 @@ class ConfParser:
         current_section_name = 'default'
         current_section = self.get_section(current_section_name)
         current_keys = []
+        no_section = True
 
         for line in lines:
-            section_name, keys, value, comment = self.line_parser.parse(line)
+            (section_name,
+             keys,
+             value,
+             append,
+             comment) = self.line_parser._parse(line)
 
             if comment != '':
                 self.__add_comment(current_section, comment, origin)
 
             if section_name != '':
+                no_section = False
                 current_section_name = section_name
                 current_section = self.get_section(current_section_name, True)
                 current_keys = []
@@ -105,14 +114,27 @@ class ConfParser:
                 current_keys = keys
 
             for section_override, key in current_keys:
+                if no_section:
+                    logging.warning('A setting does not have a section.'
+                                    'This is a deprecated feature please '
+                                    'put this setting in a section defined'
+                                    ' with `[<your-section-name]` in a '
+                                    'configuration file.')
                 if key == '':
                     continue
+
+                if key in current_section.contents and keys != []:
+                    logging.warning('{} setting has already been defined in '
+                                    'section {}. The previous setting will be '
+                                    'overridden.'.format(key,
+                                                         current_section.name))
 
                 if section_override == '':
                     current_section.add_or_create_setting(
                         Setting(key,
                                 value,
                                 origin,
+                                to_append=append,
                                 # Start ignoring PEP8Bear, PycodestyleBear*
                                 # they fail to resolve this
                                 remove_empty_iter_elements=
@@ -126,6 +148,7 @@ class ConfParser:
                             Setting(key,
                                     value,
                                     origin,
+                                    to_append=append,
                                     # Start ignoring PEP8Bear, PycodestyleBear*
                                     # they fail to resolve this
                                     remove_empty_iter_elements=

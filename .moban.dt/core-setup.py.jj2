@@ -1,0 +1,41 @@
+{% extends 'coala-setup.py.jj2' %}
+
+{% block local_exec_block_1 %}
+assert_supported_version()
+
+
+class BuildPyCommand(setuptools.command.build_py.build_py):
+
+    def run(self):
+        if platform.system() != 'Windows':
+            self.run_command('build_manpage')
+        setuptools.command.build_py.build_py.run(self)
+
+{% endblock %}
+
+{% block local_exec_block_2 %}
+
+# Generate API documentation only if we are running on readthedocs.io
+on_rtd = getenv('READTHEDOCS', None) is not None
+if on_rtd:
+    call(BuildDocsCommand.apidoc_command)
+    if 'dev' in '{{ build_version }}':
+        current_version = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+        call(['python3', '.misc/adjust_version_number.py', 'coalib/VERSION',
+              '-b {}'.format(current_version)])
+        VERSION = get_version()
+
+{% endblock %}
+
+{% block custom_requirements %}
+if __name__ == '__main__':
+    if platform.system() != 'Windows':
+        data_files = [('man/man1', ['coala.1'])]
+    else:
+        data_files = None
+{% endblock %}
+
+{% block custom_setup_commands %}
+                    'build_manpage': BuildManPage,
+                    'build_py': BuildPyCommand,
+{% endblock %}

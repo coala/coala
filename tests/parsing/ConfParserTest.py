@@ -2,13 +2,16 @@ import os
 import tempfile
 import unittest
 from collections import OrderedDict
+import logging
 
 from coalib.parsing.ConfParser import ConfParser
 from coalib.settings.Section import Section
 
 
 class ConfParserTest(unittest.TestCase):
-    example_file = """to be ignored
+    example_file = """setting = without_section
+    [foo]
+    to be ignored
     a_default, another = val
     TEST = tobeignored  # do you know that thats a comment
     test = push
@@ -23,13 +26,19 @@ class ConfParserTest(unittest.TestCase):
     # just a omment
     # just a omment
     nokey. = value
-    default.test = content
+    foo.test = content
     makefiles.lastone = val
+    append += key
 
     [EMPTY_ELEM_STRIP]
     A = a, b, c
     B = a, ,, d
     C = ,,,
+
+    [name]
+    key1 = value1
+    key2 = value1
+    key1 = value2
     """
 
     def setUp(self):
@@ -45,7 +54,10 @@ class ConfParserTest(unittest.TestCase):
         except FileNotFoundError:
             pass
 
-        self.sections = self.uut.parse(self.file)
+        logger = logging.getLogger()
+
+        with self.assertLogs(logger, 'WARNING') as self.cm:
+            self.sections = self.uut.parse(self.file)
 
     def tearDown(self):
         os.remove(self.file)
@@ -61,16 +73,9 @@ class ConfParserTest(unittest.TestCase):
                           self.uut.get_section,
                           'inexistent section')
 
-    def test_parse_default_section(self):
+    def test_parse_default_section_deprecated(self):
         default_should = OrderedDict([
-            ('a_default', 'val'),
-            ('another', 'val'),
-            ('comment0', '# do you know that thats a comment'),
-            ('test', 'content'),
-            ('t', ''),
-            ('escaped_=equal', 'escaped_#hash'),
-            ('escaped_\\backslash', 'escaped_ space'),
-            ('escaped_,comma', 'escaped_.dot')])
+            ('setting', 'without_section')])
 
         key, val = self.sections.popitem(last=False)
         self.assertTrue(isinstance(val, Section))
@@ -81,15 +86,13 @@ class ConfParserTest(unittest.TestCase):
             is_dict[k] = str(val[k])
         self.assertEqual(is_dict, default_should)
 
-    def test_parse_makefiles_section(self):
-        makefiles_should = OrderedDict([
-            ('j', 'a\nmultiline\nvalue'),
-            ('another', 'a\nmultiline\nvalue'),
-            ('comment1', '# just a omment'),
-            ('comment2', '# just a omment'),
-            ('lastone', 'val'),
-            ('comment3', ''),
+        self.assertRegex(self.cm.output[0],
+                         'A setting does not have a section.')
+
+    def test_parse_foo_section(self):
+        foo_should = OrderedDict([
             ('a_default', 'val'),
+            ('another', 'val'),
             ('comment0', '# do you know that thats a comment'),
             ('test', 'content'),
             ('t', ''),
@@ -98,6 +101,29 @@ class ConfParserTest(unittest.TestCase):
             ('escaped_,comma', 'escaped_.dot')])
 
         # Pop off the default section.
+        self.sections.popitem(last=False)
+
+        key, val = self.sections.popitem(last=False)
+        self.assertTrue(isinstance(val, Section))
+        self.assertEqual(key, 'foo')
+
+        is_dict = OrderedDict()
+        for k in val:
+            is_dict[k] = str(val[k])
+        self.assertEqual(is_dict, foo_should)
+
+    def test_parse_makefiles_section(self):
+        makefiles_should = OrderedDict([
+            ('j', 'a\nmultiline\nvalue'),
+            ('another', 'a\nmultiline\nvalue'),
+            ('comment1', '# just a omment'),
+            ('comment2', '# just a omment'),
+            ('lastone', 'val'),
+            ('append', 'key'),
+            ('comment3', '')])
+
+        # Pop off the default and foo section.
+        self.sections.popitem(last=False)
         self.sections.popitem(last=False)
 
         key, val = self.sections.popitem(last=False)
@@ -116,17 +142,10 @@ class ConfParserTest(unittest.TestCase):
             ('a', 'a, b, c'),
             ('b', 'a, ,, d'),
             ('c', ',,,'),
-            ('comment4', ''),
-            ('a_default', 'val'),
-            ('another', 'val'),
-            ('comment0', '# do you know that thats a comment'),
-            ('test', 'content'),
-            ('t', ''),
-            ('escaped_=equal', 'escaped_#hash'),
-            ('escaped_\\backslash', 'escaped_ space'),
-            ('escaped_,comma', 'escaped_.dot')])
+            ('comment4', '')])
 
-        # Pop off the default and makefiles section.
+        # Pop off the default, foo and makefiles section.
+        self.sections.popitem(last=False)
         self.sections.popitem(last=False)
         self.sections.popitem(last=False)
 
@@ -162,3 +181,13 @@ class ConfParserTest(unittest.TestCase):
 
     def test_config_directory(self):
         self.uut.parse(self.tempdir)
+
+    def test_settings_override_warning(self):
+        self.assertEqual(self.cm.output[1], 'WARNING:root:test setting has '
+                                            'already been defined in section '
+                                            'foo. The previous setting will '
+                                            'be overridden.')
+        self.assertEqual(self.cm.output[2], 'WARNING:root:key1 setting has '
+                                            'already been defined in section '
+                                            'name. The previous setting will '
+                                            'be overridden.')

@@ -5,7 +5,15 @@ import operator
 import re
 from operator import itemgetter
 
+from packaging.version import Version, InvalidVersion
+
 from coalib.settings.Annotations import typechain
+
+
+class UnknownLanguageError(AttributeError, KeyError):
+    """
+    This exception occurs when an unknown language is requested.
+    """
 
 
 class LanguageUberMeta(type):
@@ -15,40 +23,46 @@ class LanguageUberMeta(type):
     all = []
 
 
-convert_int_float = typechain(int, float)
+convert_int_float_str = typechain(int, float, str)
 
 
 def parse_lang_str(string):
     """
-    Parses any given language string into name
-    and a list of float versions (ignores leading whitespace):
+    Parses any given language `string` into name and a list of either
+    ``int``, ``float``, or ``str`` versions (ignores leading whitespace):
 
     >>> parse_lang_str("Python")
     ('Python', [])
     >>> parse_lang_str("Python 3.3")
     ('Python', [3.3])
-    >>> parse_lang_str("Python 3.6, 3.3")
-    ('Python', [3.6, 3.3])
-    >>> parse_lang_str("Objective C 3.6, 3.3")
-    ('Objective C', [3.6, 3.3])
-    >>> parse_lang_str("               Objective C 3.6, 3.3")
-    ('Objective C', [3.6, 3.3])
-    >>> parse_lang_str("Cobol, stupid!")  # +ELLIPSIS
+    >>> parse_lang_str("Python 3.6, 3.3.1")
+    ('Python', [3.6, '3.3.1'])
+    >>> parse_lang_str("Objective C 3.6, 3")
+    ('Objective C', [3.6, 3])
+    >>> parse_lang_str("Cobol, stupid!")
     Traceback (most recent call last):
      ...
-    ValueError: Couldn't convert value 'stupid!' ...
+    packaging.version.InvalidVersion: Invalid version: 'stupid!'
+    >>> parse_lang_str("Cobol seems at least stupid ;)")
+    ('Cobol seems at least stupid ;)', [])
     """
-    name, *str_versions = re.split(r',\s*', str(string))
-    versions = list(map(convert_int_float, str_versions))
+    name, *str_versions = re.split(r'\s*,\s*', str(string).strip())
+    versions = []
+    for version in str_versions:
+        version = convert_int_float_str(version)
+        Version(str(version))  # raises if not valid
+        versions.append(version)
     try:
-        name, version = name.rsplit(maxsplit=1)
-        version = convert_int_float(version)
-    except (ValueError, TypeError):
+        realname, version = name.rsplit(maxsplit=1)
+        version = convert_int_float_str(version)
+        Version(str(version))
+    except (ValueError, InvalidVersion):
         pass
     else:
         versions.insert(0, version)
+        return realname, versions
 
-    return name.strip(), versions
+    return name, versions
 
 
 class LanguageMeta(type, metaclass=LanguageUberMeta):
@@ -56,8 +70,11 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
     Metaclass for :class:`coalib.bearlib.languages.Language.Language`.
 
     Allows it being used as a decorator as well as implements the
-    `__contains__` operation and stores all languages created with the
+    :meth:`.__contains__` operation and stores all languages created with the
     decorator.
+
+    Ensures that ``.versions`` defined in language classes will be turned into
+    sorted tuples of ``packaging.version.Version`` instances.
 
     The operators are defined on the class as well, so you can do the
     following:
@@ -91,6 +108,12 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
 
         return type.__new__(mcs, clsname, bases, clsattrs)
 
+    def __init__(cls, clsname, bases, clsattrs):
+        cls.versions = tuple(sorted(
+            Version(str(v)) for v in getattr(cls, 'versions', ())))
+
+        super().__init__(clsname, bases, clsattrs)
+
     def __hash__(cls):
         """
         >>> isinstance(hash(Language), int)
@@ -105,7 +128,9 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
         try:
             return next(lang for lang in type(cls).all if item in lang)
         except StopIteration:
-            raise AttributeError
+            raise UnknownLanguageError(
+                'Language `{}` is not a valid language name or '
+                'not recognized by coala.'.format(item))
 
     def __getitem__(cls, item):
         if isinstance(item, cls):
@@ -116,6 +141,7 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
         name, versions = parse_lang_str(item)
 
         language = getattr(cls, name)
+
         if not versions:
             return language()
 
@@ -165,7 +191,7 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
 
         return str(name).lower() in map(
             str.lower, chain(cls.aliases, [cls.__qualname__, cls.__name__])
-        ) and (not versions or all(version in cls.versions
+        ) and (not versions or all(Version(str(version)) in cls.versions
                                    for version in versions))
 
     def __gt__(cls, other):
@@ -215,6 +241,12 @@ class Language(metaclass=LanguageMeta):
      ...
     ValueError: No versions left
 
+    All given versions will be stored as a sorted tuple of
+    ``packaging.version.Version`` instances:
+
+    >>> Language.TrumpScript(3.4, 3.3).versions
+    (<Version('3.3')>, <Version('3.4')>)
+
     The attributes are not accessible unless you have selected one - and only
     one - version of your language:
 
@@ -239,7 +271,8 @@ class Language(metaclass=LanguageMeta):
     the class:
 
     >>> Language.TrumpScript.comment_delimiter
-    OrderedDict([(2.7, '#'), (3.3, '#'), (3.4, '#'), (3.5, '#'), (3.6, '#')])
+    OrderedDict([(<Version('2.7')>, '#'), (<Version('3.3')>, '#'), \
+(<Version('3.4')>, '#'), (<Version('3.5')>, '#'), (<Version('3.6')>, '#')])
 
     Any nonexistent item will of course not be served:
 
@@ -331,10 +364,11 @@ class Language(metaclass=LanguageMeta):
     >>> Language.Cobol
     Traceback (most recent call last):
      ...
-    AttributeError
+    UnknownLanguageError: No language found for `Cobol`
     """
 
     def __init__(self, *versions):
+        versions = [Version(str(v)) for v in versions]
         assert all(version in type(self).versions for version in versions)
         if not versions:
             self.versions = type(self).versions
@@ -388,8 +422,14 @@ class Language(metaclass=LanguageMeta):
 
     def __contains__(self, item):
         item = Language[item]
+        item_versions = set(item.versions)
+        versions = set(self.versions)
         return (type(self) is type(item)
-                and set(item.versions).issubset(set(self.versions)))
+                and (item_versions.issubset(versions)
+                     or item_versions.issuperset(versions)))
+
+    def __reduce__(self):
+        return (Language.__getitem__, (str(self),))
 
     @property
     def attributes(self):
@@ -427,11 +467,14 @@ def limit_versions(language, limit, operator):
     """
     if isinstance(limit, int):
         versions = [version for version in language.versions
-                    if operator(int(version), limit)]
-    else:
-
+                    if operator(int(str(version).split('.')[0]), limit)]
+    elif isinstance(limit, float):
         versions = [version for version in language.versions
-                    if operator(version, limit)]
+                    if operator(float('.'.join(str(version).split('.')[0:2])),
+                                limit)]
+    else:
+        versions = [version for version in language.versions
+                    if operator(version, Version(str(limit)))]
     if not versions:
         raise ValueError('No versions left')
     return type(language)(*versions)
@@ -445,6 +488,10 @@ class Languages(tuple):
 
     >>> Languages(['C#', Language.Python == 3])
     (C#, Python 3.3, 3.4, 3.5, 3.6)
+    >>> Languages(['C#', Language.Python == '3.6'])
+    (C#, Python 3.6)
+    >>> Languages(['C#', 'Python 2.7'])
+    (C#, Python 2.7)
 
     It provides :meth:`.__contains__` for checking if a given language
     identifier is included:
@@ -453,7 +500,7 @@ class Languages(tuple):
     True
     >>> 'Py 3.3' in Languages(['Python 2'])
     False
-    >>> 'csharp' in Languages(['C#', Language.Python == 3])
+    >>> 'csharp' in Languages(['C#', Language.Python == 3.6])
     True
     """
 

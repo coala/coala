@@ -1,7 +1,7 @@
 Testing
 =======
 
-You can help us testing coala in several ways.
+You can help us test coala in several ways.
 
 Executing our Tests
 -------------------
@@ -34,10 +34,10 @@ You can then execute our tests with
 
 ::
 
-    $ py.test
+    $ pytest
 
 .. note::
-    If ``py.test`` seems to give errors, try running ``python3 -m pytest``
+    If ``pytest`` seems to give errors, try running ``python3 -m pytest``
     instead.
 
 and report any errors you get!
@@ -48,16 +48,26 @@ To run our tests, you can also use ``python3 setup.py test``
 
     If you need to customize test running, you can get more options
     about allowing skipped tests, getting code coverage displayed
-    or omitting/selecting tests using ``py.test`` directly.
+    or omitting/selecting tests using ``pytest`` directly.
 
     ::
 
-        $ py.test --help
+        $ pytest --help
 
 .. note::
 
-    You will not get a test coverage of 100% - the coverage on the
-    website is merged for several python versions.
+    You may not get a test coverage of 100% locally. The coverage
+    published on `codecov.io <https://codecov.io/gh/coala/>`__ (GitHub
+    Projects) and `codecov.io <https://codecov.io/gl/coala/>`__ (GitLab
+    Projects) are actually merged results for several python versions.
+    The results are merged from different OS. Appveyor results
+    provide coverage of Windows specific lines, and Travis/Circle
+    provide coverage of Unix specific lines. Also, the lack of tests that
+    developers often forget to write is typically why one will see test
+    coverage not reach 100%. Thus, your test coverage can 'pass' without
+    reaching 100%. If you make changes to the code, then you should
+    concentrate on getting 100% coverage on the changes made rather than
+    worrying about the coverage of the whole project.
 
 Using test coverage
 -------------------
@@ -66,12 +76,12 @@ To get coverage information, you can run:
 
 ::
 
-    $ py.test --cov
+    $ pytest --cov
 
 You can view the coverage report as html by running:
 
 ::
 
-    $ py.test --cov --cov-report html
+    $ pytest --cov --cov-report html
 
 The html report will be saved ``.htmlreport`` inside the coala repository.

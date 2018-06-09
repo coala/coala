@@ -19,7 +19,7 @@ def to_camelcase(string):
     :param string: The string to convert.
     :return:       The camel-cased string.
     """
-    string = re.sub('(\s)',
+    string = re.sub(r'(\s)',
                     lambda match: '_',
                     string)
     string = re.sub('^(_*)(.)',
@@ -48,7 +48,7 @@ def to_pascalcase(string):
     :param string: The string to convert.
     :return:       The pascal-cased string.
     """
-    string = re.sub('(\s)',
+    string = re.sub(r'(\s)',
                     lambda match: '_',
                     string)
     string = re.sub('^(_*)(.)',
@@ -79,13 +79,13 @@ def to_snakecase(string):
     :param string: The string to convert.
     :return:       The snake-cased string.
     """
-    string = re.sub('(\s)',
+    string = re.sub(r'(\s)',
                     lambda match: '_',
                     string)
     string = re.sub('^(_*)([^_])',
                     lambda match: match.group(1) + match.group(2).lower(),
                     string)
-    string = re.sub('(\w*)([.]+)([A-Z])',
+    string = re.sub(r'(\w*)([.]+)([A-Z])',
                     lambda match: (match.group(1) + match.group(2) +
                                    match.group(3).lower()),
                     string)
@@ -118,15 +118,61 @@ def to_spacecase(string):
     string = re.sub('(_)',
                     ' ',
                     string)
-    string = re.sub('^(\s*)(.)',
+    string = re.sub(r'^(\s*)(.)',
                     lambda match: match.group(2).upper(),
                     string)
-    string = re.sub('(\s*)$',
+    string = re.sub(r'(\s*)$',
                     '',
                     string)
-    string = re.sub('(?<=[^\s])\s+([^\s])',
+    string = re.sub(r'(?<=[^\s])\s+([^\s])',
                     lambda match: ' ' + match.group(1).upper(),
                     string)
-    return re.sub('(?<=[^\s])([A-Z])',
+    return re.sub(r'(?<=[^\s])([A-Z])',
                   lambda match: ' ' + match.group(1),
                   string)
+
+
+def to_kebabcase(string):
+    """
+    Converts the given string to kebab-case.
+
+    >>> to_kebabcase('HelloWorld')
+    'hello-world'
+    >>> to_kebabcase('__Init__File__')
+    'init-file'
+    >>> to_kebabcase('')
+    ''
+    >>> to_kebabcase('already-kebab-case')
+    'already-kebab-case'
+    >>> to_kebabcase('   string  ')
+    'string'
+    >>> to_kebabcase('ABCde.F.G..H..IH')
+    'a-b-cde.f.g..h..i-h'
+
+    :param string: The string to convert.
+    :return:       The kebab-cased string.
+    """
+
+    string = re.sub(r'(\s)',
+                    lambda match: '-',
+                    string)
+    string = re.sub(r'(\_)',
+                    lambda match: '-',
+                    string)
+    string = re.sub('^(-*)([^-])',
+                    lambda match: match.group(1) + match.group(2).lower(),
+                    string)
+    string = re.sub(r'(\w*)([.]+)([A-Z])',
+                    lambda match: (match.group(1) + match.group(2) +
+                                   match.group(3).lower()),
+                    string)
+    string = re.sub('(?<=[^-])-+([^-])',
+                    lambda match: '-' + match.group(1).lower(),
+                    string)
+    string = re.sub('[A-Z]',
+                    lambda match: '-' + match.group(0).lower(),
+                    string)
+    string = re.sub(r'^-+|-+$',
+                    lambda match: ''*len(match.group()),
+                    string)
+    return re.sub(r'\-+', '-', string)

@@ -1,0 +1,29 @@
+[cli]
+key = value
+
+[all]
+max_line_length = 80
+ignore += ./vendor
+
+[all.python]
+bears = LineLengthBear
+language = Python
+files = **.py
+aspects = smell, redundancy.clone  # Inclusive
+
+[all.c]
+language = C
+files = **.(c|h)
+ignore_aspects = redundancy  # Exclusive
+
+[java.test]
+language = Java
+files = **.java
+
+[all.python.codestyle]
+bears = QuotesBear
+preferred_quotation = '
+
+[all.java.codestyle]
+language = Java
+bears = TestBear

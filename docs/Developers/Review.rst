@@ -15,8 +15,8 @@ on your own.
 
 You can totally help us review source code. Especially try to review source
 code of others and share what you have learnt with them. You can use acks and
-unacks like everyone else and ``cobot`` even allows you to set PRs to WIP. Check
-the section below for more information.
+unacks like everyone else and ``corobo`` even allows you to set PRs to WIP.
+Check the section below for more information.
 
 Generally follow this process:
 
@@ -30,7 +30,7 @@ Generally follow this process:
 **Be sure to not value quantity over quality!** Be transparent and polite:
 Explain why something has to be changed and don't just "command" the coder to
 obey guidelines for no reason. Reviewing always involves saying someone that
-his code isn't right, be very careful not to appear rude even if
+their code isn't right, be very careful not to appear rude even if
 you don't mean it! Bad reviews will scare away other contributors.
 
 .. note::
@@ -62,8 +62,15 @@ The review process for coala is as follows:
       are ready to be merged into the master branch
 
    If you don't have write access to coala, you can change the labels using
-   ``cobot mark wip <URL>`` or ``cobot mark pending <URL>``.
+   ``corobo mark wip <URL>`` or ``corobo mark pending <URL>``.
 3. The developers will acknowledge the commits by writing
+
+   * In case a member is reviewing it:
+
+    - ``Looks good to me`` better known as ``LGTM`` in case the commit is
+      ready.
+
+   * In case a maintainer is reviewing it:
 
     - ``ack commit_SHA`` or ``commit_SHA is ready``, in case the commit is
       ready, or
@@ -72,11 +79,16 @@ The review process for coala is as follows:
     - ``reack commit_SHA`` in case the commit was acknowledged before, was
       rebased without conflicts and the rebase did not introduce logical
       problems.
+
+    .. note::
+
+        Only one acknowledgment is needed per commit i.e ``ack commit_SHA``.
+
 4. If the commits are not linearly mergeable into master, rebase and go
    to step one.
 5. All commits are acknowledged and fit linearly onto master. All
    continuous integration services (as described below) pass. A maintainer
-   may leave the ``@rultor merge`` command to get the PR merged automatically.
+   may leave the ``@gitmate-bot ff`` command to get the PR merged automatically.
 
 Automated Review Process
 ------------------------
@@ -91,6 +103,13 @@ request but should ideally pass for every commit.
 For the Reviewers
 -----------------
 
+-  All the pull requests waiting to be reviewed can be found at :
+   https://coala.io/review.
+-  Check the commit message.
+-  Read and try to understand the code. If something looks ineffective or
+   bug prone, leave a comment.
+   If in doubt, let the code-writer explain their reasoning until
+   reviewers have understood the code.
 -  Generated code is not intended to be reviewed. Instead rather try to
    verify that the generation was done right. The commit message should
    expose that.
@@ -102,13 +121,28 @@ For the Reviewers
    import when removing the use of something or similar things. It is
    usually good to take a look at the whole file to see if it's still
    consistent.
--  Check the commit message.
 -  Take a look at continuous integration results in the end even if they
    pass.
 -  Coverage must not fall.
 -  Be sure to assure that the tests cover all corner cases and validate the
    behaviour well. E.g. for bear tests just testing for a good and bad file
    is **not** sufficient.
+   `Writing Tests <http://api.coala.io/en/latest/Developers/Writing_Tests.html>`__
+   explains how tests should be written.
+   Bears require special attention during testing.
+   `Testing Bears <http://api.coala.io/en/latest/Developers/Testing_Bears.html>`__
+   provides a guideline for how to test bears.
+
+.. note::
+
+    While reviewing pull requests or patches for ``difficulty/low`` issues,
+    make sure that the patch solves the issue and doesn't create any
+    further issues.
+
+    You need to thoroughly review the code, i.e. understand the functionality
+    of the code, check whether it is efficient or not, and leave critical
+    comments. Otherwise, don't review! We need human reviews to find the
+    problems which can't be found automatically.
 
 As you perform your review of each commit, please make comments on the
 relevant lines of code in the GitHub pull request. After performing your

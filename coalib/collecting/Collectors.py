@@ -1,16 +1,17 @@
 import functools
+import logging
 import os
 import pkg_resources
 import itertools
-
-from pyprint.NullPrinter import NullPrinter
+import re
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Importers import iimport_objects
 from coala_utils.decorators import yield_once
+from coalib.misc.Exceptions import log_exception
+from coalib.misc.IterUtilities import partition
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.Globbing import fnmatch, iglob, glob_escape
-from coalib.output.printers.LogPrinter import LogPrinter
 
 
 def _get_kind(bear_class):
@@ -37,39 +38,86 @@ def _import_bears(file_path, kinds):
 
 
 @yield_once
-def icollect(file_paths, ignored_globs=None):
+def icollect(file_paths, ignored_globs=None, match_cache={},
+             match_function=fnmatch):
     """
     Evaluate globs in file paths and return all matching files.
 
-    :param file_paths:    File path or list of such that can include globs
-    :param ignored_globs: List of globs to ignore when matching files
-    :return:              Iterator that yields tuple of path of a matching
-                          file, the glob where it was found
+    :param file_paths:      File path or list of such that can include globs
+    :param ignored_globs:   List of globs to ignore when matching files
+    :param match_cache:     Dictionary to use for caching results
+    :param match_function:  The function to use for glob matching
+    :return:                Iterator that yields tuple of path of a matching
+                            file, the glob where it was found
     """
     if isinstance(file_paths, str):
         file_paths = [file_paths]
 
     for file_path in file_paths:
-        for match in iglob(file_path):
-            if not ignored_globs or not fnmatch(match, ignored_globs):
+        if file_path not in match_cache:
+            match_cache[file_path] = list(iglob(file_path))
+
+        for match in match_cache[file_path]:
+            if not ignored_globs or not match_function(match, ignored_globs):
                 yield match, file_path
 
 
-def collect_files(file_paths, log_printer, ignored_file_paths=None,
-                  limit_file_paths=None):
+def match_dir_or_file_pattern(path, ignore_patterns=None):
+    """
+    Tries to match the given path with the directory (substring match) or file
+    (enforced full match) patterns.
+
+    :param path:                Valid file path
+    :param ignore_patterns:     List of regex patterns that match a file or a
+                                directory
+    :return:                    True if any of the given pattern match
+    """
+    def escape(pattern):
+        return pattern.replace('\\', '\\\\')
+
+    expanded_ignores = list_glob_results(ignore_patterns)
+
+    file_patterns, dir_patterns = partition(
+        expanded_ignores,
+        os.path.isfile)
+
+    return (
+        any((re.match(escape(pattern), path) for pattern in dir_patterns)) or
+        any((re.fullmatch(escape(pattern), path) for pattern in file_patterns)))
+
+
+def list_glob_results(values=None):
+    """
+    Expands the globs of all given values and concatenates the results.
+
+    :param values:  List of file-globs or files.
+    :return:        List of matched files.
+    """
+    return functools.reduce(
+        lambda seed, value: seed + list(iglob(value)),
+        values if values else (),
+        [])
+
+
+def collect_files(file_paths, log_printer=None, ignored_file_paths=None,
+                  limit_file_paths=None, section_name=''):
     """
     Evaluate globs in file paths and return all matching files
 
     :param file_paths:         File path or list of such that can include globs
     :param ignored_file_paths: List of globs that match to-be-ignored files
     :param limit_file_paths:   List of globs that the files are limited to
+    :param section_name:       Name of currently executing section
     :return:                   List of paths of all matching files
     """
     limit_fnmatch = (functools.partial(fnmatch, globs=limit_file_paths)
                      if limit_file_paths else lambda fname: True)
 
-    valid_files = list(filter(lambda fname: os.path.isfile(fname[0]),
-                              icollect(file_paths, ignored_file_paths)))
+    valid_files = list(
+        filter(lambda fname: os.path.isfile(fname[0]),
+               icollect(file_paths,
+                        ignored_file_paths,
+                        match_function=match_dir_or_file_pattern)))
 
     # Find globs that gave no files and warn the user
     if valid_files:
@@ -77,8 +125,11 @@ def collect_files(file_paths, log_printer, ignored_file_paths=None,
     else:
         collected_files, file_globs_with_files = [], []
 
-    _warn_if_unused_glob(log_printer, file_paths, file_globs_with_files,
-                         "No files matching '{}' were found.")
+    _warn_if_unused_glob(file_paths, file_globs_with_files,
+                         'No files matching \'{}\' were found. '
+                         'If this rule is not required, you can remove it '
+                         'from section [' + section_name + '] in your '
+                         '.coafile to deactivate this warning.')
     limited_files = list(filter(limit_fnmatch, collected_files))
     return limited_files
 
@@ -101,7 +152,7 @@ def collect_dirs(dir_paths, ignored_dir_paths=None):
 
 
 @yield_once
-def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer):
+def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer=None):
     """
     Collect all bears from bear directories that have a matching kind.
 
@@ -118,26 +169,28 @@ def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer):
         # pass this later to iglob, we need to escape this.
         bear_dir = glob_escape(bear_dir)
         for bear_glob in bear_globs:
-            for matching_file in iglob(
-                    os.path.join(bear_dir, bear_glob + '.py')):
+            matching_files = iglob(os.path.join(bear_dir, bear_glob + '.py'))
 
+            matching_files = sorted(matching_files)
+
+            for matching_file in matching_files:
                 try:
                     for bear in _import_bears(matching_file, kinds):
                         yield bear, bear_glob
                 except pkg_resources.VersionConflict as exception:
-                    log_printer.log_exception(
+                    log_exception(
                         ('Unable to collect bears from {file} because there '
                          'is a conflict with the version of a dependency '
                          'you have installed. This may be resolved by '
                          'creating a separate virtual environment for coala '
-                         'or running `pip install \"{pkg}\"`. Be aware that '
+                         'or running `pip3 install \"{pkg}\"`. Be aware that '
                          'the latter solution might break other python '
                          'packages that depend on the currently installed '
                          'version.').format(file=matching_file,
                                             pkg=exception.req),
                         exception, log_level=LOG_LEVEL.WARNING)
                 except BaseException as exception:
-                    log_printer.log_exception(
+                    log_exception(
                         'Unable to collect bears from {file}. Probably the '
                         'file is malformed or the module code raises an '
                         'exception.'.format(file=matching_file),
@@ -145,7 +198,7 @@ def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer):
                         log_level=LOG_LEVEL.WARNING)
 
 
-def collect_bears(bear_dirs, bear_globs, kinds, log_printer,
+def collect_bears(bear_dirs, bear_globs, kinds, log_printer=None,
                   warn_if_unused_glob=True):
     """
     Collect all bears from bear directories that have a matching kind
@@ -163,16 +216,33 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer,
     """
     bears_found = tuple([] for i in range(len(kinds)))
     bear_globs_with_bears = set()
-    for bear, glob in icollect_bears(bear_dirs, bear_globs, kinds, log_printer):
+    for bear, glob in icollect_bears(bear_dirs, bear_globs, kinds):
         index = kinds.index(_get_kind(bear))
         bears_found[index].append(bear)
         bear_globs_with_bears.add(glob)
 
+    unused_globs = set(bear_globs) - set(bear_globs_with_bears)
+    suffix_globs = {}
+
+    for glob in unused_globs:
+        if glob is not '**' and glob is not '*':
+            if glob.endswith('bear'):  # pragma nt: no cover
+                new_glob = glob[:-4] + 'B' + glob[-3:]
+                suffix_globs[new_glob] = glob
+            elif not glob.endswith('Bear'):
+                suffix_globs[glob + 'Bear'] = glob
+
+    for bear, glob in icollect_bears(bear_dirs,
+                                     set(suffix_globs.keys()), kinds):
+        index = kinds.index(_get_kind(bear))
+        bears_found[index].append(bear)
+        bear_globs_with_bears.add(suffix_globs[glob])
+
     if warn_if_unused_glob:
-        _warn_if_unused_glob(log_printer, bear_globs, bear_globs_with_bears,
-                             "No bears matching '{}' were found. Make sure you "
-                             'have coala-bears installed or you have typed the '
-                             'name correctly.')
+        _warn_if_unused_glob(bear_globs, bear_globs_with_bears,
+                             'No bears matching \'{}\' were found. Make sure '
+                             'you have coala-bears installed or you have typed '
+                             'the name correctly.')
     return bears_found
 
 
@@ -194,6 +264,39 @@ def filter_section_bears_by_languages(bears, languages):
             bear for bear in bears[section]
             if {language.lower() for language in bear.LANGUAGES} & languages)
     return new_bears
+
+
+def collect_bears_by_aspects(aspects, kinds):
+    """
+    Collect bear based on aspects.
+
+    Return a list of bears that have capability to analyze all aspects from
+    given AspectList requirement.
+
+    :param aspects: An AspectList that need to be covered.
+    :param kinds:   List of bear kinds to be collected.
+    :return:        Tuple of list of bear classes based on kind. The lists are
+                    in the same order as kinds.
+    """
+    all_bears = get_all_bears()
+    bears_found = tuple([] for i in range(len(kinds)))
+    unfulfilled_aspects = []
+    for aspect in aspects.get_leaf_aspects():
+        for bear in all_bears:
+            if (aspect in bear.aspects['detect'] or
+                    aspect in bear.aspects['fix']):
+                index = kinds.index(_get_kind(bear))
+                # Avoid duplicate
+                if bear not in bears_found[index]:
+                    bears_found[index].append(bear)
+                break
+        else:
+            unfulfilled_aspects.append(type(aspect).__qualname__)
+
+    if unfulfilled_aspects:
+        logging.warning('coala cannot find bear that could analyze the '
+                        'following aspects: {}'.format(unfulfilled_aspects))
+    return bears_found
 
 
 def filter_capabilities_by_languages(bears, languages):
@@ -232,12 +335,10 @@ def get_all_bears():
     Get a ``list`` of all available bears.
     """
     from coalib.settings.Section import Section
-    printer = LogPrinter(NullPrinter())
     local_bears, global_bears = collect_bears(
         Section('').bear_dirs(),
         ['**'],
         [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
-        printer,
         warn_if_unused_glob=False)
     return list(itertools.chain(local_bears, global_bears))
 
@@ -249,12 +350,15 @@ def get_all_bears_names():
     return [bear.name for bear in get_all_bears()]
 
 
-def collect_all_bears_from_sections(sections, log_printer):
+def collect_all_bears_from_sections(sections,
+                                    log_printer=None,
+                                    bear_globs=('**',)):
     """
     Collect all kinds of bears from bear directories given in the sections.
 
     :param sections:    List of sections so bear_dirs are taken into account
     :param log_printer: Log_printer to handle logging
+    :param bear_globs:  List of glob patterns.
     :return:            Tuple of dictionaries of local and global bears.
                         The dictionary key is section class and
                         dictionary value is a list of Bear classes
@@ -265,14 +369,13 @@ def collect_all_bears_from_sections(sections, log_printer):
         bear_dirs = sections[section].bear_dirs()
         local_bears[section], global_bears[section] = collect_bears(
             bear_dirs,
-            ['**'],
+            bear_globs,
             [BEAR_KIND.LOCAL, BEAR_KIND.GLOBAL],
-            log_printer,
             warn_if_unused_glob=False)
     return local_bears, global_bears
 
 
-def _warn_if_unused_glob(log_printer, globs, used_globs, message):
+def _warn_if_unused_glob(globs, used_globs, message):
     """
     Warn if a glob has not been used.
 
@@ -285,7 +388,7 @@ def _warn_if_unused_glob(log_printer, globs, used_globs, message):
     """
     unused_globs = set(globs) - set(used_globs)
     for glob in unused_globs:
-        log_printer.warn(message.format(glob))
+        logging.warning(message.format(glob))
 
 
 def collect_registered_bears_dirs(entrypoint):

@@ -3,20 +3,26 @@ import unittest
 from coalib.bearlib.languages.documentation.DocstyleDefinition import (
     DocstyleDefinition)
 from coalib.bearlib.languages.documentation.DocumentationComment import (
-    DocumentationComment)
-from coalib.bearlib.languages.documentation.DocumentationExtraction import (
-    extract_documentation)
+    DocumentationComment, _find_references, SPHINX_REF)
+from coalib.bearlib.languages.documentation.DocBaseClass import (
+    DocBaseClass)
 from tests.bearlib.languages.documentation.TestUtils import (
     load_testdata)
+from coalib.results.TextPosition import TextPosition
 
 
 class DocumentationCommentTest(unittest.TestCase):
 
     Description = DocumentationComment.Description
     Parameter = DocumentationComment.Parameter
+    ExceptionValue = DocumentationComment.ExceptionValue
     ReturnValue = DocumentationComment.ReturnValue
+    Reference = DocumentationComment.Reference
 
     Metadata = DocstyleDefinition.Metadata
+    ClassPadding = DocstyleDefinition.ClassPadding
+    FunctionPadding = DocstyleDefinition.FunctionPadding
+    DocstringTypeRegex = DocstyleDefinition.DocstringTypeRegex
 
 
 class GeneralDocumentationCommentTest(DocumentationCommentTest):
@@ -27,7 +33,7 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
                                    c_doxygen,
                                    ' ',
                                    ('/**', '*', '*/'),
-                                   (25, 45))
+                                   TextPosition(3, 1))
 
         self.assertEqual(uut.documentation, 'my doc')
         self.assertEqual(uut.language, 'c')
@@ -35,11 +41,13 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
         self.assertEqual(uut.indent, ' ')
         self.assertEqual(str(uut), 'my doc')
         self.assertEqual(uut.marker, ('/**', '*', '*/'))
-        self.assertEqual(uut.range, (25, 45))
+        self.assertEqual(uut.position, TextPosition(3, 1))
 
         python_doxygen = DocstyleDefinition.load('python', 'doxygen')
 
-        python_doxygen_metadata = self.Metadata('@param ', ' ', '@return ')
+        python_doxygen_metadata = self.Metadata('@param ', ' ',
+                                                '@raises ', ' ',
+                                                '@return ')
 
         uut = DocumentationComment('qwertzuiop',
                                    python_doxygen,
@@ -54,11 +62,16 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
         self.assertEqual(str(uut), 'qwertzuiop')
         self.assertEqual(uut.marker, ('##', '#', '#'))
         self.assertEqual(uut.range, None)
+        self.assertEqual(uut.position, None)
         self.assertEqual(uut.metadata, python_doxygen_metadata)
 
     def test_not_implemented(self):
         raw_docstyle = DocstyleDefinition('nolang', 'nostyle', ('', '', ''),
-                                          self.Metadata('', '', ''))
+                                          self.Metadata('', '', '', '', ''),
+                                          self.ClassPadding('', ''),
+                                          self.FunctionPadding('', ''),
+                                          self.DocstringTypeRegex('', ''),
+                                          '')
         not_implemented = DocumentationComment(
             'some docs', raw_docstyle, None, None, None)
         with self.assertRaises(NotImplementedError):
@@ -67,9 +80,9 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
     def test_from_metadata(self):
         data = load_testdata('default.py')
 
-        original = list(extract_documentation(data, 'python', 'default'))
+        original = list(DocBaseClass.extract(data, 'python', 'default'))
 
-        parsed_docs = [(doc.parse(), doc.marker, doc.indent, doc.range)
+        parsed_docs = [(doc.parse(), doc.marker, doc.indent, doc.position)
                        for doc in original]
 
         docstyle_definition = DocstyleDefinition.load('python', 'default')
@@ -79,6 +92,14 @@ class GeneralDocumentationCommentTest(DocumentationCommentTest):
                           for doc in parsed_docs]
 
         self.assertEqual(assembled_docs, original)
+
+    def test_find_references(self):
+        line = ('In the :mod:`test`, both the classes :class:`Foo` and '
+                ':class:`Bar` have a :const:`ONE` and a :meth:`TWO`. There is '
+                'a funny :exc:`FunnyExc` as well.')
+        expected = [('Module', 7), ('Class', 37), ('Class', 54),
+                    ('Constant', 74), ('Method', 93), ('Exception', 123)]
+        self.assertEqual(_find_references(line, SPHINX_REF), expected)
 
 
 class PythonDocumentationCommentTest(DocumentationCommentTest):
@@ -104,7 +125,8 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
 
     def test_description(self):
         doc = ' description only '
-        self.check_docstring(doc, [self.Description(desc=' description only ')])
+        self.check_docstring(
+            doc, [self.Description(desc=' description only ')])
 
     def test_params_default(self):
         self.maxDiff = None
@@ -114,6 +136,15 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
                     self.Parameter(name='test', desc='  test description2 \n')]
         self.check_docstring(doc, expected)
 
+    def test_exception_default(self):
+        doc = (' :raises test:  test description1\n'
+               ' :raises test:  test description2\n')
+        expected = [self.ExceptionValue(name='test',
+                                        desc='  test description1\n'),
+                    self.ExceptionValue(name='test',
+                                        desc='  test description2\n')]
+        self.check_docstring(doc, expected)
+
     def test_return_values_default(self):
         doc = (' :return: something1 \n'
                ' :return: something2 ')
@@ -121,11 +152,28 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
                     self.ReturnValue(desc=' something2 ')]
         self.check_docstring(doc, expected)
 
+    def test_reference_default(self):
+        doc = ' A :class:` Foo.Bar.x` which does foo.'
+        expected = [self.Reference(type_ref='Class', ref_addr='Foo.Bar.x')]
+        self.check_docstring(doc, expected)
+
+    def test_multiple_references(self):
+        doc = ('In the :mod:`test`, both the classes :class:`Foo` and'
+               ':class:`Bar` have a :const:`ONE` and a :meth:`TWO`. There is a'
+               'funny :exc:`FunnyExc` as well.')
+        expected = [self.Reference(type_ref='Module', ref_addr='test'),
+                    self.Reference(type_ref='Class', ref_addr='Foo'),
+                    self.Reference(type_ref='Class', ref_addr='Bar'),
+                    self.Reference(type_ref='Constant', ref_addr='ONE'),
+                    self.Reference(type_ref='Method', ref_addr='TWO'),
+                    self.Reference(type_ref='Exception', ref_addr='FunnyExc')]
+        self.check_docstring(doc, expected)
+
     def test_python_default(self):
         data = load_testdata('default.py')
 
         parsed_docs = [doc.parse() for doc in
-                       extract_documentation(data, 'python', 'default')]
+                       DocBaseClass.extract(data, 'python', 'default')]
 
         expected = [
             [self.Description(desc='\nModule description.\n\n'
@@ -147,7 +195,26 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
                             desc='\n    Short Param description.\n\n'),
              self.ReturnValue(desc=' Long Return Description That Makes No '
                                    'Sense And Will\n         Cut to the Next'
-                                   ' Line.\n')]]
+                                   ' Line.\n')],
+            [self.Description(desc='\nThis is dummy docstring find '
+                                   'function.\n\n'),
+             self.Parameter(name='filename',
+                            desc='\n    contains filename\n'),
+             self.ExceptionValue(name='FileNotFoundError',
+                                 desc='\n    raised when the given '
+                                      'file name was not found\n\n'),
+             self.ReturnValue(desc=' returns all possible docstrings'
+                                   ' in a file\n')],
+            [self.Description(desc='\nThis returns perimeter '
+                                   'of a triangle.   \n\n'),
+             self.Parameter(name='side_A',
+                            desc='\n    length of side_A       \n'),
+             self.Parameter(name='side_B',
+                            desc='\n    length of side_B    \n'),
+             self.Parameter(name='side_C',
+                            desc='\n    length of side_C  \n\n'),
+             self.ReturnValue(desc=' returns perimeter\n')],
+                   ]
 
         self.assertEqual(parsed_docs, expected)
 
@@ -155,7 +222,7 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
         data = load_testdata('doxygen.py')
 
         parsed_docs = [doc.parse() for doc in
-                       extract_documentation(data, 'python', 'doxygen')]
+                       DocBaseClass.extract(data, 'python', 'doxygen')]
 
         expected = [
             [self.Description(desc=' @package pyexample\n  Documentation for'
@@ -170,9 +237,27 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
             [self.Description(desc=' This is the best docstring ever!\n\n'),
              self.Parameter(name='param1', desc='Parameter 1\n'),
              self.Parameter(name='param2', desc='Parameter 2\n'),
-             self.ReturnValue(desc='Nothing\n')]]
+             self.ReturnValue(desc='Nothing\n')],
+            [self.Description(desc=' This is dummy docstring find '
+                                   'function.\n\n'),
+             self.Parameter(name='filename', desc='contains filename\n'),
+             self.ExceptionValue(name='FileNotFoundError',
+                                 desc='raises when filename is not found\n'),
+             self.ReturnValue(desc='nothing\n')],
+                   ]
 
         self.assertEqual(parsed_docs, expected)
+
+    def test_python_missing_ending_colon(self):
+        doc = (' This is a malformed docstring\n'
+               ' :param abc  test description1\n'
+               ' :raises xyz  test description2\n')
+        expected = [self.Description(desc=' This is a malformed docstring\n'),
+                    self.Parameter(name='abc',
+                                   desc=' test description1\n'),
+                    self.ExceptionValue(name='xyz',
+                                        desc=' test description2\n')]
+        self.check_docstring(doc, expected)
 
 
 class JavaDocumentationCommentTest(DocumentationCommentTest):
@@ -181,15 +266,36 @@ class JavaDocumentationCommentTest(DocumentationCommentTest):
         data = load_testdata('default.java')
 
         parsed_docs = [doc.parse() for doc in
-                       extract_documentation(data, 'java', 'default')]
+                       DocBaseClass.extract(data, 'java', 'default')]
 
         expected = [[self.Description(
                      desc='\n Returns an String that says Hello with the name'
                           ' argument.\n\n'),
                      self.Parameter(name='name',
                                     desc='the name to which to say hello\n'),
+                     self.ExceptionValue(name='IOException',
+                                         desc='throws IOException\n'),
                      self.ReturnValue(
                          desc='     the concatenated string\n')]]
+
+        self.assertEqual(expected, parsed_docs)
+
+
+class GoDocumentationCommentTest(DocumentationCommentTest):
+
+    def test_go_default(self):
+        data = load_testdata('default.go')
+
+        parsed_docs = [doc.parse() for doc in
+                       DocBaseClass.extract(data, 'golang', 'golang')]
+
+        expected = [['\n',
+                     'Comments may span\n',
+                     'multiple lines\n'],
+                    ['A class comment\n',
+                     'that also spans\n',
+                     'multiple lines\n'],
+                    ['More documentation for everyone, but in one line\n']]
 
         self.assertEqual(expected, parsed_docs)
 
@@ -200,12 +306,67 @@ class DocumentationAssemblyTest(unittest.TestCase):
         data = load_testdata('default.py')
         docs = ''.join(data)
 
-        for doc in extract_documentation(data, 'python', 'default'):
+        for doc in DocBaseClass.extract(data, 'python', 'default'):
+            self.assertIn(doc.assemble(), docs)
+
+    def test_doxygen_assembly(self):
+        data = load_testdata('doxygen.py')
+        docs = ''.join(data)
+
+        for doc in DocBaseClass.extract(data, 'python', 'doxygen'):
             self.assertIn(doc.assemble(), docs)
 
     def test_c_assembly(self):
         data = load_testdata('default.c')
         docs = ''.join(data)
 
-        for doc in extract_documentation(data, 'c', 'doxygen'):
+        for doc in DocBaseClass.extract(data, 'c', 'doxygen'):
+            doc.top_padding = 1
+            doc.assemble.cache_clear()
             self.assertIn(doc.assemble(), docs)
+
+    def test_python_default_padding_amend_assembly_1(self):
+        data = ['\n', '\n', '""" documentation in single line """\n',
+                '\n', '\n', 'print(1)\n']
+
+        for doc in DocBaseClass.extract(data, 'python', 'default'):
+            doc.top_padding = 1
+            doc.bottom_padding = 0
+            doc.assemble.cache_clear()
+            self.assertEqual(doc.assemble(),
+                             '\n""" documentation in single line """')
+
+    def test_python_default_padding_amend_assembly_2(self):
+        data = ['""" documentation in single line """\n']
+
+        for doc in DocBaseClass.extract(data, 'python', 'default'):
+            doc.top_padding = 2
+            doc.bottom_padding = 3
+            doc.assemble.cache_clear()
+            self.assertEqual(doc.assemble(),
+                             '\n\n""" documentation in single line """\n\n\n')
+
+    def test_python_doxygen_padding_amend_assembly(self):
+        data = ['## documentation in single line without return at end.']
+
+        for doc in DocBaseClass.extract(data, 'python', 'doxygen'):
+            doc.top_padding = 0
+            doc.bottom_padding = 2
+            doc.assemble.cache_clear()
+            self.assertEqual(doc.assemble(),
+                             '## documentation in single line '
+                             'without return at end.\n\n')
+
+    def test_c_default_padding_amend_assembly(self):
+        data = ['/**\n',
+                ' * This is the main function.\n',
+                ' */\n']
+
+        for doc in DocBaseClass.extract(data, 'c', 'doxygen'):
+            doc.top_padding = 1
+            doc.bottom_padding = 2
+            doc.assemble.cache_clear()
+            self.assertEqual(doc.assemble(),
+                             '\n/**\n'
+                             ' * This is the main function.\n'
+                             ' */\n\n')

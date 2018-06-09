@@ -1,7 +1,9 @@
 import argparse
+import os
 
 from coalib.misc import Constants
 from coalib.collecting.Collectors import get_all_bears_names
+from coalib.parsing.filters import available_filters
 
 
 class CustomFormatter(argparse.RawDescriptionHelpFormatter):
@@ -21,6 +23,23 @@ class CustomFormatter(argparse.RawDescriptionHelpFormatter):
             return ', '.join(parts)
 
 
+class PathArg(str):
+    """
+    Uni(xi)fying OS-native directory separators in path arguments.
+
+    Removing the pain from interactively using coala in a Windows cmdline,
+    because backslashes are interpreted as escaping syntax and therefore
+    removed when arguments are turned into coala settings
+
+    >>> import os
+    >>> PathArg(os.path.join('path', 'with', 'separators'))
+    'path/with/separators'
+    """
+
+    def __new__(cls, path):
+        return str.__new__(cls, path.replace(os.path.sep, '/'))
+
+
 def default_arg_parser(formatter_class=None):
     """
     This function creates an ArgParser to parse command line arguments.
@@ -38,7 +57,7 @@ code, regardless of the programming languages you use.
 To find out what kind of analysis coala offers for the languages you use, visit
 http://coala.io/languages, or run::
 
-    $ coala --show-bears --filter-by-language C Python
+    $ coala --show-bears --filter-by language C Python
 
 To perform code analysis, simply specify the analysis routines (bears) and the
 files you want it to run on, for example:
@@ -100,12 +119,12 @@ To run coala without user interaction, run the `coala --non-interactive`,
              '"Message: {message}"; possible placeholders: '
              'id, origin, file, line, end_line, column, end_column, '
              'severity, severity_str, message, message_base, '
-             'message_arguments, affected_code')
+             'message_arguments, affected_code, source_lines')
 
     config_group = arg_parser.add_argument_group('Configuration')
 
     config_group.add_argument(
-        '-c', '--config', nargs=1, metavar='FILE',
+        '-c', '--config', type=PathArg, nargs=1, metavar='FILE',
         help='configuration file to be used, defaults to {}'.format(
             Constants.default_coafile))
 
@@ -119,7 +138,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
         help='run without using any config file')
 
     config_group.add_argument(
-        '-s', '--save', nargs='?', const=True, metavar='FILE',
+        '-s', '--save', type=PathArg, nargs='?', const=True, metavar='FILE',
         help='save used arguments to a config file to a {}, the given path, '
              'or at the value of -c'.format(Constants.default_coafile))
 
@@ -141,19 +160,19 @@ To run coala without user interaction, run the `coala --non-interactive`,
             lambda *args, **kwargs: get_all_bears_names())  # pragma: no cover
 
     inputs_group.add_argument(
-        '-f', '--files', nargs='+', metavar='FILE',
+        '-f', '--files', type=PathArg, nargs='+', metavar='FILE',
         help='files that should be checked')
 
     inputs_group.add_argument(
-        '-i', '--ignore', nargs='+', metavar='FILE',
+        '-i', '--ignore', type=PathArg, nargs='+', metavar='FILE',
         help='files that should be ignored')
 
     inputs_group.add_argument(
-        '--limit-files', nargs='+', metavar='FILE',
+        '--limit-files', type=PathArg, nargs='+', metavar='FILE',
         help="filter the `--files` argument's matches further")
 
     inputs_group.add_argument(
-        '-d', '--bear-dirs', nargs='+', metavar='DIR',
+        '-d', '--bear-dirs', type=PathArg, nargs='+', metavar='DIR',
         help='additional directories which may contain bears')
 
     outputs_group = arg_parser.add_argument_group('Outputs')
@@ -166,7 +185,8 @@ To run coala without user interaction, run the `coala --non-interactive`,
     outputs_group.add_argument(
         '-L', '--log-level', nargs=1,
         choices=['ERROR', 'INFO', 'WARNING', 'DEBUG'], metavar='ENUM',
-        help='set log output level to ERROR/INFO/WARNING/DEBUG')
+        help='set log output level to DEBUG/INFO/WARNING/ERROR, '
+             'defaults to INFO')
 
     outputs_group.add_argument(
         '-m', '--min-severity', nargs=1,
@@ -186,12 +206,23 @@ To run coala without user interaction, run the `coala --non-interactive`,
         help='filters `--show-bears` by the given languages')
 
     outputs_group.add_argument(
+        '--filter-by', action='append', nargs='+',
+        metavar=('FILTER_NAME FILTER_ARG', 'FILTER_ARG'),
+        help='filters `--show-bears` by the filter given as argument. '
+             'Available filters: {}'.format(', '.join(sorted(
+                 available_filters))))
+
+    outputs_group.add_argument(
         '-p', '--show-capabilities', nargs='+', metavar='LANG',
         help='show what coala can fix and detect for the given languages')
 
     outputs_group.add_argument(
         '-D', '--show-description', const=True, action='store_const',
         help='show bear descriptions for `--show-bears`')
+
+    outputs_group.add_argument(
+        '--show-settings', const=True, action='store_const',
+        help='show bear settings for `--show-bears`')
 
     outputs_group.add_argument(
         '--show-details', const=True, action='store_const',
@@ -203,7 +234,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
              ' (must be called with --json)')
 
     outputs_group.add_argument(
-        '-o', '--output', nargs=1, metavar='FILE',
+        '-o', '--output', type=PathArg, nargs=1, metavar='FILE',
         help='write results to the given file (must be called with --json)')
 
     outputs_group.add_argument(
@@ -218,7 +249,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
 
     misc_group.add_argument(
         '-a', '--apply-patches', action='store_const',
-        dest='default_actions', const='*: ApplyPatchAction',
+        dest='default_actions', const='**: ApplyPatchAction',
         help='apply all patches automatically if possible')
 
     misc_group.add_argument(
@@ -229,11 +260,23 @@ To run coala without user interaction, run the `coala --non-interactive`,
         '-n', '--no-orig', const=True, action='store_const',
         help="don't create .orig backup files before patching")
 
-    try:  # pragma: no cover
+    misc_group.add_argument(
+        '-A', '--single-action', const=True, action='store_const',
+        help='apply a single action for all results')
+
+    misc_group.add_argument(
+        '--debug', const=True, action='store_const',
+        help='run coala in debug mode, starting ipdb, '
+             'which must be separately installed, '
+             'on unexpected internal exceptions '
+             '(implies --verbose)')
+
+    try:
         # Auto completion should be optional, because of somewhat complicated
         # setup.
         import argcomplete
         argcomplete.autocomplete(arg_parser)
-    except ImportError:
+    except ImportError:  # pragma: no cover
         pass
+
     return arg_parser

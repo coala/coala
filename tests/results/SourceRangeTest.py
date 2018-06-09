@@ -1,5 +1,4 @@
 import unittest
-from collections import namedtuple
 from os.path import abspath
 
 from coalib.results.SourcePosition import SourcePosition
@@ -27,20 +26,6 @@ class SourceRangeTest(unittest.TestCase):
         uut = SourceRange.from_values('B', start_line=2, end_line=4)
         self.assertEqual(uut.start, self.result_fileB_line2)
         self.assertEqual(uut.end, self.result_fileB_line4)
-
-    def test_from_clang_range(self):
-        # Simulating a clang SourceRange is easier than setting one up without
-        # actually parsing a complete C file.
-        ClangRange = namedtuple('ClangRange', 'start end')
-        ClangPosition = namedtuple('ClangPosition', 'file line column')
-        ClangFile = namedtuple('ClangFile', 'name')
-        file = ClangFile('t.c')
-        start = ClangPosition(file, 1, 2)
-        end = ClangPosition(file, 3, 4)
-
-        uut = SourceRange.from_clang_range(ClangRange(start, end))
-        compare = SourceRange.from_values('t.c', 1, 2, 3, 4)
-        self.assertEqual(uut, compare)
 
     def test_from_absolute_position(self):
         text = ('a\n', 'b\n')
@@ -102,6 +87,32 @@ class SourceRangeTest(unittest.TestCase):
         a = SourceRange.from_values('test_file', 2, 2, 64, 20)
         b = SourceRange.from_values('test_file', 1, 1, 50, 20)
         self.assertNotIn(a, b)
+
+    def test_overlaps(self):
+        a = SourceRange.from_values('test_file', 2, None, 3)
+        b = SourceRange.from_values('test_file', 3, None, 5)
+        self.assertTrue(a.overlaps(b))
+        self.assertTrue(b.overlaps(a))
+
+        a = SourceRange.from_values('test_file1', 2, None, 3)
+        b = SourceRange.from_values('test_file2', 3, None, 5)
+        self.assertFalse(a.overlaps(b))
+        self.assertFalse(b.overlaps(a))
+
+        a = SourceRange.from_values('test_file', 2, None, 2, None)
+        b = SourceRange.from_values('test_file', 2, 2, 2, 80)
+        self.assertTrue(a.overlaps(b))
+        self.assertTrue(b.overlaps(a))
+
+        a = SourceRange.from_values('test_file1', 1, None, None, None)
+        b = SourceRange.from_values('test_file2', 1, None, 1, None)
+        self.assertFalse(a.overlaps(b))
+        self.assertFalse(b.overlaps(a))
+
+        a = SourceRange.from_values('test_file', 1, None, None, None)
+        b = SourceRange.from_values('test_file', 1, None, 1, None)
+        self.assertTrue(a.overlaps(b))
+        self.assertTrue(b.overlaps(a))
 
     def test_renamed_file(self):
         src_range = SourceRange(SourcePosition('test_file'))
