@@ -44,6 +44,7 @@ If you're trying to **use** coala, you should have a look at our
    Codestyle <Developers/Codestyle>
    Git Basics <Developers/Git_Basics>
    Review <Developers/Review>
+   Meta-review <Developers/Meta-review>
    Development Setup <Developers/Development_Setup>
    Adding CI to your Fork <Developers/Adding_CI>
    Writing Native Bears <Developers/Writing_Native_Bears>
