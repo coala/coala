@@ -51,7 +51,7 @@ Manual Review Process
 The review process for coala is as follows:
 
 1. Anyone can submit commits for review. These are submitted via Pull Requests
-   on Github.
+   on GitHub.
 2. The Pull Request will be labeled with a ``process`` label:
 
     - ``pending review`` the commit has just been pushed and is awaiting review
