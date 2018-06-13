@@ -25,7 +25,8 @@ install:
   # Prepend newly installed Python to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
-  - set PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%;C:\Program Files\Git\mingw64\bin
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - "SET PATH=%PATH%;C:\\Program\ Files\\Git\\mingw64\\bin"
 
   # Check that we have the expected version and architecture for Python
   - "python --version"
