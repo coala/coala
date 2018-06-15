@@ -64,7 +64,7 @@ jobs:
       - save_cache:
           key: coala-cache-{{ checksum "requirements.txt" }}
           paths:
-            - "../nltk_data"
+            - "../.nltk_data"
             - "docs/_build"
             - "../.cache/pip"
 
