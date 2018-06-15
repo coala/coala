@@ -47,6 +47,8 @@ class aspectsModuleTest(unittest.TestCase):
             exc.match(r"^Multiple aspects named '%s'. " % aspectname +
                       r'Choose from '
                       r'\[<aspectclass'
+                      r" 'Root.Formatting.Length'>,"
+                      r' <aspectclass'
                       r" 'Root.Metadata.CommitMessage.Body.Length'>,"
                       r' <aspectclass'
                       r" 'Root.Metadata.CommitMessage.Shortlog.Length'>"
@@ -77,6 +79,8 @@ class aspectsModuleTest(unittest.TestCase):
                 r"^Multiple aspects named 'length'. "
                 r'Choose from '
                 r'\[<aspectclass'
+                r" 'Root.Formatting.Length'>,"
+                r' <aspectclass'
                 r" 'Root.Metadata.CommitMessage.Body.Length'>,"
                 r' <aspectclass'
                 r" 'Root.Metadata.CommitMessage.Shortlog.Length'>"

@@ -117,3 +117,14 @@ class Root(aspectbase, metaclass=aspectclass):
     parent = None
 
     _tastes = {}
+
+    def __overriding_doctest_aspects():
+        """
+        Replace the dummy `Formatting` aspect made in the doctests
+        above, with the actual functional `Formatting` aspect.
+        This overrides the dummy aspect to ensure that doctests
+        do not interfere with it.
+
+        >>> from .Formatting import Formatting
+        >>> Root.subaspects['Formatting'] = Formatting
+        """
