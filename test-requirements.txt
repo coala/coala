@@ -5,7 +5,7 @@ coverage-config-reload-plugin~=0.2
 codecov~=2.0.5
 freezegun~=0.3.9
 moban~=0.0.9
-pytest~=3.1.1
+pytest~=3.6.1
 pytest-cov~=2.4
 pytest-env~=0.6.0
 pytest-error-for-skips~=1.0
@@ -14,7 +14,7 @@ pytest-mock~=1.1
 pytest-profiling
 pytest-reorder~=0.1.0
 pytest-reqs~=0.0.6
-pytest-timeout~=1.2.0
+pytest-timeout~=1.3.0
 pytest-xdist~=1.15
 requests-mock~=1.2
 pip!=9.0.2, !=10.0.*
