@@ -3,9 +3,10 @@ language: python
 python:
   - 3.4.4
   - 3.5
-  - 3.6
 
 stages:
+  - name: sentinel
+    if: branch != master OR type = pull_request
   - test
   - moban
   - name: unsupported
@@ -24,6 +25,16 @@ stages:
 
 jobs:
   include:
+    - stage: sentinel
+      # All other jobs will be cancelled if the sentinel job fails
+      python: 3.6
+
+    - stage: test
+      # The sentinel job isnt active on master pushes, so the
+      # job is re-added to the bottom of the test matrix
+      python: 3.6
+      if: branch = master AND type = push
+
     # OSX build removed due to long build startup delays
     # Restore matrix job entry from d2d67fab to test OSX
     - python: 2.7
