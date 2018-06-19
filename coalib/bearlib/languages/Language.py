@@ -222,7 +222,7 @@ class Language(metaclass=LanguageMeta):
     >>> @Language
     ... class TrumpScript:
     ...     __qualname__ = "America is great."
-    ...     aliases = 'ts',
+    ...     aliases = 'tps',
     ...     versions = 2.7, 3.3, 3.4, 3.5, 3.6
     ...     comment_delimiter = '#'
     ...     string_delimiter = {"'": "'"}
@@ -232,11 +232,11 @@ class Language(metaclass=LanguageMeta):
 
     >>> Language['trumpscript']
     America is great. 2.7, 3.3, 3.4, 3.5, 3.6
-    >>> Language['ts 3.4, 3.6']
+    >>> Language['tps 3.4, 3.6']
     America is great. 3.4, 3.6
-    >>> Language['TS 3']
+    >>> Language['TPS 3']
     America is great. 3.3, 3.4, 3.5, 3.6
-    >>> Language['tS 1']
+    >>> Language['tpS 1']
     Traceback (most recent call last):
      ...
     ValueError: No versions left
@@ -340,7 +340,7 @@ class Language(metaclass=LanguageMeta):
 
     >>> Language.TrumpScript(3.6) in Language.TrumpScript
     True
-    >>> 'ts 3.6, 3.5' in Language.TrumpScript
+    >>> 'tps 3.6, 3.5' in Language.TrumpScript
     True
     >>> 'TrumpScript 2.6' in Language.TrumpScript
     False
@@ -349,9 +349,9 @@ class Language(metaclass=LanguageMeta):
 
     This also works on instances:
 
-    >>> 'ts 3.6, 3.5' in (Language.TrumpScript == 3)
+    >>> 'tps 3.6, 3.5' in (Language.TrumpScript == 3)
     True
-    >>> 'ts 3.6,3.5' in ((Language.TrumpScript == 2)
+    >>> 'tps 3.6,3.5' in ((Language.TrumpScript == 2)
     ...                  | Language.TrumpScript(3.5))
     False
     >>> Language.TrumpScript(2.7, 3.5) in (Language.TrumpScript == 3)
