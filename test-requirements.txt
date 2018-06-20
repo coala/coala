@@ -11,6 +11,7 @@ pytest-env~=0.6.0
 pytest-error-for-skips~=1.0
 pytest-instafail~=0.3.0
 pytest-mock~=1.1
+pytest-profiling
 pytest-reorder~=0.1.0
 pytest-reqs~=0.0.6
 pytest-timeout~=1.2.0
