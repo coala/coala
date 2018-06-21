@@ -47,7 +47,8 @@ jobs:
           when: always
           command: |
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            pip install --user .
+            python setup.py bdist_wheel
+            sudo pip install ./dist/coala-*.whl
             pip install --user coala-bears[alldeps] --pre -U
             pip install --user "packaging~=16.8"
             ./coala --non-interactive

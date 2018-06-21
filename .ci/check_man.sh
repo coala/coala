@@ -4,7 +4,6 @@ set -e
 
 if [ $CIRCLECI ]; then
   sudo apt install man
-  export MANPATH=$MANPATH:~/.local/man
 elif [ $TRAVIS ]; then
   export MANPATH=$MANPATH:$VIRTUAL_ENV/man
 fi
