@@ -204,15 +204,15 @@ class Result:
             some time figuring out which of the leafs exactly your result
             belongs to.)
         """
-        range = SourceRange.from_values(file,
-                                        line,
-                                        column,
-                                        end_line,
-                                        end_column)
+        source_range = SourceRange.from_values(file,
+                                               line,
+                                               column,
+                                               end_line,
+                                               end_column)
 
         return cls(origin=origin,
                    message=message,
-                   affected_code=(range,),
+                   affected_code=(source_range,),
                    severity=severity,
                    additional_info=additional_info,
                    debug_msg=debug_msg,

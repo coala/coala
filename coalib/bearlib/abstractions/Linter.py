@@ -336,12 +336,12 @@ def _create_linter(klass, options):
             }
 
             if filename:
-                range = SourceRange.from_values(filename,
-                                                groups['line'],
-                                                groups['column'],
-                                                groups['end_line'],
-                                                groups['end_column'])
-                result_params['affected_code'] = (range,)
+                source_range = SourceRange.from_values(filename,
+                                                       groups['line'],
+                                                       groups['column'],
+                                                       groups['end_line'],
+                                                       groups['end_column'])
+                result_params['affected_code'] = (source_range,)
             return Result(**result_params)
 
         def process_diff(self,
