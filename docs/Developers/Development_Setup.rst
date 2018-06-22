@@ -33,7 +33,7 @@ Using venv
         (coala-venv)$ deactivate
 
 - Now you can activate the environment and start
-  `the next part <https://api.coala.io/en/latest/Developers/Development_Setup.html#id1>`_.
+  `the next part <https://api.coala.io/en/latest/Developers/Development_Setup.html#repositories>`_.
 
 Using virtualenv
 ~~~~~~~~~~~~~~~~
@@ -64,7 +64,7 @@ in your current directory, as coala only works for Python >= 3.4.4
         (coala-venv)$ deactivate # to exit the environment
 
 - After this, you can start
-  `installing from git <https://api.coala.io/en/latest/Developers/Development_Setup.html#id1>`__.
+  `installing from git <https://api.coala.io/en/latest/Developers/Development_Setup.html#installing-from-git>`__.
 
 Repositories
 ------------
