@@ -12,6 +12,9 @@ command_line_interface: coala
 package_module: coalib
 rtd_maintainer: L.S., F.N., M.K.
 ci_directory: .misc
+docs_dir: docs
+docs_source_dir: ./
+docs_toc: false
 
 entry_points:
   console_scripts:
