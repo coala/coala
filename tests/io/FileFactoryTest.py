@@ -37,11 +37,14 @@ class FileFactoryTest(unittest.TestCase):
 
     def test_lines(self):
         self.assertEqual(self.uut.lines, ('This is a test file.',))
+        self.assertEqual(self.uut.lines, ('This is a test file.',))
 
     def test_raw(self):
         self.assertEqual(self.uut.raw, b'This is a test file.')
+        self.assertEqual(self.uut.raw, b'This is a test file.')
 
     def test_string(self):
+        self.assertEqual(self.uut.string, 'This is a test file.')
         self.assertEqual(self.uut.string, 'This is a test file.')
 
     def test_timestamp(self):
