@@ -1,4 +1,6 @@
 import inspect
+import pdb
+import collections
 import traceback
 from functools import partial
 from os import makedirs
@@ -20,6 +22,33 @@ from coalib.settings.Section import Section
 from coalib.settings.ConfigurationGathering import get_config_directory
 
 from .meta import bearclass
+
+
+class Debugger(pdb.Pdb):
+
+    def do_quit(self, arg):
+        self.clear_all_breaks()
+        super().do_continue(arg)
+        return 1
+
+    do_q = do_quit
+    do_exit = do_quit
+
+
+def debug_run(func, dbg=None, *args, **kwargs):
+    dbg = Debugger() if dbg is None else dbg
+    bear_results = dbg.runcall(func, *args, **kwargs)
+    if isinstance(bear_results, collections.Iterable):
+        results = []
+        iterator = iter(bear_results)
+        try:
+            while True:
+                result = dbg.runcall(next, iterator)
+                results.append(result)
+        except StopIteration:
+            return results
+    else:
+        return bear_results
 
 
 class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
@@ -232,7 +261,8 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     def __init__(self,
                  section: Section,
                  message_queue,
-                 timeout=0):
+                 timeout=0,
+                 debugger=False):
         """
         Constructs a new bear.
 
@@ -252,6 +282,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         self.section = section
         self.message_queue = message_queue
         self.timeout = timeout
+        self.debugger = debugger
 
         self.setup_dependencies()
         cp = type(self).check_prerequisites()
@@ -287,8 +318,10 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
             self.warn('The bear {} cannot be executed.'.format(
                 self.name), str(err))
             return
-
-        return self.run(*args, **kwargs)
+        if self.debugger:
+            return debug_run(self.run, Debugger(), *args, **kwargs)
+        else:
+            return self.run(*args, **kwargs)
 
     def execute(self, *args, debug=False, **kwargs):
         name = self.name

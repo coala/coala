@@ -566,8 +566,8 @@ class ProcessingTest(unittest.TestCase):
     def test_loaded_bears_with_error_result(self):
         class BearWithMissingPrerequisites(Bear):
 
-            def __init__(self, section, queue, timeout=0.1):
-                Bear.__init__(self, section, queue, timeout)
+            def __init__(self, section, queue, timeout=0.1, debugger=False):
+                Bear.__init__(self, section, queue, timeout, debugger)
 
             def run(self):
                 return []
@@ -606,28 +606,33 @@ class ProcessingTest(unittest.TestCase):
     def test_global_instantiation(self):
         class TestOneBear(Bear):
 
-            def __init__(self, file_dict, section, queue, timeout=0.1):
+            def __init__(self, file_dict, section, queue, timeout=0.1,
+                         debugger=False):
                 raise RuntimeError
 
         class TestTwoBear(Bear):
 
             BEAR_DEPS = {TestOneBear}
 
-            def __init__(self, file_dict, section, queue, timeout=0.1):
+            def __init__(self, file_dict, section, queue, timeout=0.1,
+                         debugger=False):
                 raise RuntimeError
 
         class TestThreeBear(Bear):
 
             BEAR_DEPS = {TestTwoBear}
 
-            def __init__(self, file_dict, section, queue, timeout=0.1):
-                Bear.__init__(self, section, queue, timeout)
+            def __init__(self, file_dict, section, queue, timeout=0.1,
+                         debugger=False):
+                Bear.__init__(self, section, queue, timeout, debugger)
 
         global_bear_list = [TestTwoBear, TestThreeBear]
         list1, list2 = instantiate_bears(self.sections['cli'], [],
                                          global_bear_list, {}, self.queue,
                                          console_printer=self.console_printer,
-                                         debug=False)
+                                         debug=False,
+                                         debug_bears=['TestTwoBear',
+                                                      'TestThreeBear'])
 
         self.assertEqual(len(list1), 0)
         self.assertEqual(len(list2), 1)
@@ -635,7 +640,7 @@ class ProcessingTest(unittest.TestCase):
             global_bear_list = [TestOneBear]
             instantiate_bears(self.sections['cli'], [], global_bear_list, {},
                               self.queue, console_printer=self.console_printer,
-                              debug=True)
+                              debug=True, debug_bears=False)
 
 
 class ProcessingTest_GetDefaultActions(unittest.TestCase):

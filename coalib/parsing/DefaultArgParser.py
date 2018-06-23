@@ -241,6 +241,14 @@ To run coala without user interaction, run the `coala --non-interactive`,
         '-r', '--relpath', nargs='?', const=True,
         help='return relative paths for files (must be called with --json)')
 
+    outputs_group.add_argument(
+        '--debug-bears', nargs='?', const=True,
+        help='Enable bear debugging with pdb, that can help to identify and'
+        ' correct errors in bear code. Steps into bear code as soon as being'
+        ' executed. To specify which bears to debug, supply bear names as'
+        ' additional arguments. If used without arguments, all bears specified'
+        ' with --bears will be debugged (even implicit dependency bears).')
+
     misc_group = arg_parser.add_argument_group('Miscellaneous')
 
     misc_group.add_argument(

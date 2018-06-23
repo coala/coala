@@ -27,7 +27,7 @@ from coalib.results.result_actions.PrintDebugMessageAction import (
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
-from coalib.settings.Setting import glob_list
+from coalib.settings.Setting import glob_list, typed_list
 from coalib.parsing.Globbing import fnmatch
 
 
@@ -297,7 +297,8 @@ def instantiate_bears(section,
                       file_dict,
                       message_queue,
                       console_printer,
-                      debug=False):
+                      debug=False,
+                      debug_bears=False):
     """
     Instantiates each bear with the arguments it needs.
 
@@ -311,13 +312,26 @@ def instantiate_bears(section,
     :param console_printer:  Object to print messages on the console.
     :return:                 The local and global bear instance lists.
     """
+    debug_bears = (False if debug_bears is False else
+                   [x.lower() for x in debug_bears])
+    for bear in local_bear_list + global_bear_list:
+        for deps_bear in bear.BEAR_DEPS:
+            if debug_bears is not False and (
+                bear.__name__.lower() in debug_bears and (
+                    deps_bear.__name__.lower() not in debug_bears)):
+                debug_bears.append(deps_bear.__name__.lower())
+
     instantiated_local_bear_list = []
     instantiated_global_bear_list = []
     for bear in local_bear_list:
         try:
+            debugger = True if debug_bears is not False and (
+                    debug_bears[0] == 'true' or (
+                        bear.__name__.lower() in debug_bears)) else False
             instantiated_local_bear_list.append(bear(section,
                                                      message_queue,
-                                                     timeout=0.1,))
+                                                     timeout=0.1,
+                                                     debugger=debugger))
         # RuntimeError it will be raised only when debug will be set to True.
         except RuntimeError:
             if debug:
@@ -325,10 +339,14 @@ def instantiate_bears(section,
 
     for bear in global_bear_list:
         try:
+            debugger = True if debug_bears is not False and (
+                    debug_bears[0] == 'true' or (
+                        bear.__name__.lower() in debug_bears)) else False
             instantiated_global_bear_list.append(bear(file_dict,
                                                       section,
                                                       message_queue,
-                                                      timeout=0.1,))
+                                                      timeout=0.1,
+                                                      debugger=debugger))
         # RuntimeError it will be raised only when debug will be set to True
         except RuntimeError:
             if debug:
@@ -345,7 +363,8 @@ def instantiate_processes(section,
                           log_printer,
                           console_printer,
                           debug=False,
-                          use_raw_files=False):
+                          use_raw_files=False,
+                          debug_bears=False):
     """
     Instantiate the number of processes that will run bears which will be
     responsible for running bears in a multiprocessing environment.
@@ -379,7 +398,7 @@ def instantiate_processes(section,
     complete_file_dict = get_file_dict(complete_filename_list,
                                        allow_raw_files=use_raw_files)
 
-    if debug:
+    if debug or debug_bears:
         from . import DebugProcessing as processing
     else:
         import multiprocessing as processing
@@ -399,7 +418,8 @@ def instantiate_processes(section,
         complete_file_dict,
         message_queue,
         console_printer=console_printer,
-        debug=debug)
+        debug=debug,
+        debug_bears=debug_bears)
     loaded_valid_local_bears_count = len(local_bear_list)
     # Note: the complete file dict is given as the file dict to bears and
     # the whole project is accessible to every bear. However, local bears are
@@ -541,7 +561,8 @@ def process_queues(processes,
                    log_printer,
                    console_printer,
                    debug=False,
-                   apply_single=False):
+                   apply_single=False,
+                   debug_bears=False):
     """
     Iterate the control queue and send the results received to the print_result
     method so that they can be presented to the user.
@@ -585,7 +606,7 @@ def process_queues(processes,
     ignore_ranges = list(yield_ignore_ranges(file_dict))
 
     # One process is the logger thread (if not in debug mode)
-    while local_processes > (1 if not debug else 0):
+    while local_processes > (1 if not (debug or debug_bears) else 0):
         try:
             control_elem, index = control_queue.get(timeout=0.1)
 
@@ -737,7 +758,12 @@ def execute_section(section,
                              results (bear names are key) as well as the
                              file dictionary.
     """
-    if debug:
+    debug_bears = (False
+                   if 'debug_bears' not in section or (
+                       section['debug_bears'].value == 'False') else
+                   typed_list(str)(section['debug_bears']))
+
+    if debug or debug_bears:
         running_processes = 1
     else:
         try:
@@ -773,11 +799,12 @@ def execute_section(section,
                                                 None,
                                                 console_printer=console_printer,
                                                 debug=debug,
-                                                use_raw_files=use_raw_files)
+                                                use_raw_files=use_raw_files,
+                                                debug_bears=debug_bears)
 
     logger_thread = LogPrinterThread(arg_dict['message_queue'])
     # Start and join the logger thread along with the processes to run bears
-    if not debug:
+    if not (debug or debug_bears):
         # in debug mode the logging messages are directly processed by the
         # message_queue
         processes.append(logger_thread)
@@ -797,12 +824,13 @@ def execute_section(section,
                                None,
                                console_printer=console_printer,
                                debug=debug,
-                               apply_single=apply_single),
+                               apply_single=apply_single,
+                               debug_bears=debug_bears),
                 arg_dict['local_result_dict'],
                 arg_dict['global_result_dict'],
                 arg_dict['file_dict'])
     finally:
-        if not debug:
+        if not (debug or debug_bears):
             # in debug mode multiprocessing and logger_thread are disabled
             # ==> no need for following actions
             logger_thread.running = False
