@@ -18,9 +18,9 @@ from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.processes.Processing import (
     ACTIONS, autoapply_actions, check_result_ignore, create_process_group,
-    execute_section, filter_raising_callables, get_default_actions,
-    get_file_dict, print_result, process_queues, simplify_section_result,
-    yield_ignore_ranges)
+    execute_section, get_default_actions, get_file_dict, print_result,
+    process_queues, simplify_section_result, yield_ignore_ranges,
+    instantiate_bears)
 from coalib.results.HiddenResult import HiddenResult
 from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
@@ -347,39 +347,6 @@ class ProcessingTest(unittest.TestCase):
             # python modules subprocess and os
             self.assertEqual(p.pid, pgid)
 
-    def test_filter_raising_callables(self):
-        class A(Exception):
-            pass
-
-        class B(Exception):
-            pass
-
-        class C(Exception):
-            pass
-
-        def create_exception_raiser(exception):
-            def raiser(exc):
-                if exception in exc:
-                    raise exception
-                return exception
-            return raiser
-
-        raiseA, raiseB, raiseC = (create_exception_raiser(exc)
-                                  for exc in [A, B, C])
-
-        test_list = [raiseA, raiseC, raiseB, raiseC]
-        self.assertEqual(list(filter_raising_callables(test_list, A, (A,))),
-                         [C, B, C])
-
-        self.assertEqual(list(filter_raising_callables(test_list,
-                                                       (B, C),
-                                                       exc=(B, C))),
-                         [A])
-
-        # Test whether non filtered exceptions bubble up.
-        with self.assertRaises(B):
-            list(filter_raising_callables(test_list, C, exc=(B, C)))
-
     def test_get_file_dict(self):
         with LogCapture() as capture:
             file_dict = get_file_dict([self.testcode_c_path], self.log_printer)
@@ -635,6 +602,40 @@ class ProcessingTest(unittest.TestCase):
                                   self.log_printer,
                                   console_printer=self.console_printer)
         self.assertGreater(len(cache.data), 0)
+
+    def test_global_instantiation(self):
+        class TestOneBear(Bear):
+
+            def __init__(self, file_dict, section, queue, timeout=0.1):
+                raise RuntimeError
+
+        class TestTwoBear(Bear):
+
+            BEAR_DEPS = {TestOneBear}
+
+            def __init__(self, file_dict, section, queue, timeout=0.1):
+                raise RuntimeError
+
+        class TestThreeBear(Bear):
+
+            BEAR_DEPS = {TestTwoBear}
+
+            def __init__(self, file_dict, section, queue, timeout=0.1):
+                Bear.__init__(self, section, queue, timeout)
+
+        global_bear_list = [TestTwoBear, TestThreeBear]
+        list1, list2 = instantiate_bears(self.sections['cli'], [],
+                                         global_bear_list, {}, self.queue,
+                                         console_printer=self.console_printer,
+                                         debug=False)
+
+        self.assertEqual(len(list1), 0)
+        self.assertEqual(len(list2), 1)
+        with self.assertRaises(RuntimeError):
+            global_bear_list = [TestOneBear]
+            instantiate_bears(self.sections['cli'], [], global_bear_list, {},
+                              self.queue, console_printer=self.console_printer,
+                              debug=True)
 
 
 class ProcessingTest_GetDefaultActions(unittest.TestCase):
