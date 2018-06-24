@@ -126,9 +126,11 @@ challenging if it has new commits on it. This is why we create our own branch:
       + issueXXX
       + patchXXX
       + gh-XXX
-      + A short form of the issue name (Where XXX is your issue number.)
+      + A short form of the issue name 
+        (Where XXX is your issue number.)
 
-    We also recommend naming your first branch "*my-first-good-pull-request*", for the purpose of this guide.
+    We also recommend naming your first branch "*my-first-good-pull-request*", 
+    for the purpose of this guide.
 
 Checking your work
 ------------------
