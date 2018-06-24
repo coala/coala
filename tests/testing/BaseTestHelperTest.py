@@ -1,5 +1,3 @@
-import pytest
-
 from coalib.results.Result import Result
 from coalib.testing.BaseTestHelper import BaseTestHelper
 
@@ -9,23 +7,41 @@ class BaseTestHelperTest(BaseTestHelper):
         self.assert_result_equal(['a', 'b'], ['a', 'b'])
 
     def test_inequality_assert_result_equal(self):
-        with pytest.raises(AssertionError) as ex:
+        with self.assertRaises(AssertionError) as ex:
             self.assert_result_equal(['a', 'b'], ['a', 'b', None])
-        assert '[\'a\', \'b\'] != [\'a\', \'b\', None]' in str(ex.value)
+        self.assertEqual("Lists differ: ['a', 'b'] != ['a', 'b', None]\n\n"
+                         'Second list contains 1 additional elements.\n'
+                         'First extra element 2:\n'
+                         'None\n\n'
+                         "- ['a', 'b']\n"
+                         "+ ['a', 'b', None]\n"
+                         '?          ++++++\n', str(ex.exception))
 
     def test_not_comparable_assert_result_equal(self):
-        with pytest.raises(AssertionError) as ex:
+        with self.assertRaises(AssertionError) as ex:
             self.assert_result_equal(['a', 'b'], ['a', 'c'])
-        assert '[\'a\', \'b\'] != [\'a\', \'c\']' in str(ex.value)
+        self.assertEqual("'b' != 'c'\n"
+                         '- b\n'
+                         '+ c\n', str(ex.exception))
 
     def test_comparable_assert_result_equal(self):
         expected = [Result.from_values(origin='AnyBea',
                                        message='This file has 2 lines.',
                                        file='anyfile')]
         observed = [Result.from_values(origin='AnyBear',
-                                       message='This file has 2 lines.',
+                                       message='This file has 3 lines.',
                                        file='anyfile')]
-        with pytest.raises(AssertionError) as ex:
+        with self.assertRaises(AssertionError) as ex:
             self.assert_result_equal(expected, observed)
-        assert ('origin mismatch: AnyBea, This file has 2 lines. != AnyBear, '
-                'This file has 2 lines.\n\n') == str(ex.value)
+        self.assertEqual("'AnyBea' != 'AnyBear'\n"
+                         '- AnyBea\n'
+                         '+ AnyBear\n'
+                         '?       +\n'
+                         ' : origin mismatch.\n\n'
+                         "'This file has 2 lines.' != 'This file "
+                         "has 3 lines.'\n"
+                         '- This file has 2 lines.\n'
+                         '?               ^\n'
+                         '+ This file has 3 lines.\n'
+                         '?               ^\n'
+                         ' : message_base mismatch.', str(ex.exception))
