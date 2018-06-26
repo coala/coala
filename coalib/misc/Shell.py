@@ -94,14 +94,16 @@ def run_interactive_shell_command(command, **kwargs):
     :return:        A context manager yielding the process started from the
                     command.
     """
-    if not kwargs.get('shell', False) and isinstance(command, str):
+    if kwargs.get('shell', False):
+        command = command
+    elif isinstance(command, str):
         command = shlex.split(command)
-    else:
-        command = list(command)
 
-    if platform.system() == 'Windows':  # pragma: no cover
+    if (platform.system() == 'Windows' and
+            isinstance(command, (list, tuple))):  # pragma: no cover
         # subprocess doesn't implicitly look for .bat and .cmd scripts when
         # running commands under Windows
+        command = list(command) if isinstance(command, tuple) else command
         command[0] = which(command[0])
 
     args = {'stdout': PIPE,

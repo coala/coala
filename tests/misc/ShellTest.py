@@ -3,6 +3,7 @@ import os
 import sys
 from tempfile import NamedTemporaryFile
 import unittest
+import platform
 
 from coalib.misc.Shell import run_interactive_shell_command, run_shell_command
 
@@ -91,3 +92,13 @@ class RunShellCommandTest(unittest.TestCase):
     def test_run_shell_command_kwargs_delegation(self):
         with self.assertRaises(TypeError):
             run_shell_command('super-cool-command', weird_parameter2='abc')
+
+    def test_run_shell_command_with_shell_True(self):
+        run_shell_command('echo "test" > test_shell_True.txt', shell=True)
+        stdout = run_shell_command('cat test_shell_True.txt')[0]
+        expected_stdout = ('"test" \n' if platform.system() == 'Windows' else
+                           'test\n')
+        self.assertEqual(stdout, expected_stdout)
+
+        # Clean the textfile
+        run_shell_command('rm test_shell_True.txt')
