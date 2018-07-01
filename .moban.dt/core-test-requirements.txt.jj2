@@ -1,0 +1,2 @@
+{% include 'test-requirements.txt.jj2' %}
+testfixtures~=5.3.1

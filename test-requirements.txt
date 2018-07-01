@@ -19,3 +19,4 @@ pytest-xdist~=1.15
 requests-mock~=1.2
 pip!=9.0.2, !=10.0.*
 wheel~=0.29
+testfixtures~=5.3.1

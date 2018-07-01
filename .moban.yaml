@@ -37,7 +37,6 @@ dependencies:
   - PyPrint~=0.2.6
   - requests~=2.12
   - setuptools>=21.0.0
-  - testfixtures~=5.3.1
   - unidiff~=0.5.2
 
 gitignore_extra_rulesets:
@@ -54,7 +53,7 @@ targets:
   - .gitignore: core-gitignore.jj2
   - setup.py: core-setup.py.jj2
   - requirements.txt: requirements.txt.jj2
-  - test-requirements.txt: test-requirements.txt.jj2
+  - test-requirements.txt: core-test-requirements.txt.jj2
   - coalib/VERSION: VERSION.jj2
   - runtime.txt: runtime.txt
   - netlify.toml: docs/netlify.toml
