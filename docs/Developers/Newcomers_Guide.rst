@@ -34,6 +34,9 @@ Once you've completed all five tasks, please fill our
 `promotion request form <https://docs.google.com/forms/d/e/1FAIpQLSevrkrJga23GySFUdngrTEo0CdjXcqjHBHqX2z_JF2Z61YNmw/viewform?usp=sf_link>`_
 to get promoted to the role of developer. GitLab contributions also
 count to the promotion of a newcomer to developer.
+In order to work on GitLab issues, you should be a member of GitLab newcomers
+group. You can request access at
+`GitLab newcomers group <https://gitlab.com/coala/roles/newcomers>`_.
 
 .. note::
 
