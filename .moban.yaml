@@ -15,6 +15,7 @@ ci_directory: .misc
 docs_dir: docs
 docs_source_dir: ./
 docs_toc: false
+test_py36: false
 
 entry_points:
   console_scripts:
