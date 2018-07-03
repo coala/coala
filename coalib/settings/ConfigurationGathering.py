@@ -105,7 +105,7 @@ def merge_section_dicts(lower, higher):
     return lower
 
 
-def load_config_file(filename, log_printer=None, silent=False):
+def load_config_file(filename, log_printer=None, silent=True):
     """
     Loads sections from a config file. Prints an appropriate warning if
     it doesn't exist and returns a section dict containing an empty
@@ -257,15 +257,7 @@ def load_configuration(arg_list,
         config = os.path.abspath(
             str(cli_sections['cli'].get('config', user_config)))
 
-        try:
-            save = bool(cli_sections['cli'].get('save', 'False'))
-        except ValueError:
-            # A file is deposited for the save parameter, means we want to save
-            # but to a specific file.
-            save = True
-
-        coafile_sections = load_config_file(config,
-                                            silent=save or silent)
+        coafile_sections = load_config_file(config, silent=True)
 
         sections = merge_section_dicts(base_sections, user_sections)
 
