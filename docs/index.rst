@@ -36,6 +36,7 @@ If you're trying to **use** coala, you should have a look at our
 
    Newcomers' Guide <Developers/Newcomers_Guide>
    User's Guide <http://docs.coala.io/en/latest/>
+   IO <Developers/IO>
    NextGen-Core <Developers/NextGen_Core>
    Documentation coala settings <Developers/coala_settings>
    Bear Installation Tool <Developers/Bear_Installation_Tool>
