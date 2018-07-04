@@ -6,6 +6,6 @@ class CSharp:
     __qualname__ = 'C#'
     aliases = 'CS',
     extensions = '.cs',
-    comment_delimiter = '//'
+    comment_delimiters = '//',
     multiline_comment_delimiters = {'/*': '*/'}
     string_delimiters = {'"': '"'}

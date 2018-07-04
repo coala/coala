@@ -25,7 +25,7 @@ class LanguageDefinition(SectionCreatable):
     For some languages aliases exist, the name is case insensitive; they will
     behave just like before and return settings:
 
-    >>> dict(LanguageDefinition('C++')['comment_delimiter'])
+    >>> dict(LanguageDefinition('C++')['comment_delimiters'])
     {'//': ''}
     >>> dict(LanguageDefinition('C++')['string_delimiters'])
     {'"': '"'}

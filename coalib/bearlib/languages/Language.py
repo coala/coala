@@ -3,6 +3,7 @@ from itertools import chain
 from inspect import isclass, getmembers
 import operator
 import re
+import logging
 from operator import itemgetter
 
 from packaging.version import Version, InvalidVersion
@@ -162,8 +163,20 @@ class LanguageMeta(type, metaclass=LanguageUberMeta):
 
                 def __getattr__(self, item):
                     try:
+                        if item is 'comment_delimiter':
+                            # Providing backward compatibility for
+                            # `comment_delimiter`
+                            logging.warning(
+                                'The property `comment_delimiter` of Language '
+                                'module is deprecated and will be removed soon.'
+                                ' Please use `comment_delimiters` which returns'
+                                ' a tuple containing all the comment delimiters'
+                                ' supported by the language.')
+                            value = self._attributes['comment_delimiters'][0]
+                        else:
+                            value = self._attributes[item]
                         return OrderedDict(
-                            (version, self._attributes[item])
+                            (version, value)
                             for version in self.versions)
                     except KeyError:
                         raise AttributeError
@@ -224,7 +237,7 @@ class Language(metaclass=LanguageMeta):
     ...     __qualname__ = "America is great."
     ...     aliases = 'tps',
     ...     versions = 2.7, 3.3, 3.4, 3.5, 3.6
-    ...     comment_delimiter = '#'
+    ...     comment_delimiters = '#',
     ...     string_delimiter = {"'": "'"}
 
     From a bear, you can simply parse the user given language string to get
@@ -250,10 +263,13 @@ class Language(metaclass=LanguageMeta):
     The attributes are not accessible unless you have selected one - and only
     one - version of your language:
 
-    >>> Language.TrumpScript(3.3, 3.4).comment_delimiter
+    >>> Language.TrumpScript(3.3, 3.4).comment_delimiters
     Traceback (most recent call last):
      ...
     AttributeError: You have to specify ONE version ...
+    >>> Language.TrumpScript(3.3).comment_delimiters
+    ('#',)
+
     >>> Language.TrumpScript(3.3).comment_delimiter
     '#'
 
@@ -265,10 +281,15 @@ class Language(metaclass=LanguageMeta):
     To see which attributes are available, use the ``attributes`` property:
 
     >>> Language.TrumpScript(3.3).attributes
-    ['comment_delimiter', 'string_delimiter']
+    ['comment_delimiters', 'string_delimiter']
 
     You can access a dictionary of the attribute values for every version from
     the class:
+
+    >>> Language.TrumpScript.comment_delimiters
+    OrderedDict([(<Version('2.7')>, ('#',)), (<Version('3.3')>, ('#',)), \
+(<Version('3.4')>, ('#',)), (<Version('3.5')>, ('#',)), \
+(<Version('3.6')>, ('#',))])
 
     >>> Language.TrumpScript.comment_delimiter
     OrderedDict([(<Version('2.7')>, '#'), (<Version('3.3')>, '#'), \
@@ -290,18 +311,21 @@ class Language(metaclass=LanguageMeta):
     >>> @Language
     ... class TrumpScriptDerivative(Language.TrumpScript):
     ...     __qualname__ = 'Shorter'
-    ...     comment_delimiter = '//'
+    ...     comment_delimiters = '//', 'COM'
     ...     keywords = None
 
     >>> Language.TrumpScriptDerivative()
     Shorter 2.7, 3.3, 3.4, 3.5, 3.6
 
-    >>> Language.TrumpScriptDerivative().get_default_version().attributes
-    ['comment_delimiter', 'keywords', 'string_delimiter']
-    >>> Language.TrumpScriptDerivative().get_default_version().keywords
-    >>> Language.TrumpScriptDerivative().get_default_version().comment_delimiter
+    >>> default_version = Language.TrumpScriptDerivative().get_default_version()
+    >>> default_version.attributes
+    ['comment_delimiters', 'keywords', 'string_delimiter']
+    >>> default_version.keywords
+    >>> default_version.comment_delimiters
+    ('//', 'COM')
+    >>> default_version.comment_delimiter
     '//'
-    >>> Language.TrumpScriptDerivative().get_default_version().string_delimiter
+    >>> default_version.string_delimiter
     {"'": "'"}
 
     We can get an instance via this syntax as well:
@@ -380,6 +404,14 @@ class Language(metaclass=LanguageMeta):
             raise AttributeError('You have to specify ONE version of your '
                                  'language to retrieve attributes for it.')
         try:
+            if item is 'comment_delimiter':
+                # Providing backward compatibility for `comment_delimiter`
+                logging.warning(
+                    'The property `comment_delimiter` of Language module is '
+                    'deprecated and will be removed soon. Please use '
+                    '`comment_delimiters` which returns a tuple containing '
+                    'all the comment delimiters supported by the language.')
+                return self._attributes['comment_delimiters'][0]
             return self._attributes[item]
         except KeyError:
             if len(self.attributes) == 0:

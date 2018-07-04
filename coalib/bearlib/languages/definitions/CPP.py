@@ -6,7 +6,7 @@ class CPP:
     aliases = 'C++', 'C Plus Plus', 'CPlusPlus', 'CXX'
 
     extensions = '.c', '.cpp', '.h', '.hpp'
-    comment_delimiter = '//'
+    comment_delimiters = '//',
     multiline_comment_delimiters = {'/*': '*/'}
     string_delimiters = {'"': '"'}
     multiline_string_delimiters = {'R("': ')"'}

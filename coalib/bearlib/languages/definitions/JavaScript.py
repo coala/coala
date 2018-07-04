@@ -5,7 +5,7 @@ from coalib.bearlib.languages.Language import Language
 class JavaScript:
     aliases = 'js', 'ecmascript'
     extensions = '.js',
-    comment_delimiter = '//'
+    comment_delimiters = '//',
     multiline_comment_delimiters = {'/*': '*/'}
     string_delimiters = {'"': '"', "'": "'"}
     multiline_string_delimiters = {}

@@ -8,7 +8,7 @@ Currently defined keys are:
 
   names
   extensions
-  comment_delimiter
+  comment_delimiters
   multiline_comment_delimiters
   string_delimiters
   multiline_string_delimiters

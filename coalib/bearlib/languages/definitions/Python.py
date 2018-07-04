@@ -7,7 +7,7 @@ class Python:
     versions = 2.7, 3.3, 3.4, 3.5, 3.6
 
     extensions = '.py',
-    comment_delimiter = '#'
+    comment_delimiters = '#',
     multiline_comment_delimiters = {}
     string_delimiters = {'"': '"', "'": "'"}
     multiline_string_delimiters = {'"""': '"""', "'''": "'''"}

@@ -5,4 +5,4 @@ from coalib.bearlib.languages.Language import Language
 class Matlab:
     aliases = 'Octave',
     extensions = '.m'
-    comment_delimiter = '%'
+    comment_delimiters = '%',

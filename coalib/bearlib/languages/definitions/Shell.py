@@ -6,7 +6,7 @@ class Shell:
     aliases = 'bash', 'sh'
 
     extensions = '.sh', '.bash', '.zsh'
-    comment_delimiter = '#'
+    comment_delimiters = '#',
     multiline_comment_delimiters = {": '": "'"}
     string_delimiters = {'"': '"', "'": "'", '`': '`'}
     multiline_string_delimiters = string_delimiters

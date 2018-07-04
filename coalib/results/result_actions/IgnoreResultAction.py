@@ -93,7 +93,7 @@ class IgnoreResultAction(ResultAction):
         """
         try:
             comment_delimiter = Language[
-                language].get_default_version().comment_delimiter
+                language].get_default_version().comment_delimiters[0]
             ignore_comment = (str(comment_delimiter) + ' Ignore ' +
                               origin + '\n')
         except AttributeError:
