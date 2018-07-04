@@ -87,9 +87,15 @@ class IgnoreResultActionTest(unittest.TestCase):
                       file_dict, file_diff_dict, 'c')
             self.assertEqual(
                 file_diff_dict[f_a].modified,
-                ['1\n', '2  // Ignore origin\n', '3\n'])
+                ['1\n',
+                 '// Start Ignoring origin\n'
+                 '2\n'
+                 '// Stop Ignoring\n',
+                 '3\n'])
             with open(f_a, 'r') as f:
-                self.assertEqual(file_diff_dict[f_a].modified, f.readlines())
+                self.assertEqual(
+                    ''.join(file_diff_dict[f_a].modified),
+                    ''.join(f.readlines()))
             self.assertTrue(exists(f_a + '.orig'))
 
             # Apply a second patch, old patch has to stay!
@@ -97,9 +103,17 @@ class IgnoreResultActionTest(unittest.TestCase):
                       file_dict, file_diff_dict, 'css')
             self.assertEqual(
                 file_diff_dict[f_a].modified,
-                ['1  /* Ignore else */\n', '2  // Ignore origin\n', '3\n'])
+                ['/* Start Ignoring else */\n'
+                 '1\n'
+                 '/* Stop Ignoring */\n',
+                 '// Start Ignoring origin\n'
+                 '2\n'
+                 '// Stop Ignoring\n',
+                 '3\n'])
             with open(f_a, 'r') as f:
-                self.assertEqual(file_diff_dict[f_a].modified, f.readlines())
+                self.assertEqual(
+                    ''.join(file_diff_dict[f_a].modified),
+                    ''.join(f.readlines()))
 
             import logging
             logger = logging.getLogger()
