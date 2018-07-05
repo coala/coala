@@ -123,12 +123,12 @@ challenging if it has new commits on it. This is why we create our own branch:
     ``-b`` will create a new branch if the branch doesn't already exist.
 
     Some sample naming conventions for branches:
-    + issueXXX
-    + patchXXX
-    + gh-XXX
-    + A short form of the issue name
+     + issueXXX
+     + patchXXX
+     + gh-XXX
+     + A short form of the issue name
+     
     (Where XXX is your issue number.)
-
     We also recommend naming your first branch "my-first-good-pull-request",
     for the purpose of this guide.
 
