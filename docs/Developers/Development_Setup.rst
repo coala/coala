@@ -120,7 +120,7 @@ You should run this command before trying to build the documentation:
 
     (coala-venv)$ pip3 install -r docs-requirements.txt
 
-Once you have done so, you can build the documentation by entering the docs
+Once you have done so, you can build the documentation by entering the coala
 directory and running ``python3 setup.py docs``. The documentation
 on the coala website is in
 the ``coala`` (not ``coala-bears``) repository.
