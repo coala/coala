@@ -38,6 +38,7 @@ def _prepare_options(options, bear_class):
                        'use_stderr',
                        'normalize_line_numbers',
                        'normalize_column_numbers',
+                       'remove_zero_numbers',
                        'config_suffix',
                        'executable_check_fail_info',
                        'prerequisite_check_command',
@@ -323,6 +324,11 @@ def _create_linter(klass, options):
             # still give one through the regex
             if filename is None:
                 filename = groups.get('filename', None)
+
+            if options['remove_zero_numbers']:
+                for variable in ('line', 'column', 'end_line', 'end_column'):
+                    if groups[variable] == 0:
+                        groups[variable] = None
 
             # Construct the result. If we have a filename, we
             # use Result.from_values otherwise generate a project
@@ -763,6 +769,7 @@ def linter(executable: str,
            use_stderr: bool = False,
            normalize_line_numbers: bool = False,
            normalize_column_numbers: bool = False,
+           remove_zero_numbers: bool = False,
            config_suffix: str = '',
            executable_check_fail_info: str = '',
            prerequisite_check_command: tuple = (),
@@ -884,6 +891,8 @@ def linter(executable: str,
     :param normalize_column_numbers:
         Whether to normalize column numbers (increase by one) to fit
         coala's one-based convention.
+    :param remove_zero_numbers:
+        Whether to remove 0 line or column number and use None instead.
     :param config_suffix:
         The suffix-string to append to the filename of the configuration file
         created when ``generate_config`` is supplied. Useful if your executable
@@ -989,6 +998,7 @@ def linter(executable: str,
     options['use_stderr'] = use_stderr
     options['normalize_line_numbers'] = normalize_line_numbers
     options['normalize_column_numbers'] = normalize_column_numbers
+    options['remove_zero_numbers'] = remove_zero_numbers
     options['config_suffix'] = config_suffix
     options['executable_check_fail_info'] = executable_check_fail_info
     options['prerequisite_check_command'] = prerequisite_check_command
