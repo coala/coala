@@ -318,7 +318,9 @@ NextGen-Core's caching can be broken up into two parts:
 Since NextGen-Core passes bears ``FileFactory`` objects to interface with
 files, ``FileFactory`` uses its own caching mechanism to ensure
 high performance I/O operations. Whenever a property is accessed the cached
-results are returned instead of loading the files again.
+results are returned instead of loading the files again. For more details check
+out the `IO docs
+<http://api.coala.io/en/latest/Developers/IO.html>`_ .
 
 The NextGen-Core's main caching mechanism is based on task objects. Bears can
 offload tasks via `generate_tasks()` which get executed by a Python pool.
