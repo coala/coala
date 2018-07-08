@@ -31,7 +31,7 @@ Python-Links
 rST-Links
 ---------
 
--   `Basic rST <http://www.sphinx-doc.org/en/latest/rest.html>`_
+-   `Basic rST <http://www.sphinx-doc.org/en/stable/rest.html>`_
 -   `Syntax <http://www.sphinx-doc.org/en/stable/markup/toctree.html#toctree-directive>`_
 
 coala-Links
