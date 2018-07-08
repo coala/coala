@@ -6,13 +6,18 @@ from coalib.parsing.DefaultArgParser import default_arg_parser
 from coalib.parsing.LineParser import LineParser
 from coalib.settings.Section import Section, append_to_sections
 
-
+def deprecate_settings(**depr_args):
+    """
+     >>> @deprecate_settings(comment_separators='comment_seperators')
+     :param depr_args: A dictionary of settings as keys and their deprecated
+                       names as values.
+    """
 def parse_cli(arg_list=None,
               origin=os.getcwd(),
               arg_parser=None,
               args=None,
               key_value_delimiters=('=', ':'),
-              comment_seperators=(),
+              comment_separators=(),
               key_delimiters=(',',),
               section_override_delimiters=('.',),
               key_value_append_delimiters=('+=',)):
@@ -28,7 +33,7 @@ def parse_cli(arg_list=None,
     :param key_value_delimiters:        Delimiters to separate key and value
                                         in setting arguments where settings are
                                         being defined.
-    :param comment_seperators:          Allowed prefixes for comments.
+    :param comment_separators:          Allowed prefixes for comments.
     :param key_delimiters:              Delimiter to separate multiple keys of
                                         a setting argument.
     :param section_override_delimiters: The delimiter to delimit the section
@@ -52,7 +57,7 @@ def parse_cli(arg_list=None,
     origin += os.path.sep
     sections = OrderedDict(cli=Section('cli'))
     line_parser = LineParser(key_value_delimiters,
-                             comment_seperators,
+                             comment_separators,
                              key_delimiters,
                              {},
                              section_override_delimiters,
