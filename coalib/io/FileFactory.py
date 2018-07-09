@@ -1,7 +1,7 @@
 import os
 
 from coala_utils.decorators import generate_eq
-from coalib.io.memoized_property import memoized_property
+from cached_property import cached_property
 
 
 @generate_eq('name', 'timestamp')
@@ -71,7 +71,6 @@ class FileFactory:
         """
         self._filename = os.path.abspath(filename)
         self._timestamp = os.path.getmtime(self._filename)
-        self.cache = {}
 
     def get_line(self, line):
         """
@@ -84,7 +83,7 @@ class FileFactory:
         """
         return self.lines[line]
 
-    @memoized_property
+    @cached_property
     def lines(self):
         """
         :return:
@@ -92,7 +91,7 @@ class FileFactory:
         """
         return tuple(self.string.splitlines())
 
-    @memoized_property
+    @cached_property
     def raw(self):
         """
         :return:
@@ -101,7 +100,7 @@ class FileFactory:
         with open(self._filename, 'rb') as fp:
             return fp.read()
 
-    @memoized_property
+    @cached_property
     def string(self):
         """
         :return:
