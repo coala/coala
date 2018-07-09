@@ -62,6 +62,7 @@ jobs:
 env:
   global:
     - PATH="$PATH:$TRAVIS_BUILD_DIR/node_modules/.bin"
+    - BEARS_ZIP_URL=https://codeload.github.com/coala/coala-bears/zip
 
 cache:
   pip: true
@@ -109,12 +110,8 @@ script:
   - py.test
   - python setup.py bdist_wheel
   - pip install ./dist/coala-*.whl
-  - pip install coala-bears[alldeps] --pre -U
-  # https://github.com/coala/coala-bears/issues/1037
-  - >
-    if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
-      sed -i.bak '/bears = GitCommitBear/d' .coafile
-    fi
+  - curl -fsSL -o coala-bears.zip $BEARS_ZIP_URL/master
+  - pip install coala-bears.zip[alldeps] --pre -U
   - coala --non-interactive
   - python setup.py docs
   - .ci/check_man.sh
