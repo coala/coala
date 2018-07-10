@@ -31,7 +31,7 @@ dependencies:
   - cli_helpers~=1.0.2
   - git+https://gitlab.com/coala/coala-utils#egg=coala_utils
   - colorlog>=2.7,<4.0
-  - dependency_management~=0.4.0
+  - git+https://gitlab.com/jayvdb/package_manager#egg=dependency_management
   - packaging>=16.8
   - Pygments~=2.1
   - PyPrint~=0.2.6
