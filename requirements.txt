@@ -1,7 +1,7 @@
 appdirs~=1.4
 cached_property~=1.4.3
 cli_helpers~=1.0.2
-coala_utils~=0.7.0
+git+https://gitlab.com/coala/coala-utils#egg=coala_utils
 colorlog>=2.7,<4.0
 dependency_management~=0.4.0
 packaging>=16.8
