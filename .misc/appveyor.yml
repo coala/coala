@@ -31,6 +31,12 @@ install:
 
   # Check that we have the expected version and architecture for Python
   - "python --version"
+
+  # See note in .travis.yml
+  - pip uninstall setuptools --yes
+  - python -m pip install pip==9 setuptools==21
+  - python .misc/check_setuptools.py
+
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
   - "%CMD_IN_ENV% python -m pip install -r requirements.txt \
     -r test-requirements.txt"
