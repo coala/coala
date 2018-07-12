@@ -43,7 +43,7 @@ class aspectclass(type):
         aspectname = subcls.__name__
         sub_qualname = '%s.%s' % (cls.__qualname__, aspectname)
 
-        docs = getattr(subcls, 'docs', None)
+        docs = getattr(subcls, 'Docs', None)
         aspectdocs = Documentation(subcls.__doc__, **{
             attr: getattr(docs, attr, '') for attr in
             list(signature(Documentation).parameters.keys())[1:]})

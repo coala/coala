@@ -128,7 +128,7 @@ class Result:
         self.aspect = aspect
         if self.aspect and not self.additional_info:
             self.additional_info = '{} {}'.format(
-                aspect.docs.importance_reason, aspect.docs.fix_suggestions)
+                aspect.Docs.importance_reason, aspect.Docs.fix_suggestions)
 
     @property
     def message(self):

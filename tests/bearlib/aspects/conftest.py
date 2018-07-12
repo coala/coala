@@ -50,13 +50,13 @@ def SubAspect_docs():
     """
     Docs definitions for an exclusive SubAspect class for unit tests.
     """
-    class docs:
+    class Docs:
         example = 'An example'
         example_language = 'The example language'
         importance_reason = 'The reason of importance'
         fix_suggestions = 'Suggestions for fixing'
 
-    return docs
+    return Docs
 
 
 @pytest.fixture
@@ -111,13 +111,13 @@ def SubSubAspect_docs():
     """
     Docs definitions for an exclusive SubSubAspect class for unit tests.
     """
-    class docs:
+    class Docs:
         example = 'An example'
         example_language = 'The example language'
         importance_reason = 'The reason of importance'
         fix_suggestions = 'Suggestions for fixing'
 
-    return docs
+    return Docs
 
 
 @pytest.fixture

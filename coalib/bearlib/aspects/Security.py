@@ -7,7 +7,7 @@ class Security:
     This aspects checks for code with flaws (or security weaknesses) in your
     codebase.
     """
-    class docs:
+    class Docs:
         example = """
         char buf[1024];
         ssizet_t len;

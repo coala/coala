@@ -8,7 +8,7 @@ class Root(aspectbase, metaclass=aspectclass):
 
     Define sub-aspectclasses with class-bound ``.subaspect`` decorator.
     Definition string is taken from doc-string of decorated class.
-    Remaining docs are taken from a nested ``docs`` class.
+    Remaining docs are taken from a nested ``Docs`` class.
     Tastes are defined as class attributes that are instances of
     :class:`coalib.bearlib.aspects.Taste`.
 
@@ -19,7 +19,7 @@ class Root(aspectbase, metaclass=aspectclass):
     ...     \"""
     ...     A parent aspect for code formatting aspects...
     ...     \"""
-    ...     class docs:
+    ...     class Docs:
     ...        example = "..."
     ...        example_language = "..."
     ...        importance_reason = "..."
@@ -32,7 +32,7 @@ class Root(aspectbase, metaclass=aspectclass):
     ...     \"""
     ...     This aspect controls the length of a line...
     ...     \"""
-    ...     class docs:
+    ...     class Docs:
     ...        example = "..."
     ...        example_language = "..."
     ...        importance_reason = "..."
@@ -79,7 +79,7 @@ class Root(aspectbase, metaclass=aspectclass):
     ...     \"""
     ...     This aspect controls the greatness of a file...
     ...     \"""
-    ...     class docs:
+    ...     class Docs:
     ...        example = "..."
     ...        example_language = "..."
     ...        importance_reason = "..."

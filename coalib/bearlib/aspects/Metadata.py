@@ -7,7 +7,7 @@ class Metadata:
     This describes any aspect that is related to metadata that is not
     inside your source code.
     """
-    class docs:
+    class Docs:
         example = """
         Commit message, commit message shortlog, commit message body, etc...
         """
@@ -28,7 +28,7 @@ class CommitMessage:
     """
     Your commit message the documentation associated with your source code.
     """
-    class docs:
+    class Docs:
         example = 'YapfBear: Add `YapfBear`'
         example_language = 'English'
         importance_reason = """
@@ -50,7 +50,7 @@ class Emptiness:
     Your commit message serves as important documentation for your source
     code.
     """
-    class docs:
+    class Docs:
         example = '(no text at all)'
         example_language = 'English'
         importance_reason = """
@@ -65,7 +65,7 @@ class Shortlog:
     """
     Your commit shortlog is the first line of your commit message.
     """
-    class docs:
+    class Docs:
         example = """
         FIX: Describe change further
         """
@@ -85,7 +85,7 @@ class ColonExistence:
     Some projects force to use colons in the commit message shortlog
     (first line).
     """
-    class docs:
+    class Docs:
         example = """
         FIX: Describe change further
         context: Describe change further
@@ -112,7 +112,7 @@ class TrailingPeriod:
     Some projects force not to use trailing periods in the commit
     message shortlog (first line).
     """
-    class docs:
+    class Docs:
         example = """
         Describe change.
         Describe change
@@ -138,7 +138,7 @@ class Tense:
     Most projects have a convention on which tense to use in the commit
     shortlog (the first line of the commit message).
     """
-    class docs:
+    class Docs:
         example = """
         Add file
         Adding file
@@ -163,7 +163,7 @@ class Length:
     """
     The length of your commit message shortlog (first line).
     """
-    class docs:
+    class Docs:
         example = """
         Some people just write very long commit messages. Too long. "
         Even full sentences. And more of them, too!
@@ -197,7 +197,7 @@ class FirstCharacter:
     If the commit message contains a colon, only the first character after
     the colon will be checked.
     """
-    class docs:
+    class Docs:
         example = """
         Add coverage pragma
         Compatability: Add coverage pragma
@@ -225,7 +225,7 @@ class Body:
     """
     Your commit body may contain an elaborate description of your commit.
     """
-    class docs:
+    class Docs:
         example = """
         CI: Revert requests breakage workaround
 
@@ -254,7 +254,7 @@ class Existence:
     """
     Forces the commit message body to exist (nonempty).
     """
-    class docs:
+    class Docs:
         example = """
         aspects: Add CommitMessage.Body
         """
@@ -273,7 +273,7 @@ class Length:
     """
     The length of your commit message body lines.
     """
-    class docs:
+    class Docs:
         example = """
         Some people just write very long commit messages. Too long.
         Way too much actually. If they would just break their lines!

@@ -6,7 +6,7 @@ class Spelling:
     """
     How words should be written.
     """
-    class docs:
+    class Docs:
         example = """
         'Tihs si surly som incoreclt speling.
         `Coala` is always written with a lowercase `c`.
@@ -26,7 +26,7 @@ class DictionarySpelling:
     """
     Valid language's words spelling.
     """
-    class docs:
+    class Docs:
         example = """
         This is toatly wonrg.
         """
@@ -48,7 +48,7 @@ class OrgSpecificWordSpelling:
     """
     Organisations like coala specified words' spelling.
     """
-    class docs:
+    class Docs:
         example = """
         `Coala` is always written with a lower case c, also at the beginning
         of the sentence.

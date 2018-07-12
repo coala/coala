@@ -7,7 +7,7 @@ class Redundancy:
     """
     This aspect describes redundancy in your source code.
     """
-    class docs:
+    class Docs:
         example = """
         int foo(int iX)
         {
@@ -31,7 +31,7 @@ class Clone:
     Code clones are multiple pieces of source code in your
     codebase that are very similar.
     """
-    class docs:
+    class Docs:
         example = """
         extern int array_a[];
         extern int array_b[];
@@ -87,7 +87,7 @@ class UnusedImport:
     >>> UnusedImport.remove_non_standard_import.default
     True
     """
-    class docs:
+    class Docs:
         example = """
         import sys
         import os
@@ -118,7 +118,7 @@ class UnreachableCode:
     Unreachable code, sometimes called dead code, is source code that
     can never be executed during the program execution.
     """
-    class docs:
+    class Docs:
         example = """
         def func():
             return True
@@ -145,7 +145,7 @@ class UnusedFunction:
     An unused function is a function that is never called during
     code execution.
     """
-    class docs:
+    class Docs:
         example = """
         def func():
             pass
@@ -171,7 +171,7 @@ class UnreachableStatement:
     An unreachable statement is a statement that is never executed
     during code execution.
     """
-    class docs:
+    class Docs:
         example = """
         def func():
             return True
@@ -197,7 +197,7 @@ class UnusedVariable:
     """
     Unused variables are declared but never used.
     """
-    class docs:
+    class Docs:
         example = """
         a = {}
         print ('coala')
@@ -217,7 +217,7 @@ class UnusedParameter:
     """
     Unused parameters are functions arguments which are never used.
     """
-    class docs:
+    class Docs:
         example = """
         def func(a):
             pass
@@ -237,7 +237,7 @@ class UnusedLocalVariable:
     """
     These are variable which are defined locally but never used.
     """
-    class docs:
+    class Docs:
         example = """
         def func():
             for i in range (5):
@@ -258,7 +258,7 @@ class UnusedGlobalVariable:
     """
     These are variable which have a global scope but are never used.
     """
-    class docs:
+    class Docs:
         example = """
         a = 0
         for i in range (5):

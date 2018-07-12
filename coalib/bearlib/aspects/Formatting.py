@@ -6,7 +6,7 @@ class Formatting:
     """
     The visual appearance of source code.
     """
-    class docs:
+    class Docs:
         example = """
         # Here is an example of Python code with lots of
         # formatting issues including: trailing spaces, missing spaces
@@ -34,7 +34,7 @@ class Length:
     """
     Hold sub-aspects for file and line length.
     """
-    class docs:
+    class Docs:
         example = """
         # We assume that the maximum number of characters per line is 10
         # and that the maximum number of lines per files is 3.
@@ -59,7 +59,7 @@ class LineLength:
     """
     Number of characters found in a line of code.
     """
-    class docs:
+    class Docs:
         example = """
         print('The length of this line is 38')
         """
@@ -82,7 +82,7 @@ class FileLength:
     """
     Number of lines found in a file.
     """
-    class docs:
+    class Docs:
         example = """
         # This file would be a large file if we assume that the max number of
         # lines per file is 10
@@ -114,7 +114,7 @@ class Spacing:
     """
     All whitespace found between non-whitespace characters.
     """
-    class docs:
+    class Docs:
         example = """
         # Here is an example of code with spacing issues including
         # unnecessary blank lines and missing space around operators.
@@ -138,7 +138,7 @@ class Indentation:
     """
     Spaces/tabs used before blocks of code to convey a program's structure.
     """
-    class docs:
+    class Docs:
         example = """
         # If this code was written on an editor that defined a tab as 2
         # spaces, mixing tabs and spaces would look like this on a different
@@ -176,7 +176,7 @@ class TrailingSpace:
     character on the line until the newline. This includes tabs "\\\\t",
     blank lines, blanks etc.
     """
-    class docs:
+    class Docs:
         example = """
         def func( a ):
               pass
@@ -199,7 +199,7 @@ class BlankLine:
     """
     A line with zero characters.
     """
-    class docs:
+    class Docs:
         example = """
         name = input('What is your name?')
 
@@ -224,7 +224,7 @@ class BlankLineAfterDeclaration:
     """
     Those found after declarations.
     """
-    class docs:
+    class Docs:
         example = """
         #include <stdio.h>
 
@@ -258,7 +258,7 @@ class BlankLineAfterProcedure:
     """
     Those found after procedures or functions.
     """
-    class docs:
+    class Docs:
         example = """
         #include <stdio.h>
 
@@ -288,7 +288,7 @@ class BlankLineAfterClass:
     """
     Those found after classes' definitions.
     """
-    class docs:
+    class Docs:
         example = """
         class SomeClass:
             def __init__(self):
@@ -315,7 +315,7 @@ class NewlineAtEOF:
     """
     Newline character (usually '\\\\n', aka CR) found at the end of file.
     """
-    class docs:
+    class Docs:
         example = """
         def do_nothing():
             pass
@@ -344,7 +344,7 @@ class SpacesAroundOperator:
     """
     Spacing around operators.
     """
-    class docs:
+    class Docs:
         example = """
         def f(a, x):
             return 37+a[42 -  x]
@@ -374,7 +374,7 @@ class Quotation:
     """
     Quotation mark used for strings and docstrings.
     """
-    class docs:
+    class Docs:
         example = """
         # Here is an example of code where both '' and "" quotation mark
         # Are used.
