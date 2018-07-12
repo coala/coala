@@ -515,8 +515,8 @@ class BearDownloadTest(BearTestBase):
         super().setUp()
         self.mock_url = 'https://test.com'
         self.filename = 'test.html'
-        self.teapot_url = 'https://httpstat.us/418'
-        # https://www.google.com/teapot and
+        self.teapot_url = 'https://www.google.com/teapot'
+        # 'https://httpstat.us/418' and
         # http://httpbin.org/status/418 also work
         self.file_location = join(self.uut.data_dir, self.filename)
 

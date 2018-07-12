@@ -76,7 +76,7 @@ class BearTest(unittest.TestCase):
 
     def setUp(self):
         super().setUp()
-        self.teapot_url = 'https://httpstat.us/418'
+        self.teapot_url = 'https://www.google.com/teapot'
 
     def tearDown(self):
         defined_bears = [
