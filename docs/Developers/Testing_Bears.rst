@@ -24,8 +24,9 @@ Let us understand how to write tests for ``TooManyLinesBear`` in ``some_dir``.
 
     class TooManyLinesBear(LocalBear):
 
-        def run(file,
+        def run(self,
                 filename,
+                file,
                 max_number_of_lines: int=10):
             """
             Detects if a file has more than ``max_number_of_lines`` lines.
