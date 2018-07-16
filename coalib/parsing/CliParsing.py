@@ -6,13 +6,14 @@ from coalib.parsing.DefaultArgParser import default_arg_parser
 from coalib.parsing.LineParser import LineParser
 from coalib.settings.Section import Section, append_to_sections
 
+
 def deprecate_settings(**depr_args):
     """
-    >>> @deprecate_settings(new='old')
-    >>> @deprecate_settings(comment_separators='comment_seperators')
+        @deprecate_settings(comment_separators='comment_seperators')
 
-    :param depr_args: A dictionary of settings as keys and their deprecated as values
-    """
+     """
+
+
 def parse_cli(arg_list=None,
               origin=os.getcwd(),
               arg_parser=None,
