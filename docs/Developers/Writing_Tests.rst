@@ -71,7 +71,7 @@ The basic declaration for a test suite class is as follows:
 
 You should derive your test suite from ``unittest.TestCase`` to have
 access to the ``setUp()`` and ``tearDown()`` functions (covered in
-section below: **``setUp()`` and ``tearDown()``**) and also to the
+section below: **setUp() and tearDown()**) and also to the
 assertion functions.
 
 Now to the test cases: To implement a test case, just declare a class
