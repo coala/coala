@@ -127,4 +127,10 @@ def check_conflicts(sections):
             ArgumentParser().error(
                 "'output' or 'relpath' cannot be used without `--json`.")
 
+        if (
+                section.get('json', False) and
+                (str(section.get('format', ''))) != ''):
+            ArgumentParser().error('do not use --format and --json at ' +
+                                   'the same time')
+
     return True
