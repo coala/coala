@@ -75,7 +75,9 @@ def get_results(local_bear,
                 force_linebreaks=True,
                 create_tempfile=True,
                 tempfile_kwargs={},
-                settings={}):
+                settings={},
+                aspects=None,
+                ):
     if local_bear.BEAR_DEPS:
         # Get results of bear's dependencies first
         deps_results = dict()
@@ -87,7 +89,9 @@ def get_results(local_bear,
                                                   force_linebreaks,
                                                   create_tempfile,
                                                   tempfile_kwargs,
-                                                  settings)
+                                                  settings,
+                                                  aspects,
+                                                  )
     else:
         deps_results = None
 
@@ -141,7 +145,9 @@ class LocalBearTestHelper(unittest.TestCase):
                        force_linebreaks=True,
                        create_tempfile=True,
                        tempfile_kwargs={},
-                       settings={}):
+                       settings={},
+                       aspects=None,
+                       ):
         """
         Asserts that a check of the given lines with the given local bear
         either yields or does not yield any results.
@@ -154,6 +160,8 @@ class LocalBearTestHelper(unittest.TestCase):
                                  if needed. (Bears expect a \\n for every line)
         :param create_tempfile:  Whether to save lines in tempfile if needed.
         :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
+        :param aspects:          A list of aspect objects along with the name
+                                 and value of their respective tastes.
         """
         if valid:
             self.check_results(local_bear, lines,
@@ -163,6 +171,7 @@ class LocalBearTestHelper(unittest.TestCase):
                                create_tempfile=create_tempfile,
                                tempfile_kwargs=tempfile_kwargs,
                                settings=settings,
+                               aspects=aspects,
                                )
         else:
             return self.check_invalidity(local_bear, lines,
@@ -171,6 +180,7 @@ class LocalBearTestHelper(unittest.TestCase):
                                          create_tempfile=create_tempfile,
                                          tempfile_kwargs=tempfile_kwargs,
                                          settings=settings,
+                                         aspects=aspects,
                                          )
 
     def check_invalidity(self,
@@ -180,7 +190,9 @@ class LocalBearTestHelper(unittest.TestCase):
                          force_linebreaks=True,
                          create_tempfile=True,
                          tempfile_kwargs={},
-                         settings={}):
+                         settings={},
+                         aspects=None,
+                         ):
         """
         Asserts that a check of the given lines with the given local bear
         yields results.
@@ -192,6 +204,8 @@ class LocalBearTestHelper(unittest.TestCase):
                                  if needed. (Bears expect a \\n for every line)
         :param create_tempfile:  Whether to save lines in tempfile if needed.
         :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp().
+        :param aspects:          A list of aspect objects along with the name
+                                 and value of their respective tastes.
         """
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
@@ -207,6 +221,7 @@ class LocalBearTestHelper(unittest.TestCase):
                                   create_tempfile=create_tempfile,
                                   tempfile_kwargs=tempfile_kwargs,
                                   settings=settings,
+                                  aspects=aspects,
                                   )
         msg = ("The local bear '{}' yields no result although it "
                'should.'.format(local_bear.__class__.__name__))
@@ -222,7 +237,9 @@ class LocalBearTestHelper(unittest.TestCase):
                       force_linebreaks=True,
                       create_tempfile=True,
                       tempfile_kwargs={},
-                      settings={}):
+                      settings={},
+                      aspects=None,
+                      ):
         """
         Asserts that a check of the given lines with the given local bear does
         yield exactly the given results.
@@ -241,6 +258,8 @@ class LocalBearTestHelper(unittest.TestCase):
         :param settings:         A dictionary of keys and values (both strings)
                                  from which settings will be created that will
                                  be made available for the tested bear.
+        :param aspects:          A list of aspect objects along with the name
+                                 and value of their respective tastes.
         """
         assert isinstance(self, unittest.TestCase)
         self.assertIsInstance(local_bear,
@@ -258,7 +277,9 @@ class LocalBearTestHelper(unittest.TestCase):
                                   force_linebreaks=force_linebreaks,
                                   create_tempfile=create_tempfile,
                                   tempfile_kwargs=tempfile_kwargs,
-                                  settings=settings)
+                                  settings=settings,
+                                  aspects=aspects,
+                                  )
         if not check_order:
             self.assertComparableObjectsEqual(
                 sorted(bear_output), sorted(results))
@@ -275,7 +296,9 @@ class LocalBearTestHelper(unittest.TestCase):
                                 force_linebreaks=True,
                                 create_tempfile=True,
                                 tempfile_kwargs={},
-                                settings={}):
+                                settings={},
+                                aspects=None,
+                                ):
         """
         Check many results for each line.
 
@@ -290,6 +313,8 @@ class LocalBearTestHelper(unittest.TestCase):
         :param settings:         A dictionary of keys and values (both strings)
                                  from which settings will be created that will
                                  be made available for the tested bear.
+        :param aspects:          A list of aspect objects along with the name
+                                 and value of their respective tastes.
         """
 
         modified_lines = []
@@ -305,7 +330,9 @@ class LocalBearTestHelper(unittest.TestCase):
                                       force_linebreaks=force_linebreaks,
                                       create_tempfile=create_tempfile,
                                       tempfile_kwargs=tempfile_kwargs,
-                                      settings=settings)
+                                      settings=settings,
+                                      aspects=aspects,
+                                      )
             self.assertEqual(num, len(bear_output))
 
 
@@ -314,6 +341,7 @@ def verify_local_bear(bear,
                       invalid_files,
                       filename=None,
                       settings={},
+                      aspects=None,
                       force_linebreaks=True,
                       create_tempfile=True,
                       timeout=None,
@@ -334,6 +362,8 @@ def verify_local_bear(bear,
     :param settings:         A dictionary of keys and values (both string) from
                              which settings will be created that will be made
                              available for the tested bear.
+    :param aspects:          A list of aspect objects along with the name
+                             and value of their respective tastes.
     :param force_linebreaks: Whether to append newlines at each line
                              if needed. (Bears expect a \\n for every line)
     :param create_tempfile:  Whether to save lines in tempfile if needed.
@@ -352,6 +382,8 @@ def verify_local_bear(bear,
                             queue.Queue())
             for name, value in settings.items():
                 self.section.append(Setting(name, value))
+            if aspects:
+                self.section.aspects = aspects
 
         def test_valid_files(self):
             self.assertIsInstance(valid_files, (list, tuple))
