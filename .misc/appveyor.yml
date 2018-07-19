@@ -17,6 +17,9 @@ environment:
 
 cache:
   - "C:\\pip_cache"
+  - "node_modules"
+  - "C:\\Users\\appveyor\\AppData\\Local\\coala-bears\\coala-bears"
+  - "C:\\Users\\appveyor\\AppData\\Roaming\\nltk_data"
 
 branches:
   except:
@@ -32,14 +35,22 @@ install:
   # Check that we have the expected version and architecture for Python
   - "python --version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
+  - "%CMD_IN_ENV% python -m pip install --upgrade setuptools==21"
   - "%CMD_IN_ENV% python -m pip install -r requirements.txt \
-    -r test-requirements.txt"
+    -r test-requirements.txt -r docs-requirements.txt"
 
 build: false  # Not a C# project, build stuff at the test step instead.
 
 test_script:
   - "%CMD_IN_ENV% py.test"
   - "%CMD_IN_ENV% python setup.py install"
+  - "%CMD_IN_ENV% python -m pip install \
+    git+https://github.com/coala/coala-bears"
+  - npm install csslint -g
+  # https://github.com/coala/coala/issues/5619
+  - rm docs/Developers/coala_settings.rst
+  - sed -i '/ShellCheckBear/d' .coafile
+  - "%CMD_IN_ENV% coala --ci"
 
 on_success:
   - codecov
