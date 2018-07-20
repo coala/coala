@@ -36,8 +36,7 @@ from coalib.settings.Setting import Setting
 from coala_utils.string_processing.Core import join_names
 
 from pygments import highlight
-from pygments.formatters import (TerminalTrueColorFormatter,
-                                 TerminalFormatter)
+from pygments.formatters import TerminalTrueColorFormatter
 from pygments.filters import VisibleWhitespaceFilter
 from pygments.lexers import TextLexer, get_lexer_for_filename
 from pygments.style import Style
