@@ -369,6 +369,10 @@ def get_all_bears_names():
     return [bear.name for bear in get_all_bears()]
 
 
+def _argcomplete_bears_names(*args, **kwargs):
+    return get_all_bears_names()
+
+
 def get_all_languages(include_unknown=False):
     """
     Get a ``tuple`` of all language instances supported by coala.

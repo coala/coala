@@ -2,8 +2,11 @@ import argparse
 import os
 
 from coalib.misc import Constants
-from coalib.collecting.Collectors import get_all_bears_names
 from coalib.parsing.filters import available_filters
+
+# argcomplete is a delayed optional import
+# This variable may be None, the module, or False
+argcomplete = None
 
 
 class CustomFormatter(argparse.RawDescriptionHelpFormatter):
@@ -154,10 +157,9 @@ To run coala without user interaction, run the `coala --non-interactive`,
 
     inputs_group = arg_parser.add_argument_group('Inputs')
 
-    inputs_group.add_argument(
+    bears = inputs_group.add_argument(
         '-b', '--bears', nargs='+', metavar='NAME',
-        help='names of bears to use').completer = (
-            lambda *args, **kwargs: get_all_bears_names())  # pragma: no cover
+        help='names of bears to use')
 
     inputs_group.add_argument(
         '-f', '--files', type=PathArg, nargs='+', metavar='FILE',
@@ -279,12 +281,23 @@ To run coala without user interaction, run the `coala --non-interactive`,
              'on unexpected internal exceptions '
              '(implies --verbose)')
 
-    try:
-        # Auto completion should be optional, because of somewhat complicated
-        # setup.
-        import argcomplete
-        argcomplete.autocomplete(arg_parser)
-    except ImportError:  # pragma: no cover
-        pass
+    global argcomplete
+    if argcomplete is None:
+        try:
+            # Auto completion should be optional, because of somewhat
+            # complicated setup.
+            import argcomplete
+            argcomplete.autocomplete(arg_parser)
+        except ImportError:
+            argcomplete = False
+
+        if argcomplete:
+            try:
+                from coalib.collecting.Collectors import (
+                    _argcomplete_bears_names)
+            except ImportError:
+                pass
+            else:
+                bears.completer = _argcomplete_bears_names
 
     return arg_parser
