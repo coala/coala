@@ -242,8 +242,8 @@ class Session:
         bears_without_tasks = []
 
         for bear in bears:
-            if self.dependency_tracker.get_dependencies(
-                    bear):  # pragma: no cover
+            always_false = bool(self.dependency_tracker.get_dependencies(bear))
+            if always_false is True:
                 logging.warning(
                     'Dependencies for {!r} not yet resolved, holding back. '
                     'This should not happen, the dependency tracking system '
@@ -315,8 +315,8 @@ class Session:
         if not self.running_futures:
             # Check the DependencyTracker additionally for remaining
             # dependencies.
-            resolved = self.dependency_tracker.are_dependencies_resolved
-            if not resolved:  # pragma: no cover
+            always_false = not self.dependency_tracker.are_dependencies_resolved
+            if always_false is True:
                 logging.warning(
                     'Core finished with run, but it seems some dependencies '
                     'were unresolved: {}. Ignoring them, but this is a bug, '
