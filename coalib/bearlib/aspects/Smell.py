@@ -1,4 +1,4 @@
-from coalib.bearlib.aspects import Taste, Root
+﻿from coalib.bearlib.aspects import Taste, Root
 
 
 @Root.subaspect
@@ -449,7 +449,7 @@ class FeatureEnvy:
                 return unformattedNumber.substring(6,10);
             }
         }
-        public class Customer…
+        public class Customer{
             private Phone mobilePhone;
             public String getMobilePhoneNumber() {
                 return "(" +
