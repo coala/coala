@@ -89,7 +89,7 @@ def run_coala(console_printer=None,
                                     `force_show_patch` will be ignored.
     :param force_show_patch:        If set to True, a patch will be always
                                     shown. (Using ApplyPatchAction.)
-    :param arg_parser:              Instance of ArgParser that is used to parse
+    :param arg_parser:              Instance of ArgumentParser that is used to parse
                                     non-setting arguments.
     :param arg_list:                The CLI argument list.
     :param args:                    Alternative pre-parsed CLI arguments.
