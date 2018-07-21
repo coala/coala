@@ -18,7 +18,7 @@ from coalib.collecting.Collectors import (
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.settings.Section import Section
-from tests.TestUtilities import bear_test_module
+from tests.TestUtilities import bear_test_module, TEST_BEAR_NAMES
 
 
 class CollectFilesTest(unittest.TestCase):
@@ -387,20 +387,7 @@ class CollectorsTests(unittest.TestCase):
                 assert issubclass(bear, Bear)
             self.assertSetEqual(
                 {b.name for b in bears},
-                {'DependentBear',
-                 'EchoBear',
-                 'LineCountTestBear',
-                 'JavaTestBear',
-                 'SpaceConsistencyTestBear',
-                 'TestBear',
-                 'ErrorTestBear',
-                 'RaiseTestBear',
-                 'TestDepBearA',
-                 'TestDepBearBDependsA',
-                 'TestDepBearCDependsB',
-                 'TestDepBearAA',
-                 'AspectTestBear',
-                 'TestDepBearDependsAAndAA'})
+                set(TEST_BEAR_NAMES))
 
     def test_get_all_bears_names(self):
         with bear_test_module():
@@ -408,17 +395,4 @@ class CollectorsTests(unittest.TestCase):
             assert isinstance(names, list)
             self.assertSetEqual(
                 set(names),
-                {'DependentBear',
-                 'EchoBear',
-                 'LineCountTestBear',
-                 'JavaTestBear',
-                 'SpaceConsistencyTestBear',
-                 'TestBear',
-                 'ErrorTestBear',
-                 'RaiseTestBear',
-                 'TestDepBearA',
-                 'TestDepBearBDependsA',
-                 'TestDepBearCDependsB',
-                 'TestDepBearAA',
-                 'AspectTestBear',
-                 'TestDepBearDependsAAndAA'})
+                set(TEST_BEAR_NAMES))

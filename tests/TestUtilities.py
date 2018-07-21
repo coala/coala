@@ -5,10 +5,28 @@ import unittest.mock
 
 from coala_utils.ContextManagers import retrieve_stdout, retrieve_stderr
 
-TEST_BEARS_COUNT = 14
+# This list is sorted alphabetically
+TEST_BEAR_NAMES = (
+    'AspectTestBear',
+    'DependentBear',
+    'EchoBear',
+    'ErrorTestBear',
+    'JavaTestBear',
+    'LineCountTestBear',
+    'RaiseTestBear',
+    'SpaceConsistencyTestBear',
+    'TestBear',
+    'TestDepBearA',
+    'TestDepBearAA',
+    'TestDepBearBDependsA',
+    'TestDepBearCDependsB',
+    'TestDepBearDependsAAndAA',
+)
+
+TEST_BEARS_COUNT = len(TEST_BEAR_NAMES)
 
 # This list is sorted by filename of the bears, then name within the modules
-TEST_BEAR_NAMES = [
+TEST_BEAR_NAME_REPRS = [
     "<class 'AspectTestBear.AspectTestBear'>",
     "<ErrorTestBear linter class (wrapping 'I_do_not_exist')>",
     "<class 'JavaTestBear.JavaTestBear'>",

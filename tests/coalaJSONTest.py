@@ -10,6 +10,7 @@ from coala_utils.ContextManagers import prepare_file
 from tests.TestUtilities import (
     bear_test_module,
     execute_coala,
+    TEST_BEAR_NAMES,
     TEST_BEARS_COUNT,
 )
 
@@ -77,20 +78,7 @@ class coalaJSONTest(unittest.TestCase):
             self.assertEqual(len(output['bears']), TEST_BEARS_COUNT)
             self.assertFalse(stderr)
             self.assertEqual(output,
-                             {'bears': ['AspectTestBear',
-                                        'DependentBear',
-                                        'EchoBear',
-                                        'ErrorTestBear',
-                                        'JavaTestBear',
-                                        'LineCountTestBear',
-                                        'RaiseTestBear',
-                                        'SpaceConsistencyTestBear',
-                                        'TestBear',
-                                        'TestDepBearA',
-                                        'TestDepBearAA',
-                                        'TestDepBearBDependsA',
-                                        'TestDepBearCDependsB',
-                                        'TestDepBearDependsAAndAA']})
+                             {'bears': list(TEST_BEAR_NAMES)})
 
     def test_show_language_bears(self):
         with bear_test_module():
