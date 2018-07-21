@@ -220,8 +220,8 @@ def load_configuration(arg_list,
 
     :param arg_list:    The list of CLI arguments.
     :param log_printer: The LogPrinter object for logging.
-    :param arg_parser:  An ``argparse.ArgumentParser`` instance used for
-                        parsing the CLI arguments.
+    :param arg_parser:  An ``argparse.ArgumentParser`` instance
+                        used for parsing the CLI arguments.
     :param args:        Alternative pre-parsed CLI arguments.
     :param silent:      Whether or not to display warnings, ignored if ``save``
                         is enabled.
@@ -402,7 +402,7 @@ def get_all_bears(log_printer=None,
                   bear_globs=('**',)):
     """
     :param log_printer: The log_printer to handle logging.
-    :param arg_parser:  An ``ArgumentParser`` object.
+    :param arg_parser:  An ``argparse.ArgumentParser`` object.
     :param silent:      Whether or not to display warnings.
     :param bear_globs:  List of glob patterns.
     :return:            Tuple containing dictionaries of local bears
@@ -423,7 +423,7 @@ def get_filtered_bears(languages,
     """
     :param languages:   List of languages.
     :param log_printer: The log_printer to handle logging.
-    :param arg_parser:  An ``ArgumentParser`` object.
+    :param arg_parser:  An ``argparse.ArgumentParser`` object.
     :param silent:      Whether or not to display warnings.
     :return:            Tuple containing dictionaries of local bears
                         and global bears.
@@ -469,8 +469,8 @@ def gather_configuration(acquire_settings,
     :param log_printer:      The log printer to use for logging. The log level
                              will be adjusted to the one given by the section.
     :param arg_list:         CLI args to use
-    :param arg_parser:       Instance of ArgumentParser that is used to parse
-                             none-setting arguments.
+    :param arg_parser:       Instance of argparse.ArgumentParser that is
+                             used to parse none-setting arguments.
     :param args:             Alternative pre-parsed CLI arguments.
     :return:                 A tuple with the following contents:
 
