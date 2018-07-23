@@ -405,7 +405,7 @@ def get_all_bears(log_printer=None,
     :param arg_parser:  An ``ArgParser`` object.
     :param silent:      Whether or not to display warnings.
     :param bear_globs:  List of glob patterns.
-    :return:            Tuple containing dictionaries of local bears
+    :return:            Tuple containing dictionaries of unsorted local
                         and global bears.
     """
     sections, _ = load_configuration(arg_list=None,
@@ -425,7 +425,7 @@ def get_filtered_bears(languages,
     :param log_printer: The log_printer to handle logging.
     :param arg_parser:  An ``ArgParser`` object.
     :param silent:      Whether or not to display warnings.
-    :return:            Tuple containing dictionaries of local bears
+    :return:            Tuple containing dictionaries of unsorted local
                         and global bears.
     """
     local_bears, global_bears = get_all_bears(arg_parser=arg_parser,
