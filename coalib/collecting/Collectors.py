@@ -212,7 +212,8 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer=None,
     :param warn_if_unused_glob: True if warning message should be shown if a
                                 glob didn't give any bears.
     :return:                    Tuple of list of matching bear classes based on
-                                kind. The lists are in the same order as kinds.
+                                kind. The lists are in the same order as kinds
+                                and not sorted based upon bear name.
     """
     bears_found = tuple([] for i in range(len(kinds)))
     bear_globs_with_bears = set()
@@ -276,7 +277,8 @@ def collect_bears_by_aspects(aspects, kinds):
     :param aspects: An AspectList that need to be covered.
     :param kinds:   List of bear kinds to be collected.
     :return:        Tuple of list of bear classes based on kind. The lists are
-                    in the same order as kinds.
+                    in the same order as kinds and not sorted based upon bear
+                    name.
     """
     all_bears = get_all_bears()
     bears_found = tuple([] for i in range(len(kinds)))
@@ -332,7 +334,7 @@ def filter_capabilities_by_languages(bears, languages):
 
 def get_all_bears():
     """
-    Get a ``list`` of all available bears.
+    Get an unsorted ``list`` of all available bears.
     """
     from coalib.settings.Section import Section
     local_bears, global_bears = collect_bears(
@@ -345,7 +347,7 @@ def get_all_bears():
 
 def get_all_bears_names():
     """
-    Get a ``list`` of names of all available bears.
+    Get an unsorted ``list`` of names of all available bears.
     """
     return [bear.name for bear in get_all_bears()]
 
@@ -359,8 +361,8 @@ def collect_all_bears_from_sections(sections,
     :param sections:    List of sections so bear_dirs are taken into account
     :param log_printer: Log_printer to handle logging
     :param bear_globs:  List of glob patterns.
-    :return:            Tuple of dictionaries of local and global bears.
-                        The dictionary key is section class and
+    :return:            Tuple of dictionaries of unsorted local and
+                        global bears. The dictionary key is section class and
                         dictionary value is a list of Bear classes
     """
     local_bears = {}
