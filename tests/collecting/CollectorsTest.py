@@ -400,7 +400,8 @@ class CollectorsTests(unittest.TestCase):
                  'TestDepBearCDependsB',
                  'TestDepBearAA',
                  'AspectTestBear',
-                 'TestDepBearDependsAAndAA'})
+                 'TestDepBearDependsAAndAA',
+                 'AnnotationsTestBear'})
 
     def test_get_all_bears_names(self):
         with bear_test_module():
@@ -421,4 +422,5 @@ class CollectorsTests(unittest.TestCase):
                  'TestDepBearCDependsB',
                  'TestDepBearAA',
                  'AspectTestBear',
-                 'TestDepBearDependsAAndAA'})
+                 'TestDepBearDependsAAndAA',
+                 'AnnotationsTestBear'})

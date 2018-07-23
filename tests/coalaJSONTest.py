@@ -77,7 +77,8 @@ class coalaJSONTest(unittest.TestCase):
             self.assertEqual(len(output['bears']), TEST_BEARS_COUNT)
             self.assertFalse(stderr)
             self.assertEqual(output,
-                             {'bears': ['AspectTestBear',
+                             {'bears': ['AnnotationsTestBear',
+                                        'AspectTestBear',
                                         'DependentBear',
                                         'EchoBear',
                                         'ErrorTestBear',
