@@ -25,6 +25,43 @@ TEST_BEAR_NAMES = (
 
 TEST_BEARS_COUNT = len(TEST_BEAR_NAMES)
 
+# This list is sorted alphabetically
+LANGUAGE_NAMES = [
+    'C',
+    'C#',
+    'CPP',
+    'CSS',
+    'Fortran',
+    'Golang',
+    'Hypertext Markup Language 2.0, 3.2, 4.0, 4.1, 5, 5.1',
+    'Java',
+    'JavaScript',
+    'JavaServer Pages',
+    'Jinja2',
+    'Markdown',
+    'Matlab',
+    'ObjectiveC',
+    'PHP',
+    'PLSQL',
+    'PowerShell',
+    'Python 2.7, 3.3, 3.4, 3.5, 3.6',
+    'Ruby',
+    'Scala',
+    'Shell',
+    'Swift',
+    'Tcl',
+    'TypeScript',
+    'Vala',
+    'VisualBasic',
+    'm4',
+]
+
+LANGUAGE_COUNT = len([
+     language_file[: -3] for language_file in
+     os.listdir('coalib/bearlib/languages/definitions/')
+     if language_file.endswith('.py') and language_file != '__init__.py'
+     and language_file != 'Unknown.py'])
+
 # This list is sorted by filename of the bears, then name within the modules
 TEST_BEAR_NAME_REPRS = [
     "<class 'AspectTestBear.AspectTestBear'>",

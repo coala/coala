@@ -14,11 +14,16 @@ from coalib.bears.Bear import Bear
 from coalib.collecting.Collectors import (
     collect_all_bears_from_sections, collect_bears, collect_dirs, collect_files,
     collect_registered_bears_dirs, filter_section_bears_by_languages,
-    get_all_bears, get_all_bears_names, collect_bears_by_aspects)
+    get_all_bears, get_all_bears_names, collect_bears_by_aspects,
+    get_all_languages,
+    )
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.settings.Section import Section
-from tests.TestUtilities import bear_test_module, TEST_BEAR_NAMES
+from tests.TestUtilities import (
+    bear_test_module, TEST_BEAR_NAMES, LANGUAGE_NAMES,
+    LANGUAGE_COUNT,
+)
 
 
 class CollectFilesTest(unittest.TestCase):
@@ -396,3 +401,23 @@ class CollectorsTests(unittest.TestCase):
             self.assertSetEqual(
                 set(names),
                 set(TEST_BEAR_NAMES))
+
+    def test_get_all_languages_without_unknown(self):
+        with bear_test_module():
+            languages = get_all_languages()
+            assert isinstance(languages, tuple)
+            self.assertEqual(len(languages), LANGUAGE_COUNT)
+            self.assertSetEqual(
+                {str(language) for language in languages},
+                set(LANGUAGE_NAMES))
+
+    def test_get_all_languages_with_unknown(self):
+        with bear_test_module():
+            languages = get_all_languages(include_unknown=True)
+            language_names = LANGUAGE_NAMES.copy()
+            language_names.append('Unknown')
+            assert isinstance(languages, tuple)
+            self.assertEqual(len(languages), LANGUAGE_COUNT + 1)
+            self.assertSetEqual(
+                {str(language) for language in languages},
+                set(language_names))

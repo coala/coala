@@ -4,6 +4,7 @@ import os
 import pkg_resources
 import itertools
 import re
+from types import ModuleType
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Importers import iimport_objects
@@ -12,6 +13,8 @@ from coalib.misc.Exceptions import log_exception
 from coalib.misc.IterUtilities import partition
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.Globbing import fnmatch, iglob, glob_escape
+from coalib.bearlib.languages.Language import Languages
+from coalib.bearlib.languages import definitions
 
 
 def _get_kind(bear_class):
@@ -364,6 +367,23 @@ def get_all_bears_names():
     Get an unsorted ``list`` of names of all available bears.
     """
     return [bear.name for bear in get_all_bears()]
+
+
+def get_all_languages(include_unknown=False):
+    """
+    Get a ``tuple`` of all language instances supported by coala.
+
+    :param include_unknown: Whether to include instance of
+                            ``Unknown`` language.
+    :return:                Tuple of all language instances
+                            supported by coala.
+    """
+    languages = [
+        key for key in definitions.__dict__
+        if isinstance(definitions.__dict__[key], ModuleType)]
+    if not include_unknown:
+        languages.remove('Unknown')
+    return Languages(languages)
 
 
 def collect_all_bears_from_sections(sections,
