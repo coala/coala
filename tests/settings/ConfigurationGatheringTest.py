@@ -32,7 +32,7 @@ from coalib.misc.Constants import get_system_coafile
 from tests.TestUtilities import (
     bear_test_module,
     TEST_BEARS_COUNT,
-    TEST_BEAR_NAMES,
+    TEST_BEAR_NAME_REPRS,
 )
 from testfixtures import log_capture
 
@@ -460,7 +460,7 @@ class ConfigurationGatheringCollectionTest(unittest.TestCase):
 
         self.assertEqual(
             [str(bear) for bear in local_bears['cli']],
-            TEST_BEAR_NAMES)
+            TEST_BEAR_NAME_REPRS)
 
         with bear_test_module():
             local_bears, global_bears = get_filtered_bears(
