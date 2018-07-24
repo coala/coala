@@ -2,6 +2,7 @@ from collections import defaultdict
 
 from coalib.bearlib.aspects.collections import AspectList
 from coalib.bearlib.languages.Language import Languages
+from coalib.collecting.Collectors import get_all_languages
 
 
 class bearclass(type):
@@ -28,6 +29,8 @@ class bearclass(type):
         """
         type.__init__(cls, clsname, bases, clsattrs, *varargs)
         if aspects is not None:
+            if languages is None:
+                languages = get_all_languages(include_unknown=True)
             cls.languages = Languages(languages)
             cls.aspects = defaultdict(
                 lambda: AspectList([]),

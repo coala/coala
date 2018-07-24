@@ -17,7 +17,11 @@ from tests.TestUtilities import (
     bear_test_module,
     execute_coala,
     TEST_BEARS_COUNT,
+    JAVA_BEARS_COUNT,
 )
+
+# Java bears plus 1 line holding the closing colour escape sequence.
+JAVA_BEARS_COUNT_OUTPUT = JAVA_BEARS_COUNT + 1
 
 
 class coalaTest(unittest.TestCase):
@@ -186,8 +190,8 @@ class coalaTest(unittest.TestCase):
             retval, stdout, stderr = execute_coala(
                 coala.main, 'coala', '-B', '-l', 'java', '-I', debug=debug)
             self.assertEqual(retval, 0)
-            # 2 bears plus 1 line holding the closing colour escape sequence.
-            self.assertEqual(len(stdout.splitlines()), 3)
+            self.assertEqual(len(stdout.splitlines()),
+                             JAVA_BEARS_COUNT_OUTPUT)
             self.assertIn(
                 "'--filter-by-language ...' is deprecated", stderr)
 

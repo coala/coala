@@ -6,7 +6,11 @@ from tests.TestUtilities import (
     bear_test_module,
     execute_coala,
     TEST_BEARS_COUNT,
+    C_BEARS_COUNT,
 )
+
+# C bears plus 1 line holding the closing colour escape sequence.
+C_BEARS_COUNT_OUTPUT = C_BEARS_COUNT + 1
 
 
 class FilterTest(unittest.TestCase):
@@ -16,8 +20,8 @@ class FilterTest(unittest.TestCase):
             retval, stdout, stderr = execute_coala(
                 coala.main, 'coala', '-B', '--filter-by', 'language', 'c')
             self.assertEqual(retval, 0)
-            # 1 bear plus 1 line holding the closing colour escape sequence.
-            self.assertEqual(len(stdout.strip().splitlines()), 2)
+            self.assertEqual(len(stdout.strip().splitlines()),
+                             C_BEARS_COUNT_OUTPUT)
 
     def test_filter_by_language_java_can_fix_syntax(self):
         with bear_test_module():

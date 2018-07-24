@@ -7,6 +7,7 @@ from coala_utils.ContextManagers import retrieve_stdout, retrieve_stderr
 
 # This list is sorted alphabetically
 TEST_BEAR_NAMES = (
+    'AspectsGeneralTestBear',
     'AspectTestBear',
     'DependentBear',
     'EchoBear',
@@ -24,6 +25,10 @@ TEST_BEAR_NAMES = (
 )
 
 TEST_BEARS_COUNT = len(TEST_BEAR_NAMES)
+
+JAVA_BEARS_COUNT = 3
+
+C_BEARS_COUNT = 2
 
 # This list is sorted alphabetically
 LANGUAGE_NAMES = [
@@ -65,6 +70,7 @@ LANGUAGE_COUNT = len([
 # This list is sorted by filename of the bears, then name within the modules
 TEST_BEAR_NAME_REPRS = [
     "<class 'AspectTestBear.AspectTestBear'>",
+    "<class 'AspectsGeneralTestBear.AspectsGeneralTestBear'>",
     "<ErrorTestBear linter class (wrapping 'I_do_not_exist')>",
     "<class 'JavaTestBear.JavaTestBear'>",
     "<class 'LineCountTestBear.LineCountTestBear'>",

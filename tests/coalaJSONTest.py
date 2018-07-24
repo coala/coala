@@ -12,6 +12,7 @@ from tests.TestUtilities import (
     execute_coala,
     TEST_BEAR_NAMES,
     TEST_BEARS_COUNT,
+    JAVA_BEARS_COUNT,
 )
 
 
@@ -87,7 +88,7 @@ class coalaJSONTest(unittest.TestCase):
                 'java', '-I')
             self.assertEqual(retval, 0)
             output = json.loads(stdout)
-            self.assertEqual(len(output['bears']), 2)
+            self.assertEqual(len(output['bears']), JAVA_BEARS_COUNT)
             self.assertFalse(stderr)
 
     def test_show_bears_attributes(self):
@@ -187,5 +188,5 @@ class coalaJSONTest(unittest.TestCase):
         os.remove('bears.json')
 
         self.assertEqual(retval, 0)
-        self.assertEqual(len(data['bears']), 2)
+        self.assertEqual(len(data['bears']), JAVA_BEARS_COUNT)
         self.assertFalse(stderr)
