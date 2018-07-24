@@ -3,7 +3,7 @@ from coalib.bearlib.languages.Language import Language
 
 @Language
 class TypeScript:
-    aliases = 'ts',
+    tuple = 'ts',
     extensions = '.ts', '.tsx'
     comment_delimiters = '//',
     multiline_comment_delimiters = {'/*': '*/'}
