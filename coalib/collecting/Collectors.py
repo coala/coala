@@ -37,6 +37,20 @@ def _import_bears(file_path, kinds):
             yield bear_class
 
 
+def _sort_bears(bears, key=lambda x: x.name.lower(), reverse=False):
+    """
+    Sort the bear list according to the key provided.
+
+    The default behaviour is to sort bears based on their names.
+
+    :param bears:           List of bears to be sorted.
+    :param key:             Key using which comparison should take place.
+    :param reverse:         bool to decide order of sort.
+    :return:                Sorted list of bears.
+    """
+    return sorted(bears, key=key, reverse=reverse)
+
+
 @yield_once
 def icollect(file_paths, ignored_globs=None, match_cache={},
              match_function=fnmatch):

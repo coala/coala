@@ -28,6 +28,7 @@ from coalib.settings.ConfigurationGathering import (
 )
 from coalib.settings.Setting import Setting
 from coalib.misc.Constants import get_system_coafile
+from coalib.collecting.Collectors import _sort_bears
 
 from tests.TestUtilities import (
     bear_test_module,
@@ -465,6 +466,9 @@ class ConfigurationGatheringCollectionTest(unittest.TestCase):
         with bear_test_module():
             local_bears, global_bears = get_filtered_bears(
                 ['Java'], self.log_printer)
+
+        local_bears['cli'] = _sort_bears(local_bears['cli'])
+        global_bears['cli'] = _sort_bears(global_bears['cli'])
 
         self.assertEqual(len(local_bears['cli']), 2)
         self.assertEqual(str(local_bears['cli'][0]),
