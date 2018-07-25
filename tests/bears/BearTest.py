@@ -1,7 +1,7 @@
 import pdb
 from collections import defaultdict
 import datetime
-from io import BytesIO
+from io import BytesIO, StringIO
 import multiprocessing
 import unittest
 from os.path import abspath, exists, isfile, join, getmtime
@@ -56,6 +56,15 @@ class TestBear(Bear):
         self.print('set', 'up', delimiter='=')
         self.err('teardown')
         self.err()
+
+
+class TestOneBear(LocalBear):
+    def __init__(self, section, queue):
+        Bear.__init__(self, section, queue)
+
+    def run(self, x: int, y: str, z: int = 79, w: str = 'kbc'):
+        yield 1
+        yield 2
 
 
 class TypedTestBear(Bear):
@@ -468,9 +477,11 @@ class BearTest(BearTestBase):
     # Mock test added to solve the coverage problem by DebugBearsTest
     @patch('pdb.Pdb.do_continue')
     def test_custom_continue(self, do_continue):
-        arg = {}
-        self.assertEqual(Debugger().do_quit(arg), 1)
-        pdb.Pdb.do_continue.assert_called_once_with(arg)
+        section = Section('name')
+        bear = Bear(section, self.queue, debugger=True)
+        args = ()
+        self.assertEqual(Debugger(bear).do_quit(args), 1)
+        pdb.Pdb.do_continue.assert_called_once_with(args)
 
     # side_effect effectively implements run() method of bear
     @patch('coalib.bears.Bear.Debugger.runcall', side_effect=((1, 2), 1, 2))
@@ -488,6 +499,24 @@ class BearTest(BearTestBase):
         args = ()
         kwargs = {}
         self.assertIsNone(my_bear.run_bear_from_section(args, kwargs))
+
+    def test_do_settings(self):
+        section = Section('name', None)
+        section.append(Setting('x', '85'))
+        section.append(Setting('y', 'kbc3'))
+        section.append(Setting('z', '75'))
+        bear = TestOneBear(section, self.queue)
+        output = StringIO()
+        dbg = Debugger(bear, stdout=output)
+        arg = ()
+        self.assertEqual(dbg.do_settings(arg), 1)
+        output = output.getvalue().splitlines()
+        self.assertEqual(output[0], 'x = 85')
+        self.assertEqual(output[1], "y = 'kbc3'")
+        self.assertEqual(output[2], 'z = 75')
+        self.assertEqual(output[3], "w = 'kbc'")
+        with self.assertRaises(ValueError):
+            Debugger(bear=None)
 
 
 class BrokenReadHTTPResponse(BytesIO):

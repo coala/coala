@@ -26,6 +26,13 @@ from .meta import bearclass
 
 class Debugger(pdb.Pdb):
 
+    def __init__(self, bear, *args, **kwargs):
+        if not isinstance(bear, Bear):
+            raise ValueError('Positional argument bear is not an instance of '
+                             'Bear class.')
+        super(Debugger, self).__init__(*args, **kwargs)
+        self.bear = bear
+
     def do_quit(self, arg):
         self.clear_all_breaks()
         super().do_continue(arg)
@@ -33,6 +40,18 @@ class Debugger(pdb.Pdb):
 
     do_q = do_quit
     do_exit = do_quit
+
+    def do_settings(self, arg):
+        md = self.bear.get_metadata()
+        section_params_dict = md.create_params_from_section(
+                              self.bear.section)
+        for param in md.non_optional_params:
+            self.message('%s = %r' % (param, section_params_dict[param]))
+        for param in md.optional_params:
+            self.message('%s = %r' % (param, section_params_dict[param] if
+                                      param in section_params_dict else
+                                      md.optional_params[param][2]))
+        return 1
 
 
 def debug_run(func, dbg=None, *args, **kwargs):
@@ -319,7 +338,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
                 self.name), str(err))
             return
         if self.debugger:
-            return debug_run(self.run, Debugger(), *args, **kwargs)
+            return debug_run(self.run, Debugger(bear=self), *args, **kwargs)
         else:
             return self.run(*args, **kwargs)
 
