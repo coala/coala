@@ -9,6 +9,13 @@ from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 
 
+def deprecate_settings(**depr_args):
+    """
+        @deprecate_settings(comment_separators='comment_sepArators')
+
+    """
+
+
 class ConfParser:
 
     def __init__(self,
