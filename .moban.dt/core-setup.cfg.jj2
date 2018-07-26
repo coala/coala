@@ -1,0 +1,12 @@
+{% extends 'setup.cfg.jj2' %}
+
+{% block extras %}
+
+[build_manpage]
+output = coala.1
+parser = coalib.parsing.DefaultArgParser:default_arg_parser
+{% endblock %}
+
+{% block extra_pytest_addopts %}
+  --ignore=tests/collecting/collectors_test_dir/bears/incorrect_bear.py
+{% endblock %}

@@ -16,6 +16,7 @@ docs_dir: docs
 docs_source_dir: ./
 docs_toc: false
 test_py36: false
+allow_generic_no_cover: true
 
 entry_points:
   console_scripts:
@@ -52,8 +53,10 @@ configuration:
 targets:
   - .gitignore: core-gitignore.jj2
   - setup.py: core-setup.py.jj2
+  - setup.cfg: core-setup.cfg.jj2
   - requirements.txt: requirements.txt.jj2
   - test-requirements.txt: core-test-requirements.txt.jj2
+  - tests/conftest.py: conftest.py
   - coalib/VERSION: VERSION.jj2
   - runtime.txt: runtime.txt
   - netlify.toml: docs/netlify.toml
