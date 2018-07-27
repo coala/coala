@@ -209,9 +209,8 @@ class coalaTest(unittest.TestCase):
     def test_show_capabilities_with_supported_language_debug(self):
         self.test_show_capabilities_with_supported_language(debug=True)
 
-    @unittest.mock.patch('coalib.parsing.DefaultArgParser.get_all_bears_names')
     @unittest.mock.patch('coalib.collecting.Collectors.icollect_bears')
-    def test_version_conflict_in_collecting_bears(self, import_fn, _):
+    def test_version_conflict_in_collecting_bears(self, import_fn):
         with bear_test_module():
             import_fn.side_effect = VersionConflict('msg1', 'msg2')
             retval, stdout, stderr = execute_coala(coala.main, 'coala', '-B')

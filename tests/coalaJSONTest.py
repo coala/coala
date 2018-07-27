@@ -109,9 +109,8 @@ class coalaJSONTest(unittest.TestCase):
             self.assertTrue(bear['metadata']['optional_params'])
             self.assertFalse(bear['metadata']['non_optional_params'])
 
-    @unittest.mock.patch('coalib.parsing.DefaultArgParser.get_all_bears_names')
     @unittest.mock.patch('coalib.collecting.Collectors.icollect_bears')
-    def test_version_conflict_in_collecting_bears(self, import_fn, _):
+    def test_version_conflict_in_collecting_bears(self, import_fn):
         with bear_test_module():
             import_fn.side_effect = VersionConflict('msg1', 'msg2')
             retval, stdout, stderr = execute_coala(
