@@ -3,7 +3,15 @@ import logging
 import os
 import pickle
 
+import appdirs
+
 from coalib.misc import Constants
+from coalib import VERSION
+
+USER_DATA_DIR = appdirs.user_data_dir('coala', version=VERSION)
+# USER_DATA_DIR was originally defined in Constants, and is set for backwards
+# compatibility, however access outside of CachingUtilities is deprecated.
+Constants.USER_DATA_DIR = USER_DATA_DIR
 
 
 def get_data_path(log_printer, identifier):
