@@ -14,4 +14,5 @@ Currently defined keys are:
   multiline_string_delimiters
   keywords
   special_chars
+  max_line_length
 """
