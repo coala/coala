@@ -14,7 +14,7 @@ USER_DATA_DIR = appdirs.user_data_dir('coala', version=VERSION)
 Constants.USER_DATA_DIR = USER_DATA_DIR
 
 
-def get_data_path(log_printer, identifier):
+def get_data_path(identifier):
     """
     Get the full path of ``identifier`` present in the user's data directory.
 
@@ -35,7 +35,7 @@ def get_data_path(log_printer, identifier):
     return None
 
 
-def delete_files(log_printer, identifiers):
+def delete_files(identifiers):
     """
     Delete the given identifiers from the user's coala data directory.
 
@@ -66,7 +66,7 @@ def delete_files(log_printer, identifiers):
     return result
 
 
-def pickle_load(log_printer, identifier, fallback=None):
+def pickle_load(identifier, fallback=None):
     """
     Get the data stored in ``filename`` present in the user
     config directory. Example usage:
@@ -100,7 +100,7 @@ def pickle_load(log_printer, identifier, fallback=None):
             return fallback
 
 
-def pickle_dump(log_printer, identifier, data):
+def pickle_dump(identifier, data):
     """
     Write ``data`` into the file ``filename`` present in the user
     config directory.
@@ -159,7 +159,7 @@ def get_settings_hash(sections,
     return hash_id(str(settings))
 
 
-def settings_changed(log_printer, settings_hash):
+def settings_changed(settings_hash):
     """
     Determine if the settings have changed since the last run with caching.
 
@@ -185,7 +185,7 @@ def settings_changed(log_printer, settings_hash):
     return result
 
 
-def update_settings_db(log_printer, settings_hash):
+def update_settings_db(settings_hash):
     """
     Update the config file last modification date.
 
