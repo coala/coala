@@ -242,8 +242,8 @@ class Session:
 
         for bear in bears:
             if self.dependency_tracker.get_dependencies(
-                    bear):  # pragma: no cover
-                logging.warning(
+                    bear):
+                raise RuntimeError(  # Unreachable code
                     'Dependencies for {!r} not yet resolved, holding back. '
                     'This should not happen, the dependency tracking system '
                     'should be smarter. Please report this to the developers.'
@@ -315,11 +315,11 @@ class Session:
             # Check the DependencyTracker additionally for remaining
             # dependencies.
             resolved = self.dependency_tracker.are_dependencies_resolved
-            if not resolved:  # pragma: no cover
-                logging.warning(
+            if not resolved:
+                raise RuntimeError(  # Unreachable code
                     'Core finished with run, but it seems some dependencies '
-                    'were unresolved: {}. Ignoring them, but this is a bug, '
-                    'please report it to the developers.'.format(', '.join(
+                    'were unresolved: {}.'
+                    'Please report it to the developers.'.format(', '.join(
                         repr(dependant) + ' depends on ' + repr(dependency)
                         for dependency, dependant in self.dependency_tracker)))
 
