@@ -22,8 +22,8 @@ def parse_cli(arg_list=None,
     :param arg_list:                    The CLI argument list.
     :param origin:                      Directory used to interpret relative
                                         paths given as argument.
-    :param arg_parser:                  Instance of ArgParser that is used to
-                                        parse none-setting arguments.
+    :param arg_parser:                  Instance of argparse.ArgumentParser that
+                                        is used to parse none-setting arguments.
     :param args:                        Alternative pre-parsed CLI arguments.
     :param key_value_delimiters:        Delimiters to separate key and value
                                         in setting arguments where settings are
