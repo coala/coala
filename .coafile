@@ -126,7 +126,8 @@ ignore = docs/Developers/coala_settings.rst
 bears = SpaceConsistencyBear
 files =
     LICENSE, ISSUE_TEMPLATE, PULL_REQUEST_TEMPLATE.md, MANIFEST.in,
-    **.sh, .travis.yml, circle.yml, setup.cfg, ./docs/_static/custom.css
+    **.sh, .travis.yml, ./.circleci/config.yml, setup.cfg,
+    ./docs/_static/custom.css
 ignore = node_modules/**
 
 [jinja2]
