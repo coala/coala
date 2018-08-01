@@ -16,7 +16,7 @@ import requests_mock
 from coalib.bearlib.aspects.collections import AspectList
 from coalib.bearlib.aspects.Metadata import CommitMessage
 from coalib.bearlib.languages.Language import Language, Languages
-from coalib.bears.Bear import Bear, Debugger
+from coalib.bears.Bear import Bear, Debugger, _is_debugged
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
@@ -478,7 +478,8 @@ class BearTest(BearTestBase):
     @patch('pdb.Pdb.do_continue')
     def test_custom_continue(self, do_continue):
         section = Section('name')
-        bear = Bear(section, self.queue, debugger=True)
+        section.append(Setting('debug_bears', 'True'))
+        bear = Bear(section, self.queue)
         args = ()
         self.assertEqual(Debugger(bear).do_quit(args), 1)
         pdb.Pdb.do_continue.assert_called_once_with(args)
@@ -487,7 +488,8 @@ class BearTest(BearTestBase):
     @patch('coalib.bears.Bear.Debugger.runcall', side_effect=((1, 2), 1, 2))
     def test_debug_run_with_return(self, runcall):
         section = Section('name')
-        my_bear = Bear(section, self.queue, debugger=True)
+        section.append(Setting('debug_bears', 'True'))
+        my_bear = Bear(section, self.queue)
         args = ()
         kwargs = {}
         self.assertEqual(my_bear.run_bear_from_section(args, kwargs), [1, 2])
@@ -495,7 +497,8 @@ class BearTest(BearTestBase):
     @patch('coalib.bears.Bear.Debugger.runcall', return_value=None)
     def test_debug_run_with_no_return(self, runcall):
         section = Section('name')
-        my_bear = Bear(section, self.queue, debugger=True)
+        section.append(Setting('debug_bears', 'True'))
+        my_bear = Bear(section, self.queue)
         args = ()
         kwargs = {}
         self.assertIsNone(my_bear.run_bear_from_section(args, kwargs))
@@ -517,6 +520,22 @@ class BearTest(BearTestBase):
         self.assertEqual(output[3], "w = 'kbc'")
         with self.assertRaises(ValueError):
             Debugger(bear=None)
+
+    def test_is_debugged(self):
+        with self.assertRaises(ValueError):
+            _is_debugged(bear=None)
+
+        section = Section('name')
+        uut = Bear(section, self.queue)
+        self.assertEqual(_is_debugged(uut), False)
+        section.append(Setting('debug_bears', 'tRuE'))
+        self.assertEqual(_is_debugged(uut), True)
+        section.append(Setting('debug_bears', '0'))
+        self.assertEqual(_is_debugged(uut), False)
+        section.append(Setting('debug_bears', 'Bear, ABear'))
+        self.assertEqual(_is_debugged(uut), True)
+        section.append(Setting('debug_bears', 'abc, xyz'))
+        self.assertEqual(_is_debugged(uut), False)
 
 
 class BrokenReadHTTPResponse(BytesIO):

@@ -24,6 +24,27 @@ from coalib.settings.ConfigurationGathering import get_config_directory
 from .meta import bearclass
 
 
+def _is_debugged(bear):
+    """
+    Check whether the bear is in debug mode according to its section-settings.
+
+    :param bear: Bear object.
+    :return:     True if ``debug_bears`` is ``True`` or if bear name specified
+                 in ``debug_bears`` setting match with the bear parameter.
+    """
+    if not isinstance(bear, Bear):
+        raise ValueError('Positional argument bear is not an instance of '
+                         'Bear class.')
+    if 'debug_bears' not in bear.section:
+        return False
+    try:
+        return bool(bear.section['debug_bears'])
+    except ValueError:
+        pass
+    return bear.name.lower() in (
+            map(str.lower, bear.section['debug_bears']))
+
+
 class Debugger(pdb.Pdb):
 
     def __init__(self, bear, *args, **kwargs):
@@ -280,8 +301,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     def __init__(self,
                  section: Section,
                  message_queue,
-                 timeout=0,
-                 debugger=False):
+                 timeout=0):
         """
         Constructs a new bear.
 
@@ -301,7 +321,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         self.section = section
         self.message_queue = message_queue
         self.timeout = timeout
-        self.debugger = debugger
+        self.debugger = _is_debugged(bear=self)
 
         self.setup_dependencies()
         cp = type(self).check_prerequisites()

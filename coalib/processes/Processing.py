@@ -297,8 +297,7 @@ def instantiate_bears(section,
                       file_dict,
                       message_queue,
                       console_printer,
-                      debug=False,
-                      debug_bears=False):
+                      debug=False):
     """
     Instantiates each bear with the arguments it needs.
 
@@ -312,26 +311,13 @@ def instantiate_bears(section,
     :param console_printer:  Object to print messages on the console.
     :return:                 The local and global bear instance lists.
     """
-    debug_bears = (False if debug_bears is False else
-                   [x.lower() for x in debug_bears])
-    for bear in local_bear_list + global_bear_list:
-        for deps_bear in bear.BEAR_DEPS:
-            if debug_bears is not False and (
-                bear.__name__.lower() in debug_bears and (
-                    deps_bear.__name__.lower() not in debug_bears)):
-                debug_bears.append(deps_bear.__name__.lower())
-
     instantiated_local_bear_list = []
     instantiated_global_bear_list = []
     for bear in local_bear_list:
         try:
-            debugger = True if debug_bears is not False and (
-                    debug_bears[0] == 'true' or (
-                        bear.__name__.lower() in debug_bears)) else False
             instantiated_local_bear_list.append(bear(section,
                                                      message_queue,
-                                                     timeout=0.1,
-                                                     debugger=debugger))
+                                                     timeout=0.1))
         # RuntimeError it will be raised only when debug will be set to True.
         except RuntimeError:
             if debug:
@@ -339,14 +325,10 @@ def instantiate_bears(section,
 
     for bear in global_bear_list:
         try:
-            debugger = True if debug_bears is not False and (
-                    debug_bears[0] == 'true' or (
-                        bear.__name__.lower() in debug_bears)) else False
             instantiated_global_bear_list.append(bear(file_dict,
                                                       section,
                                                       message_queue,
-                                                      timeout=0.1,
-                                                      debugger=debugger))
+                                                      timeout=0.1))
         # RuntimeError it will be raised only when debug will be set to True
         except RuntimeError:
             if debug:
@@ -418,8 +400,7 @@ def instantiate_processes(section,
         complete_file_dict,
         message_queue,
         console_printer=console_printer,
-        debug=debug,
-        debug_bears=debug_bears)
+        debug=debug)
     loaded_valid_local_bears_count = len(local_bear_list)
     # Note: the complete file dict is given as the file dict to bears and
     # the whole project is accessible to every bear. However, local bears are
