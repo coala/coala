@@ -75,7 +75,7 @@ STR_LINE_DOESNT_EXIST = ('The line belonging to the following result '
                          'cannot be printed because it refers to a line '
                          "that doesn't seem to exist in the given file.")
 STR_PROJECT_WIDE = 'Project wide:'
-STR_ENTER_NUMBER = 'Enter number (Ctrl-{} to exit): '.format(
+STR_ENTER_LETTER = 'Enter letter (Ctrl-{} to exit): '.format(
     'Z' if platform.system() == 'Windows' else 'D')
 STR_INVALID_OPTION = '*** Invalid Option: ({}) ***\n'
 WARNING_COLOR = 'red'
@@ -654,7 +654,7 @@ def choose_action(console_printer, actions, apply_single=False):
                 color_letter(console_printer, format_lines(output.format(
                     i, action.desc), symbol='['))
 
-            line = format_lines(STR_ENTER_NUMBER, symbol='[')
+            line = format_lines(STR_ENTER_LETTER, symbol='[')
 
             choice = input(line)
             choice = str(choice)

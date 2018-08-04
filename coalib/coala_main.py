@@ -28,7 +28,7 @@ def do_nothing(*args):
     return True
 
 
-STR_ENTER_NUMBER = 'Enter number (Ctrl-{} to exit): '.format(
+STR_ENTER_LETTER = 'Enter letter (Ctrl-{} to exit): '.format(
     'Z' if platform.system() == 'Windows' else 'D')
 
 
@@ -107,7 +107,7 @@ def run_coala(console_printer=None,
                 console_printer.print(format_lines('{}'.format(
                     action), symbol='['))
 
-            line = format_lines(STR_ENTER_NUMBER, symbol='[')
+            line = format_lines(STR_ENTER_LETTER, symbol='[')
 
             choice = input(line)
 
