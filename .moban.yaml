@@ -58,6 +58,7 @@ targets:
   - test-requirements.txt: core-test-requirements.txt.jj2
   - tests/conftest.py: conftest.py
   - coalib/VERSION: VERSION.jj2
+  - coalib/__main__.py: __main__.py.jj2
   - runtime.txt: runtime.txt
   - netlify.toml: docs/netlify.toml
   - .misc/appveyor.yml: ci/appveyor.yml.jj2
