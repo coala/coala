@@ -37,6 +37,7 @@ LANGUAGE_NAMES = [
     'C#',
     'CPP',
     'CSS',
+    'Extensible Markup Language 1.0',
     'Fortran',
     'Golang',
     'Hypertext Markup Language 2.0, 3.2, 4.0, 4.1, 5, 5.1',

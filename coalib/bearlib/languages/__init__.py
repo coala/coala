@@ -34,4 +34,5 @@ from .definitions.TypeScript import TypeScript
 from .definitions.Shell import Shell
 from .definitions.Jinja2 import Jinja2
 from .definitions.VisualBasic import VisualBasic
+from .definitions.XML import XML
 # Stop ignoring PyUnusedCodeBear
