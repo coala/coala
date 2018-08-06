@@ -10,6 +10,7 @@ from coalib.parsing.filters import available_filters
 from coalib.parsing.InvalidFilterException import InvalidFilterException
 from coalib.settings.ConfigurationGathering import get_all_bears
 from coalib.parsing.DefaultArgParser import default_arg_parser
+from coalib.settings.Section import Section, Setting
 from coalib.parsing.FilterHelper import (
     collect_filters, _apply_section_filter)
 
@@ -53,6 +54,28 @@ class FilterHelperTest(unittest.TestCase):
         apply_filters_result = apply_filters([('language', 'C', 'Python'),
                                               ('can_fix', 'syntax')])
         self.assertIsNotNone(apply_filters_result)
+
+    def test_apply_filters(self):
+        section_one = Section('apply')
+        section_one.append(Setting('tags', 'save'))
+
+        section_two = Section('filters')
+        section_two.append(Setting('tags', 'change'))
+
+        filtered = apply_filters([('section_tags', 'save')],
+                                 sections=[section_one, section_two, ])
+
+        self.assertEqual(len(filtered), 1)
+        self.assertEqual(filtered[0].name, 'apply')
+
+    def test_apply_section_filters(self):
+        section_one = Section('apply')
+        section_one.append(Setting('tags', 'save'))
+
+        filtered = _apply_section_filter(
+            'section_tags', [], [section_one])
+
+        self.assertEqual(filtered, [section_one])
 
     def test_apply_section_filter_exception(self):
         with self.assertRaises(InvalidFilterException) as exp:

@@ -5,9 +5,11 @@ get a list of bears with specific properties.
 from .LanguageFilter import language_filter
 from .CanDetectFilter import can_detect_filter
 from .CanFixFilter import can_fix_filter
+from .SectionTagsFilter import section_tags_filter
 
 
 available_filters = {'language': language_filter,
                      'can_detect': can_detect_filter,
                      'can_fix': can_fix_filter,
+                     'section_tags': section_tags_filter,
                      }

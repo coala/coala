@@ -8,7 +8,9 @@ from tests.TestUtilities import (
     TEST_BEARS_COUNT,
     C_BEARS_COUNT,
 )
+from tests.test_bears.TestBear import TestBear
 from coalib.parsing.filters.decorators import typed_filter
+from coalib.settings.Section import Section, Setting
 
 # C bears plus 1 line holding the closing colour escape sequence.
 C_BEARS_COUNT_OUTPUT = C_BEARS_COUNT + 1
@@ -128,6 +130,35 @@ class FilterTest(unittest.TestCase):
             # All bear plus 1 line holding the closing colour escape sequence.
             self.assertEqual(len(stdout.strip().splitlines()),
                              TEST_BEARS_COUNT + 1)
+
+    def test_section_tags_filter_no_tags(self):
+        filter = available_filters['section_tags']
+
+        section = Section('sample')
+        section.append(Setting('tags', 'save'))
+
+        flag = filter(section, [])
+        self.assertTrue(flag)
+
+    def test_section_tags_filter_true(self):
+        filter = available_filters['section_tags']
+
+        section = Section('sample')
+        section.append(Setting('tags', 'save'))
+
+        test_bear = TestBear(section, None)
+        flag = filter(test_bear, ['save'])
+        self.assertTrue(flag)
+
+    def test_section_tags_filter_false(self):
+        filter = available_filters['section_tags']
+
+        section = Section('sample')
+        section.append(Setting('tags', 'save'))
+
+        test_bear = TestBear(section, None)
+        flag = filter(test_bear, ['change'])
+        self.assertFalse(flag)
 
 
 class FilterDecoratorsTest(unittest.TestCase):

@@ -35,7 +35,7 @@ def typed_filter(type_classes, msg=None):
                     .format(filter=filter.__name__,
                             type_name=tuple(type_classes)))
 
-            return filter(thing, *args, **kargs)
+            return filter(obj, *args, **kargs)
 
         return decorated_filter
 
