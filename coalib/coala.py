@@ -72,8 +72,8 @@ def main(debug=False):
                 try:
                     filtered_bears = apply_filters(
                         args.filter_by, filtered_bears)
-                except InvalidFilterException as ex:
-                    # If filter is not available
+                except (InvalidFilterException, NotImplementedError) as ex:
+                    # If filter is not available or is unusable
                     console_printer.print(ex)
                     return 2
 

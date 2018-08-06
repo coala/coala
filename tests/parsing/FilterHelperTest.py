@@ -9,6 +9,15 @@ from coalib.parsing.FilterHelper import (
 from coalib.parsing.filters import available_filters
 from coalib.parsing.InvalidFilterException import InvalidFilterException
 from coalib.settings.ConfigurationGathering import get_all_bears
+from coalib.parsing.DefaultArgParser import default_arg_parser
+from coalib.parsing.FilterHelper import (
+    collect_filters, _apply_section_filter)
+
+
+class MockObjMap:
+    def __init__(self, **kargs):
+        for k, v in kargs.items():
+            setattr(self, k, v)
 
 
 class FilterHelperTest(unittest.TestCase):
@@ -44,3 +53,30 @@ class FilterHelperTest(unittest.TestCase):
         apply_filters_result = apply_filters([('language', 'C', 'Python'),
                                               ('can_fix', 'syntax')])
         self.assertIsNotNone(apply_filters_result)
+
+    def test_apply_section_filter_exception(self):
+        with self.assertRaises(InvalidFilterException) as exp:
+            _apply_section_filter('unknown', ['args'], [])
+
+    def test_collect_filters_args(self):
+        args = MockObjMap(filter_by=None)
+        self.assertEqual(collect_filters(args), [])
+
+        args = MockObjMap(filter_by=[['sample', 'arg0']])
+        self.assertEqual(collect_filters(args), [['sample', 'arg0']])
+
+    def test_collect_filters_arg_list_default_parser(self):
+        collected = collect_filters(None, [])
+        self.assertEqual(collected, [])
+
+        collected = collect_filters(None, ['--filter-by', 'sample', 'arg'])
+        self.assertEqual(collected, [['sample', 'arg']])
+
+    def test_collect_filters_arg_list_custom_parser(self):
+        collected = collect_filters(None, [], default_arg_parser())
+        self.assertEqual(collected, [])
+
+        collected = collect_filters(None,
+                                    ['--filter-by', 'sample', 'arg'],
+                                    default_arg_parser())
+        self.assertEqual(collected, [['sample', 'arg']])

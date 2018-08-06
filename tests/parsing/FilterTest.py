@@ -8,6 +8,7 @@ from tests.TestUtilities import (
     TEST_BEARS_COUNT,
     C_BEARS_COUNT,
 )
+from coalib.parsing.filters.decorators import typed_filter
 
 # C bears plus 1 line holding the closing colour escape sequence.
 C_BEARS_COUNT_OUTPUT = C_BEARS_COUNT + 1
@@ -127,3 +128,49 @@ class FilterTest(unittest.TestCase):
             # All bear plus 1 line holding the closing colour escape sequence.
             self.assertEqual(len(stdout.strip().splitlines()),
                              TEST_BEARS_COUNT + 1)
+
+
+class FilterDecoratorsTest(unittest.TestCase):
+
+    def test_typed_filter_single(self):
+        @typed_filter('float')
+        def sample_one(x):
+            pass
+
+        # Valid Invokes
+        sample_one(5.5)
+        sample_one(6.4)
+
+        with self.assertRaises(NotImplementedError):
+            sample_one([])
+
+        with self.assertRaises(NotImplementedError):
+            sample_one('sample')
+
+    def test_typed_filter_multiple(self):
+        @typed_filter(('int', 'list'))
+        def sample_one(x, y, z):
+            pass
+
+        # Valid Invokes
+        sample_one(5, 0, 0)
+        sample_one(['a'], 0, 'a')
+
+        with self.assertRaises(NotImplementedError):
+            sample_one(6.2, 'a', 0)
+
+        with self.assertRaises(NotImplementedError):
+            sample_one('sample', 6, -8)
+
+    def test_typed_filter_custom_msg(self):
+        @typed_filter(('dict', 'set'), msg='random')
+        def sample_func(x):
+            pass
+
+        with self.assertRaises(NotImplementedError) as context:
+            sample_func(1.25)
+        self.assertIn('random', str(context.exception))
+
+        with self.assertRaises(NotImplementedError) as context:
+            sample_func('sample')
+        self.assertIn('random', str(context.exception))
