@@ -5,6 +5,11 @@ import os
 from coala_utils.decorators import enforce_signature
 from coalib.misc.CachingUtilities import (
     pickle_load, pickle_dump, delete_files)
+from coalib.misc.Exceptions import log_exception
+from coalib.processes.Processing import get_file_dict
+from coalib.io.FileProxy import (
+    FileDictGenerator, FileProxy, FileProxyMap)
+from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 
 
 class FileCache:
@@ -173,3 +178,134 @@ class FileCache:
                     for file in files
                     if (file not in self.data or
                         int(os.path.getmtime(file)) > self.data[file])}
+
+
+class FileDictFileCache(FileCache, FileDictGenerator):
+    """
+    FileDictFileCache extends a traditional FileCache
+    to support generation of a complete file dict, this
+    lets FileDictFileCache provide access to both file
+    cache and contents of files from disk.
+    """
+
+    def __init__(self, *args, **kargs):
+        """
+        This directly initializes the associated FileCache.
+        """
+        super().__init__(*args, **kargs)
+
+    def get_file_dict(self, filename_list, allow_raw_files=False):
+        """
+        Returns a file dictionary mapping from filename to lines of
+        file. Uses coalib.processes.Processing.get_file_dict().
+
+        :param filename_list:   List of filenames as strings to build
+                                the file dict.
+        :param allow_raw_files: Indicates if the file could also be
+                                read as a binary.
+        :return:                Reads the content of each file into
+                                dictionary with filenames as keys.
+        """
+        return get_file_dict(filename_list,
+                             allow_raw_files=allow_raw_files)
+
+
+class ProxyMapFileCache(FileCache, FileDictGenerator):
+    """
+    ProxyMapFileCache is a FileCache that also provides
+    methods to produce a file dict from a FileProxyMap.
+
+    >>> import logging
+    >>> import tempfile
+    >>> import copy, time
+    >>> logging.getLogger().setLevel(logging.CRITICAL)
+
+    >>> file = tempfile.NamedTemporaryFile(delete=False)
+    >>> file.write(b'coala')
+    5
+    >>> file.close()
+
+    A new instance of ProxyMapFileCache can be instantited:
+
+    >>> proxycache = ProxyMapFileCache(None, "test")
+
+    Before any action on the associated proxy map is carried
+    out, the proxymap needs to be initialized/set using:
+
+    >>> proxymap = FileProxyMap()
+    >>> proxycache.set_proxymap(proxymap)
+
+    A file dict can now be build using the underlying proxy
+    map using:
+
+    >>> proxy = FileProxy.from_file(file.name, None)
+    >>> proxymap.add(proxy)
+    True
+
+    >>> file_dict = proxycache.get_file_dict([file.name])
+    >>> file_dict[file.name]
+    ('coala',)
+    """
+
+    def __init__(self, *args, **kargs):
+        """
+        This directly initializes the associated FileCache.
+        """
+        super().__init__(*args, **kargs)
+        self.__proxymap = None
+
+    @enforce_signature
+    def set_proxymap(self, fileproxy_map: FileProxyMap):
+        """
+        Used to assign a ProxyMap, this is separate from
+        the instance initialization method to keep the
+        concerns separate.
+
+        :param fileproxy_map:   FileProxyMap instance to build
+                                the file dict from.
+        """
+        self.__proxymap = fileproxy_map
+
+    def get_file_dict(self, filename_list, allow_raw_files=False):
+        """
+        Builds a file dictionary from filename to lines of the file
+        from an associated FileProxyMap.
+
+        :param filename_list:   List of files to get the contents of.
+        :param allow_raw_files: Allow the usage of raw files (non text files),
+                                disabled by default
+        :return:                Reads the content of each file into dictionary
+                                with filenames as keys.
+        """
+        if self.__proxymap is None:
+            raise ValueError('set_proxymap() should be called to set proxymap'
+                             'of ProxyMapFileCache instance')
+
+        file_dict = {}
+        for filename in filename_list:
+            try:
+                # Keep the binary mode turned off to maintain compatibility
+                # with FileDictFileCache.get_file_dict().
+                # filename is assumed to be normcased.
+                proxy = self.__proxymap.resolve(filename,
+                                                hard_sync=True,
+                                                binary=False)
+
+                file_lines = proxy.lines()
+                file_dict[filename] = tuple(file_lines)
+            except UnicodeDecodeError:
+                if allow_raw_files:
+                    file_dict[filename] = None
+                    continue
+
+                logging.warning("Failed to read file '{}'. It seems to contain "
+                                'non-unicode characters. Leaving it out.'
+                                .format(filename))
+
+            except (OSError, ValueError) as exception:
+                log_exception("Failed to read file '{}' because of an unknown "
+                              'error. Leaving it out.'.format(filename),
+                              exception,
+                              log_level=LOG_LEVEL.WARNING)
+
+        return file_dict
