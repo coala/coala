@@ -7,20 +7,22 @@ from coalib.misc import Constants
 from coalib.parsing.LineParser import LineParser
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
+from coalib.bearlib import deprecate_settings
 
 
 class ConfParser:
 
+    @deprecate_settings(comment_separators='comment_seperators')
     def __init__(self,
                  key_value_delimiters=('=',),
-                 comment_seperators=('#',),
+                 comment_separators=('#',),
                  key_delimiters=(',', ' '),
                  section_name_surroundings=MappingProxyType({'[': ']'}),
                  remove_empty_iter_elements=True,
                  key_value_append_delimiters=('+=',)):
         self.line_parser = LineParser(
             key_value_delimiters,
-            comment_seperators,
+            comment_separators,
             key_delimiters,
             section_name_surroundings,
             key_value_append_delimiters=key_value_append_delimiters)
