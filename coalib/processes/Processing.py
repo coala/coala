@@ -29,6 +29,7 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Setting import glob_list, typed_list
 from coalib.parsing.Globbing import fnmatch
+from coalib.io.FileProxy import FileDictGenerator
 
 
 ACTIONS = [DoNothingAction,
@@ -377,8 +378,13 @@ def instantiate_processes(section,
     # This stores all matched files irrespective of whether coala is run
     # only on changed files or not. Global bears require all the files
     complete_filename_list = filename_list
-    complete_file_dict = get_file_dict(complete_filename_list,
-                                       allow_raw_files=use_raw_files)
+
+    file_dict_generator = get_file_dict
+    if cache is not None and isinstance(cache, FileDictGenerator):
+        file_dict_generator = cache.get_file_dict
+
+    complete_file_dict = file_dict_generator(complete_filename_list,
+                                             allow_raw_files=use_raw_files)
 
     if debug or debug_bears:
         from . import DebugProcessing as processing

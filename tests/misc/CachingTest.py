@@ -3,6 +3,7 @@ import os
 from unittest.mock import patch
 
 from pyprint.NullPrinter import NullPrinter
+from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.misc.Caching import (
     FileCache, FileDictFileCache, ProxyMapFileCache)
@@ -11,6 +12,7 @@ from coalib.io.FileProxy import (FileProxy, FileProxyMap)
 from coalib.misc.CachingUtilities import pickle_load, pickle_dump
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib import coala
+from coalib.coala_main import run_coala
 from coala_utils.ContextManagers import make_temp, prepare_file
 from coala_utils.ContextManagers import simulate_console_inputs
 from tests.TestUtilities import execute_coala, bear_test_module
@@ -250,3 +252,32 @@ class ProxyMapFileCacheTest(unittest.TestCase):
 
         file_dict = self.cache.get_file_dict(['nofile.pycoala'])
         self.assertEqual(len(file_dict), 0)
+
+    def test_file_cache_proxy_integration(self, debug=False):
+        with bear_test_module(), \
+                prepare_file(['disk-copy\n'], None) as (_, filename):
+
+            memory_data = 'in-memory\n'
+            proxy = FileProxy(filename, None, memory_data)
+            proxymap = FileProxyMap([proxy])
+            self.cache.set_proxymap(proxymap)
+
+            results, exitcode, file_dicts = run_coala(
+                console_printer=ConsolePrinter(),
+                log_printer=LogPrinter(),
+                arg_list=(
+                    '-c', os.devnull,
+                    '-f', filename,
+                    '-b', 'TestBear',
+                ),
+                autoapply=False,
+                debug=debug,
+                cache=self.cache
+            )
+
+            self.assertEqual(exitcode, 0)
+            self.assertEqual(len(results), 1)
+
+            # run_coala() output's name is always lower case
+            self.assertEqual(file_dicts['cli'][filename.lower()],
+                             (memory_data,))

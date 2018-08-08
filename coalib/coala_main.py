@@ -19,7 +19,7 @@ from coalib.results.result_actions.PrintMoreInfoAction import  \
     PrintMoreInfoAction
 from coalib.results.result_actions.PrintDebugMessageAction import \
     PrintDebugMessageAction
-from coalib.misc.Caching import FileCache
+from coalib.misc.Caching import FileDictFileCache
 from coalib.misc.CachingUtilities import (
     settings_changed, update_settings_db, get_settings_hash)
 from coalib.parsing.FilterHelper import (
@@ -63,7 +63,8 @@ def run_coala(console_printer=None,
               arg_parser=None,
               arg_list=None,
               args=None,
-              debug=False):
+              debug=False,
+              cache=None):
     """
     This is a main method that should be usable for almost all purposes and
     reduces executing coala to one function call.
@@ -98,6 +99,7 @@ def run_coala(console_printer=None,
     :param debug:                   Run in debug mode, bypassing
                                     multiprocessing, and not catching any
                                     exceptions.
+    :param cache:                   Instance of a FileCache instance.
     :return:                        A dictionary containing a list of results
                                     for all analyzed sections as key.
     """
@@ -152,9 +154,8 @@ def run_coala(console_printer=None,
         flush_cache = bool(sections['cli'].get('flush_cache', False) or
                            settings_changed(None, settings_hash))
 
-        cache = None
-        if not sections['cli'].get('disable_caching', False):
-            cache = FileCache(None, os.getcwd(), flush_cache)
+        if cache is None and not sections['cli'].get('disable_caching', False):
+            cache = FileDictFileCache(None, os.getcwd(), flush_cache)
 
         if targets:
             sections = OrderedDict(
