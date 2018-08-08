@@ -1,10 +1,13 @@
 argcomplete~=1.8
-coverage~=4.3.4
+# coverage 4.4.2 broke compatibility with coverage-config-reload-plugin
+# and thus broke https://github.com/jayvdb/coverage_env_plugin .
+# See https://github.com/jayvdb/coverage_config_reload_plugin/issues/1
+coverage==4.4.1
 coverage-env-plugin~=0.1
 coverage-config-reload-plugin~=0.2
 codecov~=2.0.5
 freezegun~=0.3.9
-moban~=0.0.9
+moban~=0.2.4
 pytest~=3.6.1
 pytest-cov~=2.4
 pytest-env~=0.6.0
