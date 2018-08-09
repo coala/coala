@@ -9,6 +9,9 @@ from coalib.processes.BearRunning import (
 from coalib.processes.CONTROL_ELEMENT import CONTROL_ELEMENT
 from coalib.results.Result import RESULT_SEVERITY, Result
 from coalib.settings.Section import Section
+from coalib.settings.Setting import Setting
+
+from tests.test_bears.RaiseTestBear import RaiseTestExecuteBear
 
 
 class LocalTestBear(LocalBear):
@@ -87,12 +90,6 @@ class GlobalTestBear(GlobalBear):
                                              file,
                                              severity=RESULT_SEVERITY.INFO))
         return result
-
-
-class EvilBear(LocalBear):
-
-    def execute(self, *args, **kwargs):
-        raise NotImplementedError
 
 
 class UnexpectedBear1(LocalBear):
@@ -177,8 +174,11 @@ class BearRunningUnitTest(unittest.TestCase):
             pass
 
     def test_evil_bear(self):
-        self.local_bear_list.append(EvilBear(self.settings,
-                                             self.message_queue))
+        self.settings.append(Setting('cls', 'NotImplementedError'))
+
+        self.local_bear_list.append(
+            RaiseTestExecuteBear(self.settings, self.message_queue))
+
         self.file_name_queue.put('t')
         self.file_dict['t'] = []
 
@@ -191,6 +191,79 @@ class BearRunningUnitTest(unittest.TestCase):
             self.global_result_dict,
             self.message_queue,
             self.control_queue)
+
+    def test_bear_debug(self):
+        self.settings.append(Setting('cls', 'KeyboardInterrupt'))
+        self.settings.append(Setting('msg', 'fake error'))
+
+        self.local_bear_list.append(
+            RaiseTestExecuteBear(self.settings, self.message_queue))
+
+        self.file_name_queue.put('t')
+        self.file_dict['t'] = []
+
+        with self.assertRaisesRegex(KeyboardInterrupt, 'fake error'):
+            run(self.file_name_queue,
+                self.local_bear_list,
+                self.global_bear_list,
+                self.global_bear_queue,
+                self.file_dict,
+                self.local_result_dict,
+                self.global_result_dict,
+                self.message_queue,
+                self.control_queue,
+                debug=True,
+                )
+
+        self.file_name_queue.put('t')
+        self.file_dict['t'] = []
+
+        run(self.file_name_queue,
+            self.local_bear_list,
+            self.global_bear_list,
+            self.global_bear_queue,
+            self.file_dict,
+            self.local_result_dict,
+            self.global_result_dict,
+            self.message_queue,
+            self.control_queue,
+            debug=False,
+            )
+
+    def test_bear_impossible(self):
+        self.settings.append(Setting('cls', 'OSError'))
+        self.settings.append(Setting('msg', 'fake error'))
+
+        self.local_bear_list.append(
+            RaiseTestExecuteBear(self.settings, self.message_queue))
+
+        self.file_name_queue.put('t')
+        self.file_dict['t'] = []
+
+        with self.assertRaisesRegex(OSError, 'fake error'):
+            run(self.file_name_queue,
+                self.local_bear_list,
+                self.global_bear_list,
+                self.global_bear_queue,
+                self.file_dict,
+                self.local_result_dict,
+                self.global_result_dict,
+                self.message_queue,
+                self.control_queue,
+                debug=True,
+                )
+
+        run(self.file_name_queue,
+            self.local_bear_list,
+            self.global_bear_list,
+            self.global_bear_queue,
+            self.file_dict,
+            self.local_result_dict,
+            self.global_result_dict,
+            self.message_queue,
+            self.control_queue,
+            debug=False,
+            )
 
     def test_strange_bear(self):
         self.local_bear_list.append(UnexpectedBear1(self.settings,

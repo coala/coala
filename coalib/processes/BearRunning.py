@@ -559,6 +559,6 @@ def run(file_name_queue,
                          control_queue,
                          debug=debug)
         control_queue.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
-    except (OSError, KeyboardInterrupt):  # pragma: no cover
+    except (OSError, KeyboardInterrupt):
         if debug:
             raise

@@ -243,13 +243,25 @@ To run coala without user interaction, run the `coala --non-interactive`,
         '-r', '--relpath', nargs='?', const=True,
         help='return relative paths for files (must be called with --json)')
 
-    outputs_group.add_argument(
+    devtool_exclusive_group = arg_parser.add_mutually_exclusive_group()
+
+    devtool_exclusive_group.add_argument(
         '--debug-bears', nargs='?', const=True,
         help='Enable bear debugging with pdb, that can help to identify and'
         ' correct errors in bear code. Steps into bear code as soon as being'
         ' executed. To specify which bears to debug, supply bear names as'
         ' additional arguments. If used without arguments, all bears specified'
         ' with --bears will be debugged (even implicit dependency bears).')
+
+    devtool_exclusive_group.add_argument(
+        '--profile', nargs='?', const=True,
+        help='Enable bear profiling with cProfile. To specify where to dump the'
+        ' profiled files, supply the directory path. If specified directory'
+        ' does not exist it will be created. If the specified path points to an'
+        ' already existing file a error is raised. All bears (even'
+        ' implicit dependency bears) in a section will be profiled. Profiled'
+        ' data files will have a name format'
+        ' ``{section.name}_{bear.name}.prof``.')
 
     misc_group = arg_parser.add_argument_group('Miscellaneous')
 

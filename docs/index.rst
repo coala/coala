@@ -53,6 +53,7 @@ If you're trying to **use** coala, you should have a look at our
    External Bears <Developers/External_Bears>
    Testing Bears <Developers/Testing_Bears>
    Debug Bears <Developers/Debug_Bears>
+   Profile Bears <Developers/Profile_Bears>
    Writing Tests <Developers/Writing_Tests>
    Writing Documentation <Developers/Writing_Documentation>
    Executing Tests <Developers/Executing_Tests>

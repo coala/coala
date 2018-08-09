@@ -120,5 +120,5 @@ def main(debug=False):
     return mode_normal(console_printer, None, args, debug=debug)
 
 
-if __name__ == '__main__':  # pragma: no cover
-    main()
+if __name__ == '__main__':
+    sys.exit(main())
