@@ -320,7 +320,7 @@ class Diff:
         >>> len(list(diff.split_diff(distance=0)))
         2
 
-        If a negative distance is given, every change will be yielded as an own
+        If ``-1`` is given, every change will be yielded as an own
         diff, even if they are right beneath each other:
 
         >>> len(list(diff.split_diff(distance=-1)))
