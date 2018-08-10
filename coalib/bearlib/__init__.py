@@ -98,6 +98,7 @@ def deprecate_settings(**depr_args):
     def _deprecate_decorator(func):
 
         logged_deprecated_args = set()
+        kwargs_to_delete = []
 
         @wraps(func)
         def wrapping_function(*args, **kwargs):
@@ -105,11 +106,11 @@ def deprecate_settings(**depr_args):
                 deprecated_arg = depr_value[0]
                 _func = depr_value[1]
                 if deprecated_arg in kwargs:
-                    if deprecated_arg not in logged_deprecated_args:
+                    if (deprecated_arg, arg) not in logged_deprecated_args:
                         logging.warning(
                             'The setting `{}` is deprecated. Please use `{}` '
                             'instead.'.format(deprecated_arg, arg))
-                        logged_deprecated_args.add(deprecated_arg)
+                        logged_deprecated_args.add((deprecated_arg, arg))
                     depr_arg_value = _func.__call__(kwargs[deprecated_arg])
                     if arg in kwargs and depr_arg_value != kwargs[arg]:
                         logging.warning(
@@ -118,7 +119,14 @@ def deprecate_settings(**depr_args):
                                   deprecated_arg, arg, arg))
                     else:
                         kwargs[arg] = depr_arg_value
-                    del kwargs[deprecated_arg]
+                    kwargs_to_delete.append(deprecated_arg)
+
+            for arg in kwargs_to_delete:
+                try:
+                    del kwargs[arg]
+                except KeyError:
+                    pass
+
             return func(*args, **kwargs)
 
         new_metadata = FunctionMetadata.from_function(func)
