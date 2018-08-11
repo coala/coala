@@ -12,6 +12,7 @@ class CPP:
     multiline_string_delimiters = {'R("': ')"'}
     indent_types = {'{': '}'}
     encapsulators = {'(': ')', '[': ']'}
+    indent_keywords = 'if', 'while', 'for'
     keywords = [
         'alignas', 'alignof', 'and', 'and_eq', 'asm', 'auto', 'bitand',
         'bitor', 'bool', 'break', 'case', 'catch', 'char', 'char16_t',
