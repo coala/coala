@@ -348,16 +348,11 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(p.pid, pgid)
 
     def test_get_file_dict(self):
-        with LogCapture() as capture:
-            file_dict = get_file_dict([self.testcode_c_path], self.log_printer)
+        file_dict = get_file_dict([self.testcode_c_path], self.log_printer)
         self.assertEqual(len(file_dict), 1)
         self.assertEqual(type(file_dict[self.testcode_c_path]),
                          tuple,
                          msg='files in file_dict should not be editable')
-        capture.check(
-            ('root', 'DEBUG', 'Files that will be checked:\n' +
-             self.testcode_c_path)
-        )
 
     def test_get_file_dict_non_existent_file(self):
         with LogCapture() as capture:
@@ -367,22 +362,14 @@ class ProcessingTest(unittest.TestCase):
             ('root', 'WARNING',
              StringComparison(r".*Failed to read file 'non_existent_file' "
                               r'because of an unknown error.*')),
-            ('root', 'INFO', StringComparison(r'.*Exception was:.*')),
-            ('root', 'DEBUG',
-             StringComparison(r'.*Files that will be checked.*'))
+            ('root', 'INFO', StringComparison(r'.*Exception was:.*'))
         )
 
     def test_get_file_dict_allow_raw_file(self):
-        log_printer = ListLogPrinter()
-        with LogCapture() as capture:
-            file_dict = get_file_dict([self.unreadable_path], log_printer,
-                                      True)
+        file_dict = get_file_dict([self.unreadable_path], self.log_printer,
+                                  True)
         self.assertNotEqual(file_dict, {})
         self.assertEqual(file_dict[self.unreadable_path], None)
-        capture.check(
-            ('root', 'DEBUG', StringComparison(r'(?s).*Files that will be '
-                                               r'checked(?s).*'))
-        )
 
     def test_get_file_dict_forbid_raw_file(self):
         log_printer = ListLogPrinter()
@@ -393,9 +380,7 @@ class ProcessingTest(unittest.TestCase):
         capture.check(
             ('root', 'WARNING', "Failed to read file '{}'. It seems to contain "
              'non-unicode characters. Leaving it out.'
-                .format(self.unreadable_path)),
-            ('root', 'DEBUG', StringComparison(r'(?s).*Files that will be '
-                                               r'checked(?s).*'))
+                .format(self.unreadable_path))
         )
 
     def test_simplify_section_result(self):

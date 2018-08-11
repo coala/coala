@@ -287,8 +287,6 @@ def get_file_dict(filename_list, log_printer=None, allow_raw_files=False):
                           exception,
                           log_level=LOG_LEVEL.WARNING)
 
-    logging.debug('Files that will be checked:\n' +
-                  '\n'.join(file_dict.keys()))
     return file_dict
 
 
@@ -385,6 +383,9 @@ def instantiate_processes(section,
 
     complete_file_dict = file_dict_generator(complete_filename_list,
                                              allow_raw_files=use_raw_files)
+
+    logging.debug('Files that will be checked:\n'
+                  '\n'.join(complete_file_dict.keys()))
 
     if debug or debug_bears:
         from . import DebugProcessing as processing
