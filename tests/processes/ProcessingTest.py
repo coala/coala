@@ -243,13 +243,14 @@ class ProcessingTest(unittest.TestCase):
         ctrlq.put((CONTROL_ELEMENT.GLOBAL, 1))
         ctrlq.put((CONTROL_ELEMENT.GLOBAL_FINISHED, None))
 
-        first_local = Result.from_values('o', 'The first result.', file='f')
+        first_local = Result.from_values('ABear', 'The first result.',
+                                         file='f', line=1, end_line=1)
         second_local = Result.from_values('ABear',
                                           'The second result.',
                                           file='f',
                                           line=1)
         third_local = Result.from_values('ABear',
-                                         'The second result.',
+                                         'u',
                                          file='f',
                                          line=4)
         fourth_local = Result.from_values('ABear',
@@ -268,7 +269,7 @@ class ProcessingTest(unittest.TestCase):
                  # The following are to be ignored
                  Result('o', 'm', severity=RESULT_SEVERITY.INFO),
                  Result.from_values('ABear', 'u', 'f', 2, 1),
-                 Result.from_values('ABear', 'u', 'f', 3, 1)],
+                 Result.from_values('ABear', 'Another result.', 'f', 7)],
              2: [fourth_local,
                  # The following are to be ignored
                  HiddenResult('t', 'c'),
@@ -288,8 +289,10 @@ class ProcessingTest(unittest.TestCase):
             self.log_printer,
             self.console_printer)
 
-        self.assertEqual(self.queue.get(timeout=0), ([second_local,
-                                                      third_local]))
+        self.assertEqual(self.queue.get(timeout=0), ([first_local,
+                                                      second_local,
+                                                      third_local,
+                                                      fourth_local]))
         self.assertEqual(self.queue.get(timeout=0), ([fourth_local]))
         self.assertEqual(self.queue.get(timeout=0), ([first_global]))
         self.assertEqual(self.queue.get(timeout=0), ([first_global]))
@@ -466,7 +469,7 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.start.line, 1)
             self.assertEqual(test_source_range.start.column, 1)
             self.assertEqual(test_source_range.end.line, 2)
-            self.assertEqual(test_source_range.end.column, 43)
+            self.assertEqual(test_source_range.end.column, 42)
 
         test_file_dict_b = {'f':
                             ('# start Ignoring bBear\n',
@@ -511,7 +514,7 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.start.line, 1)
             self.assertEqual(test_source_range.start.column, 1)
             self.assertEqual(test_source_range.end.line, 2)
-            self.assertEqual(test_source_range.end.column, 43)
+            self.assertEqual(test_source_range.end.column, 42)
 
         test_file_dict_n = {'f':
                             ('# noqa nBear\n',
@@ -522,7 +525,7 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.start.line, 1)
             self.assertEqual(test_source_range.start.column, 1)
             self.assertEqual(test_source_range.end.line, 2)
-            self.assertEqual(test_source_range.end.column, 43)
+            self.assertEqual(test_source_range.end.column, 42)
 
         test_file_dict_n = {'f':
                             ('# noqa\n',
@@ -533,7 +536,7 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.start.line, 1)
             self.assertEqual(test_source_range.start.column, 1)
             self.assertEqual(test_source_range.end.line, 2)
-            self.assertEqual(test_source_range.end.column, 43)
+            self.assertEqual(test_source_range.end.column, 42)
 
         # This case was a bug.
         test_file_dict_single_line = {'f': ('# ignore XBEAR',)}
@@ -546,7 +549,7 @@ class ProcessingTest(unittest.TestCase):
         self.assertEqual(source_range.start.line, 1)
         self.assertEqual(source_range.start.column, 1)
         self.assertEqual(source_range.end.line, 1)
-        self.assertEqual(source_range.end.column, 14)
+        self.assertEqual(source_range.end.column, 13)
 
     def test_loaded_bears_with_error_result(self):
         class BearWithMissingPrerequisites(Bear):
