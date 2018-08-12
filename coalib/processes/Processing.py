@@ -6,7 +6,6 @@ import queue
 import subprocess
 
 from coala_utils.string_processing.StringConverter import StringConverter
-from coala_utils.FileUtils import detect_encoding
 
 from coalib.collecting.Collectors import collect_files
 from coalib.misc.Exceptions import log_exception
@@ -30,6 +29,7 @@ from coalib.results.SourceRange import SourceRange
 from coalib.settings.Setting import glob_list, typed_list
 from coalib.parsing.Globbing import fnmatch
 from coalib.io.FileProxy import FileDictGenerator
+from coalib.io.FileFactory import FileFactory
 
 
 ACTIONS = [DoNothingAction,
@@ -268,16 +268,23 @@ def get_file_dict(filename_list, log_printer=None, allow_raw_files=False):
     :return:                Reads the content of each file into a dictionary
                             with filenames as keys.
     """
-    file_dict = {}
+    file_dict = FileDict()
     for filename in filename_list:
         try:
-            with open(filename, 'r',
-                      encoding=detect_encoding(filename)) as _file:
-                file_dict[filename] = tuple(_file.readlines())
+            file_dict[filename] = FileFactory(filename)
+            # This is a workaround to purposely raise a
+            # ``UnicodeDecodeError`` to move into the
+            # except clause.
+            FileFactory(filename).string
         except UnicodeDecodeError:
             if allow_raw_files:
                 file_dict[filename] = None
                 continue
+            else:
+                # In case raw files are not allowed the
+                # ``FileFactory`` object created for it
+                # needs to be evicted from the dictionary.
+                del file_dict[filename]
             logging.warning("Failed to read file '{}'. It seems to contain "
                             'non-unicode characters. Leaving it out.'
                             .format(filename))
@@ -825,3 +832,31 @@ def execute_section(section,
 
             for runner in processes:
                 runner.join()
+
+
+class FileDict(dict):
+    """
+    Acts as a middleware to provide the bears with the
+    actual file contents instead of the `FileFactory`
+    objects.
+    """
+
+    def __init__(self):
+        super().__init__()
+
+    def __setitem__(self, key, value):
+        super().__setitem__(key, value)
+
+    def __getitem__(self, key):
+        val = super().__getitem__(key)
+        if val:
+            return val.lines
+
+    def __delitem__(self, key):
+        super().__delitem__(key)
+
+    def keys(self):
+        return list(super().keys())
+
+    def __len__(self):
+        return super().__len__()
