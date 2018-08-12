@@ -1,0 +1,7 @@
+first line  # stop ignoring, invalid ignore range
+second line  # ignore all
+third line
+fourth line  # gnore shouldn't trigger without i!
+# Start ignoring ABear, BBear and CBear
+# Stop ignoring
+seventh

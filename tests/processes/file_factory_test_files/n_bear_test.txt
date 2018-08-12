@@ -1,0 +1,2 @@
+# noqa nBear
+n_string = "This string should be ignored"

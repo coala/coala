@@ -79,6 +79,36 @@ class ProcessingTest(unittest.TestCase):
         self.unreadable_path = os.path.join(os.path.dirname(config_path),
                                             'unreadable')
 
+        factory_test_path = os.path.abspath(os.path.join(
+            os.path.dirname(__file__),
+            'file_factory_test_files'))
+        self.factory_test_file = os.path.join(factory_test_path,
+                                              'factory_test.txt')
+        self.a_bear_test_path = os.path.join(factory_test_path,
+                                             'a_bear_test.txt')
+        self.b_bear_test_path = os.path.join(factory_test_path,
+                                             'b_bear_test.txt')
+        self.c_bear_test_path = os.path.join(factory_test_path,
+                                             'c_bear_test.txt')
+        self.d_bear_test_path = os.path.join(factory_test_path,
+                                             'd_bear_test.txt')
+        self.e_bear_test_path = os.path.join(factory_test_path,
+                                             'e_bear_test.txt')
+        self.n_bear_test_path = os.path.join(factory_test_path,
+                                             'n_bear_test.txt')
+        self.n_bear_test_path_2 = os.path.join(factory_test_path,
+                                               'n_bear_test2.txt')
+        self.x_bear_test_path = os.path.join(factory_test_path,
+                                             'x_bear_test.txt')
+
+        filename_list = [self.factory_test_file, self.a_bear_test_path,
+                         self.b_bear_test_path, self.c_bear_test_path,
+                         self.d_bear_test_path, self.e_bear_test_path,
+                         self.n_bear_test_path, self.n_bear_test_path_2,
+                         self.x_bear_test_path]
+
+        self.file_dict = get_file_dict(filename_list)
+
         self.result_queue = queue.Queue()
         self.queue = queue.Queue()
         self.log_queue = queue.Queue()
@@ -275,13 +305,7 @@ class ProcessingTest(unittest.TestCase):
                  Result.from_values('ABear', 'u', 'f', 5, 1),
                  Result.from_values('ABear', 'u', 'f', 6, 1)]},
             {1: [first_global]},
-            {'f': ['first line  # stop ignoring, invalid ignore range\n',
-                   'second line  # ignore all\n',
-                   'third line\n',
-                   "fourth line  # gnore shouldn't trigger without i!\n",
-                   '# Start ignoring ABear, BBear and CBear\n',
-                   '# Stop ignoring\n',
-                   'seventh']},
+            {'f': self.file_dict[self.factory_test_file]},
             lambda *args: self.queue.put(args[2]),
             section,
             None,
@@ -457,9 +481,7 @@ class ProcessingTest(unittest.TestCase):
         self.assertFalse(check_result_ignore(result, ranges))
 
     def test_yield_ignore_ranges(self):
-        test_file_dict_a = {'f':
-                            ('# Ignore aBear\n',
-                             'a_string = "This string should be ignored"\n')}
+        test_file_dict_a = {'f': self.file_dict[self.a_bear_test_path]}
         test_ignore_range_a = list(yield_ignore_ranges(test_file_dict_a))
         for test_bears, test_source_range in test_ignore_range_a:
             self.assertEqual(test_bears, ['abear'])
@@ -468,10 +490,7 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.end.line, 2)
             self.assertEqual(test_source_range.end.column, 43)
 
-        test_file_dict_b = {'f':
-                            ('# start Ignoring bBear\n',
-                             'b_string = "This string should be ignored"\n',
-                             '# stop ignoring\n')}
+        test_file_dict_b = {'f': self.file_dict[self.b_bear_test_path]}
         test_ignore_range_b = list(yield_ignore_ranges(test_file_dict_b))
         for test_bears, test_source_range in test_ignore_range_b:
             self.assertEqual(test_bears, ['bbear'])
@@ -480,9 +499,7 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.end.line, 3)
             self.assertEqual(test_source_range.end.column, 16)
 
-        test_file_dict_c = {'f':
-                            ('# Start ignoring cBear\n',
-                             '# Stop ignoring cBear This & prev ignored\n')}
+        test_file_dict_c = {'f': self.file_dict[self.c_bear_test_path]}
         test_ignore_range_c = list(yield_ignore_ranges(test_file_dict_c))
         for test_bears, test_source_range in test_ignore_range_c:
             self.assertEqual(test_bears, ['cbear'])
@@ -491,9 +508,7 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.end.line, 2)
             self.assertEqual(test_source_range.end.column, 42)
 
-        test_file_dict_d = {'f':
-                            ('# Start ignoring cBear\n',
-                             'All of this ignored\n')}
+        test_file_dict_d = {'f': self.file_dict[self.d_bear_test_path]}
         test_ignore_range_d = list(yield_ignore_ranges(test_file_dict_d))
         for test_bears, test_source_range in test_ignore_range_d:
             self.assertEqual(test_bears, ['cbear'])
@@ -502,9 +517,7 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.end.line, 2)
             self.assertEqual(test_source_range.end.column, 20)
 
-        test_file_dict_e = {'f':
-                            ('# Ignore all\n',
-                             'e_string = "This string should be ignored"\n')}
+        test_file_dict_e = {'f': self.file_dict[self.e_bear_test_path]}
         test_ignore_range_e = list(yield_ignore_ranges(test_file_dict_e))
         for test_bears, test_source_range in test_ignore_range_e:
             self.assertEqual(test_bears, [])
@@ -513,9 +526,7 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.end.line, 2)
             self.assertEqual(test_source_range.end.column, 43)
 
-        test_file_dict_n = {'f':
-                            ('# noqa nBear\n',
-                             'n_string = "This string should be ignored"\n')}
+        test_file_dict_n = {'f': self.file_dict[self.n_bear_test_path]}
         test_ignore_range_n = list(yield_ignore_ranges(test_file_dict_n))
         for test_bears, test_source_range in test_ignore_range_n:
             self.assertEqual(test_bears, ['nbear'])
@@ -524,9 +535,7 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.end.line, 2)
             self.assertEqual(test_source_range.end.column, 43)
 
-        test_file_dict_n = {'f':
-                            ('# noqa\n',
-                             'n_string = "This string should be ignored"\n')}
+        test_file_dict_n = {'f': self.file_dict[self.n_bear_test_path_2]}
         test_ignore_range_n = list(yield_ignore_ranges(test_file_dict_n))
         for test_bears, test_source_range in test_ignore_range_n:
             self.assertEqual(test_bears, [])
@@ -536,7 +545,8 @@ class ProcessingTest(unittest.TestCase):
             self.assertEqual(test_source_range.end.column, 43)
 
         # This case was a bug.
-        test_file_dict_single_line = {'f': ('# ignore XBEAR',)}
+        test_file_dict_single_line = (
+            {'f': self.file_dict[self.x_bear_test_path]})
         test_ignore_range_single_line = list(yield_ignore_ranges(
             test_file_dict_single_line))
 
@@ -546,7 +556,7 @@ class ProcessingTest(unittest.TestCase):
         self.assertEqual(source_range.start.line, 1)
         self.assertEqual(source_range.start.column, 1)
         self.assertEqual(source_range.end.line, 1)
-        self.assertEqual(source_range.end.column, 14)
+        self.assertEqual(source_range.end.column, 15)
 
     def test_loaded_bears_with_error_result(self):
         class BearWithMissingPrerequisites(Bear):
