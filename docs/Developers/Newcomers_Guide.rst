@@ -439,7 +439,6 @@ attempt - but don't worry, that's just how it works. It helps us keep
 coala **clean** and **stable**.
 
 .. seealso::
-#Hello
 
     `Review Process <http://api.coala.io/en/latest/Developers/Review.html>`_.
 
