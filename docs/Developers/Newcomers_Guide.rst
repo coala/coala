@@ -207,7 +207,7 @@ Now you can start working on it!
     As stated above, you should never work on an issue without being
     assigned. Fortunately, corobo is here to help you! If you are
     interested in picking up an issue, just write the following command
-    in gitter chat::
+    in gitter chat:
 
         corobo assign <issue_link>
 
@@ -218,20 +218,20 @@ Now you can start working on it!
     You can do amazing stuff using corobo.
 
         * Issue assigning as stated earlier.
-        * File issues::
+        * File issues:
 
             corobo file issue <repo> <title>
             <description>
 
-        * You shouldn't close any PR, instead mark them as work in progress::
+        * You shouldn't close any PR, instead mark them as work in progress:
 
             corobo mark wip <full url>
 
-        * To label a PR as pending review::
+        * To label a PR as pending review:
 
             corobo mark pending <full url>
 
-        * To see all of the corobo commands::
+        * To see all of the corobo commands:
 
             corobo help
 
@@ -291,7 +291,7 @@ fork repository.
    In order to avoid the above mentioned cases you can create a new branch
    where you will work on the issue. To do that run:
 
-   ::
+   :
 
         $ git checkout -b <branchname>
 
@@ -339,7 +339,7 @@ Step 4. Sending Your Changes
    Before committing your changes, please check that you are indeed in a
    development branch created in step 3. To check if you are in a branch, type:
 
-   ::
+   :
 
          $ git branch
 
