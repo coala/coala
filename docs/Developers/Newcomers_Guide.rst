@@ -431,6 +431,7 @@ Now there are two possibilities:
 
 .. note::
 
+
     You might be wondering what those CI things on your ``Pull Request`` are.
     For more detailed info about them, see `this page`_.
 
