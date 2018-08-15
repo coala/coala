@@ -2,15 +2,19 @@ from coalib.bearlib.languages.Language import Language
 
 
 @Language
-class Shell:
-    extensions = '.sh',
+class ZShell:
+    extensions = '.zsh',
     comment_delimiters = '#',
     multiline_comment_delimiters = {": '": "'"}
     string_delimiters = {'"': '"', "'": "'", '`': '`'}
     multiline_string_delimiters = string_delimiters
     encapsulators = {'[': ']', '{': '}'}
     keywords = [
-        'if', 'then', 'else', 'elif', 'fi', 'case', 'coproc', 'esac',
-        'for', 'select', 'while', 'until', 'do', 'done', 'in',
-        'function']
+        'do', 'done', 'esac', 'then', 'elif', 'else',
+        'fi', 'for', 'case', 'if', 'while', 'function',
+        'repeat', 'time', 'until', 'select', 'coproc',
+        'nocorrect', 'foreach', 'end', 'declare',
+        'export', 'float', 'integer', 'local',
+        'readonly', 'typeset',
+        ]
     special_chars = list('{}!|><[]*?$')

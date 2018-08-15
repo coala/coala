@@ -33,6 +33,7 @@ C_BEARS_COUNT = 2
 
 # This list is sorted alphabetically
 LANGUAGE_NAMES = [
+    'Bash',
     'C',
     'C#',
     'CPP',
@@ -46,6 +47,7 @@ LANGUAGE_NAMES = [
     'JavaScript Object Notation',
     'JavaServer Pages',
     'Jinja2',
+    'KornShell',
     'Markdown',
     'Matlab',
     'ObjectiveC',
@@ -62,6 +64,7 @@ LANGUAGE_NAMES = [
     'Vala',
     'VisualBasic',
     'm4',
+    'ZShell',
 ]
 
 LANGUAGE_COUNT = len([
