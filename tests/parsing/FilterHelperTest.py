@@ -51,8 +51,8 @@ class FilterHelperTest(unittest.TestCase):
         self.assertIsNotNone(apply_filter_result)
 
     def test_apply_filters(self):
-        apply_filters_result = apply_filters([('language', 'C', 'Python'),
-                                              ('can_fix', 'syntax')])
+        apply_filters_result = apply_filters({'language': ('C', 'Python'),
+                                              'can_fix': ('syntax',)})
         self.assertIsNotNone(apply_filters_result)
 
     def test_apply_filters(self):
@@ -62,7 +62,7 @@ class FilterHelperTest(unittest.TestCase):
         section_two = Section('filters')
         section_two.append(Setting('tags', 'change'))
 
-        filtered = apply_filters([('section_tags', 'save')],
+        filtered = apply_filters({'section_tags': ('save',)},
                                  sections=[section_one, section_two, ])
 
         self.assertEqual(len(filtered), 1)
@@ -83,23 +83,23 @@ class FilterHelperTest(unittest.TestCase):
 
     def test_collect_filters_args(self):
         args = MockObjMap(filter_by=None)
-        self.assertEqual(collect_filters(args), [])
+        self.assertEqual(collect_filters(args), {})
 
         args = MockObjMap(filter_by=[['sample', 'arg0']])
-        self.assertEqual(collect_filters(args), [['sample', 'arg0']])
+        self.assertEqual(collect_filters(args), {'sample': ('arg0',)})
 
     def test_collect_filters_arg_list_default_parser(self):
         collected = collect_filters(None, [])
-        self.assertEqual(collected, [])
+        self.assertEqual(collected, {})
 
         collected = collect_filters(None, ['--filter-by', 'sample', 'arg'])
-        self.assertEqual(collected, [['sample', 'arg']])
+        self.assertEqual(collected, {'sample': ('arg',)})
 
     def test_collect_filters_arg_list_custom_parser(self):
         collected = collect_filters(None, [], default_arg_parser())
-        self.assertEqual(collected, [])
+        self.assertEqual(collected, {})
 
         collected = collect_filters(None,
                                     ['--filter-by', 'sample', 'arg'],
                                     default_arg_parser())
-        self.assertEqual(collected, [['sample', 'arg']])
+        self.assertEqual(collected, {'sample': ('arg',)})
