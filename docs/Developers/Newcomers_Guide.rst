@@ -440,7 +440,6 @@ coala **clean** and **stable**.
 
 .. seealso::
 
-
     `Review Process <http://api.coala.io/en/latest/Developers/Review.html>`_.
 
 Now, if you need to modify your code, you can simply edit it again, add it, and
