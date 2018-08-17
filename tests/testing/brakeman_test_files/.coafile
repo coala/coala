@@ -1,0 +1,3 @@
+[brakeman]
+bears = RubySecurityBear1
+files = **
