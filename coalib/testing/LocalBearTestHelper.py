@@ -3,8 +3,6 @@ import unittest
 from contextlib import contextmanager, ExitStack
 from unittest.mock import patch
 
-import pytest
-
 from coalib.bearlib.abstractions.LinterClass import LinterClass
 from coalib.testing.BearTestHelper import generate_skip_decorator
 from coalib.bears.LocalBear import LocalBear
@@ -367,12 +365,13 @@ def verify_local_bear(bear,
     :param force_linebreaks: Whether to append newlines at each line
                              if needed. (Bears expect a \\n for every line)
     :param create_tempfile:  Whether to save lines in tempfile if needed.
-    :param timeout:          The total time to run the test for.
+    :param timeout:          Unused.  Use pytest-timeout or similar.
     :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp() if tempfile
                              needs to be created.
     :return:                 A unittest.TestCase object.
     """
-    @pytest.mark.timeout(timeout)
+    assert not timeout
+
     @generate_skip_decorator(bear)
     class LocalBearTest(LocalBearTestHelper):
 
