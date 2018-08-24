@@ -355,6 +355,10 @@ to be merged, create a commit and push it to your fork, using:
 
 where ``myfork`` is the name of your fork that you added at the previous step.
 
+After making the changes, it is recommended that you test the code on your
+forked repository by `adding the required CI
+tools <http://api.coala.io/en/latest/Developers/Adding_CI.html>`_.
+
 .. note::
 
     You can also add a profile picture to your Github account so that
