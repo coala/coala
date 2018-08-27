@@ -16,6 +16,7 @@ from .definitions.Golang import Golang
 from .definitions.html import HTML
 from .definitions.Java import Java
 from .definitions.JavaScript import JavaScript
+from .definitions.JSON import JSON
 from .definitions.JSP import JSP
 from .definitions.m4 import m4
 from .definitions.Matlab import Matlab
