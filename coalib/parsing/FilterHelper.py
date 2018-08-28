@@ -1,10 +1,12 @@
+from collections import OrderedDict
+
 from coalib.parsing.InvalidFilterException import InvalidFilterException
 from coalib.parsing.filters import available_filters
 from coalib.parsing.DefaultArgParser import default_arg_parser
 
 
-def is_valid_filter(filter):
-    return filter in available_filters
+def is_valid_filter(filter_name):
+    return filter_name in available_filters
 
 
 def _filter_section_bears(bears, args, filter_name):
@@ -25,7 +27,7 @@ def apply_filter(filter_name, filter_args, all_bears=None):
     :param filter_args:
         Arguments of the filter to be passed in.
         For example:
-        ``['c', 'java']``
+        ``('c', 'java')``
     :param all_bears:
         List of bears on which filter is to be applied.
         All the bears are loaded automatically by default.
@@ -59,9 +61,9 @@ def apply_filters(filters, bears=None, sections=None):
     and runs filter in bear filtering mode.
 
     :param filters:
-        List of args based on ``bears`` has to be filtered. For example:
-        ``[['language', 'c', 'java'], ['can_fix', 'syntax'],
-        ['section_tags', 'save']]``
+        OrderedDict of filters based on ``bears`` to be filtered. For example:
+        ``{'language': ('c', 'java'), 'can_fix': ('syntax',),
+        'section_tags': ('save',)}``
     :param bears:
         The bears to filter.
     :param sections:
@@ -75,8 +77,7 @@ def apply_filters(filters, bears=None, sections=None):
         items = sections
         applier = _apply_section_filter
 
-    for filter in filters:
-        filter_name, *filter_args = filter
+    for filter_name, filter_args in filters.items():
         items = applier(filter_name, filter_args, items)
     return items
 
@@ -90,7 +91,7 @@ def _apply_section_filter(filter_name, filter_args, all_sections):
         Name of the section filter.
     :param filter_args:
         Arguments to be passed to the filter. For example:
-        ``['section_tags', ('save', 'change')]``
+        ``{'section_tags': ('save', 'change')}``
     :param all_sections:
         List of all sections on which filter is to be applied.
     :return:
@@ -123,10 +124,30 @@ def collect_filters(args, arg_list=None, arg_parser=None):
         Instance of ArgParser that is used to parse arg list.
     :return:
         List of filters in standard filter format, i.e
-        ``[['filter_name', 'arg1', 'arg2']]``.
+        ``{'filter_name': ('arg1', 'arg2')}``.
     """
     if args is None:
         arg_parser = default_arg_parser() if arg_parser is None else arg_parser
         args = arg_parser.parse_args(arg_list)
 
-    return getattr(args, 'filter_by', None) or []
+    filters = getattr(args, 'filter_by', None) or []
+    filters = filter_vector_to_dict(filters)
+    return filters
+
+
+def filter_vector_to_dict(filters):
+    """
+    Changes filter vector to OrderedDict.
+
+    :param filters:
+        List of filters in standard filter format, i.e
+        ``[['filter_name', 'arg1', 'arg2']]``.
+    :return:
+        OrderedDict of filters, For example:
+        ``{'filter_name': ('arg1', 'arg2')}``
+    """
+    items = OrderedDict()
+    for filter_vector in filters:
+        filter_name, args = filter_vector[0], tuple(filter_vector[1:])
+        items[filter_name] = args
+    return items

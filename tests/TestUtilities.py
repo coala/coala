@@ -43,6 +43,7 @@ LANGUAGE_NAMES = [
     'Hypertext Markup Language 2.0, 3.2, 4.0, 4.1, 5, 5.1',
     'Java',
     'JavaScript',
+    'JavaScript Object Notation',
     'JavaServer Pages',
     'Jinja2',
     'Markdown',
