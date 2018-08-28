@@ -5,6 +5,7 @@ Welcome to the Newcomers' Guide!
 work on it as well, and we might have no choice but to reject one of your Pull
 Requests. We hate it if someone's time is wasted. For your own sake, please
 follow this guide. We put a lot of work into this for you!
+I am adding a line here to check if it works
 
 Everyone in the coala community is expected to follow our
 `Code of Conduct <http://coala.io/coc>`_.
