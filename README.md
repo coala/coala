@@ -390,7 +390,7 @@ Inspired by [awesome-php](https://github.com/ziadoz/awesome-php).
 
 *Databases implemented in Python.*
 
-* [pickleDB](https://pythonhosted.org/pickleDB/) - A simple and lightweight key-value store for Python.
+* [pickleDB](https://pythonhosted.org/pickleDB/) - A simple and lightweight key-value store database for Python.
 * [TinyDB](https://github.com/msiemens/tinydb) - A tiny, document-oriented database.
 * [ZODB](http://www.zodb.org/en/latest/) - A native object database for Python. A key-value and object graph database.
 
