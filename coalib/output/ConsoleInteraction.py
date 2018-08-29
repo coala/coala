@@ -802,6 +802,7 @@ def ask_for_action_and_apply(console_printer,
                                     file_diff_dict,
                                     file_dict,
                                     applied_actions)
+            break
         return False
     else:
         for action_choice, action_choice_name in zip(actions_desc,
