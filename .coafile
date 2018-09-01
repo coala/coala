@@ -43,7 +43,7 @@ ignore_length_regex = ^.*https?://
 bears = SpaceConsistencyBear, LineLengthBear
 
 files = docs/**/*.rst,*.rst
-ignore = docs/API/**
+ignore = docs/API/
 ignore_length_regex = ^.*https?://
 
 default_actions = SpaceConsistencyBear: ApplyPatchAction
@@ -53,7 +53,7 @@ enabled = False
 
 bears = LanguageToolBear
 files = docs/**/*.rst,*.rst
-ignore = docs/API/**
+ignore = docs/API/
 languagetool_disable_rules =
     EN_QUOTES,                          # `` for links in rst files
     WHITESPACE_RULE,                    # Indents in code
@@ -128,7 +128,7 @@ files =
     LICENSE, ISSUE_TEMPLATE, PULL_REQUEST_TEMPLATE.md, MANIFEST.in,
     **.sh, .travis.yml, ./.circleci/config.yml, setup.cfg,
     ./docs/_static/custom.css
-ignore = node_modules/**
+ignore = node_modules/
 
 [jinja2]
 bears = Jinja2Bear
