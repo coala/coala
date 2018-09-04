@@ -127,10 +127,10 @@ def load_config_file(filename, log_printer=None, silent=False):
         return ConfParser().parse(filename)
     except FileNotFoundError:
         if not silent:
-            if os.path.basename(filename) == Constants.default_coafile:
+            if os.path.basename(filename) == Constants.local_coafile:
                 logging.warning(COAFILE_OUTPUT
                                 .substitute(type='Default coafile',
-                                            file=Constants.default_coafile,
+                                            file=Constants.local_coafile,
                                             found='not found'))
             else:
                 logging.error(COAFILE_OUTPUT
@@ -152,7 +152,7 @@ def save_sections(sections):
     try:
         if bool(default_section.get('save', 'false')):
             conf_writer = ConfWriter(
-                str(default_section.get('config', Constants.default_coafile)))
+                str(default_section.get('config', Constants.local_coafile)))
         else:
             return
     except ValueError:
