@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 
 from coalib.output.Logging import configure_logging
 from coalib.parsing import Globbing
