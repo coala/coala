@@ -453,7 +453,10 @@ def collect_registered_bears_dirs(entrypoint):
     for ep in pkg_resources.iter_entry_points(entrypoint):
         registered_package = None
         try:
-            registered_package = ep.load()
+            # backwards compat with old setuptools
+            # (that do not provide Entrypoint.resolve)
+            meth = getattr(ep, 'resolve', getattr(ep, 'load'))
+            registered_package = meth()
         except pkg_resources.DistributionNotFound:
             continue
         collected_dirs.append(os.path.abspath(
