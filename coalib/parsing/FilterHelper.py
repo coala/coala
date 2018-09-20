@@ -121,7 +121,7 @@ def collect_filters(args, arg_list=None, arg_parser=None):
     :param arg_list:
         The CLI argument list.
     :param arg_parser:
-        Instance of ArgParser that is used to parse arg list.
+        Instance of argparse.ArgumentParser that is used to parse arg list.
     :return:
         List of filters in standard filter format, i.e
         ``{'filter_name': ('arg1', 'arg2')}``.
