@@ -3,10 +3,6 @@
 
 =====
 
-:emphasis:`"Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live."` ― `John F. Woods <http://ruby.zigzo.com/2014/08/01/who-said-that-one-violent-psychopath-quote/>`_
-
-=====
-
 |Linux Build Status| |Windows Build status| |macOS Build Status|
 |codecov.io| |Documentation Status| |AGPL| |OpenHub|
 
