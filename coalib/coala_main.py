@@ -183,7 +183,8 @@ def run_coala(console_printer=None,
                 section['default_actions'] = '*: ShowPatchAction'
                 section['show_result_on_top'] = 'yeah'
 
-            print_section_beginning(section)
+            if not (section.name == 'cli' and len(section.contents) == 0):
+                print_section_beginning(section)
             section_result = execute_section(
                 section=section,
                 global_bear_list=global_bears[section_name],
