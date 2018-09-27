@@ -1,10 +1,8 @@
 from coalib.bearlib.languages.Language import Language
 
-
 @Language
 class CPP:
     aliases = 'C++', 'C Plus Plus', 'CPlusPlus', 'CXX'
-
     extensions = '.c', '.cpp', '.h', '.hpp'
     comment_delimiters = '//',
     multiline_comment_delimiters = {'/*': '*/'}
@@ -27,6 +25,7 @@ class CPP:
         'throw', 'true', 'try', 'typedef', 'typeid', 'typename', 'union',
         'unsigned', 'using', 'virtual', 'void', 'volatile', 'wchar_t',
         'while', 'xor', 'xor_eq', '#include', '#define', '#undef', '#ifdef',
-        '#ifndef', '#if', '#endif', '#else', '#elif', '#line', '#pragma']
+        '#ifndef', '#if', '#endif', '#else', '#elif', '#line', '#pragma',]
     special_chars = list(r'+-*/.;\,()[]{}\=<>|&^~?%!')
     string_delimiter_escape = {'"': '\\"'}
+    
