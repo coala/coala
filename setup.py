@@ -269,7 +269,8 @@ class PEP440Version(LooseVersion):
         pos = len(version) - 1
 
         # Look for non-zero int part
-        while pos != 0 and not (isinstance(version[pos], int) and version[pos]):
+        while (pos != 0 and
+               not (isinstance(version[pos], int) and version[pos])):
             pos -= 1
 
         previous = []
@@ -460,3 +461,4 @@ if __name__ == '__main__':
               'Topic :: Text Processing :: Linguistic'],
           cmdclass=SETUP_COMMANDS,
           )
+
