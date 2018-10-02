@@ -7,7 +7,8 @@ from coalib import VERSION
 from coalib.misc.Exceptions import get_exitcode
 from coalib.output.Interactions import fail_acquire_settings
 from coalib.output.Logging import CounterHandler
-from coalib.processes.Processing import execute_section, simplify_section_result
+from coalib.processes.Processing import execute_section
+from coalib.processes.Processing import simplify_section_result
 from coalib.settings.ConfigurationGathering import gather_configuration
 from coalib.results.result_actions.DoNothingAction import DoNothingAction
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
@@ -234,3 +235,4 @@ def run_coala(console_printer=None,
         exitcode = exitcode or get_exitcode(exception)
 
     return results, exitcode, file_dicts
+
