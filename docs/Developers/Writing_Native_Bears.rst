@@ -202,7 +202,7 @@ First, coala looked at the parameters of the run method and found that
 we need some value named user\_input. Then it parsed our documentation
 comment and found a description for the parameter which was shown to us
 to help us choose the right value. After the needed values are provided,
-coala converts us the value into a string because we've provided the
+coala converts the value into a string because we've provided the
 ``str`` annotation for this parameter. If no annotation is given or the
 value isn't convertible into the desired data type, you will get a
 ``coalib.settings.Setting.Setting``.
