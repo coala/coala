@@ -1,4 +1,4 @@
-from collections import OrderedDict
+from collections import abc, OrderedDict
 from itertools import chain
 from inspect import isclass, getmembers
 import operator
@@ -512,7 +512,7 @@ def limit_versions(language, limit, operator):
     return type(language)(*versions)
 
 
-class Languages(tuple):
+class Languages(abc.Mapping):
     """
     A ``tuple``-based container for :class:`coalib.bearlib.languages.Language`
     instances. It supports language identifiers in any format accepted by
@@ -536,8 +536,66 @@ class Languages(tuple):
     True
     """
 
-    def __new__(cls, items):
-        return tuple.__new__(cls, (Language[i] for i in items))
+    def __init__(self, items):
+        self._languages = tuple(Language[i] for i in items)
 
     def __contains__(self, item):
-        return any(item in lang for lang in self)
+        return any(item in lang for lang in self._languages)
+
+    def __iter__(self):
+        self._index = 0
+        return self
+
+    def __next__(self):
+        if self._index >= len(self._languages):
+            raise StopIteration
+        else:
+            lang = self._languages[self._index]
+            self._index += 1
+            return lang
+
+    def __len__(self):
+        return len(self._languages)
+
+    def __getitem__(self, key):
+        return self._languages[key]
+
+    def __setitem__(self, key, value):
+        self._languages[key] = value
+
+    def __delitem__(self, key):
+        del self._languages[key]
+
+    def __reversed__(self):
+        for lang in self._languages[::-1]:
+            yield lang
+
+    def __repr__(self):
+        return self._languages.__repr__()
+
+    def __str__(self):
+        return self._languages.__str__()
+
+    def __hash__(self):
+        return hash(self._languages)
+
+    def __eq__(self, o):
+        if isinstance(o, tuple):
+            return self._languages == o
+        elif isinstance(o, Languages):
+            return self._languages == o._languages
+        return False
+
+    def __ne__(self, o):
+        return not self.__eq__(o)
+
+    def keys(self):
+        return [k for k in range(len(self._languages))]
+
+    def values(self):
+        v = [e for e in self._languages]
+        return v
+
+    def items(self):
+        its = [(k, v) for k, v in enumerate(self._languages)]
+        return its

@@ -9,6 +9,7 @@ from pyprint.ConsolePrinter import ConsolePrinter
 from testfixtures import LogCapture
 
 from coalib.bearlib.aspects import AspectList, get as get_aspect
+from coalib.bearlib.languages.Language import Languages
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.Bear import Bear
 from coalib.collecting.Collectors import (
@@ -421,7 +422,7 @@ class CollectorsTests(unittest.TestCase):
     def test_get_all_languages_without_unknown(self):
         with bear_test_module():
             languages = get_all_languages()
-            assert isinstance(languages, tuple)
+            assert isinstance(languages, Languages)
             self.assertEqual(len(languages), LANGUAGE_COUNT)
             self.assertSetEqual(
                 {str(language) for language in languages},
@@ -432,7 +433,7 @@ class CollectorsTests(unittest.TestCase):
             languages = get_all_languages(include_unknown=True)
             language_names = LANGUAGE_NAMES.copy()
             language_names.append('Unknown')
-            assert isinstance(languages, tuple)
+            assert isinstance(languages, Languages)
             self.assertEqual(len(languages), LANGUAGE_COUNT + 1)
             self.assertSetEqual(
                 {str(language) for language in languages},
