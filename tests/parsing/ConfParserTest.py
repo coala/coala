@@ -200,3 +200,11 @@ class ConfParserTest(unittest.TestCase):
                                             'already been defined in section '
                                             'name. The previous setting will '
                                             'be overridden.')
+
+    def test_check_valid_lines(self):
+        logger = logging.getLogger()
+        with self.assertLogs(logger, 'ERROR') as self.cm:
+            self.uut.check_valid_lines(['default_action: *: ShowPatchAction'])
+        self.assertEqual(self.cm.output[0], 'ERROR:root:Invalid command '
+                                            '"default_action: *: ShowPatc'
+                                            'hAction" in config file')

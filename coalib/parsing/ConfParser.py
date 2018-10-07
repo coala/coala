@@ -34,6 +34,23 @@ class ConfParser:
         self.__rand_helper = None
         self.__init_sections()
 
+    def check_valid_lines(self, lines):
+        """
+        This function checks for some invalid config file commands like
+        ``default_action: *: ShowPatchAction``
+        which show error in the previous line. This function gives the
+        correct error in such cases.
+        """
+        for line in lines:
+            occ = line.find(':')
+            line_substr = line[:occ]
+            occ_equals = line_substr.find('=')
+            occ_comment = line_substr.find('#')
+            if occ != -1 and not ((occ_equals != -1 and occ_equals < occ) or
+                                  (occ_comment != -1 and occ_comment < occ)):
+                logging.error('Invalid command "{}" in config file'.format
+                              (line.strip('\n')))
+
     def parse(self, input_data, overwrite=False):
         """
         Parses the input and adds the new data to the existing.
@@ -52,6 +69,8 @@ class ConfParser:
 
         with open(input_data, 'r', encoding='utf-8') as _file:
             lines = _file.readlines()
+
+        self.check_valid_lines(lines)
 
         if overwrite:
             self.__init_sections()
