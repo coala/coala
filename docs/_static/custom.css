@@ -152,3 +152,8 @@ img {
 .highlight .nn, .highlight .nc {
     text-decoration: none;
 }
+
+.shorturl {
+    font-size: 0.9em;
+    overflow-x: auto;
+}
