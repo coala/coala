@@ -16,17 +16,6 @@ def foobar_explosion(radius):
     return get_55() * radius
 
 
-"""
-Docstring with layouted text.
-
-    layouts inside docs are preserved.
-this is intended.
-"""
-
-
-""" Docstring inline with triple quotes.
-    Continues here. """
-
 
 def best_docstring(param1, param2):
     """
