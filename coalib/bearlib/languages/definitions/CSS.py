@@ -10,3 +10,45 @@ class CSS:
     indent_types = {'{': '}'}
     encapsulators = {'(': ')', '[': ']'}
     string_delimiter_escape = {'"': '\\"', "'": "\\'"}
+    
+#language for sass
+
+class {
+	CSS {
+		&: {
+			extensions {
+				= {
+					'.css' {
+						'/*': '*/';
+					}
+				}
+			}
+		}
+	}
+}
+multiline_comment_delimiters {
+	= {
+		'/*': '*/';
+	}
+}
+string_delimiters {
+	= {
+		'"': '"', "'": "'";
+	}
+}
+indent_types {
+	= {
+		'{': '}';
+	}
+}
+encapsulators {
+	= {
+		'(': ')', '[': ']';
+	}
+}
+string_delimiter_escape {
+	= {
+		'"': '\\"', "'": "\\'";
+	}
+}
+
