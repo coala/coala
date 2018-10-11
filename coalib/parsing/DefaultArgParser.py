@@ -2,8 +2,11 @@ import argparse
 import os
 
 from coalib.misc import Constants
-from coalib.collecting.Collectors import get_all_bears_names
 from coalib.parsing.filters import available_filters
+
+# argcomplete is a delayed optional import
+# This variable may be None, the module, or False
+argcomplete = None
 
 
 class CustomFormatter(argparse.RawDescriptionHelpFormatter):
@@ -126,12 +129,12 @@ To run coala without user interaction, run the `coala --non-interactive`,
     config_group.add_argument(
         '-c', '--config', type=PathArg, nargs=1, metavar='FILE',
         help='configuration file to be used, defaults to {}'.format(
-            Constants.default_coafile))
+            Constants.local_coafile))
 
     config_group.add_argument(
         '-F', '--find-config', action='store_const', const=True,
         help='find {} in ancestors of the working directory'.format(
-            Constants.default_coafile))
+            Constants.local_coafile))
 
     config_group.add_argument(
         '-I', '--no-config', const=True, action='store_const',
@@ -140,7 +143,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
     config_group.add_argument(
         '-s', '--save', type=PathArg, nargs='?', const=True, metavar='FILE',
         help='save used arguments to a config file to a {}, the given path, '
-             'or at the value of -c'.format(Constants.default_coafile))
+             'or at the value of -c'.format(Constants.local_coafile))
 
     config_group.add_argument(
         '--disable-caching', const=True, action='store_const',
@@ -154,10 +157,9 @@ To run coala without user interaction, run the `coala --non-interactive`,
 
     inputs_group = arg_parser.add_argument_group('Inputs')
 
-    inputs_group.add_argument(
+    bears = inputs_group.add_argument(
         '-b', '--bears', nargs='+', metavar='NAME',
-        help='names of bears to use').completer = (
-            lambda *args, **kwargs: get_all_bears_names())  # pragma: no cover
+        help='names of bears to use')
 
     inputs_group.add_argument(
         '-f', '--files', type=PathArg, nargs='+', metavar='FILE',
@@ -241,13 +243,25 @@ To run coala without user interaction, run the `coala --non-interactive`,
         '-r', '--relpath', nargs='?', const=True,
         help='return relative paths for files (must be called with --json)')
 
-    outputs_group.add_argument(
+    devtool_exclusive_group = arg_parser.add_mutually_exclusive_group()
+
+    devtool_exclusive_group.add_argument(
         '--debug-bears', nargs='?', const=True,
         help='Enable bear debugging with pdb, that can help to identify and'
         ' correct errors in bear code. Steps into bear code as soon as being'
         ' executed. To specify which bears to debug, supply bear names as'
         ' additional arguments. If used without arguments, all bears specified'
         ' with --bears will be debugged (even implicit dependency bears).')
+
+    devtool_exclusive_group.add_argument(
+        '--profile', nargs='?', const=True,
+        help='Enable bear profiling with cProfile. To specify where to dump the'
+        ' profiled files, supply the directory path. If specified directory'
+        ' does not exist it will be created. If the specified path points to an'
+        ' already existing file a error is raised. All bears (even'
+        ' implicit dependency bears) in a section will be profiled. Profiled'
+        ' data files will have a name format'
+        ' ``{section.name}_{bear.name}.prof``.')
 
     misc_group = arg_parser.add_argument_group('Miscellaneous')
 
@@ -279,12 +293,23 @@ To run coala without user interaction, run the `coala --non-interactive`,
              'on unexpected internal exceptions '
              '(implies --verbose)')
 
-    try:
-        # Auto completion should be optional, because of somewhat complicated
-        # setup.
-        import argcomplete
-        argcomplete.autocomplete(arg_parser)
-    except ImportError:  # pragma: no cover
-        pass
+    global argcomplete
+    if argcomplete is None:
+        try:
+            # Auto completion should be optional, because of somewhat
+            # complicated setup.
+            import argcomplete
+            argcomplete.autocomplete(arg_parser)
+        except ImportError:
+            argcomplete = False
+
+        if argcomplete:
+            try:
+                from coalib.collecting.Collectors import (
+                    _argcomplete_bears_names)
+            except ImportError:
+                pass
+            else:
+                bears.completer = _argcomplete_bears_names
 
     return arg_parser

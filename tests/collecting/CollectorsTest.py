@@ -14,11 +14,16 @@ from coalib.bears.Bear import Bear
 from coalib.collecting.Collectors import (
     collect_all_bears_from_sections, collect_bears, collect_dirs, collect_files,
     collect_registered_bears_dirs, filter_section_bears_by_languages,
-    get_all_bears, get_all_bears_names, collect_bears_by_aspects)
+    get_all_bears, get_all_bears_names, collect_bears_by_aspects,
+    get_all_languages,
+    )
 from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.settings.Section import Section
-from tests.TestUtilities import bear_test_module
+from tests.TestUtilities import (
+    bear_test_module, TEST_BEAR_NAMES, LANGUAGE_NAMES,
+    LANGUAGE_COUNT,
+)
 
 
 class CollectFilesTest(unittest.TestCase):
@@ -110,6 +115,22 @@ class CollectFilesTest(unittest.TestCase):
             collect_files_partial(
                 ignored_file_paths=[dir_base('py_files', '*')]),
             [dir_base('c_files', 'file1.c')])
+
+    def test_trailing_globstar(self):
+        ignore_path = os.path.join(self.collectors_test_dir,
+                                   'others',
+                                   'c_files',
+                                   '**')
+        with LogCapture() as capture:
+            collect_files(file_paths=[],
+                          ignored_file_paths=[ignore_path],
+                          log_printer=self.log_printer)
+        capture.check(
+            ('root', 'WARNING', 'Detected trailing globstar in ignore glob '
+                                '\'{}\'. Please remove the unnecessary \'**\''
+                                ' from its end.'
+                                .format(ignore_path))
+        )
 
     def test_limited(self):
         self.assertEqual(
@@ -387,20 +408,7 @@ class CollectorsTests(unittest.TestCase):
                 assert issubclass(bear, Bear)
             self.assertSetEqual(
                 {b.name for b in bears},
-                {'DependentBear',
-                 'EchoBear',
-                 'LineCountTestBear',
-                 'JavaTestBear',
-                 'SpaceConsistencyTestBear',
-                 'TestBear',
-                 'ErrorTestBear',
-                 'RaiseTestBear',
-                 'TestDepBearA',
-                 'TestDepBearBDependsA',
-                 'TestDepBearCDependsB',
-                 'TestDepBearAA',
-                 'AspectTestBear',
-                 'TestDepBearDependsAAndAA'})
+                set(TEST_BEAR_NAMES))
 
     def test_get_all_bears_names(self):
         with bear_test_module():
@@ -408,17 +416,24 @@ class CollectorsTests(unittest.TestCase):
             assert isinstance(names, list)
             self.assertSetEqual(
                 set(names),
-                {'DependentBear',
-                 'EchoBear',
-                 'LineCountTestBear',
-                 'JavaTestBear',
-                 'SpaceConsistencyTestBear',
-                 'TestBear',
-                 'ErrorTestBear',
-                 'RaiseTestBear',
-                 'TestDepBearA',
-                 'TestDepBearBDependsA',
-                 'TestDepBearCDependsB',
-                 'TestDepBearAA',
-                 'AspectTestBear',
-                 'TestDepBearDependsAAndAA'})
+                set(TEST_BEAR_NAMES))
+
+    def test_get_all_languages_without_unknown(self):
+        with bear_test_module():
+            languages = get_all_languages()
+            assert isinstance(languages, tuple)
+            self.assertEqual(len(languages), LANGUAGE_COUNT)
+            self.assertSetEqual(
+                {str(language) for language in languages},
+                set(LANGUAGE_NAMES))
+
+    def test_get_all_languages_with_unknown(self):
+        with bear_test_module():
+            languages = get_all_languages(include_unknown=True)
+            language_names = LANGUAGE_NAMES.copy()
+            language_names.append('Unknown')
+            assert isinstance(languages, tuple)
+            self.assertEqual(len(languages), LANGUAGE_COUNT + 1)
+            self.assertSetEqual(
+                {str(language) for language in languages},
+                set(language_names))

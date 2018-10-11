@@ -30,7 +30,7 @@ remove_all_unused_imports = true
 
 [autopep8]
 bears = PEP8Bear, PycodestyleBear
-pycodestyle_ignore = E303, E121, E123, E126, E133, E226, E242, E704,
+pycodestyle_ignore = E121, E123, E126, E226, E704,
                      W503, W504
 
 default_actions = PEP8Bear: ApplyPatchAction
@@ -43,7 +43,7 @@ ignore_length_regex = ^.*https?://
 bears = SpaceConsistencyBear, LineLengthBear
 
 files = docs/**/*.rst,*.rst
-ignore = docs/API/**
+ignore = docs/API/
 ignore_length_regex = ^.*https?://
 
 default_actions = SpaceConsistencyBear: ApplyPatchAction
@@ -53,7 +53,7 @@ enabled = False
 
 bears = LanguageToolBear
 files = docs/**/*.rst,*.rst
-ignore = docs/API/**
+ignore = docs/API/
 languagetool_disable_rules =
     EN_QUOTES,                          # `` for links in rst files
     WHITESPACE_RULE,                    # Indents in code
@@ -126,8 +126,9 @@ ignore = docs/Developers/coala_settings.rst
 bears = SpaceConsistencyBear
 files =
     LICENSE, ISSUE_TEMPLATE, PULL_REQUEST_TEMPLATE.md, MANIFEST.in,
-    **.sh, .travis.yml, circle.yml, setup.cfg, ./docs/_static/custom.css
-ignore = node_modules/**
+    **.sh, .travis.yml, ./.circleci/config.yml, setup.cfg,
+    ./docs/_static/custom.css
+ignore = node_modules/
 
 [jinja2]
 bears = Jinja2Bear

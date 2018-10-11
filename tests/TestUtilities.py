@@ -5,16 +5,86 @@ import unittest.mock
 
 from coala_utils.ContextManagers import retrieve_stdout, retrieve_stderr
 
-TEST_BEARS_COUNT = 14
+# This list is sorted alphabetically
+TEST_BEAR_NAMES = (
+    'AspectsGeneralTestBear',
+    'AspectTestBear',
+    'DependentBear',
+    'EchoBear',
+    'ErrorTestBear',
+    'JavaTestBear',
+    'LineCountTestBear',
+    'RaiseTestBear',
+    'RaiseTestExecuteBear',
+    'SpaceConsistencyTestBear',
+    'TestBear',
+    'TestDepBearA',
+    'TestDepBearAA',
+    'TestDepBearBDependsA',
+    'TestDepBearCDependsB',
+    'TestDepBearDependsAAndAA',
+)
+
+TEST_BEARS_COUNT = len(TEST_BEAR_NAMES)
+
+JAVA_BEARS_COUNT = 3
+
+C_BEARS_COUNT = 2
+
+# This list is sorted alphabetically
+LANGUAGE_NAMES = [
+    'Bash',
+    'C',
+    'C#',
+    'CPP',
+    'CSS',
+    'Extensible Markup Language 1.0',
+    'Fortran',
+    'Golang',
+    'Haskell 1.0, 1.1, 1.2, 1.3, 1.4, 98, 2010',
+    'Hypertext Markup Language 2.0, 3.2, 4.0, 4.1, 5, 5.1',
+    'Java',
+    'JavaScript',
+    'JavaScript Object Notation',
+    'JavaServer Pages',
+    'Jinja2',
+    'KornShell',
+    'Markdown',
+    'Matlab',
+    'ObjectiveC',
+    'PHP',
+    'PLSQL',
+    'PowerShell',
+    'Python 2.7, 3.3, 3.4, 3.5, 3.6',
+    'Ruby',
+    'Scala',
+    'SCSS 3.1, 3.2, 3.3, 3.4, 3.5, 4.0',
+    'Shell',
+    'Swift',
+    'Tcl',
+    'TypeScript',
+    'Vala',
+    'VisualBasic',
+    'm4',
+    'ZShell',
+]
+
+LANGUAGE_COUNT = len([
+     language_file[: -3] for language_file in
+     os.listdir('coalib/bearlib/languages/definitions/')
+     if language_file.endswith('.py') and language_file != '__init__.py'
+     and language_file != 'Unknown.py'])
 
 # This list is sorted by filename of the bears, then name within the modules
-TEST_BEAR_NAMES = [
+TEST_BEAR_NAME_REPRS = [
     "<class 'AspectTestBear.AspectTestBear'>",
+    "<class 'AspectsGeneralTestBear.AspectsGeneralTestBear'>",
     "<ErrorTestBear linter class (wrapping 'I_do_not_exist')>",
     "<class 'JavaTestBear.JavaTestBear'>",
     "<class 'LineCountTestBear.LineCountTestBear'>",
     "<EchoBear linter class (wrapping 'echo')>",
     "<class 'RaiseTestBear.RaiseTestBear'>",
+    "<class 'RaiseTestBear.RaiseTestExecuteBear'>",
     "<class 'TestBear.TestBear'>",
     "<class 'TestBearDep.TestDepBearA'>",
     "<class 'TestBearDep.TestDepBearAA'>",

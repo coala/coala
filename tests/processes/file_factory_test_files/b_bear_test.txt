@@ -1,0 +1,3 @@
+# start Ignoring bBear
+b_string = "This string should be ignored
+# stop ignoring

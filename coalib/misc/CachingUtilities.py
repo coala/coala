@@ -3,7 +3,15 @@ import logging
 import os
 import pickle
 
+import appdirs
+
 from coalib.misc import Constants
+from coalib import VERSION
+
+USER_DATA_DIR = appdirs.user_data_dir('coala', version=VERSION)
+# USER_DATA_DIR was originally defined in Constants, and is set for backwards
+# compatibility, however access outside of CachingUtilities is deprecated.
+Constants.USER_DATA_DIR = USER_DATA_DIR
 
 
 def get_data_path(log_printer, identifier):
@@ -45,7 +53,7 @@ def delete_files(log_printer, identifiers):
                 os.remove(file_path)
             else:
                 result = False
-        except (OSError, TypeError) as e:
+        except (OSError, TypeError):
             error_files.append(hash_id(identifier))
 
     if len(error_files) > 0:
@@ -86,7 +94,7 @@ def pickle_load(log_printer, identifier, fallback=None):
     with open(file_path, 'rb') as f:
         try:
             return pickle.load(f)
-        except (pickle.UnpicklingError, EOFError) as e:
+        except (pickle.UnpicklingError, EOFError):
             logging.warning('The given file is corrupted and will be removed.')
             delete_files(None, [identifier])
             return fallback

@@ -28,11 +28,12 @@ from coalib.settings.ConfigurationGathering import (
 )
 from coalib.settings.Setting import Setting
 from coalib.misc.Constants import get_system_coafile
+from coalib.collecting.Collectors import _sort_bears
 
 from tests.TestUtilities import (
     bear_test_module,
     TEST_BEARS_COUNT,
-    TEST_BEAR_NAMES,
+    TEST_BEAR_NAME_REPRS,
 )
 from testfixtures import log_capture
 
@@ -460,15 +461,21 @@ class ConfigurationGatheringCollectionTest(unittest.TestCase):
 
         self.assertEqual(
             [str(bear) for bear in local_bears['cli']],
-            TEST_BEAR_NAMES)
+            TEST_BEAR_NAME_REPRS)
 
         with bear_test_module():
             local_bears, global_bears = get_filtered_bears(
                 ['Java'], self.log_printer)
 
-        self.assertEqual(len(local_bears['cli']), 2)
-        self.assertEqual(str(local_bears['cli'][0]),
-                         "<class 'JavaTestBear.JavaTestBear'>")
+        local_bears['cli'] = _sort_bears(local_bears['cli'])
+        global_bears['cli'] = _sort_bears(global_bears['cli'])
+
+        self.assertEqual(len(local_bears['cli']), 3)
+        self.assertEqual(
+            str(local_bears['cli'][0]),
+            "<class 'AspectsGeneralTestBear.AspectsGeneralTestBear'>")
         self.assertEqual(str(local_bears['cli'][1]),
+                         "<class 'JavaTestBear.JavaTestBear'>")
+        self.assertEqual(str(local_bears['cli'][2]),
                          "<class 'LineCountTestBear.LineCountTestBear'>")
         self.assertEqual(len(global_bears['cli']), 0)

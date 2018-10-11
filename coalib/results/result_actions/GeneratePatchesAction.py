@@ -41,7 +41,7 @@ def filter_bears(language):
     :param language: The language to filter with.
     :return:         A list of bears.
     """
-    return list(apply_filters([['language', language]], None)[0]['cli'])
+    return list(apply_filters({'language': (language,)}, None)[0]['cli'])
 
 
 def find_language(filename):

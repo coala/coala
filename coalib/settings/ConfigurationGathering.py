@@ -127,10 +127,10 @@ def load_config_file(filename, log_printer=None, silent=False):
         return ConfParser().parse(filename)
     except FileNotFoundError:
         if not silent:
-            if os.path.basename(filename) == Constants.default_coafile:
+            if os.path.basename(filename) == Constants.local_coafile:
                 logging.warning(COAFILE_OUTPUT
                                 .substitute(type='Default coafile',
-                                            file=Constants.default_coafile,
+                                            file=Constants.local_coafile,
                                             found='not found'))
             else:
                 logging.error(COAFILE_OUTPUT
@@ -152,7 +152,7 @@ def save_sections(sections):
     try:
         if bool(default_section.get('save', 'false')):
             conf_writer = ConfWriter(
-                str(default_section.get('config', Constants.default_coafile)))
+                str(default_section.get('config', Constants.local_coafile)))
         else:
             return
     except ValueError:
@@ -405,7 +405,7 @@ def get_all_bears(log_printer=None,
     :param arg_parser:  An ``ArgParser`` object.
     :param silent:      Whether or not to display warnings.
     :param bear_globs:  List of glob patterns.
-    :return:            Tuple containing dictionaries of local bears
+    :return:            Tuple containing dictionaries of unsorted local
                         and global bears.
     """
     sections, _ = load_configuration(arg_list=None,
@@ -425,7 +425,7 @@ def get_filtered_bears(languages,
     :param log_printer: The log_printer to handle logging.
     :param arg_parser:  An ``ArgParser`` object.
     :param silent:      Whether or not to display warnings.
-    :return:            Tuple containing dictionaries of local bears
+    :return:            Tuple containing dictionaries of unsorted local
                         and global bears.
     """
     local_bears, global_bears = get_all_bears(arg_parser=arg_parser,

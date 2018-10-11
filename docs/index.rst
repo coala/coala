@@ -44,6 +44,7 @@ If you're trying to **use** coala, you should have a look at our
    Codestyle <Developers/Codestyle>
    Git Basics <Developers/Git_Basics>
    Review <Developers/Review>
+   Meta-review <Developers/Meta-review>
    Development Setup <Developers/Development_Setup>
    Adding CI to your Fork <Developers/Adding_CI>
    Writing Native Bears <Developers/Writing_Native_Bears>
@@ -52,10 +53,18 @@ If you're trying to **use** coala, you should have a look at our
    External Bears <Developers/External_Bears>
    Testing Bears <Developers/Testing_Bears>
    Debug Bears <Developers/Debug_Bears>
+   Profile Bears <Developers/Profile_Bears>
    Writing Tests <Developers/Writing_Tests>
    Writing Documentation <Developers/Writing_Documentation>
    Executing Tests <Developers/Executing_Tests>
    Useful Links <Developers/Useful_Links>
+
+
+.. toctree::
+    :caption: Release Notes
+    :hidden:
+
+    Release Notes <release_notes>
 
 
 .. _user documentation: https://docs.coala.io

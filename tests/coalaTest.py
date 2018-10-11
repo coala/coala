@@ -17,7 +17,11 @@ from tests.TestUtilities import (
     bear_test_module,
     execute_coala,
     TEST_BEARS_COUNT,
+    JAVA_BEARS_COUNT,
 )
+
+# Java bears plus 1 line holding the closing colour escape sequence.
+JAVA_BEARS_COUNT_OUTPUT = JAVA_BEARS_COUNT + 1
 
 
 class coalaTest(unittest.TestCase):
@@ -186,8 +190,8 @@ class coalaTest(unittest.TestCase):
             retval, stdout, stderr = execute_coala(
                 coala.main, 'coala', '-B', '-l', 'java', '-I', debug=debug)
             self.assertEqual(retval, 0)
-            # 2 bears plus 1 line holding the closing colour escape sequence.
-            self.assertEqual(len(stdout.splitlines()), 3)
+            self.assertEqual(len(stdout.splitlines()),
+                             JAVA_BEARS_COUNT_OUTPUT)
             self.assertIn(
                 "'--filter-by-language ...' is deprecated", stderr)
 
@@ -202,12 +206,56 @@ class coalaTest(unittest.TestCase):
             self.assertEqual(len(stdout.splitlines()), 2)
             self.assertFalse(stderr)
 
+    def test_execute_with_bad_filters(self, debug=False):
+        with bear_test_module(), \
+                prepare_file(['#fixme'], None) as (lines, filename):
+            retval, stdout, stderr = execute_coala(
+                coala.main, 'coala', '--filter-by', 'language', 'python',
+                '-f', filename, '-b', 'TestBear', '--no-color', '-I',
+                debug=debug)
+
+            self.assertIn(
+                "'language_filter' can only handle ('bearclass',). "
+                'The context of your usage might be wrong.', stdout)
+            # Calling without config, hence 0
+            # else, it'll be 1
+            self.assertEqual(retval, 0)
+
+    def test_execute_with_bad_filters_debug(self):
+        self.test_execute_with_bad_filters(True)
+
+    def test_execute_with_filters(self, debug=False):
+        coala_config = ('[section_one]',
+                        'tags = save',
+                        '[section_two]',
+                        'tags = change',)
+
+        with bear_test_module(), \
+                prepare_file(['#fixme'], None) as (_, filename), \
+                prepare_file(coala_config, None) as (_, configuration):
+            results, retval, _ = run_coala(
+                                    console_printer=ConsolePrinter(),
+                                    log_printer=LogPrinter(),
+                                    arg_list=(
+                                        '-c', configuration,
+                                        '-f', filename,
+                                        '-b', 'TestBear',
+                                        '--filter-by', 'section_tags',
+                                        'save'
+                                    ),
+                                    autoapply=False,
+                                    debug=debug)
+
+            self.assertTrue('section_one' in results)
+
+    def test_execute_with_filters_debug(self):
+        self.test_execute_with_filters(True)
+
     def test_show_capabilities_with_supported_language_debug(self):
         self.test_show_capabilities_with_supported_language(debug=True)
 
-    @unittest.mock.patch('coalib.parsing.DefaultArgParser.get_all_bears_names')
     @unittest.mock.patch('coalib.collecting.Collectors.icollect_bears')
-    def test_version_conflict_in_collecting_bears(self, import_fn, _):
+    def test_version_conflict_in_collecting_bears(self, import_fn):
         with bear_test_module():
             import_fn.side_effect = VersionConflict('msg1', 'msg2')
             retval, stdout, stderr = execute_coala(coala.main, 'coala', '-B')

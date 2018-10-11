@@ -8,3 +8,4 @@ class Tcl:
     string_delimiters = {'"': '"'}
     multiline_string_delimiters = {'"': '"'}
     encapsulators = {'(': ')', '[': ']', '{': '}'}
+    string_delimiter_escape = {'"': '\\"'}

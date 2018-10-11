@@ -26,6 +26,14 @@ manager as follows:
 
     $ brew install git
 
+Alternatively, Git comes pre-installed with  `XCode <https://www.atlassian.com/git/tutorials/install-git#mac-os-x>`_
+(or its  Command Line Tools) on a Mac OS system. You can directly install the
+Command Line Tools as follows:
+
+::
+
+    $ xcode-select --install
+
 Getting Started with coala
 --------------------------
 

@@ -28,16 +28,16 @@ class FileFactoryTest(unittest.TestCase):
         self.assertNotEqual(self.uut, self.other_file_factory)
 
     def test_iter(self):
-        self.assertEqual(list(self.uut), ['This is a test file.'])
+        self.assertEqual(list(self.uut), ['This is a test file.\n'])
 
     def test_line(self):
-        self.assertEqual(self.uut.get_line(0), 'This is a test file.')
+        self.assertEqual(self.uut.get_line(0), 'This is a test file.\n')
         with self.assertRaises(IndexError):
             self.uut.get_line(1)
 
     def test_lines(self):
-        self.assertEqual(self.uut.lines, ('This is a test file.',))
-        self.assertEqual(self.uut.lines, ('This is a test file.',))
+        self.assertEqual(self.uut.lines, ('This is a test file.\n',))
+        self.assertEqual(self.uut.lines, ('This is a test file.\n',))
 
     def test_raw(self):
         self.assertEqual(self.uut.raw, b'This is a test file.')

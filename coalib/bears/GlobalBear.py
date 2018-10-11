@@ -18,8 +18,7 @@ class GlobalBear(Bear):
                  file_dict,
                  section,
                  message_queue,
-                 timeout=0,
-                 debugger=False):
+                 timeout=0):
         """
         Constructs a new GlobalBear.
 
@@ -27,7 +26,7 @@ class GlobalBear(Bear):
 
         See :class:`coalib.bears.Bear` for other parameters.
         """
-        Bear.__init__(self, section, message_queue, timeout, debugger)
+        Bear.__init__(self, section, message_queue, timeout)
         self.file_dict = file_dict
 
     @staticmethod

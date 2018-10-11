@@ -4,6 +4,7 @@ import os
 import pkg_resources
 import itertools
 import re
+from types import ModuleType
 
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.collecting.Importers import iimport_objects
@@ -12,6 +13,8 @@ from coalib.misc.Exceptions import log_exception
 from coalib.misc.IterUtilities import partition
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.Globbing import fnmatch, iglob, glob_escape
+from coalib.bearlib.languages.Language import Languages
+from coalib.bearlib.languages import definitions
 
 
 def _get_kind(bear_class):
@@ -37,6 +40,20 @@ def _import_bears(file_path, kinds):
             yield bear_class
 
 
+def _sort_bears(bears, key=lambda x: x.name.lower(), reverse=False):
+    """
+    Sort the bear list according to the key provided.
+
+    The default behaviour is to sort bears based on their names.
+
+    :param bears:           List of bears to be sorted.
+    :param key:             Key using which comparison should take place.
+    :param reverse:         bool to decide order of sort.
+    :return:                Sorted list of bears.
+    """
+    return sorted(bears, key=key, reverse=reverse)
+
+
 @yield_once
 def icollect(file_paths, ignored_globs=None, match_cache={},
              match_function=fnmatch):
@@ -52,6 +69,15 @@ def icollect(file_paths, ignored_globs=None, match_cache={},
     """
     if isinstance(file_paths, str):
         file_paths = [file_paths]
+
+    if ignored_globs is None:
+        ignored_globs = []
+    for index, glob in enumerate(ignored_globs):
+        if glob.endswith('/**') or glob.endswith('\\**'):
+            logging.warning("Detected trailing globstar in ignore glob '{}'. "
+                            "Please remove the unnecessary '**' from its end."
+                            .format(glob))
+            ignored_globs[index] = glob.rstrip('*')
 
     for file_path in file_paths:
         if file_path not in match_cache:
@@ -212,7 +238,8 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer=None,
     :param warn_if_unused_glob: True if warning message should be shown if a
                                 glob didn't give any bears.
     :return:                    Tuple of list of matching bear classes based on
-                                kind. The lists are in the same order as kinds.
+                                kind. The lists are in the same order as kinds
+                                and not sorted based upon bear name.
     """
     bears_found = tuple([] for i in range(len(kinds)))
     bear_globs_with_bears = set()
@@ -276,7 +303,8 @@ def collect_bears_by_aspects(aspects, kinds):
     :param aspects: An AspectList that need to be covered.
     :param kinds:   List of bear kinds to be collected.
     :return:        Tuple of list of bear classes based on kind. The lists are
-                    in the same order as kinds.
+                    in the same order as kinds and not sorted based upon bear
+                    name.
     """
     all_bears = get_all_bears()
     bears_found = tuple([] for i in range(len(kinds)))
@@ -332,7 +360,7 @@ def filter_capabilities_by_languages(bears, languages):
 
 def get_all_bears():
     """
-    Get a ``list`` of all available bears.
+    Get an unsorted ``list`` of all available bears.
     """
     from coalib.settings.Section import Section
     local_bears, global_bears = collect_bears(
@@ -345,9 +373,30 @@ def get_all_bears():
 
 def get_all_bears_names():
     """
-    Get a ``list`` of names of all available bears.
+    Get an unsorted ``list`` of names of all available bears.
     """
     return [bear.name for bear in get_all_bears()]
+
+
+def _argcomplete_bears_names(*args, **kwargs):
+    return get_all_bears_names()
+
+
+def get_all_languages(include_unknown=False):
+    """
+    Get a ``tuple`` of all language instances supported by coala.
+
+    :param include_unknown: Whether to include instance of
+                            ``Unknown`` language.
+    :return:                Tuple of all language instances
+                            supported by coala.
+    """
+    languages = [
+        key for key in definitions.__dict__
+        if isinstance(definitions.__dict__[key], ModuleType)]
+    if not include_unknown:
+        languages.remove('Unknown')
+    return Languages(languages)
 
 
 def collect_all_bears_from_sections(sections,
@@ -359,8 +408,8 @@ def collect_all_bears_from_sections(sections,
     :param sections:    List of sections so bear_dirs are taken into account
     :param log_printer: Log_printer to handle logging
     :param bear_globs:  List of glob patterns.
-    :return:            Tuple of dictionaries of local and global bears.
-                        The dictionary key is section class and
+    :return:            Tuple of dictionaries of unsorted local and
+                        global bears. The dictionary key is section class and
                         dictionary value is a list of Bear classes
     """
     local_bears = {}

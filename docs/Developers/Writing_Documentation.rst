@@ -28,8 +28,8 @@ You should run this command before trying to build the documentation:
   pip3 install -r docs-requirements.txt
 
 You can test the documentation locally through simply running
-``make html`` in the root directory. This generates
-``_build\html\index.html`` that you can view on your browser.
+``python3 setup.py docs`` in the root directory. This generates
+``docs\_build\html\index.html`` that you can view on your browser.
 
 
 .. _Installation Instructions: https://docs.coala.io/en/latest/Users/Install.html

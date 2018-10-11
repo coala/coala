@@ -6,7 +6,6 @@ import queue
 import subprocess
 
 from coala_utils.string_processing.StringConverter import StringConverter
-from coala_utils.FileUtils import detect_encoding
 
 from coalib.collecting.Collectors import collect_files
 from coalib.misc.Exceptions import log_exception
@@ -29,6 +28,8 @@ from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.results.SourceRange import SourceRange
 from coalib.settings.Setting import glob_list, typed_list
 from coalib.parsing.Globbing import fnmatch
+from coalib.io.FileProxy import FileDictGenerator
+from coalib.io.FileFactory import FileFactory
 
 
 ACTIONS = [DoNothingAction,
@@ -267,16 +268,23 @@ def get_file_dict(filename_list, log_printer=None, allow_raw_files=False):
     :return:                Reads the content of each file into a dictionary
                             with filenames as keys.
     """
-    file_dict = {}
+    file_dict = FileDict()
     for filename in filename_list:
         try:
-            with open(filename, 'r',
-                      encoding=detect_encoding(filename)) as _file:
-                file_dict[filename] = tuple(_file.readlines())
+            file_dict[filename] = FileFactory(filename)
+            # This is a workaround to purposely raise a
+            # ``UnicodeDecodeError`` to move into the
+            # except clause.
+            FileFactory(filename).string
         except UnicodeDecodeError:
             if allow_raw_files:
                 file_dict[filename] = None
                 continue
+            else:
+                # In case raw files are not allowed the
+                # ``FileFactory`` object created for it
+                # needs to be evicted from the dictionary.
+                del file_dict[filename]
             logging.warning("Failed to read file '{}'. It seems to contain "
                             'non-unicode characters. Leaving it out.'
                             .format(filename))
@@ -286,8 +294,6 @@ def get_file_dict(filename_list, log_printer=None, allow_raw_files=False):
                           exception,
                           log_level=LOG_LEVEL.WARNING)
 
-    logging.debug('Files that will be checked:\n' +
-                  '\n'.join(file_dict.keys()))
     return file_dict
 
 
@@ -297,8 +303,7 @@ def instantiate_bears(section,
                       file_dict,
                       message_queue,
                       console_printer,
-                      debug=False,
-                      debug_bears=False):
+                      debug=False):
     """
     Instantiates each bear with the arguments it needs.
 
@@ -312,26 +317,13 @@ def instantiate_bears(section,
     :param console_printer:  Object to print messages on the console.
     :return:                 The local and global bear instance lists.
     """
-    debug_bears = (False if debug_bears is False else
-                   [x.lower() for x in debug_bears])
-    for bear in local_bear_list + global_bear_list:
-        for deps_bear in bear.BEAR_DEPS:
-            if debug_bears is not False and (
-                bear.__name__.lower() in debug_bears and (
-                    deps_bear.__name__.lower() not in debug_bears)):
-                debug_bears.append(deps_bear.__name__.lower())
-
     instantiated_local_bear_list = []
     instantiated_global_bear_list = []
     for bear in local_bear_list:
         try:
-            debugger = True if debug_bears is not False and (
-                    debug_bears[0] == 'true' or (
-                        bear.__name__.lower() in debug_bears)) else False
             instantiated_local_bear_list.append(bear(section,
                                                      message_queue,
-                                                     timeout=0.1,
-                                                     debugger=debugger))
+                                                     timeout=0.1))
         # RuntimeError it will be raised only when debug will be set to True.
         except RuntimeError:
             if debug:
@@ -339,14 +331,10 @@ def instantiate_bears(section,
 
     for bear in global_bear_list:
         try:
-            debugger = True if debug_bears is not False and (
-                    debug_bears[0] == 'true' or (
-                        bear.__name__.lower() in debug_bears)) else False
             instantiated_global_bear_list.append(bear(file_dict,
                                                       section,
                                                       message_queue,
-                                                      timeout=0.1,
-                                                      debugger=debugger))
+                                                      timeout=0.1))
         # RuntimeError it will be raised only when debug will be set to True
         except RuntimeError:
             if debug:
@@ -395,8 +383,16 @@ def instantiate_processes(section,
     # This stores all matched files irrespective of whether coala is run
     # only on changed files or not. Global bears require all the files
     complete_filename_list = filename_list
-    complete_file_dict = get_file_dict(complete_filename_list,
-                                       allow_raw_files=use_raw_files)
+
+    file_dict_generator = get_file_dict
+    if cache is not None and isinstance(cache, FileDictGenerator):
+        file_dict_generator = cache.get_file_dict
+
+    complete_file_dict = file_dict_generator(complete_filename_list,
+                                             allow_raw_files=use_raw_files)
+
+    logging.debug('Files that will be checked:\n' +
+                  '\n'.join(complete_file_dict.keys()))
 
     if debug or debug_bears:
         from . import DebugProcessing as processing
@@ -418,8 +414,7 @@ def instantiate_processes(section,
         complete_file_dict,
         message_queue,
         console_printer=console_printer,
-        debug=debug,
-        debug_bears=debug_bears)
+        debug=debug)
     loaded_valid_local_bears_count = len(local_bear_list)
     # Note: the complete file dict is given as the file dict to bears and
     # the whole project is accessible to every bear. However, local bears are
@@ -837,3 +832,31 @@ def execute_section(section,
 
             for runner in processes:
                 runner.join()
+
+
+class FileDict(dict):
+    """
+    Acts as a middleware to provide the bears with the
+    actual file contents instead of the `FileFactory`
+    objects.
+    """
+
+    def __init__(self):
+        super().__init__()
+
+    def __setitem__(self, key, value):
+        super().__setitem__(key, value)
+
+    def __getitem__(self, key):
+        val = super().__getitem__(key)
+        if val:
+            return val.lines
+
+    def __delitem__(self, key):
+        super().__delitem__(key)
+
+    def keys(self):
+        return list(super().keys())
+
+    def __len__(self):
+        return super().__len__()

@@ -62,6 +62,15 @@ class ConfParserTest(unittest.TestCase):
     def tearDown(self):
         os.remove(self.file)
 
+    def test_warning_typo(self):
+        logger = logging.getLogger()
+        with self.assertLogs(logger, 'WARNING') as cm:
+            newConf = ConfParser(comment_seperators=('#',))
+            self.assertEquals(cm.output[0], 'WARNING:root:The setting '
+                              '`comment_seperators` is deprecated. '
+                              'Please use `comment_separators` '
+                              'instead.')
+
     def test_parse_nonexisting_file(self):
         self.assertRaises(FileNotFoundError,
                           self.uut.parse,

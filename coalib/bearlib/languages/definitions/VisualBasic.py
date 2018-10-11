@@ -10,3 +10,5 @@ class VisualBasic:
     # Multiline strings are only supported by Visual Basic 14.0 and above
     multiline_string_delimiters = string_delimiters
     encapsulators = {'(': ')', '{': '}'}
+    max_line_length = 65535
+    string_delimiter_escape = {'"': '""'}

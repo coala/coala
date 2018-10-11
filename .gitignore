@@ -343,6 +343,9 @@ tags
 .idea/**/dictionaries
 .idea/**/shelf
 
+# Generated files
+.idea/**/contentModel.xml
+
 # Sensitive or high-churn files
 .idea/**/dataSources/
 .idea/**/dataSources.ids
@@ -555,11 +558,6 @@ cscope.po.out
 
 # man pages
 coala.1
-
-# Patch & backup files
-*.patch
-*.orig
-*.diff
 
 # Pytest profile files
 prof/

@@ -13,5 +13,5 @@ def main(debug=False):
     return coala_main(debug=debug)
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == '__main__':
     sys.exit(main())

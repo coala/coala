@@ -1,10 +1,12 @@
 import pdb
+import os
 from collections import defaultdict
 import datetime
-from io import BytesIO
+from io import BytesIO, StringIO
 import multiprocessing
 import unittest
 from os.path import abspath, exists, isfile, join, getmtime
+from tempfile import TemporaryDirectory, NamedTemporaryFile
 import shutil
 
 from freezegun import freeze_time
@@ -13,19 +15,26 @@ from unittest.mock import patch
 import requests
 import requests_mock
 
+from coalib.coala_main import run_coala
 from coalib.bearlib.aspects.collections import AspectList
 from coalib.bearlib.aspects.Metadata import CommitMessage
 from coalib.bearlib.languages.Language import Language, Languages
-from coalib.bears.Bear import Bear, Debugger
+from coalib.bears.Bear import (
+    Bear, Debugger, _setting_is_enabled, _is_debugged, _is_profiled)
 from coalib.bears.BEAR_KIND import BEAR_KIND
 from coalib.bears.GlobalBear import GlobalBear
 from coalib.bears.LocalBear import LocalBear
 from coalib.results.Result import Result
 from coalib.results.TextPosition import ZeroOffsetError
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
+from coalib.output.printers.LogPrinter import LogPrinter
 from coalib.processes.communication.LogMessage import LogMessage
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting, language
+from pyprint.ConsolePrinter import ConsolePrinter
+from coala_utils.ContextManagers import prepare_file
+
+from tests.TestUtilities import bear_test_module
 
 
 class BadTestBear(Bear):
@@ -56,6 +65,29 @@ class TestBear(Bear):
         self.print('set', 'up', delimiter='=')
         self.err('teardown')
         self.err()
+
+
+class TestOneBear(LocalBear):
+    def __init__(self, section, queue):
+        Bear.__init__(self, section, queue)
+
+    def run(self, x: int, y: str, z: int = 79, w: str = 'kbc'):
+        yield 1
+        yield 2
+
+
+class TestTwoBear(Bear):
+
+    def run(self, *args, **kwargs):
+        yield 1
+        yield 2
+        yield 3
+
+
+class TestThreeBear(Bear):
+
+    def run(self, *args, **kwargs):
+        pass
 
 
 class TypedTestBear(Bear):
@@ -468,15 +500,19 @@ class BearTest(BearTestBase):
     # Mock test added to solve the coverage problem by DebugBearsTest
     @patch('pdb.Pdb.do_continue')
     def test_custom_continue(self, do_continue):
-        arg = {}
-        self.assertEqual(Debugger().do_quit(arg), 1)
-        pdb.Pdb.do_continue.assert_called_once_with(arg)
+        section = Section('name')
+        section.append(Setting('debug_bears', 'True'))
+        bear = Bear(section, self.queue)
+        args = ()
+        self.assertEqual(Debugger(bear).do_quit(args), 1)
+        pdb.Pdb.do_continue.assert_called_once_with(args)
 
     # side_effect effectively implements run() method of bear
     @patch('coalib.bears.Bear.Debugger.runcall', side_effect=((1, 2), 1, 2))
     def test_debug_run_with_return(self, runcall):
         section = Section('name')
-        my_bear = Bear(section, self.queue, debugger=True)
+        section.append(Setting('debug_bears', 'True'))
+        my_bear = Bear(section, self.queue)
         args = ()
         kwargs = {}
         self.assertEqual(my_bear.run_bear_from_section(args, kwargs), [1, 2])
@@ -484,10 +520,169 @@ class BearTest(BearTestBase):
     @patch('coalib.bears.Bear.Debugger.runcall', return_value=None)
     def test_debug_run_with_no_return(self, runcall):
         section = Section('name')
-        my_bear = Bear(section, self.queue, debugger=True)
+        section.append(Setting('debug_bears', 'True'))
+        my_bear = Bear(section, self.queue)
         args = ()
         kwargs = {}
         self.assertIsNone(my_bear.run_bear_from_section(args, kwargs))
+
+    def test_do_settings(self):
+        section = Section('name', None)
+        section.append(Setting('x', '85'))
+        section.append(Setting('y', 'kbc3'))
+        section.append(Setting('z', '75'))
+        bear = TestOneBear(section, self.queue)
+        output = StringIO()
+        dbg = Debugger(bear, stdout=output)
+        arg = ()
+        self.assertEqual(dbg.do_settings(arg), 1)
+        output = output.getvalue().splitlines()
+        self.assertEqual(output[0], 'x = 85')
+        self.assertEqual(output[1], "y = 'kbc3'")
+        self.assertEqual(output[2], 'z = 75')
+        self.assertEqual(output[3], "w = 'kbc'")
+        with self.assertRaises(ValueError):
+            Debugger(bear=None)
+
+    def test_is_debugged(self):
+        with self.assertRaises(ValueError):
+            _is_debugged(bear=None)
+
+        section = Section('name')
+        uut = Bear(section, self.queue)
+        self.assertEqual(_is_debugged(uut), False)
+        section.append(Setting('debug_bears', 'tRuE'))
+        self.assertEqual(_is_debugged(uut), True)
+        section.append(Setting('debug_bears', '0'))
+        self.assertEqual(_is_debugged(uut), False)
+        section.append(Setting('debug_bears', 'Bear, ABear'))
+        self.assertEqual(_is_debugged(uut), True)
+        section.append(Setting('debug_bears', 'abc, xyz'))
+        self.assertEqual(_is_debugged(uut), False)
+
+    @patch('cProfile.Profile.dump_stats')
+    def test_profiler_with_no_directory_exists(self, dump_stats):
+        args = ()
+        kwargs = {}
+        section = Section('name')
+        section.append(Setting('profile', 'tRuE'))
+        bear = TestTwoBear(section, self.queue)
+        self.assertEqual(bear.run_bear_from_section(args, kwargs), [1, 2, 3])
+        dump_stats.assert_called_once_with(join(os.getcwd(),
+                                                'name_TestTwoBear.prof'))
+        section.append(Setting('profile', 'abc'))
+        bear = TestTwoBear(section, self.queue)
+        self.assertEqual(bear.run_bear_from_section(args, kwargs), [1, 2, 3])
+        dump_stats.assert_called_with(os.path.join(
+            bear.profile, 'name_TestTwoBear.prof'))
+        os.rmdir('abc')
+        section.append(Setting('profile', '1'))
+        bear = TestThreeBear(section, self.queue)
+        self.assertIsNone(bear.run_bear_from_section(args, kwargs))
+        dump_stats.assert_called_with(join(os.getcwd(),
+                                           'name_TestThreeBear.prof'))
+
+    @patch('cProfile.Profile.dump_stats')
+    def test_profiler_with_directory_exists(self, dump_stats):
+        args = ()
+        kwargs = {}
+        section = Section('name')
+        with TemporaryDirectory() as temp_dir:
+            section.append(Setting('profile', temp_dir))
+            bear = TestTwoBear(section, self.queue)
+            self.assertEqual(bear.run_bear_from_section(args, kwargs),
+                             [1, 2, 3])
+            dump_stats.assert_called_once_with(os.path.join(
+                bear.profile, 'name_TestTwoBear.prof'))
+
+    def test_profiler_with_file_path(self):
+        args = ()
+        kwargs = {}
+        section = Section('name')
+        with NamedTemporaryFile() as temp_file:
+            section.append(Setting('profile', temp_file.name))
+            bear = TestTwoBear(section, self.queue)
+            with self.assertRaises(SystemExit) as context:
+                bear.run_bear_from_section(args, kwargs)
+                self.assertEqual(context.exception.code, 2)
+
+    def test_profiler_with_debugger(self):
+        section = Section('name')
+        section.append(Setting('debug_bears', 'tRuE'))
+        section.append(Setting('profile', 'tRuE'))
+        with self.assertRaisesRegex(
+                ValueError,
+                'Cannot run debugger and profiler at the same time.'):
+            Bear(section, self.queue)
+
+    @patch('coalib.bears.Bear.Bear.profile_run')
+    def test_profiler_with_false_setting(self, profile_run):
+        args = ()
+        kwargs = {}
+        section = Section('name')
+        section.append(Setting('profile', '0'))
+        bear = TestThreeBear(section, self.queue)
+        self.assertIsNone(bear.run_bear_from_section(args, kwargs))
+        assert not profile_run.called
+
+    def test_is_profiled(self):
+        with self.assertRaisesRegex(
+                ValueError,
+                'Positional argument bear is not an instance of Bear class.'):
+            _is_profiled(bear=None)
+
+        section = Section('name')
+        uut = Bear(section, self.queue)
+        self.assertEqual(_is_profiled(uut), False)
+        section.append(Setting('profile', 'tRuE'))
+        self.assertEqual(_is_profiled(uut), os.getcwd())
+        section.append(Setting('profile', '0'))
+        self.assertEqual(_is_profiled(uut), False)
+        section.append(Setting('profile', 'dirpath'))
+        self.assertEqual(_is_profiled(uut), 'dirpath')
+
+    def test_setting_is_enabled(self):
+        with self.assertRaisesRegex(
+                ValueError,
+                'Positional argument bear is not an instance of Bear class.'):
+            _setting_is_enabled(bear=None, key='key')
+
+        section = Section('name')
+        uut = Bear(section, self.queue)
+        with self.assertRaisesRegex(ValueError, 'No setting key passed.'):
+            _setting_is_enabled(bear=uut, key=None)
+
+        self.assertFalse(_setting_is_enabled(bear=uut, key='key'))
+
+        section.append(Setting('key', 'value'))
+        self.assertEqual(_setting_is_enabled(bear=uut, key='key'),
+                         uut.section['key'])
+        section.append(Setting('key', 'tRuE'))
+        self.assertEqual(_setting_is_enabled(bear=uut, key='key'), True)
+        section.append(Setting('key', '0'))
+        self.assertEqual(_setting_is_enabled(bear=uut, key='key'), False)
+
+    def test_profiler_dependency(self, debug=False):
+        with bear_test_module(), \
+                prepare_file(['#fixme  '], None) as (lines, filename):
+            results = run_coala(console_printer=ConsolePrinter(),
+                                log_printer=LogPrinter(),
+                                arg_list=(
+                                    '-c', os.devnull,
+                                    '-f', filename,
+                                    '-b', 'DependentBear',
+                                    '-S', 'use_spaces=yeah',
+                                    '--profile', 'profiled_bears',
+                                ),
+                                autoapply=False,
+                                debug=debug)
+            cli_result = results[0]['cli']
+            self.assertEqual(len(cli_result), 1)
+
+        profiled_files = os.listdir('profiled_bears')
+        self.assertEqual(len(profiled_files), 1)
+        self.assertEqual(profiled_files[0], 'cli_SpaceConsistencyTestBear.prof')
+        shutil.rmtree('profiled_bears')
 
 
 class BrokenReadHTTPResponse(BytesIO):

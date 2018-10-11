@@ -33,7 +33,7 @@ Example of a good commit:
     This fixes the typo and changes
     it from wether --> whether.
 
-    Fixes https://github.com/coala/coala/issues/4018
+    Closes https://github.com/coala/coala/issues/4018
 
 - `configure.py: Fix docstring typo`: Describe the change in
    maximum of 50 characters.

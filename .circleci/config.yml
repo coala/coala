@@ -16,6 +16,19 @@ jobs:
             echo "export PATH=~/.local/bin:$PATH" >> $BASH_ENV
 
       - run:
+          name: dependencies
+          command: |
+            pip install --user \
+            -r test-requirements.txt \
+            -r requirements.txt \
+            -r docs-requirements.txt
+
+      - run:
+          name: pytest
+          when: always
+          command: python -m pytest
+
+      - run:
           name: install-csslint
           command: |
             curl -o- \
@@ -24,19 +37,6 @@ jobs:
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm install 8
             npm install -g csslint
-
-      - run:
-          name: dependencies
-          command: |
-            pip install --user \
-            -r requirements.txt \
-            -r docs-requirements.txt \
-            -r test-requirements.txt
-
-      - run:
-          name: pytest
-          when: always
-          command: python -m pytest
 
       - run:
           name: install-shellcheck

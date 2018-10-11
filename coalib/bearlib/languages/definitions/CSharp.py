@@ -9,3 +9,4 @@ class CSharp:
     comment_delimiters = '//',
     multiline_comment_delimiters = {'/*': '*/'}
     string_delimiters = {'"': '"'}
+    string_delimiter_escape = {'"': '\\"'}

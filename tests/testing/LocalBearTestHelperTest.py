@@ -3,6 +3,7 @@ import sys
 import unittest
 
 from tests.test_bears.TestBear import TestBear
+from tests.test_bears.AspectsGeneralTestBear import AspectsGeneralTestBear
 from tests.test_bears.TestBearDep import (TestDepBearBDependsA,
                                           TestDepBearCDependsB,
                                           TestDepBearDependsAAndAA)
@@ -15,6 +16,10 @@ from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.testing.LocalBearTestHelper import verify_local_bear, execute_bear
 from coalib.testing.LocalBearTestHelper import LocalBearTestHelper as Helper
+from coalib.bearlib.aspects import (
+    AspectList,
+    get as get_aspect,
+)
 
 
 files = ('Everything is invalid/valid/raises error',)
@@ -25,6 +30,25 @@ invalidTest = verify_local_bear(TestBear,
 validTest = verify_local_bear(TestBear,
                               valid_files=files,
                               invalid_files=())
+min_files = ('This is valid.',)
+max_files = ('This is particularly an invalid file',)
+AspectTest = verify_local_bear(
+    AspectsGeneralTestBear,
+    valid_files=min_files,
+    invalid_files=max_files,
+    aspects=AspectList([
+        get_aspect('LineLength')('Unknown', max_line_length=20),
+        ]),
+)
+PriorityAspectsTest = verify_local_bear(
+    AspectsGeneralTestBear,
+    valid_files=min_files,
+    invalid_files=max_files,
+    aspects=AspectList([
+        get_aspect('LineLength')('Unknown', max_line_length=60),
+        ]),
+    settings={'max_line_length': 20},
+)
 
 
 class LocalBearCheckResultsTest(Helper):
