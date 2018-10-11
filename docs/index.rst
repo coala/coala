@@ -60,4 +60,11 @@ If you're trying to **use** coala, you should have a look at our
    Useful Links <Developers/Useful_Links>
 
 
+.. toctree::
+    :caption: Release Notes
+    :hidden:
+
+    Release Notes <release_notes>
+
+
 .. _user documentation: https://docs.coala.io

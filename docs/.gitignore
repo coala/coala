@@ -1,6 +1,7 @@
 # all .rst files here are generated
 *.rst
-# …except for the index
+# …except for the index and release_notes
 !index.rst
+!release_notes.rst
 # …and the hand-written developers docs.
 !Developers/*.rst
