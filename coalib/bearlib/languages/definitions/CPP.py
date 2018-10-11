@@ -4,7 +4,6 @@ from coalib.bearlib.languages.Language import Language
 @Language
 class CPP:
     aliases = 'C++', 'C Plus Plus', 'CPlusPlus', 'CXX'
-
     extensions = '.c', '.cpp', '.h', '.hpp'
     comment_delimiters = '//',
     multiline_comment_delimiters = {'/*': '*/'}
