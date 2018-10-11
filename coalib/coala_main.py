@@ -235,4 +235,3 @@ def run_coala(console_printer=None,
         exitcode = exitcode or get_exitcode(exception)
 
     return results, exitcode, file_dicts
-
