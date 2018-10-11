@@ -23,8 +23,8 @@ class ConfParserTest(unittest.TestCase):
      j  , another = a
                    multiline
                    value
-    # just a omment
-    # just a omment
+    # just a comment
+    # just a comment
     nokey. = value
     foo.test = content
     makefiles.lastone = val
@@ -71,7 +71,7 @@ class ConfParserTest(unittest.TestCase):
     def test_parse_nonexisting_section(self):
         self.assertRaises(IndexError,
                           self.uut.get_section,
-                          'inexistent section')
+                          'non-existent section')
 
     def test_parse_default_section_deprecated(self):
         default_should = OrderedDict([
@@ -116,8 +116,8 @@ class ConfParserTest(unittest.TestCase):
         makefiles_should = OrderedDict([
             ('j', 'a\nmultiline\nvalue'),
             ('another', 'a\nmultiline\nvalue'),
-            ('comment1', '# just a omment'),
-            ('comment2', '# just a omment'),
+            ('comment1', '# just a comment'),
+            ('comment2', '# just a comment'),
             ('lastone', 'val'),
             ('append', 'key'),
             ('comment3', '')])
