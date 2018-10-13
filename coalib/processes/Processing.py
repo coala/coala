@@ -841,22 +841,7 @@ class FileDict(dict):
     objects.
     """
 
-    def __init__(self):
-        super().__init__()
-
-    def __setitem__(self, key, value):
-        super().__setitem__(key, value)
-
     def __getitem__(self, key):
         val = super().__getitem__(key)
         if val:
             return val.lines
-
-    def __delitem__(self, key):
-        super().__delitem__(key)
-
-    def keys(self):
-        return list(super().keys())
-
-    def __len__(self):
-        return super().__len__()
