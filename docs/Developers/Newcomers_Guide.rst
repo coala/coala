@@ -419,6 +419,26 @@ and clicking ``New Pull Request``.
 
 **Congratulations!** You have now created your first ``Pull Request``!
 
+Now, before having other contributors review your work, the system will do an
+automated code review and will comment the requested improvements (respecting
+coding style and commit message rules, line length and spacing etc.) on your
+Pull Request.
+
+.. important::
+
+    It is **never** allowed to close your Pull Request. **Never!**
+
+    It is **always** possible to modify your Pull Request using
+    `git <https://coala.io/git>`_.
+
+    By no means should you delete your branch or your fork, close your
+    ``Pull Request`` or open a new one. All of those actions will create
+    a mess.
+
+    It is highly recommended that you use the tools provided by ``git`` to
+    apply certain modifications to your Pull Request, and not open another one
+    for the same issue.
+
 .. note::
 
     Do not delete your comments on Github, because that makes it hard for other
