@@ -211,9 +211,22 @@ class FnmatchTest(unittest.TestCase):
         non_matches = ['aXbX', 'aXcX']
         self._test_fnmatch(pattern, matches, non_matches)
 
+        # An empty pattern has no effect on the result
+        pattern = ['', 'a**b', 'a**c']
+        matches = ['axb', 'axc']
+        non_matches = ['aXbX', 'aXcX']
+        self._test_fnmatch(pattern, matches, non_matches)
+
+    def test_empty_globs(self):
         pattern = []
         matches = ['anything', 'anything_else']
         non_matches = []
+        self._test_fnmatch(pattern, matches, non_matches)
+
+    def test_empty_glob_in_globs(self):
+        pattern = ['']
+        matches = []
+        non_matches = ['anything', 'anything_else']
         self._test_fnmatch(pattern, matches, non_matches)
 
 
