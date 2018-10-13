@@ -843,5 +843,7 @@ class FileDict(dict):
 
     def __getitem__(self, key):
         val = super().__getitem__(key)
-        if val:
+        if val is None:
+            return val
+        else:
             return val.lines
