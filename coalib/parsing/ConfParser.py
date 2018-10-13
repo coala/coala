@@ -8,6 +8,7 @@ from coalib.parsing.LineParser import LineParser
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 from coalib.bearlib import deprecate_settings
+from coalib.results.SourcePosition import SourcePosition
 
 
 class ConfParser:
@@ -90,6 +91,7 @@ class ConfParser:
         current_section = self.get_section(current_section_name)
         current_keys = []
         no_section = True
+        line_number = 0
 
         for line in lines:
             (section_name,
@@ -98,6 +100,7 @@ class ConfParser:
              append,
              comment) = self.line_parser._parse(line)
 
+            line_number += 1
             if comment != '':
                 self.__add_comment(current_section, comment, origin)
 
@@ -135,7 +138,8 @@ class ConfParser:
                     current_section.add_or_create_setting(
                         Setting(key,
                                 value,
-                                origin,
+                                SourcePosition(
+                                    str(origin), line=line_number),
                                 to_append=append,
                                 # Start ignoring PEP8Bear, PycodestyleBear*
                                 # they fail to resolve this
@@ -149,7 +153,8 @@ class ConfParser:
                         True).add_or_create_setting(
                             Setting(key,
                                     value,
-                                    origin,
+                                    SourcePosition(
+                                        str(origin), line=line_number),
                                     to_append=append,
                                     # Start ignoring PEP8Bear, PycodestyleBear*
                                     # they fail to resolve this

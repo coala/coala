@@ -11,6 +11,7 @@ from coalib.settings.Setting import (
 )
 from coalib.parsing.DefaultArgParser import PathArg
 from coalib.parsing.Globbing import glob_escape
+from coalib.results.SourcePosition import SourcePosition
 
 
 class SettingTest(unittest.TestCase):
@@ -44,9 +45,21 @@ class SettingTest(unittest.TestCase):
                               origin='test' + os.path.sep),
                          os.path.abspath(os.path.join('test', '22')))
 
+        self.uut = Setting('key', '22\n',
+                           SourcePosition('.' + os.path.sep),
+                           strip_whitespaces=True)
+        self.assertEqual(path(self.uut),
+                         os.path.abspath(os.path.join('.', '22')))
+
     def test_glob(self):
         self.uut = Setting('key', '.',
                            origin=os.path.join('test (1)', 'somefile'))
+        self.assertEqual(glob(self.uut),
+                         glob_escape(os.path.abspath('test (1)')))
+
+        self.uut = Setting('key', '.',
+                           origin=SourcePosition(
+                                  os.path.join('test (1)', 'somefile')))
         self.assertEqual(glob(self.uut),
                          glob_escape(os.path.abspath('test (1)')))
 
@@ -55,6 +68,12 @@ class SettingTest(unittest.TestCase):
         # Need to escape backslashes since we use list conversion
         self.uut = Setting('key', '., ' + abspath.replace('\\', '\\\\'),
                            origin=os.path.join('test', 'somefile'))
+        self.assertEqual(path_list(self.uut),
+                         [os.path.abspath(os.path.join('test', '.')), abspath])
+
+        self.uut = Setting('key', '., ' + abspath.replace('\\', '\\\\'),
+                           origin=SourcePosition(
+                                  os.path.join('test', 'somefile')))
         self.assertEqual(path_list(self.uut),
                          [os.path.abspath(os.path.join('test', '.')), abspath])
 
@@ -75,6 +94,13 @@ class SettingTest(unittest.TestCase):
             glob_list(self.uut),
             [glob_escape(os.path.abspath(os.path.join('test (1)', '.'))),
              abspath])
+
+        self.uut = Setting('key', '.,' + abspath.replace('\\', '\\\\'),
+                           origin=SourcePosition(
+                                  os.path.join('test (1)', 'somefile')))
+        self.assertEqual(glob_list(self.uut),
+                         [glob_escape(os.path.abspath(
+                                      os.path.join('test (1)', '.'))), abspath])
 
     def test_language(self):
         self.uut = Setting('key', 'python 3.4')
@@ -175,3 +201,14 @@ class SettingTest(unittest.TestCase):
                                     'Iteration on this object is invalid'):
             self.uut = Setting('key', '1, 2, 3', '.', to_append=True)
             list(self.uut)
+
+    def test_line_number(self):
+        self.uut = Setting('key', '22\n', origin=SourcePosition('filename', 3))
+        self.assertEqual(self.uut.line_number, 3)
+
+        with self.assertRaisesRegex(TypeError,
+                                    "Instantiated with str 'origin' "
+                                    'which does not have line numbers. '
+                                    'Use SourcePosition for line numbers.'):
+            self.uut = Setting('key', '22\n', origin='filename')
+            self.uut.line_number

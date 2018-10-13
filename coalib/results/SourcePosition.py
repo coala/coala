@@ -25,6 +25,7 @@ class SourcePosition(TextPosition):
         """
         TextPosition.__init__(self, line, column)
 
+        self.filename = file
         self._file = abspath(file)
 
     @property
@@ -36,3 +37,11 @@ class SourcePosition(TextPosition):
         if use_relpath:
             _dict['file'] = relpath(_dict['file'])
         return _dict
+
+    def __str__(self):
+        source_position = self.filename
+        if self.line is not None:
+            source_position += ':' + str(self.line)
+        if self.column is not None:
+            source_position += ':' + str(self.column)
+        return source_position

@@ -98,6 +98,11 @@ class ConfParserTest(unittest.TestCase):
         self.assertRegex(self.cm.output[0],
                          'A setting does not have a section.')
 
+        # Check if line number is correctly set when
+        # no section is given
+        line_num = val.contents['setting'].line_number
+        self.assertEqual(line_num, 1)
+
     def test_parse_foo_section(self):
         foo_should = OrderedDict([
             ('a_default', 'val'),
@@ -146,6 +151,13 @@ class ConfParserTest(unittest.TestCase):
 
         self.assertEqual(val['comment1'].key, 'comment1')
 
+        # Check starting line number of
+        # settings in makefiles section.
+        line_num = val.contents['another'].line_number
+        self.assertEqual(line_num, 12)
+        line_num = val.contents['append'].line_number
+        self.assertEqual(line_num, 20)
+
     def test_parse_empty_elem_strip_section(self):
         empty_elem_strip_should = OrderedDict([
             ('a', 'a, b, c'),
@@ -166,6 +178,22 @@ class ConfParserTest(unittest.TestCase):
         for k in val:
             is_dict[k] = str(val[k])
         self.assertEqual(is_dict, empty_elem_strip_should)
+
+        # Check starting line number of
+        # settings in empty_elem_strip section.
+        line_num = val.contents['b'].line_number
+        self.assertEqual(line_num, 24)
+
+    def test_line_number_name_section(self):
+        # Pop off the default, foo, makefiles and empty_elem_strip sections.
+        self.sections.popitem(last=False)
+        self.sections.popitem(last=False)
+        self.sections.popitem(last=False)
+        self.sections.popitem(last=False)
+
+        key, val = self.sections.popitem(last=False)
+        line_num = val.contents['key1'].line_number
+        self.assertEqual(line_num, 30)
 
     def test_remove_empty_iter_elements(self):
         # Test with empty-elem stripping.

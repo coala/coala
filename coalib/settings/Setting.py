@@ -8,6 +8,7 @@ from coala_utils.decorators import (
 from coala_utils.string_processing.StringConverter import StringConverter
 from coalib.bearlib.languages.Language import Language, UnknownLanguageError
 from coalib.parsing.Globbing import glob_escape
+from coalib.results.SourcePosition import SourcePosition
 
 
 def path(obj, *args, **kwargs):
@@ -155,7 +156,7 @@ class Setting(StringConverter):
     def __init__(self,
                  key,
                  value,
-                 origin: str = '',
+                 origin: (str, SourcePosition) = '',
                  strip_whitespaces: bool = True,
                  list_delimiters: Iterable = (',', ';'),
                  from_cli: bool = False,
@@ -196,7 +197,7 @@ class Setting(StringConverter):
 
         self.from_cli = from_cli
         self.key = key
-        self.origin = str(origin)
+        self._origin = origin
 
     def __path__(self, origin=None, glob_escape_origin=False):
         """
@@ -296,3 +297,22 @@ class Setting(StringConverter):
                              'incomplete. Please access the value of the '
                              'setting in a section to get the complete value.')
         return self._value
+
+    @property
+    def origin(self):
+        """
+        Returns the filename.
+        """
+        if isinstance(self._origin, SourcePosition):
+            return self._origin.filename
+        else:
+            return self._origin
+
+    @property
+    def line_number(self):
+        if isinstance(self._origin, SourcePosition):
+            return self._origin.line
+        else:
+            raise TypeError("Instantiated with str 'origin' "
+                            'which does not have line numbers. '
+                            'Use SourcePosition for line numbers.')

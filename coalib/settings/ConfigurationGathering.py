@@ -367,8 +367,7 @@ def get_config_directory(section):
 
     However if its origin is already a directory this will be preserved:
 
-    >>> files = section['files']
-    >>> files.origin = os.path.abspath('/tmp/dir/')
+    >>> files = Setting('files', '**', origin=os.path.abspath('/tmp/dir/'))
     >>> section.append(files)
     >>> os.makedirs(section['files'].origin, exist_ok=True)
     >>> get_config_directory(section) == section['files'].origin
