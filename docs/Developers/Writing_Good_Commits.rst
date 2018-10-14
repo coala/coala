@@ -41,7 +41,7 @@ Example of a good commit:
 - `This fixes.. ..whether.`: Describe the reasoning of your changes
    in maximum of 72 characters per line.
 
-- `Closes https://github.com/coala/coala/issues/7971`: Mention the URL
+- `Closes https://github.com/coala/coala/issues/4018`: Mention the URL
    of the issue it closes or fixes.
 
 
