@@ -3,7 +3,7 @@
 
 =====
 
-:emphasis:`"Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live."` ― `John F. Woods <http://ruby.zigzo.com/2014/08/01/who-said-that-one-violent-psychopath-quote/>`_
+:emphasis:`"Most good programmers do programming not because they expect to get paid or get adulation by the public, but because it is fun to program."` ― `Linus Torvalds  <https://www.brainyquote.com/quotes/linus_torvalds_367382>`_
 
 =====
 
