@@ -90,6 +90,9 @@ class ConfParser:
         current_section = self.get_section(current_section_name)
         current_keys = []
         no_section = True
+        # After a key is read, by default the value
+        # of keys is [('', 'key')]
+        multiple_ignore_keys = [('', 'ignore')]
 
         for line in lines:
             (section_name,
@@ -142,7 +145,10 @@ class ConfParser:
                                 remove_empty_iter_elements=
                                 self.__remove_empty_iter_elements),
                                 # Stop ignoring
-                        allow_appending=(keys == []))
+                                # mutiple_ignore_keys is used to support
+                                # multiple instances of ignore
+                        allow_appending=(
+                            keys == [] or keys == multiple_ignore_keys))
                 else:
                     self.get_section(
                         section_override,
@@ -156,7 +162,8 @@ class ConfParser:
                                     remove_empty_iter_elements=
                                     self.__remove_empty_iter_elements),
                                     # Stop ignoring
-                            allow_appending=(keys == []))
+                            allow_appending=(
+                                keys == [] or keys == multiple_ignore_keys))
 
     def __init_sections(self):
         self.sections = OrderedDict()
