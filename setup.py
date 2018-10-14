@@ -24,6 +24,9 @@ except (ValueError, UnicodeError, locale.Error):
     locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 VERSION = '0.12.0.dev99999999999999'
+DESCRIPTION = (
+    'Linting and Fixing Code for All Languages'
+)
 DEPENDENCY_LINKS = []
 
 SETUP_COMMANDS = {}
@@ -400,7 +403,7 @@ SETUP_COMMANDS.update({
 if __name__ == '__main__':
     setup(name='coala',
           version=VERSION,
-          description='Linting and Fixing Code for All Languages',
+          description=DESCRIPTION,
           author='The coala developers',
           author_email='coala.analyzer@gmail.com',
           maintainer='Lasse Schuirmann, Fabian Neuschmidt, Mischa Kr\xfcger'

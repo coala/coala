@@ -128,7 +128,7 @@ system_coafile = get_system_coafile(coalib_root)
 
 user_coafile = os.path.join(os.path.expanduser('~'), '.coarc')
 
-default_coafile = '.coafile'
+local_coafile = '.coafile'
 
 # USER_DATA_DIR will be set here when CachingUtilities loads, however
 # access to it from outside of CachingUtilities is deprecated.

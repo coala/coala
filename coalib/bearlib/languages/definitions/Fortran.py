@@ -5,3 +5,4 @@ from coalib.bearlib.languages.Language import Language
 class Fortran:
     extensions = '.f90', '.f95', '.f03', '.f', '.for'
     comment_delimiters = '!',
+    string_delimiter_escape = {'"': '""', "'": "''"}

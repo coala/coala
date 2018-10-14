@@ -33,6 +33,7 @@ C_BEARS_COUNT = 2
 
 # This list is sorted alphabetically
 LANGUAGE_NAMES = [
+    'Bash',
     'C',
     'C#',
     'CPP',
@@ -40,11 +41,14 @@ LANGUAGE_NAMES = [
     'Extensible Markup Language 1.0',
     'Fortran',
     'Golang',
+    'Haskell 1.0, 1.1, 1.2, 1.3, 1.4, 98, 2010',
     'Hypertext Markup Language 2.0, 3.2, 4.0, 4.1, 5, 5.1',
     'Java',
     'JavaScript',
+    'JavaScript Object Notation',
     'JavaServer Pages',
     'Jinja2',
+    'KornShell',
     'Markdown',
     'Matlab',
     'ObjectiveC',
@@ -54,6 +58,7 @@ LANGUAGE_NAMES = [
     'Python 2.7, 3.3, 3.4, 3.5, 3.6',
     'Ruby',
     'Scala',
+    'SCSS 3.1, 3.2, 3.3, 3.4, 3.5, 4.0',
     'Shell',
     'Swift',
     'Tcl',
@@ -61,6 +66,7 @@ LANGUAGE_NAMES = [
     'Vala',
     'VisualBasic',
     'm4',
+    'ZShell',
 ]
 
 LANGUAGE_COUNT = len([

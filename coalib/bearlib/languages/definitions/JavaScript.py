@@ -3,7 +3,7 @@ from coalib.bearlib.languages.Language import Language
 
 @Language
 class JavaScript:
-    aliases = 'js', 'ecmascript'
+    aliases = 'js', 'ecmascript', 'node'
     extensions = '.js',
     comment_delimiters = '//',
     multiline_comment_delimiters = {'/*': '*/'}
@@ -11,3 +11,4 @@ class JavaScript:
     multiline_string_delimiters = {}
     indent_types = {'{': '}'}
     encapsulators = {'(': ')', '[': ']'}
+    string_delimiter_escape = {'"': '\\"', "'": "\\'"}

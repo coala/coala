@@ -1,3 +1,7 @@
+from coalib.parsing.filters.decorators import typed_filter
+
+
+@typed_filter('bearclass')
 def can_fix_filter(bear, args):
     """
     Filters the bears by ``CAN_FIX``.

@@ -61,10 +61,10 @@ def fill_section(section, acquire_settings, log_printer, bears):
 
 
 def fill_settings(sections,
-                  targets,
                   acquire_settings,
                   log_printer=None,
                   fill_section_method=fill_section,
+                  targets=None,
                   **kwargs):
     """
     Retrieves all bears and requests missing settings via the given
@@ -73,8 +73,6 @@ def fill_settings(sections,
     This will retrieve all bears and their dependencies.
 
     :param sections:            The sections to fill up, modified in place.
-    :param targets:             List of section names to be executed which are
-                                passed from cli.
     :param acquire_settings:    The method to use for requesting settings. It
                                 will get a parameter which is a dictionary with
                                 the settings name as key and a list containing
@@ -82,6 +80,8 @@ def fill_settings(sections,
                                 who need this setting in all following indexes.
     :param log_printer:         The log printer to use for logging.
     :param fill_section_method: Method to be used to fill the section settings.
+    :param targets:             List of section names to be executed which are
+                                passed from cli.
     :param kwargs:              Any other arguments for the fill_section_method
                                 can be supplied via kwargs, which are passed
                                 directly to the fill_section_method.
@@ -110,7 +110,7 @@ def fill_settings(sections,
         section_global_bears = Dependencies.resolve(section_global_bears)
         all_bears = copy.deepcopy(section_local_bears)
         all_bears.extend(section_global_bears)
-        if section.is_enabled(targets):
+        if targets is None or section.is_enabled(targets):
             fill_section_method(section,
                                 acquire_settings,
                                 None,

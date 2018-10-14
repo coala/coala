@@ -107,6 +107,9 @@ class FileLength:
     max_file_length = Taste[int](
         'Maximum number of line for a file',
         (999,), default=999)
+    min_file_length = Taste[int](
+        'Minimum number of lines for a file.',
+        (1,), default=1)
 
 
 @Formatting.subaspect

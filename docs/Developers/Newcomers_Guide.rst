@@ -1,6 +1,14 @@
 Welcome to the Newcomers' Guide!
 ================================
 
+.. container:: shorturl
+
+    +----------------+-----------+
+    | Redirects from | newcomer_ |
+    +----------------+-----------+
+
+.. _newcomer: https://coala.io/newcomer/
+
 **DO NOT WORK ON ANY ISSUE WITHOUT ASSIGNMENT!** If you do, someone else might
 work on it as well, and we might have no choice but to reject one of your Pull
 Requests. We hate it if someone's time is wasted. For your own sake, please
@@ -20,9 +28,12 @@ following tasks, you will become a developer at coala:
   - review at least a ``difficulty/newcomer`` Pull Request
   - merge a ``difficulty/low`` Pull Request
   - review at least a ``difficulty/low`` or higher Pull Request
+  - do at least a `meta-review <Meta-review.html>`_ or receive a meta-review
 
-Note: After you have solved a ``difficulty/newcomer`` issue, please don't
-take up any more. Instead, move on to more difficult issues.
+.. note::
+
+    After you have solved a ``difficulty/newcomer`` issue, please don't
+    take up any more. Instead, move on to more difficult issues.
 
 Once you've run coala on a project, please fill out our
 `usability survey <http://coala.io/usability>`_. And once you've got your first Pull
@@ -353,6 +364,10 @@ to be merged, create a commit and push it to your fork, using:
     $ git push -u myfork <branchname>
 
 where ``myfork`` is the name of your fork that you added at the previous step.
+
+After making the changes, it is recommended that you test the code on your
+forked repository by `adding the required CI
+tools <http://api.coala.io/en/latest/Developers/Adding_CI.html>`_.
 
 .. note::
 

@@ -26,6 +26,14 @@ manager as follows:
 
     $ brew install git
 
+Alternatively, Git comes pre-installed with  `XCode <https://www.atlassian.com/git/tutorials/install-git#mac-os-x>`_
+(or its  Command Line Tools) on a Mac OS system. You can directly install the
+Command Line Tools as follows:
+
+::
+
+    $ xcode-select --install
+
 Getting Started with coala
 --------------------------
 
@@ -200,7 +208,7 @@ parts. They should have a newline between them.
 
   The body should have a short paragraph that briefly describes the change
   that was made, and the reason why this change was needed in imperative.
-  Its maximum length is 50 characters.
+  Its maximum length is 72 characters.
 
 - **The issue that is being fixed**
 

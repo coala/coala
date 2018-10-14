@@ -11,3 +11,4 @@ class VisualBasic:
     multiline_string_delimiters = string_delimiters
     encapsulators = {'(': ')', '{': '}'}
     max_line_length = 65535
+    string_delimiter_escape = {'"': '""'}

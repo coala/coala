@@ -70,6 +70,15 @@ def icollect(file_paths, ignored_globs=None, match_cache={},
     if isinstance(file_paths, str):
         file_paths = [file_paths]
 
+    if ignored_globs is None:
+        ignored_globs = []
+    for index, glob in enumerate(ignored_globs):
+        if glob.endswith('/**') or glob.endswith('\\**'):
+            logging.warning("Detected trailing globstar in ignore glob '{}'. "
+                            "Please remove the unnecessary '**' from its end."
+                            .format(glob))
+            ignored_globs[index] = glob.rstrip('*')
+
     for file_path in file_paths:
         if file_path not in match_cache:
             match_cache[file_path] = list(iglob(file_path))

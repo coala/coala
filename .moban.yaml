@@ -15,7 +15,7 @@ ci_directory: .misc
 docs_dir: docs
 docs_source_dir: ./
 docs_toc: false
-test_py36: false
+test_py36: true
 allow_generic_no_cover: true
 
 entry_points:
