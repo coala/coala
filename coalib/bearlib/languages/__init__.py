@@ -36,6 +36,7 @@ from .definitions.PLSQL import PLSQL
 from .definitions.PowerShell import PowerShell
 from .definitions.Python import Python
 from .definitions.Ruby import Ruby
+from .definitions.SASS import SASS
 from .definitions.Scala import Scala
 from .definitions.SCSS import SCSS
 from .definitions.Shell import Shell
