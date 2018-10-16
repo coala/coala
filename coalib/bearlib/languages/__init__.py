@@ -15,6 +15,7 @@ from .definitions.CSharp import CSharp
 from .definitions.CSS import CSS
 from .definitions.Fortran import Fortran
 from .definitions.Golang import Golang
+from .definitions.GraphQL import GraphQL
 from .definitions.html import HTML
 from .definitions.Java import Java
 from .definitions.JavaScript import JavaScript
