@@ -3,7 +3,7 @@
 
 =====
 
-:emphasis:`"Most good programmers do programming not because they expect to get paid or get adulation by the public, but because it is fun to program."` ― `Linus Torvalds  <https://www.brainyquote.com/quotes/linus_torvalds_367382>`_
+:emphasis:`" Most good programmers do programming not because they expect to get paid or get adulation by the public, but because it is fun to program. "` ― `Linus Torvalds  <https://www.brainyquote.com/quotes/linus_torvalds_367382>`_
 
 =====
 
