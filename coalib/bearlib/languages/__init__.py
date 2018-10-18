@@ -7,6 +7,7 @@ from .Language import Language
 from .Language import Languages
 
 from .definitions.Unknown import Unknown
+from .definitions.antlr import antlr
 from .definitions.Bash import Bash
 from .definitions.C import C
 from .definitions.CPP import CPP

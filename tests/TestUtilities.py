@@ -33,6 +33,7 @@ C_BEARS_COUNT = 2
 
 # This list is sorted alphabetically
 LANGUAGE_NAMES = [
+    'antlr 3, 4',
     'Bash',
     'C',
     'C#',
