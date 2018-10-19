@@ -147,6 +147,11 @@ img {
     max-width: 100%;
 }
 
+.header {
+    margin: 5%;
+    width: 30em;
+}
+
 /* Override few pygments styles */
 
 .highlight .nn, .highlight .nc {

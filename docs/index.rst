@@ -1,9 +1,10 @@
 Welcome to coala API Documentation
 ==================================
 
-.. image:: _static/images/coala-header.png
-   :scale: 50
+.. image:: _static/images/coala-header.svg
    :align: center
+   :alt: coala.io
+   :class: header
 
 Hey there! You're in the right place if you:
 
