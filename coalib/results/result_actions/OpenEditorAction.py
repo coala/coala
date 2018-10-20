@@ -63,6 +63,10 @@ KNOWN_EDITORS = {
         'args': '--wait',
         'gui': True
     },
+    'brackets': {
+        'file_arg_template': '{filename}',
+        'gui': True
+    },
     'geany': {
         'file_arg_template': '{filename} -l {line} --column {column}',
         'args': '-s -i',
