@@ -67,6 +67,11 @@ KNOWN_EDITORS = {
         'file_arg_template': '{filename}',
         'gui': True
     },
+    'code': {
+        'file_arg_template': '{filename}:{line}:{column} --goto',
+        'args': '--new-window --reuse-window --wait',
+        'gui': True
+    },
     'geany': {
         'file_arg_template': '{filename} -l {line} --column {column}',
         'args': '-s -i',
