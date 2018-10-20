@@ -13,6 +13,7 @@ from .definitions.C import C
 from .definitions.CPP import CPP
 from .definitions.CSharp import CSharp
 from .definitions.CSS import CSS
+from .definitions.D import D
 from .definitions.Fortran import Fortran
 from .definitions.Golang import Golang
 from .definitions.GraphQL import GraphQL

@@ -39,6 +39,7 @@ LANGUAGE_NAMES = [
     'C#',
     'CPP',
     'CSS',
+    'D',
     'Extensible Markup Language 1.0',
     'Fortran',
     'Golang',
