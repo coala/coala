@@ -42,6 +42,12 @@ class ExternalBearWrapComponentTest(unittest.TestCase):
             return 1
 
     def setUp(self):
+        self._old_python_path = os.environ.get('PYTHONPATH')
+        os.environ['PYTHONPATH'] = os.path.join(
+            os.path.dirname(__file__),
+            '..', '..', '..', '..',
+        )
+
         self.section = Section('TEST_SECTION')
 
         self.test_program_path = get_testfile_path('test_external_bear.py')
@@ -49,6 +55,10 @@ class ExternalBearWrapComponentTest(unittest.TestCase):
         self.testfile_path = get_testfile_path('test_file.txt')
         with open(self.testfile_path, mode='r') as fl:
             self.testfile_content = fl.read().splitlines(keepends=True)
+
+    def tearDown(self):
+        if self._old_python_path:
+            os.environ['PYTHONPATH'] = self._old_python_path
 
     def test_decorator_invalid_parameters(self):
         with self.assertRaises(ValueError) as cm:
