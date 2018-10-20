@@ -13,10 +13,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Start ignoring PEP8Bear*, PyImportSortBear and PycodestyleBear*, we need to
+# assert the version before importing things that could cause an ImportError
 import sys
 
-# Start ignoring PyImportSortBear and PycodestyleBear*, we need to assert the
-# version before importing things that could cause an ImportError
 from coalib import assert_supported_version
 
 assert_supported_version()
