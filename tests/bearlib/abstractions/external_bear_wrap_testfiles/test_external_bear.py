@@ -1,17 +1,10 @@
-import os
 import sys
 import json
-
-# Start ignoring PycodestyleBear* as those imports may raise
-# import warnings
-sys.path.append(os.path.join(os.path.dirname(__file__),
-                             '..', '..', '..', '..'))
 
 from coalib.results.Result import Result
 from coalib.results.SourceRange import SourceRange
 from coalib.output.JSONEncoder import create_json_encoder
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
-# Stop ignoring
 
 if __name__ == '__main__':
 

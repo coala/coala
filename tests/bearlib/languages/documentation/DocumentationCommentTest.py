@@ -182,11 +182,6 @@ class PythonDocumentationCommentTest(DocumentationCommentTest):
                                    'documenting code.\n'),
              self.Parameter(name='radius', desc=' The explosion radius. ')],
             [self.Description(desc='A function that returns 55.')],
-            [self.Description(desc='\nDocstring with layouted text.\n\n    '
-                                   'layouts inside docs are preserved.'
-                                   '\nthis is intended.\n')],
-            [self.Description(desc=' Docstring inline with triple quotes.\n'
-                                   '    Continues here. ')],
             [self.Description(desc='\nThis is the best docstring ever!\n\n'),
              self.Parameter(name='param1',
                             desc='\n    Very Very Long Parameter '

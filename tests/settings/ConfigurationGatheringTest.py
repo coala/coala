@@ -69,6 +69,12 @@ class ConfigurationGatheringTest(unittest.TestCase):
                 *args,
                 arg_list=['-S', 'test=5', '-c', 'some_bad_filename'])
 
+        # Using a invalid .coarc file will error
+        with self.assertRaises(SystemExit):
+            gather_configuration(
+                *args,
+                arg_list=['-S', 'test=5', '-c', '/Users/abcdefghi/.coarc'])
+
         with make_temp() as temporary:
             sections, local_bears, global_bears, targets = (
                 gather_configuration(

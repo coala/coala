@@ -22,6 +22,12 @@ COAFILE_OUTPUT = Template('$type \'$file\' $found!\n'
                           'your current options\n'
                           '* add `-I` to suppress any use of config files\n')
 
+COARC_OUTPUT = Template('$type \'$file\' $found!\n'
+                        'Here\'s what you can do:\n'
+                        'You can create a .coarc file '
+                        'in your home directory to set certain '
+                        'user wide settings\n')
+
 
 def aspectize_sections(sections):
     """
@@ -129,9 +135,14 @@ def load_config_file(filename, log_printer=None, silent=False):
         if not silent:
             if os.path.basename(filename) == Constants.local_coafile:
                 logging.warning(COAFILE_OUTPUT
-                                .substitute(type='Default coafile',
+                                .substitute(type='Local coafile',
                                             file=Constants.local_coafile,
                                             found='not found'))
+            elif os.path.basename(filename) == '.coarc':
+                logging.warning(COARC_OUTPUT
+                                .substitute(type='Requested coarc file',
+                                            file=filename,
+                                            found='does not exist'))
             else:
                 logging.error(COAFILE_OUTPUT
                               .substitute(type='Requested coafile',
@@ -490,8 +501,9 @@ def gather_configuration(acquire_settings,
     _set_section_language(sections)
     aspectize_sections(sections)
     local_bears, global_bears = fill_settings(sections,
-                                              targets,
-                                              acquire_settings)
+                                              acquire_settings,
+                                              targets=targets,
+                                              )
     save_sections(sections)
     warn_nonexistent_targets(targets, sections)
 

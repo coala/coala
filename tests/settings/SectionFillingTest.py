@@ -45,10 +45,8 @@ class SectionFillingTest(unittest.TestCase):
 
     def test_fill_settings(self):
         sections = {'test': self.section}
-        targets = []
         with simulate_console_inputs() as generator:
             fill_settings(sections,
-                          targets,
                           acquire_settings,
                           self.log_printer)
             self.assertEqual(generator.last_input, -1)
@@ -57,7 +55,6 @@ class SectionFillingTest(unittest.TestCase):
 
         with simulate_console_inputs('True'), bear_test_module():
             local_bears, global_bears = fill_settings(sections,
-                                                      targets,
                                                       acquire_settings,
                                                       self.log_printer)
             self.assertEqual(len(local_bears['test']), 1)
@@ -113,9 +110,8 @@ class SectionFillingTest(unittest.TestCase):
 
     def test_dependency_resolving(self):
         sections = {'test': self.section}
-        targets = []
         self.section['bears'] = 'DependentBear'
         with simulate_console_inputs('True'), bear_test_module():
-            fill_settings(sections, targets, acquire_settings, self.log_printer)
+            fill_settings(sections, acquire_settings, self.log_printer)
 
         self.assertEqual(bool(self.section['use_spaces']), True)

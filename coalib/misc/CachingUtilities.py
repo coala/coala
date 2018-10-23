@@ -68,8 +68,9 @@ def delete_files(log_printer, identifiers):
 
 def pickle_load(log_printer, identifier, fallback=None):
     """
-    Get the data stored in ``filename`` present in the user
-    config directory. Example usage:
+    Unpickle the data stored in ``identifier`` file and return it.
+
+    Example usage:
 
     >>> test_data = {'answer': 42}
     >>> pickle_dump(None, 'test_project', test_data)
@@ -102,8 +103,7 @@ def pickle_load(log_printer, identifier, fallback=None):
 
 def pickle_dump(log_printer, identifier, data):
     """
-    Write ``data`` into the file ``filename`` present in the user
-    config directory.
+    Pickle the ``data`` and write into the ``identifier`` file.
 
     :param log_printer: A LogPrinter object to use for logging.
     :param identifier:  The name of the file present in the user config

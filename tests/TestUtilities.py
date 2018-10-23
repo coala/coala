@@ -33,6 +33,7 @@ C_BEARS_COUNT = 2
 
 # This list is sorted alphabetically
 LANGUAGE_NAMES = [
+    'antlr 3, 4',
     'Bash',
     'C',
     'C#',
@@ -41,6 +42,8 @@ LANGUAGE_NAMES = [
     'Extensible Markup Language 1.0',
     'Fortran',
     'Golang',
+    'GraphQL',
+    'Haskell 1.0, 1.1, 1.2, 1.3, 1.4, 98, 2010',
     'Hypertext Markup Language 2.0, 3.2, 4.0, 4.1, 5, 5.1',
     'Java',
     'JavaScript',

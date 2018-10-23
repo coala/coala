@@ -33,7 +33,7 @@ Example of a good commit:
     This fixes the typo and changes
     it from wether --> whether.
 
-    Fixes https://github.com/coala/coala/issues/4018
+    Closes https://github.com/coala/coala/issues/4018
 
 - `configure.py: Fix docstring typo`: Describe the change in
    maximum of 50 characters.
@@ -41,7 +41,7 @@ Example of a good commit:
 - `This fixes.. ..whether.`: Describe the reasoning of your changes
    in maximum of 72 characters per line.
 
-- `Closes https://github.com/coala/coala/issues/7971`: Mention the URL
+- `Closes https://github.com/coala/coala/issues/4018`: Mention the URL
    of the issue it closes or fixes.
 
 
@@ -152,9 +152,12 @@ Example:
    or from the program it should be considered a bug, and should be
    addresed with ``Fixes``. If an issue is labelled with ``type/bug``
    you should always use ``Fixes``. For all other issues use ``Closes``.
+-  In case your commit does not close an issue but it is related to
+   the issue and partly solves the problem, use ``Related to`` instead
+   of ``Fixes`` or ``Closes``.
 -  Should use full URL to the issue.
--  There should be a single space between the ``Fixes`` or ``Closes`` and the
-   URL.
+-  There should be a single space between the ``Fixes``, ``Closes`` or
+   ``Related to`` and the URL.
 
 .. note::
 
@@ -202,6 +205,20 @@ Example 3 (fixed typo):
     wether --> whether.
 
     Closes https://github.com/coala/coala/issues/4018
+
+Example 4 (related to):
+
+::
+
+    CI: Workaround sphinx error with docutils 0.14rc1
+
+    sphinx raises an exception when trying to parse the
+    docutils version 0.14rc1.
+
+    This is a temporary workaround until docutils version 0.14 is
+    released or Sphinx 1.7 is released with the fix.
+
+    Related to https://github.com/coala/coala/issues/4280
 
 Editing Commit Messages
 -----------------------

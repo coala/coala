@@ -35,6 +35,11 @@ class FileFactoryTest(unittest.TestCase):
         with self.assertRaises(IndexError):
             self.uut.get_line(1)
 
+    def test_deprecated_dict_getitem(self):
+        self.assertEqual(self.uut[0], 'This is a test file.\n')
+        with self.assertRaises(IndexError):
+            self.uut[1]
+
     def test_lines(self):
         self.assertEqual(self.uut.lines, ('This is a test file.\n',))
         self.assertEqual(self.uut.lines, ('This is a test file.\n',))

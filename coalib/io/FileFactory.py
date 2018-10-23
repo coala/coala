@@ -136,3 +136,16 @@ class FileFactory:
             An iterator iterating over all lines in the file.
         """
         return iter(self.lines)
+
+    def __len__(self):
+        """
+        :return:
+            The number of lines in the file.
+        """
+        return len(self.lines)
+
+    def __getitem__(self, item):
+        """
+        DEPRECATED.
+        """
+        return self.lines[item]

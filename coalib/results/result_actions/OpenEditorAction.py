@@ -63,6 +63,15 @@ KNOWN_EDITORS = {
         'args': '--wait',
         'gui': True
     },
+    'brackets': {
+        'file_arg_template': '{filename}',
+        'gui': True
+    },
+    'code': {
+        'file_arg_template': '{filename}:{line}:{column} --goto',
+        'args': '--new-window --reuse-window --wait',
+        'gui': True
+    },
     'geany': {
         'file_arg_template': '{filename} -l {line} --column {column}',
         'args': '-s -i',
@@ -128,7 +137,6 @@ class OpenEditorAction(ResultAction):
         """
         Create argument list which will then be used to open an editor for
         the given files at the correct positions, if applicable.
-
         :param editor:
             The editor to open the file with.
         :param editor_info:
@@ -158,7 +166,6 @@ class OpenEditorAction(ResultAction):
     def apply(self, result, original_file_dict, file_diff_dict, editor: str):
         """
         (O)pen file
-
         :param editor: The editor to open the file with.
         """
         try:
@@ -210,4 +217,4 @@ class OpenEditorAction(ResultAction):
         return file_diff_dict
 
     if 'EDITOR' in environ:
-        apply.__defaults__ = (environ['EDITOR'],)
+apply.__defaults__ = (environ['EDITOR'],)
