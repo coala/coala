@@ -547,8 +547,7 @@ def require_setting(setting_name, arr, section):
 
     :param setting_name: Name of the setting missing
     :param arr:          A list containing a description in [0] and the name
-                         of the bears who need this setting in [1] and
-                         following.
+                         of the bears who need this setting in [1].
     :param section:      The section the action corresponds to.
     :param return:       Returns the setting value that was requested from the
                          user.
