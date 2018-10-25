@@ -177,8 +177,12 @@ class Result:
             The related file.
         :param line:
             The first related line in the file. (First line is 1)
+            line = None means an unknown line occurs anywhere in the file.
         :param column:
             The column indicating the first character. (First character is 1)
+            column = None means there is an error with the whole line.
+            All combinations of None values are allowed for line and column,
+            Except line = None and column = <some number>
         :param end_line:
             The last related line in the file.
         :param end_column:
