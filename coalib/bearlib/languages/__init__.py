@@ -35,6 +35,7 @@ from .definitions.Ruby import Ruby
 from .definitions.Scala import Scala
 from .definitions.Swift import Swift
 from .definitions.Tcl import Tcl
+from .definitions.TinyBasic import TinyBasic
 from .definitions.Vala import Vala
 from .definitions.TypeScript import TypeScript
 from .definitions.Shell import Shell
