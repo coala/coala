@@ -45,6 +45,14 @@ request, you likely missed something.
 If you don't find any issues with a Pull Request and acknowledge it, a senior
 member will look over it and perform the merge if everything is good.
 
+Best Practices for Review Discussion
+------------------------------------
+1. After the PR has been reviewed, don't comment on a review unless
+   there is a technical discussion going on, or comment only if you
+   are not in agreement with the reviewer. For an addressed status
+   you can use thumbs up and avoid commenting affirmations like
+   'Thanks' or 'Done'.
+
 Manual Review Process
 ---------------------
 
