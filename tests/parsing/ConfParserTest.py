@@ -200,3 +200,129 @@ class ConfParserTest(unittest.TestCase):
                                             'already been defined in section '
                                             'name. The previous setting will '
                                             'be overridden.')
+
+
+class ConfParserTestParselinesSections(unittest.TestCase):
+    test_file = """
+    [basic]
+
+    ignore = aaa,bbb
+    ignore += ccc
+    ignore += ddd
+
+    [check_inheritence]
+    ignore += eee
+
+    [with_unrelated_settings]
+    ignore = aaa,bbb
+    other = variable
+    ignore += ccc
+
+    [multiline]
+    ignore = aaa,
+             bbb
+    other = variable
+    ignore += ccc ,
+    ddd
+
+    [with_random_spaces]
+    ignore =aaa ,
+             bbb
+    other = variable
+    ignore +=                  ccc   ,
+                 ddd
+
+    [with_spaces]
+    ignore = a  aa,
+             bbb
+    other = variable
+    ignore += c c c ,dd d
+
+    [without_+=]
+    ignore = aaa
+    ignore = bbb
+
+    [incomplete_ignore]
+    ignore = aaa
+    ignore +=
+    """
+
+    def setUp(self):
+        self.tempdir = tempfile.gettempdir()
+        self.file = os.path.join(self.tempdir, '.coafile')
+        with open(self.file, 'w') as file:
+            file.write(self.test_file)
+        self.uut = ConfParser()
+        self.sections = self.uut.parse(self.file)
+
+    def tearDown(self):
+        os.remove(self.file)
+
+    def test_multiple_ignore_in_single_settings(self):
+        expected = ['aaa', 'bbb', 'ccc', 'ddd']
+        setting = self.uut.sections['basic'].contents['ignore']
+        # While parsing .coafile, `\n` is added as the string
+        # seperator between multiple values of ignore but while
+        # forming a list it is seperated by `,`.
+        setting.value = setting._value.replace('\n', ',')
+        setting_items = list(setting)
+        self.assertEqual(expected, setting_items)
+
+    def test_ignore_with_unrelated_settings(self):
+        expected = ['aaa', 'bbb', 'ccc']
+        setting = (
+            self.uut.sections['with_unrelated_settings'].contents['ignore'])
+        setting.value = setting._value.replace('\n', ',')
+        setting_items = list(setting)
+        self.assertEqual(expected, setting_items)
+
+    def test_multiline_ignore(self):
+        expected = ['aaa', 'bbb', 'ccc', 'ddd']
+        setting = self.uut.sections['multiline'].contents['ignore']
+        setting.value = setting._value.replace('\n', ',')
+        setting_items = list(setting)
+        self.assertEqual(expected, setting_items)
+
+    def test_ignore_with_random_spaces(self):
+        expected = ['aaa', 'bbb', 'ccc', 'ddd']
+        setting = self.uut.sections['with_random_spaces'].contents['ignore']
+        setting.value = setting._value.replace('\n', ',')
+        setting_items = list(setting)
+        self.assertEqual(expected, setting_items)
+
+    def test_multiline_ignore_with_spaces_in_names(self):
+        expected = ['a  aa', 'bbb', 'c c c', 'dd d']
+        setting = self.uut.sections['with_spaces'].contents['ignore']
+        setting.value = setting._value.replace('\n', ',')
+        setting_items = list(setting)
+        self.assertEqual(expected, setting_items)
+
+    # FIXME
+    def test_errored_ignore_multiple(self):
+        # Expected: It should throw an error, the user should fix it
+        current_output = ['aaa', 'bbb']
+        setting = self.uut.sections['without_+='].contents['ignore']
+        setting.value = setting._value.replace('\n', ',')
+        setting_items = list(setting)
+        print('setting_items: ', setting_items)
+        self.assertEqual(current_output, setting_items)
+
+    # FIXME
+    def test_with_incomplete_ignore(self):
+        # Expected: It should throw an error, the user should fix it
+        current_output = []
+        setting = self.uut.sections['incomplete_ignore'].contents['ignore']
+        setting.value = setting._value.replace('\n', ',')
+        setting_items = list(setting)
+        self.assertEqual(current_output, setting_items)
+
+    # FIXME
+    def test_ignore_inheritence(self):
+        # Expected: setting_items should be a list and
+        # it should be equal to expected
+        # expected = ['aaa', 'bbb', 'ccc', 'ddd', 'eee']
+        current_output = 'eee'
+        setting = self.uut.sections['check_inheritence'].contents['ignore']
+        setting.value = setting._value.replace('\n', ',')
+        # setting_items = list(setting)
+        self.assertEqual(current_output, setting._value)
