@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import unittest
 import unittest.mock
@@ -343,6 +344,37 @@ class coalaTest(unittest.TestCase):
             )
 
             assert exitcode == 1
+
+    def test_coala_no_unexpected_warnings(self):
+        with bear_test_module(), \
+                prepare_file(['#fixme'], None) as (lines, filename):
+            retval, stdout, stderr = execute_coala(
+                coala.main, 'coala')
+            errors = filter(bool, stderr.split('\n'))
+            errors = list(errors)
+
+            unexpected = errors.copy()
+
+            expected = [
+                err for err in unexpected
+                if "Implicit 'Default' section inheritance" in err]
+            self.assertNotEqual([], expected)
+            # Filter them out
+            unexpected = [err for err in unexpected if err not in expected]
+
+            # These errors depend on the state of the host, so ignore them
+            ignored = [
+                err for err in unexpected
+                if re.search("No bears matching '.*' were found", err)]
+
+            # Filter them out
+            unexpected = [err for err in unexpected if err not in ignored]
+
+            self.assertEqual([], unexpected)
+            self.assertEqual(
+                retval, 0,
+                'coala must return zero when there are no errors;'
+                ' errors={errors}'.format(errors=list(errors)))
 
     def test_coala_with_color(self):
         with bear_test_module(), \
