@@ -14,3 +14,4 @@ class Python:
     indent_types = ':',
     encapsulators = {'(': ')', '[': ']', '{': '}'}
     string_delimiter_escape = {'"': '\\"', "'": "\\'"}
+    line_continuation = '\\'
