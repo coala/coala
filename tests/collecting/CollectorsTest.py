@@ -117,19 +117,23 @@ class CollectFilesTest(unittest.TestCase):
             [dir_base('c_files', 'file1.c')])
 
     def test_trailing_globstar(self):
-        ignore_path = os.path.join(self.collectors_test_dir,
-                                   'others',
-                                   'c_files',
-                                   '**')
+        ignore_path1 = os.path.join(self.collectors_test_dir,
+                                    'others',
+                                    'c_files',
+                                    '**')  # should generate warning
+        ignore_path2 = os.path.join(self.collectors_test_dir,
+                                    '**',
+                                    'py_files',
+                                    '**')  # no warning
         with LogCapture() as capture:
             collect_files(file_paths=[],
-                          ignored_file_paths=[ignore_path],
+                          ignored_file_paths=[ignore_path1, ignore_path2],
                           log_printer=self.log_printer)
         capture.check(
             ('root', 'WARNING', 'Detected trailing globstar in ignore glob '
                                 '\'{}\'. Please remove the unnecessary \'**\''
                                 ' from its end.'
-                                .format(ignore_path))
+                                .format(ignore_path1))
         )
 
     def test_limited(self):

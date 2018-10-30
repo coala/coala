@@ -12,7 +12,7 @@ from coala_utils.decorators import yield_once
 from coalib.misc.Exceptions import log_exception
 from coalib.misc.IterUtilities import partition
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.parsing.Globbing import fnmatch, iglob, glob_escape
+from coalib.parsing.Globbing import fnmatch, iglob, glob_escape, has_wildcard
 from coalib.bearlib.languages.Language import Languages
 from coalib.bearlib.languages import definitions
 
@@ -73,7 +73,8 @@ def icollect(file_paths, ignored_globs=None, match_cache={},
     if ignored_globs is None:
         ignored_globs = []
     for index, glob in enumerate(ignored_globs):
-        if glob.endswith('/**') or glob.endswith('\\**'):
+        dirname, basename = os.path.split(glob)
+        if not has_wildcard(dirname) and basename == '**':
             logging.warning("Detected trailing globstar in ignore glob '{}'. "
                             "Please remove the unnecessary '**' from its end."
                             .format(glob))
