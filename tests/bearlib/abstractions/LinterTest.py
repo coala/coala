@@ -298,7 +298,13 @@ class LinterRunTest(LinterTestBase):
         uut = (linter(sys.executable, use_stdout=True)
                (TestLinter)
                (self.section, None))
-        uut.run('', [])
+
+        with self.assertLogs('', level='DEBUG') as cm:
+            uut.run('', [])
+
+        self.assertEqual(cm.output, [
+            'WARNING:root:TestLinter: Discarded stderr: hello stderr\n',
+            ])
 
         process_output_mock.assert_called_once_with('hello stdout\n', '', [])
         process_output_mock.reset_mock()
@@ -306,7 +312,13 @@ class LinterRunTest(LinterTestBase):
         uut = (linter(sys.executable, use_stdout=False, use_stderr=True)
                (TestLinter)
                (self.section, None))
-        uut.run('', [])
+
+        with self.assertLogs('', level='DEBUG') as cm:
+            uut.run('', [])
+
+        self.assertEqual(cm.output, [
+            'WARNING:root:TestLinter: Discarded stdout: hello stdout\n',
+            ])
 
         process_output_mock.assert_called_once_with('hello stderr\n', '', [])
         process_output_mock.reset_mock()
@@ -319,6 +331,95 @@ class LinterRunTest(LinterTestBase):
 
         process_output_mock.assert_called_once_with(('hello stdout\n',
                                                      'hello stderr\n'), '', [])
+
+    def test_no_output(self):
+        process_output_mock = Mock()
+        logging.getLogger().setLevel(logging.DEBUG)
+
+        class TestLinter:
+
+            @staticmethod
+            def process_output(output, filename, file):
+                process_output_mock(output, filename, file)
+
+            @staticmethod
+            def create_arguments(filename, file, config_file):
+                return '-c', ''
+
+        uut = (linter(sys.executable, use_stdout=True, use_stderr=True)
+               (TestLinter)
+               (self.section, None))
+
+        with self.assertLogs('', level='DEBUG') as cm:
+            uut.run('', [])
+
+            process_output_mock.assert_not_called()
+
+        self.assertEqual(cm.output, [
+            'INFO:root:TestLinter: No output; skipping processing',
+            ])
+
+    def test_discarded_stderr(self):
+        process_output_mock = Mock()
+        logging.getLogger().setLevel(logging.DEBUG)
+
+        class TestLinter:
+
+            @staticmethod
+            def process_output(output, filename, file):
+                process_output_mock(output, filename, file)
+
+            @staticmethod
+            def create_arguments(filename, file, config_file):
+                code = '\n'.join(['import sys',
+                                  "print('hello stderr', file=sys.stderr)",
+                                  ])
+                return '-c', code
+
+        uut = (linter(sys.executable, use_stdout=True, use_stderr=False)
+               (TestLinter)
+               (self.section, None))
+
+        with self.assertLogs('', level='DEBUG') as cm:
+            uut.run('', [])
+
+            process_output_mock.assert_not_called()
+
+        self.assertEqual(cm.output, [
+            'WARNING:root:TestLinter: Discarded stderr: hello stderr\n',
+            'INFO:root:TestLinter: No output; skipping processing',
+            ])
+
+    def test_discarded_stdout(self):
+        process_output_mock = Mock()
+        logging.getLogger().setLevel(logging.DEBUG)
+
+        class TestLinter:
+
+            @staticmethod
+            def process_output(output, filename, file):
+                process_output_mock(output, filename, file)
+
+            @staticmethod
+            def create_arguments(filename, file, config_file):
+                code = '\n'.join(['import sys',
+                                  "print('hello stdout', file=sys.stdout)",
+                                  ])
+                return '-c', code
+
+        uut = (linter(sys.executable, use_stdout=False, use_stderr=True)
+               (TestLinter)
+               (self.section, None))
+
+        with self.assertLogs('', level='DEBUG') as cm:
+            uut.run('', [])
+
+            process_output_mock.assert_not_called()
+
+        self.assertEqual(cm.output, [
+            'WARNING:root:TestLinter: Discarded stdout: hello stdout\n',
+            'INFO:root:TestLinter: No output; skipping processing',
+            ])
 
     def test_strip_ansi(self):
         process_output_mock = Mock()

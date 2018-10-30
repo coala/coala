@@ -2,7 +2,7 @@ from contextlib import contextmanager
 from functools import partial, partialmethod
 import logging
 import inspect
-from itertools import chain, compress
+from itertools import chain
 import re
 import shutil
 from subprocess import check_call, CalledProcessError, DEVNULL
@@ -676,18 +676,43 @@ def _create_linter(klass, options):
                 self.debug("Running '{}'".format(
                     ' '.join(str(arg) for arg in arguments)))
 
-                output = run_shell_command(
+                result = run_shell_command(
                     arguments,
                     stdin=''.join(file) if options['use_stdin'] else None,
                     cwd=self.get_config_dir())
 
-                output = tuple(compress(
-                    output,
-                    (options['use_stdout'], options['use_stderr'])))
+                stdout, stderr = result
+
+                output = []
+
+                if options['use_stdout']:
+                    output.append(stdout)
+                elif stdout:
+                    logging.warning(
+                        '{}: Discarded stdout: {}'.format(
+                            self.__class__.__name__, stdout))
+
+                if options['use_stderr']:
+                    output.append(stderr)
+                elif stderr:
+                    logging.warning(
+                        '{}: Discarded stderr: {}'.format(
+                            self.__class__.__name__, stderr))
+
+                if not any(output):
+                    logging.info(
+                        '{}: No output; skipping processing'.format(
+                            self.__class__.__name__))
+                    return
+
                 if options['strip_ansi']:
                     output = tuple(map(strip_ansi, output))
+
                 if len(output) == 1:
                     output = output[0]
+                else:
+                    output = tuple(output)
+
                 process_output_kwargs = FunctionMetadata.filter_parameters(
                     self._get_process_output_metadata(), kwargs)
                 return self.process_output(output, filename, file,
