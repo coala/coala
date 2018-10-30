@@ -28,7 +28,7 @@ def get_testfile_name(name):
                         name)
 
 
-class LinterComponentTest(unittest.TestCase):
+class LinterTestBase(unittest.TestCase):
 
     PARAM_TYPE_ERROR_RE = '[A-Za-z_]+ must be an instance of one of .*'
 
@@ -59,6 +59,9 @@ class LinterComponentTest(unittest.TestCase):
 
     def setUp(self):
         self.section = Section('TEST_SECTION')
+
+
+class LinterDecoratorTest(LinterTestBase):
 
     def test_decorator_invalid_parameters(self):
         with self.assertRaisesRegex(ValueError,
@@ -272,6 +275,9 @@ class LinterComponentTest(unittest.TestCase):
                       prerequisite_check_fail_message='NOPE')
                (self.ManualProcessingTestLinter))
         self.assertEqual(uut.check_prerequisites(), 'NOPE')
+
+
+class LinterRunTest(LinterTestBase):
 
     def test_output_stream(self):
         process_output_mock = Mock()
@@ -815,6 +821,9 @@ class LinterComponentTest(unittest.TestCase):
         self.assertEqual(results, [Result.from_values('EmptyTestLinter', '',
                                                       file='file')])
 
+
+class LinterSettingsTest(LinterTestBase):
+
     def test_get_non_optional_settings(self):
         class Handler(self.ManualProcessingTestLinter):
 
@@ -970,6 +979,9 @@ class LinterComponentTest(unittest.TestCase):
             with open(config_file, mode='r') as fl:
                 self.assertEqual(fl.read(), 'config_value = 88')
         self.assertFalse(os.path.isfile(config_file))
+
+
+class LinterOtherTest(LinterTestBase):
 
     def test_metaclass_repr(self):
         uut = linter('my-tool')(self.ManualProcessingTestLinter)
