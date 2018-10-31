@@ -699,6 +699,11 @@ def _create_linter(klass, options):
                         '{}: Discarded stderr: {}'.format(
                             self.__class__.__name__, stderr))
 
+                if result.code:
+                    logging.warning(
+                        '{}: Exit code {}'.format(
+                            self.__class__.__name__, result.code))
+
                 if not any(output):
                     logging.info(
                         '{}: No output; skipping processing'.format(

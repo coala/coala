@@ -373,6 +373,7 @@ class LinterRunTest(LinterTestBase):
             def create_arguments(filename, file, config_file):
                 code = '\n'.join(['import sys',
                                   "print('hello stderr', file=sys.stderr)",
+                                  'sys.exit(1)'
                                   ])
                 return '-c', code
 
@@ -387,6 +388,7 @@ class LinterRunTest(LinterTestBase):
 
         self.assertEqual(cm.output, [
             'WARNING:root:TestLinter: Discarded stderr: hello stderr\n',
+            'WARNING:root:TestLinter: Exit code 1',
             'INFO:root:TestLinter: No output; skipping processing',
             ])
 
@@ -404,6 +406,7 @@ class LinterRunTest(LinterTestBase):
             def create_arguments(filename, file, config_file):
                 code = '\n'.join(['import sys',
                                   "print('hello stdout', file=sys.stdout)",
+                                  'sys.exit(1)'
                                   ])
                 return '-c', code
 
@@ -418,6 +421,7 @@ class LinterRunTest(LinterTestBase):
 
         self.assertEqual(cm.output, [
             'WARNING:root:TestLinter: Discarded stdout: hello stdout\n',
+            'WARNING:root:TestLinter: Exit code 1',
             'INFO:root:TestLinter: No output; skipping processing',
             ])
 
