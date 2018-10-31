@@ -9,7 +9,7 @@ from tests.test_bears.TestBearDep import (TestDepBearBDependsA,
                                           TestDepBearDependsAAndAA)
 from coalib.bearlib.abstractions.Linter import linter
 from tests.test_bears.LineCountTestBear import LineCountTestBear
-from coala_utils.ContextManagers import prepare_file
+from coala_utils.ContextManagers import prepare_file, retrieve_stderr
 from coalib.results.Result import Result
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
 from coalib.settings.Section import Section
@@ -232,3 +232,12 @@ class LocalBearTestHelper(unittest.TestCase):
         with self.assertRaises(AssertionError), execute_bear(
                 self.uut, 'Luke', files[0]) as result:
             pass
+
+
+class VerifyLocalBearTest(unittest.TestCase):
+    def test_timeout_deprecation_warning(self):
+        with retrieve_stderr() as stderr:
+            verify_local_bear(TestBear, valid_files=(),
+                              invalid_files=files, timeout=50)
+            self.assertIn('timeout is ignored as the timeout set in the repo '
+                          'configuration will be sufficient', stderr.getvalue())
