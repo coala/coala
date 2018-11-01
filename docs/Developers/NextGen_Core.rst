@@ -312,11 +312,11 @@ Superior Caching
 
 NextGen-Core's caching can be broken up into two parts:
 
-- Caching of ``FileFactory`` objects
+- Caching of ``File`` objects
 - Caching of task objects
 
-Since NextGen-Core passes bears ``FileFactory`` objects to interface with
-files, ``FileFactory`` uses its own caching mechanism to ensure
+Since NextGen-Core passes bears ``File`` objects to interface with
+files, ``File`` uses its own caching mechanism to ensure
 high performance I/O operations. Whenever a property is accessed the cached
 results are returned instead of loading the files again. For more details check
 out the `IO docs

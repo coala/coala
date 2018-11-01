@@ -1,7 +1,10 @@
 import os
 import unittest
 
-from coalib.io.FileFactory import FileFactory
+from coalib.io.File import File
+
+TEST_FILE_DIR = os.path.join(os.path.split(__file__)[0],
+                             'file_test_files')
 
 
 def get_path_components(filepath):
@@ -12,19 +15,17 @@ def get_path_components(filepath):
     return os.path.normpath(filepath).split(os.sep)
 
 
-class FileFactoryTest(unittest.TestCase):
+class FileTest(unittest.TestCase):
 
     def setUp(self):
-        file_factory_test_dir = os.path.join(os.path.split(__file__)[0],
-                                             'FileFactoryTestFiles')
-
+        file_factory_test_dir = TEST_FILE_DIR
         self.test_file = os.path.join(file_factory_test_dir, 'test1.txt')
         self.other_test_file = os.path.join(file_factory_test_dir, 'test2.txt')
-        self.uut = FileFactory(self.test_file)
-        self.other_file_factory = FileFactory(self.other_test_file)
+        self.uut = File(self.test_file)
+        self.other_file_factory = File(self.other_test_file)
 
     def test_equal(self):
-        self.assertEqual(self.uut, FileFactory(self.test_file))
+        self.assertEqual(self.uut, File(self.test_file))
         self.assertNotEqual(self.uut, self.other_file_factory)
 
     def test_iter(self):
@@ -54,4 +55,4 @@ class FileFactoryTest(unittest.TestCase):
 
     def test_name(self):
         self.assertEqual(get_path_components(self.uut.name)[-4:],
-                         ['tests', 'io', 'FileFactoryTestFiles', 'test1.txt'])
+                         ['tests', 'io', 'file_test_files', 'test1.txt'])

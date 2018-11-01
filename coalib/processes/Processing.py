@@ -29,7 +29,7 @@ from coalib.results.SourceRange import SourceRange
 from coalib.settings.Setting import glob_list, typed_list
 from coalib.parsing.Globbing import fnmatch
 from coalib.io.FileProxy import FileDictGenerator
-from coalib.io.FileFactory import FileFactory
+from coalib.io.File import File
 
 
 ACTIONS = [DoNothingAction,
@@ -271,18 +271,18 @@ def get_file_dict(filename_list, log_printer=None, allow_raw_files=False):
     file_dict = FileDict()
     for filename in filename_list:
         try:
-            file_dict[filename] = FileFactory(filename)
+            file_dict[filename] = File(filename)
             # This is a workaround to purposely raise a
             # ``UnicodeDecodeError`` to move into the
             # except clause.
-            FileFactory(filename).string
+            File(filename).string
         except UnicodeDecodeError:
             if allow_raw_files:
                 file_dict[filename] = None
                 continue
             else:
                 # In case raw files are not allowed the
-                # ``FileFactory`` object created for it
+                # ``File`` object created for it
                 # needs to be evicted from the dictionary.
                 del file_dict[filename]
             logging.warning("Failed to read file '{}'. It seems to contain "
@@ -837,7 +837,7 @@ def execute_section(section,
 class FileDict(dict):
     """
     Acts as a middleware to provide the bears with the
-    actual file contents instead of the `FileFactory`
+    actual file contents instead of the `File`
     objects.
     """
 

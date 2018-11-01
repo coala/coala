@@ -5,9 +5,9 @@ from cached_property import cached_property
 
 
 @generate_eq('name', 'timestamp')
-class FileFactory:
+class File:
     """
-    The ``FileFactory`` is a class to provide different views on a file.
+    The ``File`` is a class to provide different views on a file.
     It contains the following information about the file:
 
         * The filename (absolute file path).
@@ -16,10 +16,10 @@ class FileFactory:
         * The file in the form of a string UTF-8 decoded from the raw format.
         * The lines of the file in the form of a tuple.
 
-    Two ``FileFactory`` objects are considered equal if they have the
+    Two ``File`` objects are considered equal if they have the
     same filename and timestamp.
 
-    To initialize a ``FileFactory`` object for a file:
+    To initialize a ``File`` object for a file:
 
     >>> import os
     >>> import tempfile
@@ -27,7 +27,7 @@ class FileFactory:
     >>> temp.write(bytes('This is a test file.', 'UTF-8'))
     20
     >>> temp.close()
-    >>> ff = FileFactory(temp.name, newline=False)
+    >>> ff = File(temp.name, newline=False)
 
     File indices start with zero.
     To retrieve a single line:
