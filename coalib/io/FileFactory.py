@@ -92,7 +92,7 @@ class FileFactory:
         """
         lines = self.string.splitlines()
         if self._newline:
-            return tuple(line if line.endswith('\n') else line + '\n'
+            return tuple(line + '\n'
                          for line in lines)
         else:
             return tuple(lines)
