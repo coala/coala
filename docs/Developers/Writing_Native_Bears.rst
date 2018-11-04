@@ -531,16 +531,16 @@ can be used as follows:
 Aspect Bear
 -----------
 
-Aspect is a feature in coala that make configuring coala in project more easy
-and language agnostic. For more detail about aspect, see cEP-0005 in
+Aspect is a feature in coala that make configuring coala in projects easier
+and language agnostic. For more details about aspect, see cEP-0005 in
 https://github.com/coala/cEPs/blob/master/cEP-0005.md.
 
-An aspect-compliant bear MUST:
+An aspect-compliant bear must:
 
-1. Declare list of aspect it can fix and detected. Note that the aspect MUST be
-   a leaf aspect. You can see list of supported aspect here
+1. Declare a list of aspect it can detect and fix. Note that the aspect must be
+   a leaf aspect. You can see list of supported aspects here
    https://github.com/coala/aspect-docs.
-2. Declare list of supported language. See list of supported language
+2. Declare a list of supported languages. See the list of supported languages
    https://github.com/coala/coala/tree/master/coalib/bearlib/languages/definitions.
 3. Map setting to its equivalent aspect or taste using ``map_setting_to_aspect``
    decorator.

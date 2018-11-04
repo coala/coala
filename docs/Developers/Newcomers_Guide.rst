@@ -393,7 +393,34 @@ Step 4. Sending Your Changes
    is no asterisk next to the master branch.
 
 Now that you've fixed the issue, you've tested it, and you think it is ready
-to be merged, create a commit and push it to your fork, using:
+to be merged, add your updated file to the staging area:
+
+::
+
+    $ git add <file/folder_name>
+
+Create a commit using the following command:
+
+::
+
+    $ git commit
+
+This will open a text editor to write commit message.
+
+After saving the commit, you can check your commit message using:
+
+::
+
+    $ git show
+
+If you made a mistake in the commit message, edit the commit message again:
+
+::
+
+    $ git commit --amend
+
+Once you are happy that the commit message is correct,
+push it to your fork using:
 
 ::
 
