@@ -18,15 +18,15 @@ def get_path_components(filepath):
 class FileTest(unittest.TestCase):
 
     def setUp(self):
-        file_factory_test_dir = TEST_FILE_DIR
-        self.test_file = os.path.join(file_factory_test_dir, 'test1.txt')
-        self.other_test_file = os.path.join(file_factory_test_dir, 'test2.txt')
+        file_test_dir = TEST_FILE_DIR
+        self.test_file = os.path.join(file_test_dir, 'test1.txt')
+        self.other_test_file = os.path.join(file_test_dir, 'test2.txt')
         self.uut = File(self.test_file)
-        self.other_file_factory = File(self.other_test_file)
+        self.other_file = File(self.other_test_file)
 
     def test_equal(self):
         self.assertEqual(self.uut, File(self.test_file))
-        self.assertNotEqual(self.uut, self.other_file_factory)
+        self.assertNotEqual(self.uut, self.other_file)
 
     def test_iter(self):
         self.assertEqual(list(self.uut), ['This is a test file.\n'])
