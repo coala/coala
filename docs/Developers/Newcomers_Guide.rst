@@ -392,6 +392,18 @@ Step 4. Sending Your Changes
    Your current branch will have an asterisk (\*) next to it. Ensure that there
    is no asterisk next to the master branch.
 
+Add your changes:
+
+::
+
+    $ git add .
+
+Commit your changes using the following commands:
+
+::
+
+    $ git commit -m "your commit message"
+
 Now that you've fixed the issue, you've tested it, and you think it is ready
 to be merged, create a commit and push it to your fork, using:
 
