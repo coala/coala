@@ -350,18 +350,18 @@ def get_config_directory(section):
 
     Given an empty section:
 
-    >>> section = Section("name")
+    >>> section = Section('name')
 
     The configuration directory is not defined and will therefore fallback to
     the current directory:
 
-    >>> get_config_directory(section) == os.path.abspath(".")
+    >>> get_config_directory(section) == os.path.abspath('.')
     True
 
     If the ``files`` setting is given with an originating coafile, the directory
     of the coafile will be assumed the configuration directory:
 
-    >>> section.append(Setting("files", "**", origin="/tmp/.coafile"))
+    >>> section.append(Setting('files', '**', origin='/tmp/.coafile'))
     >>> get_config_directory(section) == os.path.abspath('/tmp/')
     True
 
@@ -383,7 +383,7 @@ def get_config_directory(section):
 
     If no section is given, the current directory is returned:
 
-    >>> get_config_directory(None) == os.path.abspath(".")
+    >>> get_config_directory(None) == os.path.abspath('.')
     True
 
     To summarize, the config directory will be chosen by the following
