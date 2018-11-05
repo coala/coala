@@ -29,6 +29,40 @@ DESCRIPTION = (
 )
 DEPENDENCY_LINKS = []
 
+KEYWORDS = [
+    'code-analysis',
+    'lint',
+]
+
+
+# from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+
+CLASSIFIERS = [
+    'Development Status :: 4 - Beta',
+
+    'Environment :: Console',
+    'Environment :: MacOS X',
+    'Environment :: Win32 (MS Windows)',
+
+    'Intended Audience :: Science/Research',
+    'Intended Audience :: Developers',
+
+    'License :: OSI Approved :: GNU Affero General Public License '
+    'v3 or later (AGPLv3+)',
+    'Operating System :: OS Independent',
+
+    'Programming Language :: Python :: Implementation :: CPython',
+    'Programming Language :: Python :: 3.4'
+    'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3 :: Only',
+
+    'Topic :: Scientific/Engineering :: Information Analysis',
+    'Topic :: Software Development :: Quality Assurance',
+    'Topic :: Text Processing :: Linguistic',
+
+]
+
 SETUP_COMMANDS = {}
 
 assert_supported_version()
@@ -291,6 +325,8 @@ class PEP440Version(LooseVersion):
         return previous
 
 
+# This is an unfortunately needed comment
+
 def egg_name_to_requirement(name):
     name = name.strip()
     parts = name.split('-')
@@ -422,6 +458,7 @@ if __name__ == '__main__':
                                    'bearlib/languages/documentation/*.coalang']
                         },
           license='AGPL-3.0',
+          keywords=KEYWORDS,
           data_files=data_files,
           long_description=long_description,
           entry_points={
@@ -433,30 +470,6 @@ if __name__ == '__main__':
                   'coala-delete-orig = coalib.coala_delete_orig:main',
               ],
           },
-          # from http://pypi.python.org/pypi?%3Aaction=list_classifiers
-          classifiers=[
-              'Development Status :: 4 - Beta',
-
-              'Environment :: Console',
-              'Environment :: MacOS X',
-              'Environment :: Win32 (MS Windows)',
-
-              'Intended Audience :: Science/Research',
-              'Intended Audience :: Developers',
-
-              'License :: OSI Approved :: GNU Affero General Public License '
-              'v3 or later (AGPLv3+)',
-
-              'Operating System :: OS Independent',
-
-              'Programming Language :: Python :: Implementation :: CPython',
-              'Programming Language :: Python :: 3.4',
-              'Programming Language :: Python :: 3.5',
-              'Programming Language :: Python :: 3.6',
-              'Programming Language :: Python :: 3 :: Only',
-
-              'Topic :: Scientific/Engineering :: Information Analysis',
-              'Topic :: Software Development :: Quality Assurance',
-              'Topic :: Text Processing :: Linguistic'],
+          classifiers=CLASSIFIERS,
           cmdclass=SETUP_COMMANDS,
           )

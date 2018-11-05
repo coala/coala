@@ -52,6 +52,7 @@ configuration:
   configuration_dir: ../coala-mobans/
 targets:
   - .gitignore: core-gitignore.jj2
+  - .editorconfig: .editorconfig.jj2
   - setup.py: core-setup.py.jj2
   - setup.cfg: core-setup.cfg.jj2
   - requirements.txt: requirements.txt.jj2

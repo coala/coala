@@ -114,6 +114,9 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# Pyre type checker
+.pyre/
 # Node rules
 # Logs
 logs
@@ -188,6 +191,9 @@ typings/
 
 # Serverless directories
 .serverless
+
+# FuseBox cache
+.fusebox/
 
 
 # VirtualEnv rules

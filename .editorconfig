@@ -1,19 +1,19 @@
+# top-most EditorConfig file
 root = true
 
 [**]
 charset = utf-8
 end_of_line = lf
+indent_size = 2
+indent_style = space
 insert_final_newline = true
 max_line_length = 80
+trim_trailing_whitespace = true
 
-# Set default charset and indentation for python files
-[{*.py,coalib/**/*.py,./coala,tests/**/*.py}]
-indent_style = space
+# Set default indentation for python files
+[*.py]
 indent_size = 4
-trim_trailing_whitespace = true
 
-# 2 space indentation for yml files and package.json
-[{package.json,*.yml}]
-indent_style = space
-indent_size = 2
-trim_trailing_whitespace = true
+# Override trailing whitespace for markdown files
+[*.md]
+trim_trailing_whitespace = false
