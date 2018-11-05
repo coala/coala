@@ -392,7 +392,7 @@ Step 4. Sending Your Changes
    Your current branch will have an asterisk (\*) next to it. Ensure that there
    is no asterisk next to the master branch.
 
-Add your changes:
+Add all your changes:
 
 ::
 
