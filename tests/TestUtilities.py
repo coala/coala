@@ -69,6 +69,7 @@ LANGUAGE_NAMES = [
     'TinyBasic 1.0, 2.0',
     'TypeScript',
     'Vala',
+    'Verilog',
     'VisualBasic',
     'm4',
     'ZShell',

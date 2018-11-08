@@ -42,6 +42,7 @@ from .definitions.Tcl import Tcl
 from .definitions.TinyBasic import TinyBasic
 from .definitions.TypeScript import TypeScript
 from .definitions.Vala import Vala
+from .definitions.Verilog import Verilog
 from .definitions.VisualBasic import VisualBasic
 from .definitions.XML import XML
 from .definitions.ZShell import ZShell
