@@ -57,11 +57,24 @@ in your current directory, as coala only works for Python >= 3.4.4
 
     $ virtualenv coala-venv -p $(which python3)
 
-- Run coala-venv :
+- Activate the *coala-venv* isolated environment :
+
+    + If you are a Linux or Mac user:
+
     ::
 
         $ source coala-venv/bin/activate
         (coala-venv)$ deactivate # to exit the environment
+
+    + And if you are a Windows user:
+
+    ::
+
+        > coala-venv\Scripts\activate
+        (coala-venv)> deactivate # to exit the environment
+
+- If you run into any hiccups refer to the
+  `Virtualenv User Guide <https://virtualenv.pypa.io/en/stable/userguide/#activate-script>`__.
 
 - After this, you can start
   `installing from git <https://api.coala.io/en/latest/Developers/Development_Setup.html#installing-from-git>`__.
