@@ -532,7 +532,7 @@ Aspect Bear
 -----------
 
 Aspect is a feature in coala that make configuring coala in projects easier
-and language agnostic. For more details about aspect, see cEP-0005 in
+and language agnostic. For more details about aspects, see cEP-0005 in
 https://github.com/coala/cEPs/blob/master/cEP-0005.md.
 
 An aspect-compliant bear must:
