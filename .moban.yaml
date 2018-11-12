@@ -45,11 +45,13 @@ gitignore_extra_rulesets:
 
 requires:
   - https://gitlab.com/coala/mobans.git
+  - https://github.com/NAStools/homeassistant.git
 configuration:
   template_dir:
     - .moban.dt/
     - mobans:templates/
     - mobans:assets/
+    - homeassistant:homeassistant/util/
   configuration: .moban.yaml
   configuration_dir: 'mobans:'
 targets:
@@ -65,3 +67,6 @@ targets:
   - netlify.toml: docs/netlify.toml
   - .misc/appveyor.yml: ci/appveyor.yml.jj2
   - .misc/run_with_env.cmd: run_with_env.cmd
+copy:
+  # homeassistant license MIT
+  - coalib/misc/Asyncio.py: async.py

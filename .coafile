@@ -3,6 +3,7 @@ files = *.py, coalib/**/*.py, ./coala, tests/**/*.py, docs/conf.py
 ignore =
     tests/bearlib/languages/documentation/documentation_extraction_testdata/*.py,
     tests/collecting/collectors_test_dir/bears/incorrect_bear.py,
+    coalib/misc/Asyncio.py,
 
 max_line_length = 80
 use_spaces = True
