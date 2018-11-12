@@ -9,4 +9,5 @@ Pygments~=2.1
 PyPrint~=0.2.6
 requests~=2.12
 setuptools>=21.0.0
+trollius~=2.2
 unidiff~=0.5.2

@@ -1,4 +1,3 @@
-import asyncio
 import concurrent.futures
 import functools
 import logging
@@ -6,6 +5,7 @@ import logging
 from coalib.core.DependencyTracker import DependencyTracker
 from coalib.core.Graphs import traverse_graph
 from coalib.core.PersistentHash import persistent_hash
+from coalib.misc.Compatibility import asyncio
 
 
 def group(iterable, key=lambda x: x):

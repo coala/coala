@@ -30,6 +30,6 @@ fi
 set -e
 
 # The following is emitted on stdout
-grep -q 'coala supports only python 3.4.4 or later' setup.log
+grep -q 'coala supports only python 3.4 or later' setup.log
 
 echo "Unsupported check completed successfully"
