@@ -1,7 +1,5 @@
 overrides: coala.yaml
 
-allow_generic_no_cover: true
-
 nocover_regexes:
   - raise RuntimeError.*Unreachable code
   - 'if always_false is True:'
