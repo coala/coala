@@ -43,13 +43,15 @@ dependencies:
 gitignore_extra_rulesets:
   - node
 
+requires:
+  - https://gitlab.com/coala/mobans.git
 configuration:
   template_dir:
     - .moban.dt/
-    - ../coala-mobans/templates/
-    - ../coala-mobans/assets/
+    - mobans:templates/
+    - mobans:assets/
   configuration: .moban.yaml
-  configuration_dir: ../coala-mobans/
+  configuration_dir: 'mobans:'
 targets:
   - .gitignore: core-gitignore.jj2
   - .editorconfig: .editorconfig.jj2
