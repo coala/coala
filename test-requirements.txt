@@ -2,7 +2,7 @@
 # install a later version, so when pip tries to install radon it will
 # ignore the dependency version difference and only fail when the
 # bear is loaded.
-colorama<4
+colorama<0.4
 argcomplete~=1.8
 # coverage 4.4.2 broke compatibility with coverage-config-reload-plugin
 # and thus broke https://github.com/jayvdb/coverage_env_plugin .
@@ -12,7 +12,7 @@ coverage-env-plugin~=0.1
 coverage-config-reload-plugin~=0.2
 codecov~=2.0.5
 freezegun~=0.3.9
-moban~=0.3.1
+moban~=0.3.3
 pytest~=3.6.1
 pytest-cov~=2.4
 pytest-env~=0.6.0
@@ -26,6 +26,7 @@ pytest-timeout~=1.3.0
 pytest-travis-fold~=1.3.0
 pytest-xdist~=1.15
 requests-mock~=1.2
+ipdb~=0.11
 pip<10
 wheel~=0.29
 testfixtures~=5.3.1
