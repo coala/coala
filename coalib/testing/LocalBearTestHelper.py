@@ -8,7 +8,7 @@ from coalib.bearlib.abstractions.LinterClass import LinterClass
 from coalib.testing.BearTestHelper import generate_skip_decorator
 from coalib.bears.LocalBear import LocalBear
 from coala_utils.Comparable import Comparable
-from coala_utils.ContextManagers import prepare_file
+from coala_utils.ContextManagers import prepare_file, change_directory
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 
@@ -344,7 +344,8 @@ def verify_local_bear(bear,
                       force_linebreaks=True,
                       create_tempfile=True,
                       timeout=None,
-                      tempfile_kwargs={}):
+                      tempfile_kwargs={},
+                      base_directory=None):
     """
     Generates a test for a local bear by checking the given valid and invalid
     file contents. Simply use it on your module level like:
@@ -369,12 +370,17 @@ def verify_local_bear(bear,
     :param timeout:          Unused.  Use pytest-timeout or similar.
     :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp() if tempfile
                              needs to be created.
+	:param base_directory    A default directory to which it will change if it is
+                             provided
     :return:                 A unittest.TestCase object.
     """
     if timeout:
         logging.warning('timeout is ignored as the timeout set in the repo '
                         'configuration will be sufficient. Use pytest-timeout '
                         'or similar to achieve same result.')
+
+    if base_directory != None:
+        change_directory(base_directory)
 
     @generate_skip_decorator(bear)
     class LocalBearTest(LocalBearTestHelper):
