@@ -40,6 +40,7 @@ LANGUAGE_NAMES = [
     'CPP',
     'CSS',
     'D',
+    'Dart',
     'DOT',
     'Extensible Markup Language 1.0',
     'Fortran',
