@@ -370,8 +370,8 @@ def verify_local_bear(bear,
     :param timeout:          Unused.  Use pytest-timeout or similar.
     :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp() if tempfile
                              needs to be created.
-    :param base_directory    A default directory to which it will change if
-                             it is provided
+	:param base_directory    A default directory to which it will change if it is
+                             provided
     :return:                 A unittest.TestCase object.
     """
     if timeout:
@@ -379,7 +379,7 @@ def verify_local_bear(bear,
                         'configuration will be sufficient. Use pytest-timeout '
                         'or similar to achieve same result.')
 
-    if base_directory is not None:
+    if base_directory != None:
         change_directory(base_directory)
 
     @generate_skip_decorator(bear)
