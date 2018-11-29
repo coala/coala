@@ -37,6 +37,7 @@ from .definitions.PowerShell import PowerShell
 from .definitions.Python import Python
 from .definitions.Ruby import Ruby
 from .definitions.Scala import Scala
+from .definitions.SCSS import SCSS
 from .definitions.Shell import Shell
 from .definitions.Swift import Swift
 from .definitions.Tcl import Tcl
