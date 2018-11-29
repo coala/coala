@@ -67,6 +67,7 @@ LANGUAGE_NAMES = [
     'Shell',
     'Swift',
     'Tcl',
+    'Text',
     'TinyBasic 1.0, 2.0',
     'TypeScript',
     'Vala',
