@@ -598,4 +598,9 @@ For example, let's make an aspect bear named SpellingCheckBear.
                         aspect=DictionarySpelling('py'),
                     )
 
+.. note::
+
+    coala uses 1-based line & column convention, i.e., the first line
+    and first column are 1.
+
 .. _main tutorial: https://docs.coala.io/en/latest/Users/Tutorial.html
