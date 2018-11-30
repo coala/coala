@@ -29,7 +29,7 @@ What do we Need?
 ----------------
 
 First of all, we need the linter executable that we are going to use.
-In this tutorial we will build the PylintTutorialBear so we need Pylint, a
+In this tutorial, we will build the PylintTutorialBear so we need Pylint, a
 common linter for Python. It can be found `here <https://www.pylint.org/>`__.
 Since it is a python package we can go ahead and install it with
 
@@ -220,7 +220,7 @@ We can test our bear like this
 
 .. note::
 
-    In order for the above command to work we should have 2 files in
+    In order for the above command to work, we should have 2 files in
     our current dir: ``PylintTutorialBear.py`` and our ``sample.py``.
     Naming is **very** important in coala. coala will look for bears
     by their **filename** and display them based on their
