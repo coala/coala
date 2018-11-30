@@ -23,7 +23,7 @@ directory of the coala-tutorial repository.
 What is a bear?
 ---------------
 
-A bear is meant to do some analysis on source code. The source code will
+A bear is meant to do some analysis on the source code. The source code will
 be provided by coala so the bear doesn't have to care where it comes from
 or where it goes.
 
@@ -37,8 +37,8 @@ A bear can communicate with the user via two ways:
 -  Via log messages
 -  Via results
 
-Log messages will be logged according to the users settings and are
-usually used if something goes wrong. However you can use debug for
+Log messages will be logged according to the users' settings and are
+usually used if something goes wrong. However, you can use debug for
 providing development related debug information since it will not be
 shown to the user by default. If error/failure messages are used, the
 bear is expected not to continue analysis.
@@ -72,7 +72,7 @@ to find it. We can do that with the ``-d`` (``--bear-dirs``) argument:
 
     The given bear directories must not have any glob expressions in them. Any
     character that could be interpreted as a part of a glob expression will be
-    escaped. Please use comma separated values to give several such
+    escaped. Please use comma-separated values to give several such
     directories instead. Do not forget to flush the cache (by adding the
     argument ``--flush-cache`` when running coala) if you run a new bear on a
     file which has been previously analyzed (by coala).
@@ -104,7 +104,7 @@ You should now see an output like this on your command line:
 
 .. note::
 
-    The first ``WARNING`` message is because our directory, does not
+    The first ``WARNING`` message is because our directory does not
     contain a ``.coafile``. If you have followed the instructions in
     our `main tutorial`_, you will have a ``.coafile`` in your working
     directory. Its best if you delete that file before working on this
@@ -319,7 +319,7 @@ Bears Depending on Other Bears
 So we've got a result, but what if we need our Bear to depend on results from
 a different Bear?
 
-Well coala has an efficient dependency management system that would run the
+Well, coala has an efficient dependency management system that would run the
 other Bear before your Bear and get its results for you. All you need to do is
 to tell coala which Bear(s) you want to run before your Bear.
 
