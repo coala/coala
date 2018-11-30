@@ -27,7 +27,7 @@ Caching
 -------
 
 ``File`` uses ``cached_property`` to decorate its
-properties. Due to this the properties are only called once for the first
+properties. Due to this,the properties are only called once for the first
 time and then their results are stored in a cache which is tied to the
 same ``File`` object. If the properties are accessed again for the
 same object then a cache lookup is performed and the contents are served
