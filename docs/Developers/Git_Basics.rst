@@ -12,7 +12,7 @@ submit your commit on Github.
 How to install Git
 ------------------
 
-First step is installing Git. Supposing you are on a Debian-based distribution,
+The first step is installing Git. Supposing you are on a Debian-based distribution,
 this will do:
 
 ::
@@ -76,7 +76,7 @@ Now you have all your code on your local machine!
 Getting to work
 ---------------
 
-First let's talk about remotes. To communicate with the outside world, git uses
+First, let's talk about remotes. To communicate with the outside world, git uses
 what are called remotes. These are repositories other than the one on your
 local disk which you can push your changes into (so that other people can see
 them) or pull from (so that you can get others changes).
@@ -93,7 +93,7 @@ command:
   name it however you want.
 
 The next thing you should know before getting down to work is how to check on
-the changes you've made to your project, and your current branch. The
+the changes you've made to your project and your current branch. The
 ability to check your current branch is also extremely important, as you'll see
 in the next section. The command to check this information is:
 
@@ -114,9 +114,9 @@ To start working on an issue, you first need to create a new branch where you
 will work. Do not change files when you are on your fork's master branch. If you
 submit a Pull Request from your fork's master branch, maintainers
 will assume that you didn't read this guide. coala developers may even reject
-your work (even if it is a good patch), because you are showing you haven't
+your work (even if it is a good patch) because you are showing you haven't
 checked our documentation. The reason why you should never develop on your
-master branch is because your fork's master branch should always be
+master branch is that your fork's master branch should always be
 synchronized with the main repository's master branch, which is much more
 challenging if it has new commits on it. This is why we create our own branch:
 
@@ -166,7 +166,7 @@ which branch you're developing on.
     For more information about tests, check
     :doc:`this link. <Writing_Tests>`
 
-Adding the files and commiting
+Adding the files and committing
 ------------------------------
 
 First, make sure you're on the correct branch and not developing on master! If
@@ -262,8 +262,8 @@ Creating a Pull Request
 If you've made it this far, and you're still using your 'master' branch, then
 we're definitely going to be able to tell you have not been reading this
 documentation. Naughty, naughty, but there is still a way to fix your changes
-if you have already commited. You can run the following command, which will
-take you to a new branch containing all of your commited changes (Note: Some
+if you have already committed. You can run the following command, which will
+take you to a new branch containing all of your committed changes (Note: Some
 sample naming conventions can be found under the "Creating a branch" section).
 Then, to set your fork's master branch back to a pristine state,
 check the commands in our `Common Git Issues section <http://api.coala.io/en/latest/Developers/Git_Basics.html#common-git-issues>`__
@@ -300,7 +300,7 @@ Now after you have created the Pull Request, there are two possibilities:
 - your PR will be rejected. There are 2 cases when a PR is rejected:
 
       - Test fails
-      - Reviewer wants something changed (This also causes gitmate to fail)
+      - The reviewer wants something changed (This also causes gitmate to fail)
 
 It's highly unlikely that your PR will be accepted on the first attempt - but
 don't worry that's just how it works. It helps us maintain coala
@@ -322,7 +322,7 @@ fine by our reviewers, you can simply send it again like this. If not, edit it
 and send it.
 Now you have successfully edited your last commit!
 
-If you need to rebase, or want to edit an older commit from your branch, we
+If you need to rebase or want to edit an older commit from your branch, we
 have an amazing `tutorial that you can watch <https://asciinema.org/a/78683>`__
 to understand how it works.
 
@@ -402,7 +402,7 @@ Common Git Issues
 -----------------
 
 Sometimes, you use ``git add -A`` and add files you didn't want to your push
-(often after rebasing) and push it to the remote. Here ,is a short outline of,
+(often after rebasing) and push it to the remote. Here is a short outline of,
 how can you remove (or revert changes in) particular files from your commit even
 after pushing to remote.
 
@@ -413,7 +413,7 @@ run the following:
 
     $ git checkout HEAD^ /path/to/file
 
-Now , after reverting the file(s) update your last commit, by running :
+Now, after reverting the file(s) update your last commit, by running :
 
 ::
 
@@ -438,7 +438,7 @@ last commit. By replacing the ``HEAD^`` by the revision number of the particular
 
 Might sound a little intimidating, but don't worry, an example has been
 provided for you.
-First you can check the commit's revision number, where the file was revised by
+First, you can check the commit's revision number, where the file was revised by
 running the following command:
 
 ::
@@ -463,7 +463,7 @@ http://ohshitgit.com/ contains helpful Git snippets for recovering from various
 common Git issues. It is a great resource to check out when something has gone
 wrong.
 
-If at any stage you are confused, or have an issue, do not close your Pull
+If at any stage you are confused or have an issue, do not close your Pull
 Request. Instead, contact us on gitter so that we can help you resolve your
 problem.
 
@@ -479,7 +479,7 @@ use and will really make your work easier.
 
 The ``git config`` command lets you configure your Git installation (or an
 individual repository) from the command line. This command can define
-everything from user info to preferences to the behavior of a repository.
+everything from user info to preferences to the behaviour of a repository.
 
 ::
 
@@ -513,7 +513,7 @@ away your local developments before using it.
     $ git clean
 
 The ``git clean`` command removes untracked files from your working directory.
-This is really more of a convenience command, since it’s trivial to see which
+This is really more of a convenience command since it’s trivial to see which
 files are untracked with git status and remove them manually. Like an ordinary
 rm command, ``git clean`` is not undoable, so make sure you really want to
 delete the untracked files before you run it.
