@@ -1,4 +1,5 @@
 def typechain(*args):
+    # Start ignoring LineContinuationBear
     """
     Returns function which applies the first transformation it can from args
     and returns transformed value, or the value itself if it is in args.
@@ -23,6 +24,7 @@ in specified values.
     :raises TypeError:  Raises when either no functions are specified for
                         checking.
     """
+    # Stop ignoring
     if len(args) == 0:
         raise TypeError('No arguments were provided.')
 

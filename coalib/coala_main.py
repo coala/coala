@@ -15,10 +15,10 @@ from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.results.result_actions.IgnoreResultAction import IgnoreResultAction
 from coalib.results.result_actions.OpenEditorAction import OpenEditorAction
 from coalib.results.result_actions.PrintAspectAction import PrintAspectAction
-from coalib.results.result_actions.PrintMoreInfoAction import  \
-    PrintMoreInfoAction
-from coalib.results.result_actions.PrintDebugMessageAction import \
-    PrintDebugMessageAction
+from coalib.results.result_actions.PrintMoreInfoAction import (
+    PrintMoreInfoAction)
+from coalib.results.result_actions.PrintDebugMessageAction import (
+    PrintDebugMessageAction)
 from coalib.misc.Caching import FileDictFileCache
 from coalib.misc.CachingUtilities import (
     settings_changed, update_settings_db, get_settings_hash)

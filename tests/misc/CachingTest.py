@@ -105,49 +105,49 @@ class CachingTest(unittest.TestCase):
         A simple integration test to assert that results are not dropped
         when coala is ran multiple times with caching enabled.
         """
-        with bear_test_module(), \
-                prepare_file(['a=(5,6)'], None) as (lines, filename):
-            with simulate_console_inputs('n'):
+        with bear_test_module():
+            with prepare_file(['a=(5,6)'], None) as (lines, filename):
+                with simulate_console_inputs('n'):
+                    retval, stdout, stderr = execute_coala(
+                        coala.main,
+                        'coala',
+                        '-c', os.devnull,
+                        '--disable-caching',
+                        '--flush-cache',
+                        '-f', filename,
+                        '-b', 'LineCountTestBear',
+                        '-L', 'DEBUG')
+                    self.assertIn('This file has', stdout)
+                    self.assertIn('Running bear LineCountTestBear', stderr)
+
+                # Due to the change in configuration from the removal of
+                # ``--flush-cache`` this run will not be sufficient to
+                # assert this behavior.
                 retval, stdout, stderr = execute_coala(
                     coala.main,
                     'coala',
+                    '--non-interactive', '--no-color',
                     '-c', os.devnull,
-                    '--disable-caching',
-                    '--flush-cache',
                     '-f', filename,
-                    '-b', 'LineCountTestBear',
-                    '-L', 'DEBUG')
+                    '-b', 'LineCountTestBear')
                 self.assertIn('This file has', stdout)
-                self.assertIn('Running bear LineCountTestBear', stderr)
+                self.assertEqual(1, len(stderr.splitlines()))
+                self.assertIn(
+                    'LineCountTestBear: This result has no patch attached.',
+                    stderr)
 
-            # Due to the change in configuration from the removal of
-            # ``--flush-cache`` this run will not be sufficient to
-            # assert this behavior.
-            retval, stdout, stderr = execute_coala(
-                coala.main,
-                'coala',
-                '--non-interactive', '--no-color',
-                '-c', os.devnull,
-                '-f', filename,
-                '-b', 'LineCountTestBear')
-            self.assertIn('This file has', stdout)
-            self.assertEqual(1, len(stderr.splitlines()))
-            self.assertIn(
-                'LineCountTestBear: This result has no patch attached.',
-                stderr)
-
-            retval, stdout, stderr = execute_coala(
-                coala.main,
-                'coala',
-                '--non-interactive', '--no-color',
-                '-c', os.devnull,
-                '-f', filename,
-                '-b', 'LineCountTestBear')
-            self.assertIn('This file has', stdout)
-            self.assertEqual(1, len(stderr.splitlines()))
-            self.assertIn(
-                'LineCountTestBear: This result has no patch attached.',
-                stderr)
+                retval, stdout, stderr = execute_coala(
+                    coala.main,
+                    'coala',
+                    '--non-interactive', '--no-color',
+                    '-c', os.devnull,
+                    '-f', filename,
+                    '-b', 'LineCountTestBear')
+                self.assertIn('This file has', stdout)
+                self.assertEqual(1, len(stderr.splitlines()))
+                self.assertIn(
+                    'LineCountTestBear: This result has no patch attached.',
+                    stderr)
 
     def test_caching_multi_results(self):
         """
@@ -254,30 +254,30 @@ class ProxyMapFileCacheTest(unittest.TestCase):
         self.assertEqual(len(file_dict), 0)
 
     def test_file_cache_proxy_integration(self, debug=False):
-        with bear_test_module(), \
-                prepare_file(['disk-copy\n'], None) as (_, filename):
+        with bear_test_module():
+            with prepare_file(['disk-copy\n'], None) as (_, filename):
 
-            memory_data = 'in-memory\n'
-            proxy = FileProxy(filename, None, memory_data)
-            proxymap = FileProxyMap([proxy])
-            self.cache.set_proxymap(proxymap)
+                memory_data = 'in-memory\n'
+                proxy = FileProxy(filename, None, memory_data)
+                proxymap = FileProxyMap([proxy])
+                self.cache.set_proxymap(proxymap)
 
-            results, exitcode, file_dicts = run_coala(
-                console_printer=ConsolePrinter(),
-                log_printer=LogPrinter(),
-                arg_list=(
-                    '-c', os.devnull,
-                    '-f', filename,
-                    '-b', 'TestBear',
-                ),
-                autoapply=False,
-                debug=debug,
-                cache=self.cache
-            )
+                results, exitcode, file_dicts = run_coala(
+                    console_printer=ConsolePrinter(),
+                    log_printer=LogPrinter(),
+                    arg_list=(
+                        '-c', os.devnull,
+                        '-f', filename,
+                        '-b', 'TestBear',
+                    ),
+                    autoapply=False,
+                    debug=debug,
+                    cache=self.cache
+                )
 
-            self.assertEqual(exitcode, 0)
-            self.assertEqual(len(results), 1)
+                self.assertEqual(exitcode, 0)
+                self.assertEqual(len(results), 1)
 
-            # run_coala() output's name is always lower case
-            self.assertEqual(file_dicts['cli'][filename.lower()],
-                             (memory_data,))
+                # run_coala() output's name is always lower case
+                self.assertEqual(file_dicts['cli'][filename.lower()],
+                                 (memory_data,))

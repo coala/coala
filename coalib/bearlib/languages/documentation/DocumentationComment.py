@@ -251,6 +251,7 @@ class DocumentationComment:
     @classmethod
     def from_metadata(cls, doccomment, docstyle_definition,
                       marker, indent, position):
+        # Start ignoring LineContinuationBear
         r"""
         Assembles a list of parsed documentation comment metadata.
 
@@ -287,6 +288,7 @@ class DocumentationComment:
         :return:
             A ``DocumentationComment`` instance of the assembled documentation.
         """
+        # Stop ignoring
         assembled_doc = ''
         for section in doccomment:
             section_desc = section.desc.splitlines(keepends=True)

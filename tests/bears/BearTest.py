@@ -663,21 +663,21 @@ class BearTest(BearTestBase):
         self.assertEqual(_setting_is_enabled(bear=uut, key='key'), False)
 
     def test_profiler_dependency(self, debug=False):
-        with bear_test_module(), \
-                prepare_file(['#fixme  '], None) as (lines, filename):
-            results = run_coala(console_printer=ConsolePrinter(),
-                                log_printer=LogPrinter(),
-                                arg_list=(
-                                    '-c', os.devnull,
-                                    '-f', filename,
-                                    '-b', 'DependentBear',
-                                    '-S', 'use_spaces=yeah',
-                                    '--profile', 'profiled_bears',
-                                ),
-                                autoapply=False,
-                                debug=debug)
-            cli_result = results[0]['cli']
-            self.assertEqual(len(cli_result), 1)
+        with bear_test_module():
+            with prepare_file(['#fixme  '], None) as (lines, filename):
+                results = run_coala(console_printer=ConsolePrinter(),
+                                    log_printer=LogPrinter(),
+                                    arg_list=(
+                                        '-c', os.devnull,
+                                        '-f', filename,
+                                        '-b', 'DependentBear',
+                                        '-S', 'use_spaces=yeah',
+                                        '--profile', 'profiled_bears',
+                                    ),
+                                    autoapply=False,
+                                    debug=debug)
+                cli_result = results[0]['cli']
+                self.assertEqual(len(cli_result), 1)
 
         profiled_files = os.listdir('profiled_bears')
         self.assertEqual(len(profiled_files), 1)
@@ -757,19 +757,21 @@ class BearDownloadTest(BearTestBase):
         filename = self.filename
         file_location = self.file_location
 
-        with freeze_time('2017-01-01') as frozen_datetime, \
-                requests_mock.Mocker() as reqmock:
+        with freeze_time('2017-01-01') as frozen_datetime:
+            with requests_mock.Mocker() as reqmock:
 
-            reqmock.get(mock_url, text=mock_text)
-            self.assertFalse(isfile(file_location))
-            expected_filename = file_location
-            result_filename = self.uut.download_cached_file(mock_url, filename)
-            self.assertTrue(isfile(join(file_location)))
-            self.assertEqual(result_filename, expected_filename)
-            expected_time = getmtime(file_location)
+                reqmock.get(mock_url, text=mock_text)
+                self.assertFalse(isfile(file_location))
+                expected_filename = file_location
+                result_filename = self.uut.download_cached_file(mock_url,
+                                                                filename)
+                self.assertTrue(isfile(join(file_location)))
+                self.assertEqual(result_filename, expected_filename)
+                expected_time = getmtime(file_location)
 
-            frozen_datetime.tick(delta=datetime.timedelta(seconds=0.5))
-            result_filename = self.uut.download_cached_file(mock_url, filename)
-            self.assertEqual(result_filename, expected_filename)
-            result_time = getmtime(file_location)
-            self.assertEqual(result_time, expected_time)
+                frozen_datetime.tick(delta=datetime.timedelta(seconds=0.5))
+                result_filename = self.uut.download_cached_file(mock_url,
+                                                                filename)
+                self.assertEqual(result_filename, expected_filename)
+                result_time = getmtime(file_location)
+                self.assertEqual(result_time, expected_time)

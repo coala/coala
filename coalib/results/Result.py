@@ -29,6 +29,7 @@ from coalib.results.SourceRange import SourceRange
                    'debug_msg',
                    'applied_actions')
 class Result:
+    # Start ignoring LineContinuationBear
     """
     A result is anything that has an origin and a message.
 
@@ -38,7 +39,7 @@ class Result:
     style formatted with these arguments.
 
     >>> r = Result('origin','{arg1} and {arg2}', \
-           message_arguments={'arg1': 'foo', 'arg2': 'bar'})
+        message_arguments={'arg1': 'foo', 'arg2': 'bar'})
     >>> r.message
     'foo and bar'
 
@@ -50,6 +51,7 @@ class Result:
     'spam and eggs'
 
     """
+    # Stop ignoring
 
     @enforce_signature
     def __init__(self,
