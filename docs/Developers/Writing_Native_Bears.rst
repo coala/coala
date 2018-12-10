@@ -218,7 +218,519 @@ Try executing
 
 This will show the user a bunch of information related to the bear like:
 - A description of what the bear does - The sections which uses it - The
-settings it uses (optional and required)
+settings it uses :
+:: 
+  
+  AlexBear
+  Checks the markdown file with Alex - Catch insensitive, inconsiderate
+  writing.
+
+  Be aware that Alex and this bear only work on English text.
+  For more information, consult <https://www.npmjs.com/package/alex>.
+
+  AnnotationBear
+  Finds out all the positions of strings and comments in a file. The Bear searches for valid comments and strings and yields their        ranges as SourceRange objects in HiddenResults.
+
+  BanditBear
+  Performs security analysis on Python source code, utilizing the ``ast``module from the Python standard library.
+
+  BootLintBear
+  Raise several common HTML mistakes in html files that are using Bootstrap in a fairly "vanilla" way.
+  Vanilla Bootstrap's components/widgets require their parts of the DOM to conform to certain structures that is
+  checked. Also, raises issues about certain <meta> tags, HTML5 doctype declaration, etc. to use bootstrap properly.
+
+  For more about the analysis, check Bootlint
+  <https://github.com/twbs/bootlint#bootlint>.
+
+  CheckstyleBear
+  Check Java code for possible style, semantic and design issues.
+
+  For more information, consult
+  <http://checkstyle.sourceforge.net/checks.html>.
+
+  ClangASTPrintBear
+  This bear is meant for debugging purposes relating to clang. It just prints out the whole AST for a file to the DEBUG channel.
+
+  ClangBear
+  Check code for syntactical or semantical problems using Clang.This bear supports automatic fixes.
+
+  ClangCloneDetectionBear
+  Checks the given code for similar functions that are probably redundant.
+
+  ClangComplexityBear
+  Check for all functions if they are too complicated using the cyclomatic complexity metric.
+  You can read more about this metric at <https://www.wikiwand.com/en/Cyclomatic_complexity>.
+
+  ClangFunctionDifferenceBear
+  Retrieves similarities for code clone detection. Those can be reused in another bear to produce results.
+  Postprocessing may be done because small functions are less likely to be clones at the same difference value than big functions which   may provide a better refactoring opportunity for the user.
+
+  CMakeLintBear
+  Check CMake code for syntactical or formatting issues.
+
+  For more information consult <https://github.com/richq/cmake-lint>.
+
+  coalaBear
+  Check for the correct spelling of ``coala`` in the file.
+
+  CoffeeLintBear
+  Check CoffeeScript code for a clean and consistent style.
+
+  For more information about coffeelint, visit <http://www.coffeelint.org/>.
+
+  CommunicationBear
+  Communicates with the user.
+
+  CPDBear
+  Checks for similar code that looks as it could be replaced to reduce redundancy.
+  For more details see: <https://pmd.github.io/pmd-5.4.1/usage/cpd-usage.html>
+
+  CPPCheckBear
+  Report possible security weaknesses for C/C++.
+  For more information, consult <https://github.com/danmar/cppcheck>.
+
+  CPPCleanBear
+  Find problems in C++ source code that slow down development in large code bases. This includes finding unused code, among   
+  other features.
+
+  Read more about available routines at
+  <https://github.com/myint/cppclean#features>.
+
+  CPPLintBear
+  Check C++ code for Google's C++ style guide.
+
+  For more information, consult <https://github.com/theandrewdavis/cpplint>.
+
+  CSecurityBear
+  Report possible security weaknesses for C/C++.
+
+  For more information, consult <http://www.dwheeler.com/flawfinder/>.
+
+  CSharpLintBear
+  Checks C# code for syntactical correctness using the ``mcs`` compiler.
+
+  CSSAutoPrefixBear
+  This bear adds vendor prefixes to CSS rules using ``autoprefixer`` utility.
+
+  CSSLintBear
+  Check code for syntactical or semantical problems that might lead to
+  problems or inefficiencies.
+
+  CSVLintBear
+  Verifies using ``csvlint`` if ``.csv`` files are valid CSV or not.
+
+  DartLintBear
+  Checks the code with ``dart-linter``.
+
+  This bear expects dart commands to be on your ``PATH``. Please ensure
+  /path/to/dart-sdk/bin is in your ``PATH``.
+
+  DennisBear
+  Lints your translated PO and POT files!
+
+  Check multiple lint rules on all the strings in the PO file
+  generating a list of errors and a list of warnings.
+
+  See http://dennis.readthedocs.io/en/latest/linting.html for
+  list of all error codes.
+
+  http://dennis.readthedocs.io/
+
+  DockerfileLintBear
+  Check file syntax as well as arbitrary semantic and best practice in Dockerfiles. it also checks LABEL rules against docker images.
+
+  Uses ``dockerfile_lint`` to provide the analysis.
+  See <https://github.com/projectatomic/dockerfile_lint#dockerfile-lint> for more information .
+
+  DuplicateFileBear
+  Checks for Duplicate Files
+
+  ElmLintBear
+  This bear formats the Elm source code according to a standard set of rules.
+
+  See <https://github.com/avh4/elm-format> for more information.
+
+  ESLintBear
+  Check JavaScript and JSX code for style issues and semantic errors.
+
+  Find out more at <http://eslint.org/docs/rules/>.
+
+  FilenameBear
+  Checks whether the filename follows a certain naming-convention.
+
+  FormatRBear
+  Check and correct formatting of R Code using known formatR utility.
+
+  GhcModBear
+  Syntax checking with ``ghc`` for Haskell files.
+
+  See <https://hackage.haskell.org/package/ghc-mod> for more information!
+
+  GitCommitBear
+  Check for matching issue related references and URLs.
+
+  GNUIndentBear
+  This bear checks and corrects spacing and indentation via the well known
+  Indent utility.
+
+  C++ support is considered experimental.
+
+  GoErrCheckBear
+  Checks the code for all function calls that have unchecked errors.
+  GoErrCheckBear runs ``errcheck`` over each file to find such functions.
+
+  For more information on the analysis visit
+  <https://github.com/kisielk/errcheck>.
+
+  GofmtBear
+  Suggest better formatting options in Go code. Basic checks like alignment,
+  indentation, and redundant parentheses are provided.
+
+  This is done using the ``gofmt`` utility. For more information visit
+  <https://golang.org/cmd/gofmt/>.
+
+  GoImportsBear
+  Adds/Removes imports to Go code for missing imports.
+
+  GoLintBear
+  Checks the code using ``golint``. This will run golint over each file
+  separately.
+
+  GoReturnsBear
+  Proposes corrections of Go code using ``goreturns``.
+
+  GoTypeBear
+  Checks the code using ``gotype``. This will run ``gotype`` over each file separately.
+
+  GoVetBear
+  Analyze Go code and raise suspicious constructs, such as printf calls whose arguments do not correctly match the format string,
+  useless  assignments, common mistakes about boolean operations, unreachable code,etc.
+
+  This is done using the ``vet`` command. For more information visit
+  <https://golang.org/cmd/vet/>.
+
+  HappinessLintBear
+  Checks JavaScript files for semantic and syntax errors using ``happiness``.
+
+  See <https://github.com/JedWatson/happiness/> for more information.
+
+  HaskellLintBear
+  Check Haskell code for possible problems. This bear can propose patches for using alternative functions, simplifying code
+  and removing redundancies.
+
+  See <http://community.haskell.org/~ndm/darcs/hlint/hlint.htm> for more
+  information.
+
+  HelloWorldBear
+
+
+  HTMLLintBear
+  Check HTML source code for invalid or misformatted code.
+
+  See also <https://pypi.python.org/pypi/html-linter>.
+
+  IndentationBear
+  It is a generic indent bear, which looks for a start and end indent specifier, example: ``{ : }`` where "{" is the start indent   specifier and "}" is the end indent specifier. If the end-specifier is not given, this bear looks for unindents within the code to correctly figure out indentation.
+  It also figures out hanging indents and absolute indentation of function params or list elements.
+  It does not however support  indents based on keywords yet. for example:
+  if(something) does not get indented
+  undergoes no change.
+  WARNING: The IndentationBear is experimental right now, you can report any issues found to https://github.com/coala/coala-bears
+
+  InferBear
+  Checks the code with ``infer``.
+
+  InvalidLinkBear
+  Find links in any text file and check if they are valid.
+  A link is considered valid if the server responds with a 2xx code.
+  This bear can automatically fix redirects, but ignores redirect URLs that have a huge difference with the original URL.
+  Warning: This bear will make HEAD requests to all URLs mentioned in your codebase, which can potentially be destructive. As an      example, this bear would naively just visit the URL from a line that goes like `do_not_ever_open = 'https://api.acme.inc/delete-all-data'` wiping out all your data.
+
+  JavaPMDBear
+  Check Java code for possible issues like potential bugs, dead code or too
+  complicated expressions.
+
+  More information is available at
+  <http://pmd.github.io/pmd-5.4.1/pmd-java/rules/index.html>.
+
+  Jinja2Bear
+  Check `Jinja2 templates <http://jinja.pocoo.org>`_ for syntax, formatting and documentation issues. The following aspects are being     looked at:
+  * Variable spacing: Variable tags should be padded with one space on each side, like this: ``{{ var_name }}``. This can be set to any   number of spaces via the setting ``variable_spacing``. Malformatted variable tags are detected and fixes suggested. 
+  * Control spacing: Like variable spacing, but for control blocks, i.e. ``if`` and ``for`` constructs. Looks at both start and end     block.* Control labels: It is good practice to label the end of an ``if`` or ``for`` construct with a comment equal to the content of    the start, like so::
+  {% for x in y %} do something {% endfor %}{# for x in y %}
+  Mising or differing labels are detected and fixes suggested. Constructs with start and end on the same line are being ignored. *unbalanced blocks: Each opening tag for a ``for`` or ``if`` construct must be closed by a corresponding end tag.
+  An unbalanced number of opening and closing tags is invalid syntax and will be reported with MAJOR severity by the bear.
+
+  JSComplexityBear
+  Calculates cyclomatic complexity using ``cr``, the command line utility
+  provided by the NodeJS module ``complexity-report``.
+
+  JSHintBear
+  Detect errors and potential problems in JavaScript code and to enforce appropriate coding conventions. For example, problems like syntax errors,bugs due to implicit type conversion, leaking variables and much more can be detected.
+
+  For more information on the analysis visit <http://jshint.com/>
+
+  JSONFormatBear
+  Raises issues for any deviations from the pretty-printed JSON.
+
+  JuliaLintBear
+  Provide analysis related to common bugs and potential issues in Julia like
+  dead code, undefined variable usage, duplicate keys in dicts, incorrect
+  ADT usage, wrongfully using ellipsis, and much more.
+
+  See <https://lintjl.readthedocs.org/en/stable/> for more information
+  on the analysis provided.
+
+  KeywordBear
+  Checks the code files for given keywords.
+
+  LanguageToolBear
+  Checks the code with LanguageTool.
+
+  LatexLintBear
+  Checks the code with ``chktex``.
+
+  LicenseCheckBear
+  Attempts to check the given file for a license, by searching the start
+  of the file for text belonging to various licenses.
+
+  For Ubuntu/Debian users, the ``licensecheck_lines`` option has to be used
+  in accordance with the ``licensecheck_tail`` option.
+
+  LineCountBear
+  Count the number of lines in a file and ensure that they are smaller than a given size.
+
+  LineLengthBear
+  Yields results for all lines longer than the given maximum line length.
+
+  LuaLintBear
+  Check Lua code for possible semantic problems, like unused code.
+
+  Read more at <https://github.com/mpeterv/luacheck>.
+
+  MarkdownBear
+  Check and correct Markdown style violations automatically.
+  See <https://github.com/wooorm/remark-lint> for details about the tool
+  below.
+
+  MatlabIndentationBear
+  This bear features a simple algorithm to calculate the right indentation for Matlab/Octave code. However, it will not handle hanging   indentation or conditions ranging over several lines yet.
+
+  MypyBear
+  Type-checks your Python files!
+  Checks optional static typing using the mypy tool.
+  See <http://mypy.readthedocs.io/en/latest/basics.html> for info on how to add static typing.
+
+  PEP8Bear
+  Detects and fixes PEP8 incompliant code. This bear will not change functionality of the code in any way.
+
+  PEP8NotebookBear
+  Detects and fixes PEP8 incompliant code in Jupyter Notebooks. This bear will not change functionality of the code in any way.
+
+  PerlCriticBear
+  Check the code with perlcritic. This will run perlcritic over each of the files seperately.
+
+  PHPCodeSnifferBear
+  Ensures that your PHP, JavaScript or CSS code remains clean and consistent.
+  See <https://github.com/squizlabs/PHP_CodeSniffer> for more information.
+
+  PHPLintBear
+  Checks the code with ``php -l``. This runs it on each file separately.
+
+  PHPMessDetectorBear
+  The bear takes a given PHP source code base and looks for several potential problems within that source. 
+  These problems can be things like:
+  - Possible bugs
+  - Suboptimal code
+  - Overcomplicated expressions
+  - Unused parameters, methods, properties
+
+  PinRequirementsBear
+  Checks if requirements are properly pinned. It will always raise an issue if the minor version is not given. If you do not wish that,   do not use this bear.
+
+  ProseLintBear
+  Lints the file using `proselint <https://github.com/amperser/proselint>`__.
+  Works only with English language text.
+
+  PuppetLintBear
+  Check and correct puppet configuration files using ``puppet-lint``.
+  See <http://puppet-lint.com/> for details about the tool.
+
+  PycodestyleBear
+  A wrapper for the tool ``pycodestyle`` formerly known as ``pep8``.
+
+  PyCommentedCodeBear
+  Detects commented out source code in Python.
+
+  PyDocStyleBear
+  Checks python docstrings.
+
+  PyFlakesBear
+  Checks Python files for errors using ``pyflakes``.
+  See https://github.com/PyCQA/pyflakes for more info.
+
+  PyImportSortBear
+  Raise issues related to sorting imports, segregating imports into various sections, and also adding comments on top of each import     section based on the configurations provided.
+  You can read more about ``isort`` at <https://isort.readthedocs.org/en/latest/>.
+
+  PyLintBear
+  Checks the code with pylint. This will run pylint over each file separately.
+
+  PyromaBear
+  Checks for Python packaging best practices using `pyroma`.
+  Pyroma rhymes with aroma, and is a product aimed at giving a rating of how well a Python project complies with the best practices of   the Python packaging ecosystem, primarily PyPI, pip, Distribute etc, as well as a list of issues that could be improved.
+  See <https://bitbucket.org/regebro/pyroma/> for more information.
+
+  PySafetyBear
+  Checks for vulnerable package versions in requirements files.
+
+  PythonPackageInitBear
+
+  PyUnusedCodeBear
+  Detects unused code. By default this functionality is limited to:
+  - Unneeded pass statements. - Unneeded builtin imports.
+
+  QuotesBear
+  Checks and corrects your quotation style.
+  For all single line strings, this bear will correct the quotation to your preferred quotation style if that kind of quote is not    include within the string. Multi line strings are not supported.
+
+  RadonBear
+  Uses radon to compute complexity of a given file.
+
+  RAMLLintBear
+  RAML Linter is a static analysis, linter-like, utility that will enforce
+  rules on a given RAML document, ensuring consistency and quality.
+  Note: Files should not have leading empty lines, else the bear fails to identify the problems correctly.
+
+  reSTLintBear
+  Lints reStructuredText.
+
+  RLintBear
+  Checks the code with ``lintr``.
+
+  RSTcheckBear
+  Check syntax of ``reStructuredText`` and code blocks nested within it.
+  Check <https://pypi.python.org/pypi/rstcheck> for more information.
+
+  RuboCopBear
+  Check Ruby code for syntactic, formatting as well as semantic problems.
+
+  See <https://github.com/bbatsov/rubocop#cops> for more information.
+
+  RubySmellBear
+  Detect code smells in Ruby source code.
+  For more information about the detected smells, see
+  <https://github.com/troessner/reek/blob/master/docs/Code-Smells.md>.
+
+  RubySyntaxBear
+  Checks the code with ``ruby -wc`` on each file separately.
+
+  ScalaLintBear
+  Check Scala code for codestyle, but also semantical problems,
+  e.g. cyclomatic complexity.
+
+  SCSSLintBear
+  Check SCSS code to keep it clean and readable.
+  More information is available at <https://github.com/brigade/scss-lint>.
+
+  ShellCheckBear
+  Check bash/shell scripts for syntactical problems (with understandable
+  messages), semantical problems as well as subtle caveats and pitfalls.
+
+  A gallery of bad code that can be detected is available at
+  <https://github.com/koalaman/shellcheck/blob/master/README.md>.
+
+  SpaceConsistencyBear
+  Check and correct spacing for all textual data. This includes usage of tabs vs. spaces, trailing whitespace and (missing) newlines     before the end of the file.
+
+  SpellCheckBear
+  Lints files to check for incorrect spellings using ``scspell``.
+  scspell is a spell checker for source code.
+  When applied to a code written in most popular programming languages
+  while using most typical naming conventions, this algorithm will
+  usually catch many errors without an annoying false positive rate.
+
+  In an effort to catch more spelling errors, scspell is able to
+  check each file against a set of dictionary words selected
+  specifically for that file.
+
+  See <https://pypi.python.org/pypi/scspell3k> for more information.
+
+  SQLintBear
+  Check the given SQL files for syntax errors or warnings.
+  This bear supports ANSI syntax. Check out
+  <https://github.com/purcell/sqlint> for more detailed information.
+
+  StyleLintBear
+  Checks the code with stylelint. This will run stylelint over each file
+  separately.
+  Detect errors and potential problems in CSS code and to enforce
+  appropriate coding conventions. For example, problems like syntax errors,
+  invalid color codes etc can be detected.
+
+  For more information on the analysis visit <http://stylelint.io/>
+
+  TailorBear
+  Analyze Swift code and check for code style related warning messages.
+  For more information on the analysis visit <https://tailor.sh/>
+
+  TSLintBear
+  Check TypeScript code for style violations and possible semantical problems.
+  Read more about the capabilities at <https://github.com/palantir/tslint#core-rules>.
+
+  VerilogLintBear
+  Analyze Verilog code using ``verilator`` and checks for all line related and code style related warning messages. It supports the
+  synthesis subset of Verilog, plus initial statements, proper
+  blocking/non-blocking assignments, functions, tasks.
+  It also warns about unused code when a specified signal is never sinked, and unoptimized code due to some construct, with which the
+  optimization of the specified signal or block is disabled.
+  
+  This is done using the ``--lint-only`` command. For more information visit
+  <http://www.veripool.org/projects/verilator/wiki/Manual-verilator>.
+
+  VHDLLintBear
+  Check VHDL code for common codestyle problems.
+  Rules include:
+   * Signals, variables, ports, types, subtypes, etc. must be lowercase.
+   * Constants and generics must be uppercase.
+   * Entities, architectures and packages must be "mixedcase" (may be 100%
+     uppercase, but not 100% lowercase).
+   * Ports must be suffixed using _i, _o or _io denoting its kind.
+   * Labels must be placed in a separated line. Exception: component
+     instantiation.
+   * End statements must be documented indicating what are finishing.
+   * Buffer ports are forbidden.
+   * VHDL constructions of the "entity xxxx is" and similars must be in one
+     line. You can't put "entity xxxxx" in one line and "is" in another.
+   * No more than one VHDL construction is allowed in one line of code.
+
+  See <http://fpgalibre.sourceforge.net/ingles.html#tp46> for more
+  information.
+
+  VintBear
+  Check vimscript code for possible style problems.
+  See <https://github.com/Kuniwak/vint> for more information.
+
+  VultureBear
+  Check Python code for unused variables and functions using `vulture`.
+  See <https://bitbucket.org/jendrikseipp/vulture> for more information.
+
+  WriteGoodLintBear
+  Lints the text files using ``write-good`` for improving proses.
+  See <https://github.com/btford/write-good> for more information.
+
+  XMLBear
+  Checks the code with ``xmllint``.
+  See http://xmlsoft.org/xmllint.html
+
+  YAMLLintBear
+  Check yaml code for errors and possible problems.
+  You can read more about capabilities at
+  <http://yamllint.readthedocs.org/en/latest/rules.html>.
+
+  YapfBear
+  Check and correct formatting of Python code using ``yapf`` utility.
+  See <https://github.com/google/yapf> for more information.
 
 .. note::
 
