@@ -23,22 +23,22 @@ directory of the coala-tutorial repository.
 What is a bear?
 ---------------
 
-A bear is meant to do some analysis on source code. The source code will
+A bear is meant to do some analysis on the source code. The source code will
 be provided by coala so the bear doesn't have to care where it comes from
 or where it goes.
 
 There are two kinds of bears:
 
 - LocalBears, which only perform analysis on each file itself
-- GlobalBears, which are project wide, like the GitCommitBear
+- GlobalBears, which are project-wide, like the GitCommitBear
 
-A bear can communicate with the user via two ways:
+A bear can communicate with the user in two ways:
 
 -  Via log messages
 -  Via results
 
-Log messages will be logged according to the users settings and are
-usually used if something goes wrong. However you can use debug for
+Log messages will be logged according to the user's settings and are
+usually used if something goes wrong. However, you can use debug for
 providing development related debug information since it will not be
 shown to the user by default. If error/failure messages are used, the
 bear is expected not to continue analysis.
@@ -46,7 +46,7 @@ bear is expected not to continue analysis.
 A Hello World Bear
 ------------------
 
-Below is the code given for a simple bear that sends a debug message for
+Below is the given code for a simple bear that sends a debug message for
 each file:
 
 .. code:: python
@@ -63,7 +63,7 @@ each file:
 
 This bear is stored at ``./bears/HelloWorldBear.py``
 
-In order to let coala execute this bear you need to let coala know where
+In order to let coala execute this bear, you need to let coala know where
 to find it. We can do that with the ``-d`` (``--bear-dirs``) argument:
 
 ``coala -f src/*.c -d bears -b HelloWorldBear -L DEBUG --flush-cache``
@@ -72,7 +72,7 @@ to find it. We can do that with the ``-d`` (``--bear-dirs``) argument:
 
     The given bear directories must not have any glob expressions in them. Any
     character that could be interpreted as a part of a glob expression will be
-    escaped. Please use comma separated values to give several such
+    escaped. Please use comma-separated values to give several such
     directories instead. Do not forget to flush the cache (by adding the
     argument ``--flush-cache`` when running coala) if you run a new bear on a
     file which has been previously analyzed (by coala).
@@ -104,7 +104,7 @@ You should now see an output like this on your command line:
 
 .. note::
 
-    The first ``WARNING`` message is because our directory, does not
+    The first ``WARNING`` message is because our directory does not
     contain a ``.coafile``. If you have followed the instructions in
     our `main tutorial`_, you will have a ``.coafile`` in your working
     directory. Its best if you delete that file before working on this
@@ -269,7 +269,7 @@ You can use shortcuts for basic types, ``str_list`` for strings,
 boolean values.
 
 If you need another type, you can write the conversion function yourself
-and use this function as the annotation (if you cannot convert value, be
+and use this function as the annotation (if you cannot convert the value, be
 sure to throw ``TypeError`` or ``ValueError``). We've provided a few
 advanced conversions for you:
 
@@ -290,7 +290,7 @@ advanced conversions for you:
 Results
 -------
 
-In the end we've got a result. If a file is provided, coala will show
+In the end, we've got a result. If a file is provided, coala will show
 the file, if a line is provided, coala will also show a few lines before
 the affecting line. There are a few parameters to the Result
 constructor, so you can e.g. create a result that proposes a code change
@@ -319,7 +319,7 @@ Bears Depending on Other Bears
 So we've got a result, but what if we need our Bear to depend on results from
 a different Bear?
 
-Well coala has an efficient dependency management system that would run the
+Well, coala has an efficient dependency management system that would run the
 other Bear before your Bear and get its results for you. All you need to do is
 to tell coala which Bear(s) you want to run before your Bear.
 
@@ -340,7 +340,7 @@ So let's see how you could tell coala which Bears to run before yours:
 
 As you can see we have a :attr:`~coalib.bears.Bear.Bear.BEAR_DEPS`
 set which contains a list of bears we wish to depend on.
-In this case it is a set with 1 item: "OtherBear".
+In this case, it is a set with 1 item: "OtherBear".
 
 .. note::
     The `BEAR_DEPS` set must have classes of the bear itself,
@@ -382,7 +382,7 @@ Let's see how we can use HiddenResults in our Bear:
 Here we see that this Bear (unlike normal Bears) yields a
 :class:`~coalib.results.HiddenResult` instead of a ``Result``. The first
 parameter in ``HiddenResult`` should be the instance of the Bear that yields
-this result (in this case ``self``), and second argument should be the content
+this result (in this case ``self``), and the second argument should be the content
 we want to transfer between the Bears. Here we use a list of strings as content
 but it can be any object.
 
@@ -415,7 +415,7 @@ REQUIREMENTS
 ~~~~~~~~~~~~
 
 To indicate the requirements of the bear, assign ``REQUIREMENTS`` a set with
-instances of subclass of ``PackageRequirement`` such as:
+instances of a subclass of ``PackageRequirement`` such as:
 
 - PipRequirement
 - NpmRequirement
@@ -432,7 +432,7 @@ instances of subclass of ``PackageRequirement`` such as:
         REQUIREMENTS = {
         PipRequirement('coala_decorators', '0.2.1')}
 
-To specify multiple requirements you can use the multiple method.
+To specify multiple requirements you can use the multiple methods.
 This can receive both tuples of strings, in case you want a specific version,
 or a simple string, in case you want the latest version to be specified.
 
@@ -531,20 +531,20 @@ can be used as follows:
 Aspect Bear
 -----------
 
-Aspect is a feature in coala that make configuring coala in project more easy
+Aspect is a feature in coala that make configuring coala in project easier
 and language agnostic. For more detail about aspect, see cEP-0005 in
 https://github.com/coala/cEPs/blob/master/cEP-0005.md.
 
 An aspect-compliant bear MUST:
 
-1. Declare list of aspect it can fix and detected. Note that the aspect MUST be
-   a leaf aspect. You can see list of supported aspect here
+1. Declare a list of aspect it can fix and detected. Note that the aspect MUST be
+   a leaf aspect. You can see a list of supported aspect here
    https://github.com/coala/aspect-docs.
-2. Declare list of supported language. See list of supported language
+2. Declare a list of supported language. See the list of supported language
    https://github.com/coala/coala/tree/master/coalib/bearlib/languages/definitions.
 3. Map setting to its equivalent aspect or taste using ``map_setting_to_aspect``
    decorator.
-4. Yield result with relevant aspect.
+4. Yield result with the relevant aspect.
 
 For example, let's make an aspect bear named SpellingCheckBear.
 
