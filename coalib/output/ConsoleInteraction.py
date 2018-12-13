@@ -725,6 +725,15 @@ def try_to_apply_action(action_name,
                                          file_dict,
                                          file_diff_dict,
                                          section)
+        while len(file_diff_dict) == 0 and isinstance(chosen_action,
+                                                      IgnoreResultAction):
+            failed_actions.add(action_name)
+            get_action_info(section, IgnoreResultAction.get_metadata(),
+                            failed_actions)
+            chosen_action.apply_from_section(result,
+                                             file_dict,
+                                             file_diff_dict,
+                                             section)
         if not isinstance(chosen_action, DoNothingAction):
             console_printer.print(
                 format_lines(chosen_action.SUCCESS_MESSAGE, symbol='['),
