@@ -58,6 +58,7 @@ If you're trying to **use** coala, you should have a look at our
    Writing Documentation <Developers/Writing_Documentation>
    Executing Tests <Developers/Executing_Tests>
    Useful Links <Developers/Useful_Links>
+   Shortlinks <Developers/Shortlinks>
 
 
 .. toctree::

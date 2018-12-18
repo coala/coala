@@ -37,7 +37,7 @@ rST-Links
 coala-Links
 -----------
 
--   `coala Shortlinks <coala.io/links>`_
+-   `coala Shortlinks <./Shortlinks.html>`_
 -   `Install coala <http://docs.coala.io/en/latest/Users/Install.html>`_
 -   `coala Issues <https://github.com/coala/coala/issues>`_
 -   `coala Tutorial <http://docs.coala.io/en/latest/Users/Tutorial.html>`_
