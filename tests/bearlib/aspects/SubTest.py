@@ -31,8 +31,8 @@ class SubAspectTest:
             taste_values = aspect.tastes
             for name, taste in SubAspect_tastes.items():
                 if not taste.languages or language in taste.languages:
-                    assert getattr(aspect, name) == taste_values[name] \
-                        == taste.default
+                    assert (getattr(aspect, name) == taste_values[name]
+                            == taste.default)
                 else:
                     with pytest.raises(TasteError) as exc:
                         getattr(aspect, name)
@@ -41,19 +41,19 @@ class SubAspectTest:
 
     def test__eq__(self, RootAspect, SubAspect, SubAspect_taste_values):
         assert SubAspect('py') == SubAspect('py')
-        assert SubAspect('py', **SubAspect_taste_values) \
-            == SubAspect('py', **SubAspect_taste_values)
+        assert (SubAspect('py', **SubAspect_taste_values)
+                == SubAspect('py', **SubAspect_taste_values))
         assert not SubAspect('py') == RootAspect('py')
         assert not SubAspect('py') == Root('py')
-        assert not SubAspect('py') \
-            == SubAspect('py', **SubAspect_taste_values)
-        assert not SubAspect('py', **SubAspect_taste_values) \
-            == SubAspect('py')
+        assert not (SubAspect('py')
+                    == SubAspect('py', **SubAspect_taste_values))
+        assert not (SubAspect('py', **SubAspect_taste_values)
+                    == SubAspect('py'))
 
     def test__ne__(self, RootAspect, SubAspect, SubAspect_taste_values):
         assert not SubAspect('py') != SubAspect('py')
-        assert not SubAspect('py', **SubAspect_taste_values) \
-            != SubAspect('py', **SubAspect_taste_values)
+        assert not (SubAspect('py', **SubAspect_taste_values)
+                    != SubAspect('py', **SubAspect_taste_values))
         assert SubAspect('py') != RootAspect('py')
         assert SubAspect('py') != Root('py')
         assert SubAspect('py') != SubAspect('py', **SubAspect_taste_values)

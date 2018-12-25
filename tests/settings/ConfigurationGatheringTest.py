@@ -324,31 +324,32 @@ class ConfigurationGatheringTest(unittest.TestCase):
         test_dir = os.path.join(current_dir, 'section_manager_test_files')
         logger = logging.getLogger()
 
-        with change_directory(test_dir), \
-                self.assertLogs(logger, 'WARNING') as cm:
-            sections, _, _, _ = gather_configuration(
-                lambda *args: True,
-                self.log_printer,
-                arg_list=['-c', 'inherit_coafile'])
-            self.assertEqual(sections['all.python'].defaults, sections['all'])
-            self.assertEqual(sections['all.c']['key'],
-                             sections['cli']['key'])
-            self.assertEqual(sections['java.test'].defaults,
-                             sections['cli'])
-            self.assertEqual(int(sections['all.python']['max_line_length']),
-                             80)
-            self.assertEqual(sections['all.python.codestyle'].defaults,
-                             sections['all.python'])
-            self.assertEqual(sections['all.java.codestyle'].defaults,
-                             sections['all'])
-            self.assertEqual(str(sections['all']['ignore']),
-                             './vendor')
-            sections['cli']['ignore'] = './user'
-            self.assertEqual(str(sections['all']['ignore']),
-                             './user, ./vendor')
-            sections['cli']['ignore'] = './client'
-            self.assertEqual(str(sections['all']['ignore']),
-                             './client, ./vendor')
+        with change_directory(test_dir):
+            with self.assertLogs(logger, 'WARNING') as cm:
+                sections, _, _, _ = gather_configuration(
+                    lambda *args: True,
+                    self.log_printer,
+                    arg_list=['-c', 'inherit_coafile'])
+                self.assertEqual(sections['all.python'].defaults,
+                                 sections['all'])
+                self.assertEqual(sections['all.c']['key'],
+                                 sections['cli']['key'])
+                self.assertEqual(sections['java.test'].defaults,
+                                 sections['cli'])
+                self.assertEqual(int(sections['all.python']['max_line_length']),
+                                 80)
+                self.assertEqual(sections['all.python.codestyle'].defaults,
+                                 sections['all.python'])
+                self.assertEqual(sections['all.java.codestyle'].defaults,
+                                 sections['all'])
+                self.assertEqual(str(sections['all']['ignore']),
+                                 './vendor')
+                sections['cli']['ignore'] = './user'
+                self.assertEqual(str(sections['all']['ignore']),
+                                 './user, ./vendor')
+                sections['cli']['ignore'] = './client'
+                self.assertEqual(str(sections['all']['ignore']),
+                                 './client, ./vendor')
         self.assertRegex(cm.output[0],
                          '\'cli\' is an internally reserved section name.')
 

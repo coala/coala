@@ -453,10 +453,12 @@ class DocBaseClassTest(unittest.TestCase):
                 '* A doc-comment aborted in the middle of writing\n',
                 '* This won\'t get parsed (hopefully...)\n']
 
+        # Start ignoring LineContinuationBear
         expected = [dedent("""\
             Please check the docstring for faulty markers. A starting
             marker has been found, but no instance of DocComment is
             returned."""), 0]
+        # Stop ignoring
 
         for doc_comment in DocBaseClass.extract(data, 'C', 'doxygen'):
             self.assertEqual(
@@ -467,10 +469,12 @@ class DocBaseClassTest(unittest.TestCase):
         data = ['\n',
                 '/** Aborts...\n']
 
+        # Start ignoring LineContinuationBear
         expected = [dedent("""\
             Please check the docstring for faulty markers. A starting
             marker has been found, but no instance of DocComment is
             returned."""), 1]
+        # Stop ignoring
 
         for doc_comment in DocBaseClass.extract(data, 'CPP', 'doxygen'):
             self.assertEqual(
@@ -482,10 +486,12 @@ class DocBaseClassTest(unittest.TestCase):
                 '* Markers are faulty\n',
                 '*/']
 
+        # Start ignoring LineContinuationBear
         expected = [dedent("""\
             Please check the docstring for faulty markers. A starting
             marker has been found, but no instance of DocComment is
             returned."""), 0]
+        # Stop ignoring
 
         for doc_comment in DocBaseClass.extract(data, 'JAVA', 'default'):
             self.assertEqual(

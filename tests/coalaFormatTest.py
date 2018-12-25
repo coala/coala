@@ -22,34 +22,36 @@ class coalaFormatTest(unittest.TestCase):
         self.assertIn('usage: coala', stdout)
 
     def test_line_count(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
-            retval, stdout, stderr = execute_coala(coala.main, 'coala',
-                                                   '--format', '-c',
-                                                   os.devnull, '-f', filename,
-                                                   '-b', 'LineCountTestBear')
-            self.assertRegex(stdout, r'message:This file has [0-9]+ lines.',
-                             'coala-format output for line count should '
-                             'not be empty')
-            self.assertEqual(retval, 1,
-                             'coala-format must return exitcode 1 when it '
-                             'yields results')
-            self.assertFalse(stderr)
+        with bear_test_module():
+            with prepare_file(['#fixme'], None) as (lines, filename):
+                retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                       '--format', '-c',
+                                                       os.devnull, '-f',
+                                                       filename, '-b',
+                                                       'LineCountTestBear')
+                self.assertRegex(stdout, r'message:This file has [0-9]+ lines.',
+                                 'coala-format output for line count should '
+                                 'not be empty')
+                self.assertEqual(retval, 1,
+                                 'coala-format must return exitcode 1 when it '
+                                 'yields results')
+                self.assertFalse(stderr)
 
     def test_format_ci_combination(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
-            retval, stdout, stderr = execute_coala(coala.main, 'coala',
-                                                   '--format', '--ci', '-c',
-                                                   os.devnull, '-f', filename,
-                                                   '-b', 'LineCountTestBear')
-            self.assertRegex(stdout, r'message:This file has [0-9]+ lines.',
-                             'coala --format --ci output for line count should '
-                             'not be empty')
-            self.assertEqual(retval, 1,
-                             'coala --format --ci must return exitcode 1 when '
-                             'it yields results')
-            self.assertFalse(stderr)
+        with bear_test_module():
+            with prepare_file(['#fixme'], None) as (lines, filename):
+                retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                       '--format', '--ci',
+                                                       '-c', os.devnull, '-f',
+                                                       filename, '-b',
+                                                       'LineCountTestBear')
+                self.assertRegex(
+                    stdout, r'message:This file has [0-9]+ lines.',
+                    'coala --format --ci output for line count should not be '
+                    'empty')
+                self.assertEqual(retval, 1, 'coala --format --ci must return '
+                                 'exitcode 1 when it yields results')
+                self.assertFalse(stderr)
 
     def test_format_show_bears(self):
         with bear_test_module():

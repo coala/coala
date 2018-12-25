@@ -41,6 +41,7 @@ from .definitions.SCSS import SCSS
 from .definitions.Shell import Shell
 from .definitions.Swift import Swift
 from .definitions.Tcl import Tcl
+from .definitions.Text import Text
 from .definitions.TinyBasic import TinyBasic
 from .definitions.TypeScript import TypeScript
 from .definitions.Vala import Vala

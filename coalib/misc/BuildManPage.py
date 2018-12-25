@@ -5,6 +5,7 @@ from distutils.errors import DistutilsOptionError
 
 
 class BuildManPage(Command):
+    # Start ignoring LineContinuationBear
     """
     Add a ``build_manpage`` command  to your setup.py.
     To use this Command class add a command to call this class::
@@ -36,6 +37,7 @@ class BuildManPage(Command):
         output = <appname>.1
         parser = <path_to_your_parser>
     """
+    # Stop ignoring
     user_options = [
         ('output=', 'O', 'output file'),
         ('parser=', None, 'module path to an ArgumentParser instance'

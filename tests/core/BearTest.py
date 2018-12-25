@@ -197,22 +197,22 @@ class BearTest(unittest.TestCase):
         filename = 'test.html'
         file_location = join(uut.data_dir, filename)
 
-        with freeze_time('2017-01-01') as frozen_datetime, \
-                requests_mock.Mocker() as reqmock:
+        with freeze_time('2017-01-01') as frozen_datetime:
+            with requests_mock.Mocker() as reqmock:
 
-            reqmock.get(mock_url, text=mock_text)
-            self.assertFalse(isfile(file_location))
-            expected_filename = file_location
-            result_filename = uut.download_cached_file(mock_url, filename)
-            self.assertTrue(isfile(join(file_location)))
-            self.assertEqual(result_filename, expected_filename)
-            expected_time = getmtime(file_location)
+                reqmock.get(mock_url, text=mock_text)
+                self.assertFalse(isfile(file_location))
+                expected_filename = file_location
+                result_filename = uut.download_cached_file(mock_url, filename)
+                self.assertTrue(isfile(join(file_location)))
+                self.assertEqual(result_filename, expected_filename)
+                expected_time = getmtime(file_location)
 
-            frozen_datetime.tick(delta=datetime.timedelta(seconds=0.5))
-            result_filename = uut.download_cached_file(mock_url, filename)
-            self.assertEqual(result_filename, expected_filename)
-            result_time = getmtime(file_location)
-            self.assertEqual(result_time, expected_time)
+                frozen_datetime.tick(delta=datetime.timedelta(seconds=0.5))
+                result_filename = uut.download_cached_file(mock_url, filename)
+                self.assertEqual(result_filename, expected_filename)
+                result_time = getmtime(file_location)
+                self.assertEqual(result_time, expected_time)
 
     def test_download_cached_file_connection_timeout_mocked(self):
         mock_url = 'https://test.com'

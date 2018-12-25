@@ -34,107 +34,106 @@ class coalaTest(unittest.TestCase):
         sys.argv = self.old_argv
 
     def test_coala(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
-            retval, stdout, stderr = execute_coala(
-                             coala.main,
-                             'coala', '-c', os.devnull,
-                             '--non-interactive', '--no-color',
-                             '-f', filename,
-                             '-b', 'LineCountTestBear')
-            self.assertIn('This file has 1 lines.',
-                          stdout,
-                          'The output should report count as 1 lines')
-            self.assertEqual(1, len(stderr.splitlines()))
-            self.assertIn(
-                'LineCountTestBear: This result has no patch attached.',
-                stderr)
-            self.assertNotEqual(retval, 0,
-                                'coala must return nonzero when errors occured')
+        with bear_test_module():
+            with prepare_file(['#fixme'], None) as (lines, filename):
+                retval, stdout, stderr = execute_coala(
+                                coala.main,
+                                'coala', '-c', os.devnull,
+                                '--non-interactive', '--no-color',
+                                '-f', filename,
+                                '-b', 'LineCountTestBear')
+                self.assertIn('This file has 1 lines.',
+                              stdout,
+                              'The output should report count as 1 lines')
+                self.assertEqual(1, len(stderr.splitlines()))
+                self.assertIn(
+                    'LineCountTestBear: This result has no patch attached.',
+                    stderr)
+                self.assertNotEqual(retval, 0,
+                                    'coala must return nonzero when '
+                                    'errors occured')
 
     def test_coala2(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
-            with simulate_console_inputs('a', 'n') as generator, \
-                    retrieve_stdout() as sio:
-                retval, stdout, stderr = execute_coala(
-                                 coala.main,
-                                 'coala', '-c', os.devnull,
-                                 '--non-interactive', '--no-color',
-                                 '-f', filename,
-                                 '-b', 'LineCountTestBear', '-A')
-                self.assertIn('',
-                              stdout,
-                              '')
-                self.assertEqual(1, len(stderr.splitlines()))
-                self.assertIn(
-                    'LineCountTestBear: This result has no patch attached.',
-                    stderr)
-                self.assertNotEqual(retval, 0,
-                                    'coala must return nonzero when errors '
-                                    'occured')
+        with bear_test_module(), retrieve_stdout() as sio:
+            with prepare_file(['#fixme'], None) as (lines, filename):
+                with simulate_console_inputs('a', 'n') as generator:
+                    retval, stdout, stderr = execute_coala(
+                                    coala.main,
+                                    'coala', '-c', os.devnull,
+                                    '--non-interactive', '--no-color',
+                                    '-f', filename,
+                                    '-b', 'LineCountTestBear', '-A')
+                    self.assertIn('',
+                                  stdout,
+                                  '')
+                    self.assertEqual(1, len(stderr.splitlines()))
+                    self.assertIn(
+                        'LineCountTestBear: This result has no patch '
+                        'attached.', stderr)
+                    self.assertNotEqual(retval, 0,
+                                        'coala must return nonzero when '
+                                        'errors occured')
 
     def test_coala3(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
-            with simulate_console_inputs('1', 'n') as generator, \
-                    retrieve_stdout() as sio:
-                retval, stdout, stderr = execute_coala(
-                                 coala.main,
-                                 'coala', '-c', os.devnull,
-                                 '--non-interactive', '--no-color',
-                                 '-f', filename,
-                                 '-b', 'LineCountTestBear', '-A')
-                self.assertIn('',
-                              stdout,
-                              '')
-                self.assertEqual(1, len(stderr.splitlines()))
-                self.assertIn(
-                    'LineCountTestBear: This result has no patch attached.',
-                    stderr)
-                self.assertNotEqual(retval, 0,
-                                    'coala must return nonzero when errors '
-                                    'occured')
+        with bear_test_module(), retrieve_stdout() as sio:
+            with prepare_file(['#fixme'], None) as (lines, filename):
+                with simulate_console_inputs('1', 'n') as generator:
+                    retval, stdout, stderr = execute_coala(
+                                    coala.main,
+                                    'coala', '-c', os.devnull,
+                                    '--non-interactive', '--no-color',
+                                    '-f', filename,
+                                    '-b', 'LineCountTestBear', '-A')
+                    self.assertIn('',
+                                  stdout,
+                                  '')
+                    self.assertEqual(1, len(stderr.splitlines()))
+                    self.assertIn(
+                        'LineCountTestBear: This result has no patch '
+                        'attached.', stderr)
+                    self.assertNotEqual(retval, 0,
+                                        'coala must return nonzero when '
+                                        'errors occured')
 
     def test_coala4(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
-            with simulate_console_inputs('x', 'n') as generator, \
-                    retrieve_stdout() as sio:
-                retval, stdout, stderr = execute_coala(
-                                 coala.main,
-                                 'coala', '-c', os.devnull,
-                                 '--non-interactive', '--no-color',
-                                 '-f', filename,
-                                 '-b', 'LineCountTestBear', '-A')
-                self.assertIn('',
-                              stdout,
-                              '')
-                self.assertEqual(1, len(stderr.splitlines()))
-                self.assertIn(
-                    'LineCountTestBear: This result has no patch attached.',
-                    stderr)
-                self.assertNotEqual(retval, 0,
-                                    'coala must return nonzero when errors '
-                                    'occured')
+        with bear_test_module(), retrieve_stdout() as sio:
+            with prepare_file(['#fixme'], None) as (lines, filename):
+                with simulate_console_inputs('x', 'n') as generator:
+                    retval, stdout, stderr = execute_coala(
+                                    coala.main,
+                                    'coala', '-c', os.devnull,
+                                    '--non-interactive', '--no-color',
+                                    '-f', filename,
+                                    '-b', 'LineCountTestBear', '-A')
+                    self.assertIn('',
+                                  stdout,
+                                  '')
+                    self.assertEqual(1, len(stderr.splitlines()))
+                    self.assertIn(
+                        'LineCountTestBear: This result has no patch '
+                        'attached.', stderr)
+                    self.assertNotEqual(retval, 0,
+                                        'coala must return nonzero when '
+                                        'errors occured')
 
     def test_coala_aspect(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
-            retval, stdout, stderr = execute_coala(
-                             coala.main,
-                             'coala', '-c', os.devnull,
-                             '--non-interactive', '--no-color',
-                             '-f', filename,
-                             '-S', 'cli.aspects=UnusedLocalVariable',
-                             'cli.language=Python')
-            self.assertIn(
-                'AspectTestBear: This result has no patch attached.',
-                stderr)
-            self.assertIn('This is just a dummy result',
-                          stdout)
-            self.assertNotEqual(retval, 0,
-                                'coala must return nonzero when errors occured')
+        with bear_test_module():
+            with prepare_file(['#fixme'], None) as (lines, filename):
+                retval, stdout, stderr = execute_coala(
+                                coala.main,
+                                'coala', '-c', os.devnull,
+                                '--non-interactive', '--no-color',
+                                '-f', filename,
+                                '-S', 'cli.aspects=UnusedLocalVariable',
+                                'cli.language=Python')
+                self.assertIn(
+                    'AspectTestBear: This result has no patch attached.',
+                    stderr)
+                self.assertIn('This is just a dummy result',
+                              stdout)
+                self.assertNotEqual(retval, 0,
+                                    'coala must return nonzero when '
+                                    'errors occured')
 
     @unittest.mock.patch('sys.version_info', tuple((2, 7, 11)))
     def test_python_version_27(self):
@@ -208,19 +207,19 @@ class coalaTest(unittest.TestCase):
             self.assertFalse(stderr)
 
     def test_execute_with_bad_filters(self, debug=False):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
-            retval, stdout, stderr = execute_coala(
-                coala.main, 'coala', '--filter-by', 'language', 'python',
-                '-f', filename, '-b', 'TestBear', '--no-color', '-I',
-                debug=debug)
+        with bear_test_module():
+            with prepare_file(['#fixme'], None) as (lines, filename):
+                retval, stdout, stderr = execute_coala(
+                    coala.main, 'coala', '--filter-by', 'language', 'python',
+                    '-f', filename, '-b', 'TestBear', '--no-color', '-I',
+                    debug=debug)
 
-            self.assertIn(
-                "'language_filter' can only handle ('bearclass',). "
-                'The context of your usage might be wrong.', stdout)
-            # Calling without config, hence 0
-            # else, it'll be 1
-            self.assertEqual(retval, 0)
+                self.assertIn(
+                    "'language_filter' can only handle ('bearclass',). "
+                    'The context of your usage might be wrong.', stdout)
+                # Calling without config, hence 0
+                # else, it'll be 1
+                self.assertEqual(retval, 0)
 
     def test_execute_with_bad_filters_debug(self):
         self.test_execute_with_bad_filters(True)
@@ -231,23 +230,23 @@ class coalaTest(unittest.TestCase):
                         '[section_two]',
                         'tags = change',)
 
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (_, filename), \
-                prepare_file(coala_config, None) as (_, configuration):
-            results, retval, _ = run_coala(
-                                    console_printer=ConsolePrinter(),
-                                    log_printer=LogPrinter(),
-                                    arg_list=(
-                                        '-c', configuration,
-                                        '-f', filename,
-                                        '-b', 'TestBear',
-                                        '--filter-by', 'section_tags',
-                                        'save'
-                                    ),
-                                    autoapply=False,
-                                    debug=debug)
+        with bear_test_module():
+            with prepare_file(['#fixme'], None) as (_, filename):
+                with prepare_file(coala_config, None) as (_, configuration):
+                    results, retval, _ = run_coala(
+                                            console_printer=ConsolePrinter(),
+                                            log_printer=LogPrinter(),
+                                            arg_list=(
+                                                '-c', configuration,
+                                                '-f', filename,
+                                                '-b', 'TestBear',
+                                                '--filter-by', 'section_tags',
+                                                'save'
+                                            ),
+                                            autoapply=False,
+                                            debug=debug)
 
-            self.assertTrue('section_one' in results)
+                    self.assertTrue('section_one' in results)
 
     def test_execute_with_filters_debug(self):
         self.test_execute_with_filters(True)
@@ -290,129 +289,130 @@ class coalaTest(unittest.TestCase):
             self.assertIn('No bears to show.', stdout)
 
     def test_run_coala_no_autoapply(self, debug=False):
-        with bear_test_module(), \
-                prepare_file(['#fixme  '], None) as (lines, filename):
-            self.assertEqual(
-                1,
-                len(run_coala(
-                    console_printer=ConsolePrinter(),
-                    log_printer=LogPrinter(),
-                    arg_list=(
-                        '-c', os.devnull,
-                        '-f', filename,
-                        '-b', 'SpaceConsistencyTestBear',
-                        '--apply-patches',
-                        '-S', 'use_spaces=yeah'
-                    ),
-                    autoapply=False,
-                    debug=debug
-                )[0]['cli'])
-            )
+        with bear_test_module():
+            with prepare_file(['#fixme  '], None) as (lines, filename):
+                self.assertEqual(
+                    1,
+                    len(run_coala(
+                        console_printer=ConsolePrinter(),
+                        log_printer=LogPrinter(),
+                        arg_list=(
+                            '-c', os.devnull,
+                            '-f', filename,
+                            '-b', 'SpaceConsistencyTestBear',
+                            '--apply-patches',
+                            '-S', 'use_spaces=yeah'
+                        ),
+                        autoapply=False,
+                        debug=debug
+                    )[0]['cli'])
+                )
 
-            self.assertEqual(
-                0,
-                len(run_coala(
-                    console_printer=ConsolePrinter(),
-                    log_printer=LogPrinter(),
-                    arg_list=(
-                        '-c', os.devnull,
-                        '-f', filename,
-                        '-b', 'SpaceConsistencyTestBear',
-                        '--apply-patches',
-                        '-S', 'use_spaces=yeah'
-                    ),
-                    debug=debug
-                )[0]['cli'])
-            )
+                self.assertEqual(
+                    0,
+                    len(run_coala(
+                        console_printer=ConsolePrinter(),
+                        log_printer=LogPrinter(),
+                        arg_list=(
+                            '-c', os.devnull,
+                            '-f', filename,
+                            '-b', 'SpaceConsistencyTestBear',
+                            '--apply-patches',
+                            '-S', 'use_spaces=yeah'
+                        ),
+                        debug=debug
+                    )[0]['cli'])
+                )
 
     def test_run_coala_no_autoapply_debug(self):
         self.test_run_coala_no_autoapply(debug=True)
 
     def test_logged_error_causes_non_zero_exitcode(self):
         configure_logging()
-        with bear_test_module(), \
-                prepare_file(['#fixme  '], None) as (lines, filename):
-            _, exitcode, _ = run_coala(
-                console_printer=ConsolePrinter(),
-                log_printer=LogPrinter(),
-                arg_list=(
-                    '-c', os.devnull,
-                    '-f', filename,
-                    '-b', 'ErrorTestBear'
-                ),
-                autoapply=False
-            )
+        with bear_test_module():
+            with prepare_file(['#fixme  '], None) as (lines, filename):
+                _, exitcode, _ = run_coala(
+                    console_printer=ConsolePrinter(),
+                    log_printer=LogPrinter(),
+                    arg_list=(
+                        '-c', os.devnull,
+                        '-f', filename,
+                        '-b', 'ErrorTestBear'
+                    ),
+                    autoapply=False
+                )
 
-            assert exitcode == 1
+                assert exitcode == 1
 
     def test_coala_no_unexpected_warnings(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
-            retval, stdout, stderr = execute_coala(
-                coala.main, 'coala')
-            errors = filter(bool, stderr.split('\n'))
-            errors = list(errors)
+        with bear_test_module():
+            with prepare_file(['#fixme'], None) as (lines, filename):
+                retval, stdout, stderr = execute_coala(
+                    coala.main, 'coala')
+                errors = filter(bool, stderr.split('\n'))
+                errors = list(errors)
 
-            unexpected = errors.copy()
+                unexpected = errors.copy()
 
-            expected = [
-                err for err in unexpected
-                if "Implicit 'Default' section inheritance" in err]
-            self.assertNotEqual([], expected)
-            # Filter them out
-            unexpected = [err for err in unexpected if err not in expected]
+                expected = [
+                    err for err in unexpected
+                    if "Implicit 'Default' section inheritance" in err]
+                self.assertNotEqual([], expected)
+                # Filter them out
+                unexpected = [err for err in unexpected
+                              if err not in expected]
 
-            # These errors depend on the state of the host, so ignore them
-            ignored = [
-                err for err in unexpected
-                if re.search("No bears matching '.*' were found", err)]
+                # These errors depend on the state of the host, so ignore them
+                ignored = [
+                    err for err in unexpected
+                    if re.search("No bears matching '.*' were found", err)]
 
-            # Filter them out
-            unexpected = [err for err in unexpected if err not in ignored]
+                # Filter them out
+                unexpected = [err for err in unexpected if err not in ignored]
 
-            self.assertEqual([], unexpected)
-            self.assertEqual(
-                retval, 0,
-                'coala must return zero when there are no errors;'
-                ' errors={errors}'.format(errors=list(errors)))
+                self.assertEqual([], unexpected)
+                self.assertEqual(
+                    retval, 0,
+                    'coala must return zero when there are no errors;'
+                    ' errors={errors}'.format(errors=list(errors)))
 
     def test_coala_with_color(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
-            retval, stdout, stderr = execute_coala(
-                coala.main, 'coala')
-            errors = filter(bool, stderr.split('\n'))
-            # Every error message must start with characters
-            # used for coloring.
-            for err in errors:
-                self.assertNotRegex(err, r'^\[WARNING\]')
-            self.assertEqual(
-                retval, 0, 'coala must return zero when there are no errors')
+        with bear_test_module():
+            with prepare_file(['#fixme'], None) as (lines, filename):
+                retval, stdout, stderr = execute_coala(
+                    coala.main, 'coala')
+                errors = filter(bool, stderr.split('\n'))
+                # Every error message must start with characters
+                # used for coloring.
+                for err in errors:
+                    self.assertNotRegex(err, r'^\[WARNING\]')
+                self.assertEqual(retval, 0, 'coala must return zero when '
+                                 'there are no errors')
 
     def test_coala_without_color(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
+        with bear_test_module():
+            with prepare_file(['#fixme'], None) as (lines, filename):
 
-            retval, stdout, stderr = execute_coala(
-                             coala.main, 'coala', '-N')
-            errors = filter(bool, stderr.split('\n'))
-            # Any error message must not start with characters
-            # used for coloring.
-            for err in errors:
-                self.assertRegex(err, r'^\[WARNING\]')
-            self.assertEqual(
-                retval, 0, 'coala must return zero when there are no errors')
+                retval, stdout, stderr = execute_coala(
+                                coala.main, 'coala', '-N')
+                errors = filter(bool, stderr.split('\n'))
+                # Any error message must not start with characters
+                # used for coloring.
+                for err in errors:
+                    self.assertRegex(err, r'^\[WARNING\]')
+                self.assertEqual(retval, 0, 'coala must return zero when '
+                                 'there are no errors')
 
     def test_coala_ignore_file(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
-            retval, stdout, stderr = execute_coala(
-                    coala.main, 'coala',
-                    '-c', os.devnull,
-                    '--non-interactive',
-                    '-f', filename,
-                    '--ignore', filename,
-                    '-b', 'LineCountTestBear')
-            self.assertEqual(stdout, 'Executing section cli...\n')
-            self.assertEqual(
-                retval, 0, 'coala must return zero when there are no errors')
+        with bear_test_module():
+            with prepare_file(['#fixme'], None) as (lines, filename):
+                retval, stdout, stderr = execute_coala(
+                        coala.main, 'coala',
+                        '-c', os.devnull,
+                        '--non-interactive',
+                        '-f', filename,
+                        '--ignore', filename,
+                        '-b', 'LineCountTestBear')
+                self.assertEqual(stdout, 'Executing section cli...\n')
+                self.assertEqual(retval, 0, 'coala must return zero when '
+                                 'there are no errors')

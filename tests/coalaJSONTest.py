@@ -40,22 +40,23 @@ class coalaJSONTest(unittest.TestCase):
                             'coala must return nonzero when errors occured')
 
     def test_find_issues(self):
-        with bear_test_module(), \
-                prepare_file(['#fixme'], None) as (lines, filename):
-            retval, stdout, stderr = execute_coala(coala.main, 'coala',
-                                                   '--json', '-c', os.devnull,
-                                                   '-b', 'LineCountTestBear',
-                                                   '-f', filename)
-            output = json.loads(stdout)
-            self.assertEqual(output['results']['cli'][0]['message'],
-                             'This file has 1 lines.')
-            self.assertEqual(output['results']['cli'][0]
-                             ['message_arguments'],
-                             {})
-            self.assertNotEqual(retval, 0,
-                                'coala-json must return nonzero when '
-                                'results found')
-            self.assertFalse(stderr)
+        with bear_test_module():
+            with prepare_file(['#fixme'], None) as (lines, filename):
+                retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                       '--json', '-c',
+                                                       os.devnull, '-b',
+                                                       'LineCountTestBear',
+                                                       '-f', filename)
+                output = json.loads(stdout)
+                self.assertEqual(output['results']['cli'][0]['message'],
+                                 'This file has 1 lines.')
+                self.assertEqual(output['results']['cli'][0]
+                                 ['message_arguments'],
+                                 {})
+                self.assertNotEqual(retval, 0,
+                                    'coala-json must return nonzero when '
+                                    'results found')
+                self.assertFalse(stderr)
 
     def test_fail_acquire_settings(self):
         with bear_test_module():
