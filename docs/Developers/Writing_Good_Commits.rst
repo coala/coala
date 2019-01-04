@@ -54,7 +54,7 @@ We are now looking at pull request `#5789 <https://github.com/coala/coala/pull/5
    of the issue it closes or fixes.
 
 
-At coala we are looking heavily at the maintainability of the code.
+At coala, we are looking heavily at the maintainability of the code.
 
 .. note::
 
