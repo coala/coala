@@ -171,7 +171,7 @@ class Setting(StringConverter):
                                            to this value.
         :param origin:                     The originating file. This will be
                                            used for path conversions and the
-                                           last part will be stripped of. If
+                                           last part will be stripped off. If
                                            you want to specify a directory as
                                            origin be sure to end it with a
                                            directory separator.
