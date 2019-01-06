@@ -169,7 +169,7 @@ def translate(pattern):
                 regex += '.*'
             # On Windows, '*' matches everything but the filesystem
             # separators '/' and '\'.
-            elif platform.system() == 'Windows':  # pragma posix: no cover
+            elif platform.system() == 'Windows':  # pragma: no cover
                 regex += '[^/\\\\]*'
             # On all other (~Unix-) platforms, '*' matches everything but the
             # filesystem separator, most likely '/'.
