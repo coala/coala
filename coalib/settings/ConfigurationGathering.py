@@ -243,6 +243,7 @@ def load_configuration(arg_list,
     cli_sections = parse_cli(arg_list=arg_list, arg_parser=arg_parser,
                              args=args)
     check_conflicts(cli_sections)
+    to_save_sections = cli_sections
 
     if (
             bool(cli_sections['cli'].get('find_config', 'False')) and
@@ -282,6 +283,13 @@ def load_configuration(arg_list,
 
         sections = merge_section_dicts(sections, coafile_sections)
 
+        # Get the sections to be saved
+        save_config = os.path.abspath(
+            str(cli_sections['cli'].get('config', Constants.local_coafile)))
+
+        to_save_file = load_config_file(save_config, silent=True)
+        to_save_sections = merge_section_dicts(to_save_file, cli_sections)
+
         if 'cli' in sections:
             logging.warning('\'cli\' is an internally reserved section name. '
                             'It may have been generated into your coafile '
@@ -293,6 +301,25 @@ def load_configuration(arg_list,
 
         sections = merge_section_dicts(sections, cli_sections)
 
+    remove_default_section(sections)
+
+    remove_default_section(to_save_sections)
+
+    save_sections(to_save_sections)
+
+    str_log_level = str(sections['cli'].get('log_level', '')).upper()
+    logging.getLogger().setLevel(LOG_LEVEL.str_dict.get(str_log_level,
+                                                        LOG_LEVEL.INFO))
+
+    return sections, targets
+
+
+def remove_default_section(sections):
+    """
+    Removes default section from the sections
+    :param sections:
+    :return:
+    """
     for name, section in list(sections.items()):
         section.set_default_section(sections)
         if name == 'default':
@@ -308,12 +335,6 @@ def load_configuration(arg_list,
                 sections['default'].name = 'cli'
                 sections['cli'] = sections['default']
             del sections['default']
-
-    str_log_level = str(sections['cli'].get('log_level', '')).upper()
-    logging.getLogger().setLevel(LOG_LEVEL.str_dict.get(str_log_level,
-                                                        LOG_LEVEL.INFO))
-
-    return sections, targets
 
 
 def find_user_config(file_path, max_trials=10):
@@ -503,7 +524,6 @@ def gather_configuration(acquire_settings,
                                               acquire_settings,
                                               targets=targets,
                                               )
-    save_sections(sections)
     warn_nonexistent_targets(targets, sections)
 
     return (sections,
