@@ -411,6 +411,8 @@ strings as a value:
     class SomeBear(Bear):
         LANGUAGES = {'C', 'CPP','C#', 'D'}
 
+.. include:: ./Language_Naming_Format.rst
+
 REQUIREMENTS
 ~~~~~~~~~~~~
 

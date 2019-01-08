@@ -449,6 +449,8 @@ gather information by using these values. Our bear now looks like:
         return ('--msg-template="L{line}C{column}: {msg_id} - {msg}"',
                 '--reports=n', '--rcfile=' + pylint_rcfile, filename)
 
+.. include:: ./Language_Naming_Format.rst
+
 Running and Testing our Bear
 ----------------------------
 
