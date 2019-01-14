@@ -51,7 +51,7 @@ linter-bear infrastructure, which is provided via the ``@linter`` decorator.
     class PylintTutorialBear:
         pass
 
-As you can see ``pylint`` is already provided as an executable name which gets
+As you can see, ``pylint`` is already provided as an executable name which gets
 invoked on the files you are going to lint. This is a mandatory argument for
 the decorator.
 
@@ -220,7 +220,7 @@ We can test our bear like this
 
 .. note::
 
-    In order for the above command to work we should have 2 files in
+    In order for the above command to work, we should have 2 files in
     our current dir: ``PylintTutorialBear.py`` and our ``sample.py``.
     Naming is **very** important in coala. coala will look for bears
     by their **filename** and display them based on their
