@@ -28,7 +28,7 @@ following tasks, you will become a developer at coala:
   - review at least a ``difficulty/newcomer`` Pull Request
   - merge a ``difficulty/low`` Pull Request
   - review at least a ``difficulty/low`` or higher Pull Request
-  - do at least a `meta-review <Meta-review.html>`_ or receive a meta-review
+  - do at least a `meta-review <Meta-review.rst>`_ or receive a meta-review
 
 .. note::
 
