@@ -63,6 +63,10 @@ KNOWN_EDITORS = {
         'args': '--wait',
         'gui': True
     },
+    'brackets': {
+        'file_arg_template': '{filename}',
+        'gui': True,
+    },
     'code': {
         'file_arg_template': '{filename}:{line}:{column} --goto',
         'args': '--new-window --reuse-window --wait',
