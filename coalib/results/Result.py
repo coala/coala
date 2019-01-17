@@ -27,7 +27,8 @@ from coalib.results.SourceRange import SourceRange
                    'additional_info',
                    'diffs',
                    'debug_msg',
-                   'applied_actions')
+                   'applied_actions',
+                   'id')
 class Result:
     # Start ignoring LineContinuationBear
     """
