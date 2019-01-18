@@ -92,6 +92,48 @@ def mode_json(args, debug=False):
     return 0 if args.show_bears else exitcode
 
 
+def mode_diff(args, debug=False):
+    import json
+
+    from coalib.coala_main import run_coala
+    from coalib.output.JSONEncoder import create_json_encoder
+
+    JSONEncoder = create_json_encoder(use_relpath=args.relpath)
+
+    results, exitcode, _ = run_coala(args=args, debug=debug)
+    retval = {'results': results}
+
+    # json_data is the output of `--json`
+    json_data = json.dumps(retval,
+                           cls=JSONEncoder,
+                           sort_keys=True,
+                           indent=2,
+                           separators=(',', ': '))
+
+    # Converting back to dict and discarding all the non-fix results
+    data = json.loads(json_data)
+    sections = data['results']
+    unified_diff = ''
+    for _, section_value in sections.items():
+        for section_list in section_value:
+            for key, val in section_list.items():
+                if key == 'diffs' and val is not None:
+                    for filename, diff in val.items():
+                        diff = diff.replace('+++', '+++ ' + filename)
+                        diff = diff.replace('---', '--- ' + filename)
+                        unified_diff += diff + '\n'
+
+    # Check if user has used `--output` to mention the output file
+    if args.output:
+        filename = str(args.output[0])
+        with open(filename, 'w') as fp:
+            fp.write(unified_diff)
+    else:
+        print(unified_diff)
+
+    return exitcode
+
+
 def mode_format(args, debug=False):
     from coalib.coala_main import run_coala
     from coalib.output.ConsoleInteraction import print_results_formatted

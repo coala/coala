@@ -46,7 +46,8 @@ def main(debug=False):
 
         # Defer imports so if e.g. --help is called they won't be run
         from coalib.coala_modes import (
-            mode_format, mode_json, mode_non_interactive, mode_normal)
+            mode_format, mode_json, mode_non_interactive,
+            mode_normal, mode_diff)
         from coalib.output.ConsoleInteraction import (
             show_bears, show_language_bears_capabilities)
 
@@ -99,6 +100,9 @@ def main(debug=False):
 
         if args.json:
             return mode_json(args, debug=debug)
+
+        if args.diff:
+            return mode_diff(args, debug=debug)
 
     except BaseException as exception:  # pylint: disable=broad-except
         if not isinstance(exception, SystemExit):

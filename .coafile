@@ -4,6 +4,7 @@ ignore =
     tests/bearlib/languages/documentation/documentation_extraction_testdata/*.py,
     tests/collecting/collectors_test_dir/bears/incorrect_bear.py,
     coalib/misc/Asyncio.py,
+    tests/diff/testFile.py,
 
 max_line_length = 80
 use_spaces = True
