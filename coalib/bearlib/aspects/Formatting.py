@@ -18,7 +18,7 @@ class Formatting:
         """
         example_language = 'Python'
         importance_reason = """
-        A coding style (the of rules or guidelines used when writing the
+        A coding style (the rules or guidelines used when writing the
         source code) can drastically affect the readability, and
         maintainability of a program and might as well introduce bugs.
         """
