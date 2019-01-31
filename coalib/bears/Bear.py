@@ -553,6 +553,31 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
 
         return non_optional_settings
 
+    @classmethod
+    def get_optional_settings(cls, recurse=True):
+        """
+        This method has to determine all settings for this bear, optional or
+        non-optional.
+
+        Note: This function also queries settings from bear dependencies in
+        recursive manner. Though circular dependency chains are a challenge to
+        achieve, this function would never return on them!
+
+        :param recurse: Get the settings recursively from its dependencies.
+        :return:        A dictionary of all settings as keys and a tuple of
+                        help text and annotation as values.
+        """
+        optional_settings = {}
+
+        if recurse:
+            for dependency in cls.BEAR_DEPS:
+                optional_settings.update(
+                    dependency.get_optional_settings())
+
+        optional_settings.update(cls.get_metadata().optional_params)
+
+        return optional_settings
+
     @staticmethod
     def setup_dependencies():
         """

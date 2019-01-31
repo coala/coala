@@ -8,11 +8,14 @@ from coalib.bearlib.languages.Language import Language, UnknownLanguageError
 from coalib.misc import Constants
 from coalib.output.ConfWriter import ConfWriter
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
-from coalib.parsing.CliParsing import parse_cli, check_conflicts
+from coalib.parsing.CliParsing import (
+    parse_cli, check_conflicts, get_custom_settings)
 from coalib.parsing.ConfParser import ConfParser
 from coalib.parsing.DefaultArgParser import PathArg
 from coalib.settings.Section import Section, extract_aspects_from_section
-from coalib.settings.SectionFilling import fill_settings
+from coalib.settings.SectionFilling import (fill_settings,
+                                            get_all_bears_from_sections,
+                                            warn_extraneous_settings)
 from coalib.settings.Setting import Setting, path
 from string import Template
 
@@ -505,7 +508,10 @@ def gather_configuration(acquire_settings,
                                               )
     save_sections(sections)
     warn_nonexistent_targets(targets, sections)
+    parsed_settings = get_custom_settings(arg_list, arg_parser, args)
 
+    all_bears = get_all_bears_from_sections(sections)
+    warn_extraneous_settings(all_bears, parsed_settings)
     return (sections,
             local_bears,
             global_bears,

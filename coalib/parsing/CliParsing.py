@@ -80,6 +80,65 @@ def parse_cli(arg_list=None,
     return sections
 
 
+def get_custom_settings(arg_list,
+                        arg_parser,
+                        args,
+                        key_value_delimiters=('=', ':'),
+                        comment_seperators=(),
+                        key_delimiters=(',',),
+                        section_override_delimiters=('.',),
+                        key_value_append_delimiters=('+=',)):
+    """
+    Parses the custom settings from CLI arguments and returns them.
+
+    :param arg_list:                    The CLI argument list.
+    :param arg_parser:                  Instance of ArgParser that is used to
+                                        parse none-setting arguments.
+    :param args:                        Alternative pre-parsed CLI arguments.
+    :param key_value_delimiters:        Delimiters to separate key and value
+                                        in setting arguments where settings are
+                                        being defined.
+    :param comment_seperators:          Allowed prefixes for comments.
+    :param key_delimiters:              Delimiter to separate multiple keys of
+                                        a setting argument.
+    :param section_override_delimiters: The delimiter to delimit the section
+                                        from the key name (e.g. the '.' in
+                                        sect.key = value).
+    :param key_value_append_delimiters: Delimiters to separate key and value
+                                        in setting arguments where settings are
+                                        being appended.
+    :return:                            A list of dicts with a setting key to
+                                        denote the name of a custom setting,
+                                        and a value key to denote the value
+                                        of that custom setting.
+    """
+    assert not (arg_list and args), (
+        'Either call get_custom_settings() with an arg_list of CLI arguments '
+        'or with pre-parsed args, but not with both.')
+
+    if args is None:
+        arg_parser = default_arg_parser() if arg_parser is None else arg_parser
+        args = arg_parser.parse_args(arg_list)
+
+    line_parser = LineParser(key_value_delimiters,
+                             comment_seperators,
+                             key_delimiters,
+                             {},
+                             section_override_delimiters,
+                             key_value_append_delimiters)
+
+    parsed_settings = []
+    for arg_key, arg_value in sorted(vars(args).items()):
+        if arg_key == 'settings' and arg_value is not None:
+            for setting_definition in arg_value:
+                (_, key_tuples, value, _, _) = line_parser._parse(
+                    setting_definition)
+                for key_tuple in key_tuples:
+                    parsed_settings.append(
+                        {'setting': key_tuple[1], 'value': value})
+    return parsed_settings
+
+
 def parse_custom_settings(sections,
                           custom_settings_list,
                           origin,
