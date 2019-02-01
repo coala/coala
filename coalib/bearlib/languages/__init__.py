@@ -27,6 +27,7 @@ from .definitions.Jinja2 import Jinja2
 from .definitions.JSON import JSON
 from .definitions.JSP import JSP
 from .definitions.KornShell import KornShell
+from .definitions.Liquid import Liquid
 from .definitions.m4 import m4
 from .definitions.Markdown import Markdown
 from .definitions.Matlab import Matlab
