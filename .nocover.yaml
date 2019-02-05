@@ -1,0 +1,6 @@
+overrides: coala.yaml
+
+nocover_regexes:
+  - raise RuntimeError.*Unreachable code
+  - 'if always_false is True:'
+  - 'if get_running_processes\(processes\) < 2:'

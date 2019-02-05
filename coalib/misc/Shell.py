@@ -99,7 +99,7 @@ def run_interactive_shell_command(command, **kwargs):
     else:
         command = list(command)
 
-    if platform.system() == 'Windows':  # pragma: no cover
+    if platform.system() == 'Windows':  # pragma posix: no cover; nt: no branch
         # subprocess doesn't implicitly look for .bat and .cmd scripts when
         # running commands under Windows
         command[0] = which(command[0])
