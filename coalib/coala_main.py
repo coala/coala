@@ -31,7 +31,7 @@ def do_nothing(*args):
 
 
 STR_ENTER_LETTER = 'Enter letter (Ctrl-{} to exit): '.format(
-    'Z' if platform.system() == 'Windows' else 'D')
+    'Z-Enter' if platform.system() == 'Windows' else 'D')
 
 
 def provide_all_actions():
