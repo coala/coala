@@ -416,3 +416,25 @@ class coalaTest(unittest.TestCase):
                 self.assertEqual(stdout, 'Executing section cli...\n')
                 self.assertEqual(retval, 0, 'coala must return zero when '
                                  'there are no errors')
+
+    def test_coala_override_config_actions(self):
+        coala_config = ('[all]',
+                        'default_actions = **: DoNothingAction')
+
+        with bear_test_module():
+            with prepare_file(['\t#fixme'], None) as (_, filename):
+                with prepare_file(coala_config, None) as (_, configuration):
+                    exitcode, stdout, stderr = execute_coala(
+                        coala.main, 'coala',
+                        '--non-interactive',
+                        '--apply-patches',
+                        '-c', configuration,
+                        '-f', filename,
+                        '-b',
+                        'SpaceConsistencyTestBear',
+                        '--settings',
+                        'use_spaces=True'
+                    )
+                    self.assertIn("Applied 'ShowPatchAction'", stderr)
+                    self.assertIn("Applied 'ApplyPatchAction'", stderr)
+                    self.assertNotIn("Applied 'DoNothingAction'", stderr)

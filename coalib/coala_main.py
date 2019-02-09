@@ -131,8 +131,6 @@ def run_coala(console_printer=None,
                                     'Please enter a valid letter.',
                                     symbol='['))
 
-        args.apply_patch = False
-
     exitcode = 0
     sections = {}
     results = {}
@@ -177,11 +175,20 @@ def run_coala(console_printer=None,
             if not section.is_enabled(targets):
                 continue
 
-            if not autoapply:
+            if autoapply:
+                default_actions = []
+                if force_show_patch:
+                    default_actions.append('*: ShowPatchAction')
+                    section['show_result_on_top'] = 'yeah'
+
+                if (args and args.apply_patches) or (
+                        arg_list and '--apply-patches' in arg_list):
+                    default_actions.append('**: ApplyPatchAction')
+
+                if default_actions:
+                    section['default_actions'] = ', '.join(default_actions)
+            else:
                 section['default_actions'] = ''
-            elif force_show_patch:
-                section['default_actions'] = '*: ShowPatchAction'
-                section['show_result_on_top'] = 'yeah'
 
             print_section_beginning(section)
             section_result = execute_section(
