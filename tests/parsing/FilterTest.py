@@ -45,7 +45,7 @@ class FilterTest(unittest.TestCase):
                 '--filter-by', 'can_detect', 'formatting')
             self.assertEqual(retval, 0)
             # 1 bear plus 1 line holding the closing colour escape sequence.
-            self.assertEqual(len(stdout.strip().splitlines()), 2)
+            self.assertEqual(len(stdout.strip().splitlines()), 3)
 
     def test_filter_bylanguage_java_can_detect_syntax(self):
         with bear_test_module():
@@ -55,7 +55,7 @@ class FilterTest(unittest.TestCase):
                 '--filter-by', 'can_detect', 'formatting')
             self.assertEqual(retval, 0)
             # 1 bear plus 1 line holding the closing colour escape sequence.
-            self.assertEqual(len(stdout.strip().splitlines()), 2)
+            self.assertEqual(len(stdout.strip().splitlines()), 3)
 
     def test_filter_by_can_detect_syntax(self):
         with bear_test_module():

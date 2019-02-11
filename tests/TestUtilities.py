@@ -14,6 +14,7 @@ TEST_BEAR_NAMES = (
     'ErrorTestBear',
     'JavaTestBear',
     'LineCountTestBear',
+    'LineLengthTestBear',
     'RaiseTestBear',
     'RaiseTestExecuteBear',
     'SpaceConsistencyTestBear',
@@ -27,9 +28,9 @@ TEST_BEAR_NAMES = (
 
 TEST_BEARS_COUNT = len(TEST_BEAR_NAMES)
 
-JAVA_BEARS_COUNT = 3
+JAVA_BEARS_COUNT = 4
 
-C_BEARS_COUNT = 2
+C_BEARS_COUNT = 3
 
 # This list is sorted alphabetically
 LANGUAGE_NAMES = [
@@ -90,6 +91,7 @@ TEST_BEAR_NAME_REPRS = [
     "<ErrorTestBear linter class (wrapping 'I_do_not_exist')>",
     "<class 'JavaTestBear.JavaTestBear'>",
     "<class 'LineCountTestBear.LineCountTestBear'>",
+    "<class 'LineLengthTestBear.LineLengthTestBear'>",
     "<EchoBear linter class (wrapping 'echo')>",
     "<class 'RaiseTestBear.RaiseTestBear'>",
     "<class 'RaiseTestBear.RaiseTestExecuteBear'>",
