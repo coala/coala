@@ -49,9 +49,7 @@ from tests.TestUtilities import bear_test_module, execute_coala
 
 STR_GET_VAL_FOR_SETTING = ('Please enter a value for the setting \"{}\" ({}) '
                            'needed by {}: ')
-STR_LINE_DOESNT_EXIST = ('The line belonging to the following result '
-                         'cannot be printed because it refers to a line '
-                         "that doesn't seem to exist in the given file.")
+STR_LINE_DOESNT_EXIST = 'Empty file'
 STR_PROJECT_WIDE = 'Project wide:'
 
 
