@@ -1,5 +1,6 @@
 import os
 import unittest
+import unittest.mock
 
 from pyprint.NullPrinter import NullPrinter
 

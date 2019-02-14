@@ -3,6 +3,7 @@ import logging
 import subprocess
 import tempfile
 import unittest
+import unittest.mock
 from importlib import reload
 
 import coalib.results.result_actions.OpenEditorAction
