@@ -8,7 +8,7 @@ from coalib.bearlib.abstractions.LinterClass import LinterClass
 from coalib.testing.BearTestHelper import generate_skip_decorator
 from coalib.bears.LocalBear import LocalBear
 from coala_utils.Comparable import Comparable
-from coala_utils.ContextManagers import prepare_file
+from coala_utils.ContextManagers import prepare_file, change_directory
 from coalib.settings.Section import Section
 from coalib.settings.Setting import Setting
 
@@ -345,7 +345,8 @@ def verify_local_bear(bear,
                       force_linebreaks=True,
                       create_tempfile=True,
                       timeout=None,
-                      tempfile_kwargs={}):
+                      tempfile_kwargs={},
+                      base_directory=None):
     """
     Generates a test for a local bear by checking the given valid and invalid
     file contents. Simply use it on your module level like:
@@ -370,6 +371,8 @@ def verify_local_bear(bear,
     :param timeout:          Unused.  Use pytest-timeout or similar.
     :param tempfile_kwargs:  Kwargs passed to tempfile.mkstemp() if tempfile
                              needs to be created.
+    :param base_directory:   Path to the base directory. Changes the CWD to
+                             base_directory while running the bear.
     :return:                 A unittest.TestCase object.
     """
     if timeout:
@@ -390,25 +393,39 @@ def verify_local_bear(bear,
                 self.section.aspects = aspects
 
         def test_valid_files(self):
-            self.assertIsInstance(valid_files, (list, tuple))
-            for file in valid_files:
-                self.check_validity(self.uut,
-                                    file.splitlines(keepends=True),
-                                    filename,
-                                    valid=True,
-                                    force_linebreaks=force_linebreaks,
-                                    create_tempfile=create_tempfile,
-                                    tempfile_kwargs=tempfile_kwargs)
+            def test(self):
+                self.assertIsInstance(valid_files, (list, tuple))
+                for file in valid_files:
+                    self.check_validity(self.uut,
+                                        file.splitlines(keepends=True),
+                                        filename,
+                                        valid=True,
+                                        force_linebreaks=force_linebreaks,
+                                        create_tempfile=create_tempfile,
+                                        tempfile_kwargs=tempfile_kwargs)
+            if base_directory:
+                ch_dir = change_directory(base_directory)
+                with ch_dir:
+                    test(self)
+            else:
+                test(self)
 
         def test_invalid_files(self):
-            self.assertIsInstance(invalid_files, (list, tuple))
-            for file in invalid_files:
-                self.check_validity(self.uut,
-                                    file.splitlines(keepends=True),
-                                    filename,
-                                    valid=False,
-                                    force_linebreaks=force_linebreaks,
-                                    create_tempfile=create_tempfile,
-                                    tempfile_kwargs=tempfile_kwargs)
+            def test(self):
+                self.assertIsInstance(invalid_files, (list, tuple))
+                for file in invalid_files:
+                    self.check_validity(self.uut,
+                                        file.splitlines(keepends=True),
+                                        filename,
+                                        valid=False,
+                                        force_linebreaks=force_linebreaks,
+                                        create_tempfile=create_tempfile,
+                                        tempfile_kwargs=tempfile_kwargs)
+            if base_directory:
+                ch_dir = change_directory(base_directory)
+                with ch_dir:
+                    test(self)
+            else:
+                test(self)
 
     return LocalBearTest

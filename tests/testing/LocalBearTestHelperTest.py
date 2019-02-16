@@ -1,6 +1,8 @@
 from queue import Queue
 import sys
+
 import unittest
+from unittest.mock import patch
 
 from tests.test_bears.TestBear import TestBear
 from tests.test_bears.AspectsGeneralTestBear import AspectsGeneralTestBear
@@ -241,3 +243,13 @@ class VerifyLocalBearTest(unittest.TestCase):
                               invalid_files=files, timeout=50)
             self.assertIn('timeout is ignored as the timeout set in the repo '
                           'configuration will be sufficient', stderr.getvalue())
+
+    @patch('coalib.testing.LocalBearTestHelper.change_directory')
+    def test_change_directory(self, change_directory):
+        base_dir = 'tests/bears'
+        changeDirectoryTest = verify_local_bear(TestBear,
+                                                valid_files=(),
+                                                invalid_files=files,
+                                                settings={'result': True},
+                                                base_directory=base_dir)
+        change_directory.assert_called()
