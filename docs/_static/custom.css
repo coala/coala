@@ -89,16 +89,32 @@ div.caution {  /* csslint allow: overqualified-elements */
     background-color: #f0ad4e;
 }
 
+div.caution pre {  /* csslint allow: overqualified-elements */
+    background-color: #a6844e;
+}
+
 div.important {  /* csslint allow: overqualified-elements */
     background-color: #d9534f;
+}
+
+div.important pre {  /* csslint allow: overqualified-elements */
+    background-color: #b84e4f;
 }
 
 div.tip {  /* csslint allow: overqualified-elements */
     background-color: #428bca;
 }
 
+div.tip pre {  /* csslint allow: overqualified-elements */
+    background-color: #3d6f98;
+}
+
 div.note {  /* csslint allow: overqualified-elements */
     background-color: #5bc0de;
+}
+
+div.note pre {  /* csslint allow: overqualified-elements */
+    background-color: #4c8fa4;
 }
 
 div.admonition p.admonition-title {  /* Ignore CSSLintBear */
