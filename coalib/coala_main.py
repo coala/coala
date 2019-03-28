@@ -57,7 +57,6 @@ def run_coala(console_printer=None,
               print_results=do_nothing,
               acquire_settings=fail_acquire_settings,
               print_section_beginning=do_nothing,
-              nothing_done=do_nothing,
               autoapply=True,
               force_show_patch=False,
               arg_parser=None,
@@ -84,9 +83,6 @@ def run_coala(console_printer=None,
     :param print_section_beginning: A callback that will be called with a
                                     section name string whenever analysis of a
                                     new section is started.
-    :param nothing_done:            A callback that will be called with only a
-                                    log printer that shall indicate that
-                                    nothing was done.
     :param autoapply:               Set this to false to not autoapply any
                                     actions. If you set this to `False`,
                                     `force_show_patch` will be ignored.
@@ -213,7 +209,8 @@ def run_coala(console_printer=None,
         if CounterHandler.get_num_calls_for_level('ERROR') > 0:
             exitcode = 1
         elif did_nothing:
-            nothing_done(None)
+            logging.warning('No existent section was targeted or enabled.'
+                            'Nothing to do.')
             exitcode = 2
         elif yielded_unfixed_results:
             exitcode = 1
