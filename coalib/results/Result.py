@@ -15,7 +15,7 @@ from coalib.results.SourceRange import SourceRange
                ('severity', RESULT_SEVERITY.reverse.get),
                'confidence',
                'message',
-               ('aspect', lambda aspect: type(aspect).__qualname__),
+               ('aspect', lambda aspect: get_type(aspect)),
                'applied_actions')
 @generate_ordering('affected_code',
                    'severity',
@@ -334,5 +334,16 @@ class Result:
         if use_relpath and _dict['diffs']:
             _dict['diffs'] = {relpath(file): diff
                               for file, diff in _dict['diffs'].items()}
-        _dict['aspect'] = type(self.aspect).__qualname__
+        _dict['aspect'] = get_type(self.aspect)
         return _dict
+
+
+def get_type(class_instance):
+    """
+    :param class_instance: An instance of the class
+    :return: A qualified name for class instance
+    """
+    if class_instance is None:
+        return 'null'
+    else:
+        return type(class_instance).__qualname__
