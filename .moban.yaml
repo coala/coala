@@ -17,6 +17,7 @@ docs_source_dir: ./
 docs_toc: false
 test_py36: true
 allow_generic_no_cover: true
+test_timeout: 60
 
 entry_points:
   console_scripts:
@@ -73,3 +74,5 @@ copy:
   - .misc/check_setuptools.py: ci/check_setuptools.py
   # homeassistant license MIT
   - coalib/misc/Asyncio.py: async.py
+nocover_file_globs:
+  - coalib/misc/Asyncio.py
