@@ -19,6 +19,7 @@ from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.SourceRange import SourceRange
 from coalib.results.RESULT_SEVERITY import RESULT_SEVERITY
+from coalib.results.AspectFind import find_leaf_aspect
 from coalib.settings.FunctionMetadata import FunctionMetadata
 
 
@@ -348,6 +349,12 @@ def _create_linter(klass, options):
                                                        groups['end_line'],
                                                        groups['end_column'])
                 result_params['affected_code'] = (source_range,)
+
+            message = result_params['message']
+            capabilities = klass.CAN_DETECT or klass.CAN_FIX
+            result_params['aspect'] = find_leaf_aspect(capabilities,
+                                                       message)
+
             return Result(**result_params)
 
         def process_diff(self,
@@ -379,11 +386,16 @@ def _create_linter(klass, options):
                 file to correct.
             """
             for splitted_diff in diff.split_diff(distance=diff_distance):
+                capabilities = klass.CAN_DETECT or klass.CAN_FIX
+                aspect = find_leaf_aspect(capabilities,
+                                          result_message)
+
                 yield Result(self,
                              result_message,
                              affected_code=splitted_diff.affected_code(
                                  filename),
                              diffs={filename: splitted_diff},
+                             aspect=aspect,
                              severity=diff_severity)
 
         def process_output_corrected(self,
