@@ -2,8 +2,9 @@ import unittest
 import json
 from os.path import abspath
 
+from coalib.bearlib.aspects import Root
 from coalib.results.Diff import Diff
-from coalib.results.Result import RESULT_SEVERITY, Result
+from coalib.results.Result import RESULT_SEVERITY, Result, get_type
 from coalib.results.SourceRange import SourceRange
 from coalib.output.JSONEncoder import create_json_encoder
 
@@ -205,3 +206,25 @@ class ResultTest(unittest.TestCase):
         uut2 = Result('origin', 'msg', diffs={'f_b': diff})
 
         self.assertNotEqual(uut1, uut2)
+
+    def test_get_type(self):
+
+        @Root.subaspect
+        class TestAspect:
+            """
+            This is a test aspect
+            """
+            class Docs:
+                example = 'test'
+                example_language = 'test'
+                importance_reason = 'test'
+                fix_suggestions = 'test'
+
+        result_a = Result(origin='o', message='m', aspect=None)
+        self.assertEqual(get_type(result_a.aspect),
+                         'null')
+
+        test_aspect = TestAspect('py')
+        result_b = Result(origin='o', message='m', aspect=test_aspect)
+        self.assertEqual(get_type(result_b.aspect),
+                         'Root.TestAspect')

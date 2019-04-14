@@ -24,7 +24,7 @@ pytest-reorder~=0.1.0
 git+https://github.com/jayvdb/pytest-reqs@coala#egg=pytest-reqs
 pytest-timeout~=1.3.0
 pytest-travis-fold~=1.3.0
-pytest-xdist~=1.15
+pytest-xdist==1.15
 requests-mock~=1.2
 ipdb~=0.11
 pip<10
