@@ -66,7 +66,19 @@ def mode_json(args, debug=False):
 
     JSONEncoder = create_json_encoder(use_relpath=args.relpath)
 
-    results, exitcode, _ = run_coala(args=args, debug=debug)
+    if args.show_capabilities:
+        languages = args.show_capabilities
+        capabilities = args.languages_capability
+        results = {}
+        for language in languages:
+            language_capability = capabilities[language.lower()]
+            results['{} Language Capabilities'
+                    .format(language.capitalize())] = {
+                'Detects': sorted(language_capability[0]),
+                'Fixes': sorted(language_capability[1])
+            }
+    else:
+        results, exitcode, _ = run_coala(args=args, debug=debug)
 
     retval = {'results': results}
 
@@ -89,7 +101,7 @@ def mode_json(args, debug=False):
                          indent=2,
                          separators=(',', ': ')))
 
-    return 0 if args.show_bears else exitcode
+    return 0 if args.show_bears or args.show_capabilities else exitcode
 
 
 def mode_format(args, debug=False):

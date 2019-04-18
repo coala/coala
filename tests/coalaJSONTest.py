@@ -92,6 +92,20 @@ class coalaJSONTest(unittest.TestCase):
             self.assertEqual(len(output['bears']), JAVA_BEARS_COUNT)
             self.assertFalse(stderr)
 
+    def test_show_language_capabilities(self):
+        with bear_test_module():
+            retval, stdout, stderr = execute_coala(
+                coala.main, 'coala', '--show-capabilities', 'Java', '--json')
+            self.assertEqual(retval, 0)
+            output = json.loads(stdout)
+            capabilities = output['results']
+            self.assertTrue(capabilities
+                            .__contains__('Java Language Capabilities'))
+            self.assertTrue(len(capabilities['Java Language Capabilities']
+                                ['Detects']) > 0)
+            self.assertTrue(len(capabilities['Java Language Capabilities']
+                                ['Fixes']) > 0)
+
     def test_show_bears_attributes(self):
         with bear_test_module():
             retval, stdout, stderr = execute_coala(
