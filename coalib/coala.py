@@ -93,9 +93,12 @@ def main(debug=False):
             local_bears, _ = apply_filter('language', args.show_capabilities)
             capabilities = filter_capabilities_by_languages(
                 local_bears, args.show_capabilities)
-            show_language_bears_capabilities(capabilities, console_printer)
+            if args.json:
+                args.languages_capability = capabilities
+            else:
+                show_language_bears_capabilities(capabilities, console_printer)
 
-            return 0
+                return 0
 
         if args.json:
             return mode_json(args, debug=debug)
