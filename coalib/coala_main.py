@@ -2,6 +2,7 @@ from collections import OrderedDict
 import logging
 import os
 import platform
+import nltk
 
 from coalib import VERSION
 from coalib.misc.Exceptions import get_exitcode
@@ -24,6 +25,10 @@ from coalib.misc.CachingUtilities import (
     settings_changed, update_settings_db, get_settings_hash)
 from coalib.parsing.FilterHelper import (
     apply_filters, collect_filters, InvalidFilterException)
+
+# Download packages for lemmatizing each of the result message
+nltk.download('stopwords')
+nltk.download('wordnet')
 
 
 def do_nothing(*args):

@@ -35,10 +35,11 @@ class LinterTestBase(unittest.TestCase):
     # Using `object` instead of an empty class results in inheritance problems
     # inside the linter decorator.
     class EmptyTestLinter:
-        pass
+        CAN_DETECT = {'Metadata'}
 
     class RootDirTestLinter:
 
+        CAN_DETECT = {'Metadata'}
         ROOT_DIR = 'C:\\' if WINDOWS else '/'
         WRONG_DIR_MSG = ('The linter doesn\'t run the command in '
                          'the right directory!')
@@ -53,6 +54,8 @@ class LinterTestBase(unittest.TestCase):
             assert output == '{}\n'.format(self.ROOT_DIR), self.WRONG_DIR_MSG
 
     class ManualProcessingTestLinter:
+
+        CAN_DETECT = {'Metadata'}
 
         def process_output(self, *args, **kwargs):
             pass
@@ -1146,6 +1149,8 @@ class LocalLinterReallifeTest(unittest.TestCase):
 
         class Handler:
 
+            CAN_DETECT = {'Metadata'}
+
             @staticmethod
             def create_arguments(filename, file, config_file):
                 create_arguments_mock(filename, file, config_file)
@@ -1183,6 +1188,8 @@ class LocalLinterReallifeTest(unittest.TestCase):
         create_arguments_mock = Mock()
 
         class Handler:
+
+            CAN_DETECT = {'Metadata', 'InvalidAspect'}
 
             @staticmethod
             def create_arguments(filename, file, config_file):
@@ -1222,6 +1229,8 @@ class LocalLinterReallifeTest(unittest.TestCase):
         create_arguments_mock = Mock()
 
         class Handler:
+
+            CAN_DETECT = {'Metadata'}
 
             @staticmethod
             def create_arguments(filename, file, config_file):
@@ -1266,6 +1275,8 @@ class LocalLinterReallifeTest(unittest.TestCase):
         generate_config_mock = Mock()
 
         class Handler:
+
+            CAN_DETECT = {'Metadata'}
 
             @staticmethod
             def generate_config(filename, file, some_val):
@@ -1322,6 +1333,8 @@ class LocalLinterReallifeTest(unittest.TestCase):
         # delegation to `generate_config()` and `create_arguments()`
         # accordingly.
         class Handler:
+
+            CAN_DETECT = {'Metadata'}
 
             @staticmethod
             def generate_config(filename, file, some_value_A):
@@ -1395,6 +1408,54 @@ class LocalLinterReallifeTest(unittest.TestCase):
             "removing the capturing group to improve coala's "
             'performance.'])
 
+    def test_invalid_aspects_provided_error(self):
+
+        class Handler:
+            CAN_DETECT = {'InvalidTestAspect'}
+
+            @staticmethod
+            def create_arguments(filename, file, config_file):
+                return self.test_program_path, filename
+
+        uut = (linter(sys.executable,
+                      output_format='regex',
+                      output_regex=self.test_program_regex,
+                      severity_map=self.test_program_severity_map)
+               (Handler)
+               (self.section, None))
+
+        list(uut.run(self.testfile_path, self.testfile_content))
+
+    def test_support_aspects_in_linter(self):
+        test_file_path = get_testfile_name('test_aspect_support.py')
+        with open(test_file_path, 'r') as fl:
+            test_file_content = fl.readlines()
+        from coalib.bearlib import aspects
+
+        class Handler:
+            CAN_DETECT = {'Formatting'}
+
+            @staticmethod
+            def create_arguments(filename, file, config_file):
+                args = ('--reports=n', '--persistent=n',
+                        '--msg-template="L{line}C{column}: {msg_id} - {msg}"')
+                args += ('--rcfile=' + os.devnull,)
+
+                return args + (filename,)
+
+        uut = (linter('pylint',
+                      normalize_column_numbers=True,
+                      output_format='regex',
+                      output_regex=r'L(?P<line>\d+)C(?P<column>\d+): '
+                                   r'(?P<message>(?P<origin>(?P<severity>'
+                                   r'[WFECRI])\d+) - .*)',)
+               (Handler)
+               (self.section, None))
+
+        results = list(uut.run(test_file_path, test_file_content))
+        self.assertTrue(len(results) > 0)
+        self.assertTrue(results[0].aspect, aspects['TrailingSpace'])
+
 
 class GlobalLinterReallifeTest(unittest.TestCase):
 
@@ -1410,6 +1471,8 @@ class GlobalLinterReallifeTest(unittest.TestCase):
         create_arguments_mock = Mock()
 
         class Handler:
+
+            CAN_DETECT = {'Metadata'}
 
             @staticmethod
             def create_arguments(config_file):
@@ -1437,6 +1500,8 @@ class GlobalLinterReallifeTest(unittest.TestCase):
         create_arguments_mock = Mock()
 
         class Handler:
+
+            CAN_DETECT = {'Metadata'}
 
             @staticmethod
             def create_arguments(config_file):
@@ -1473,6 +1538,8 @@ class GlobalLinterReallifeTest(unittest.TestCase):
         create_arguments_mock = Mock()
 
         class Handler:
+
+            CAN_DETECT = {'Metadata'}
 
             @staticmethod
             def create_arguments(config_file):
