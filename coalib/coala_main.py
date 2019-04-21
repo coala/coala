@@ -113,7 +113,11 @@ def run_coala(console_printer=None,
 
             line = format_lines(STR_ENTER_LETTER, symbol='[')
 
-            choice = input(line)
+            try:
+                choice = input(line)
+            except EOFError:  # pragma: no cover
+                console_printer.print('Found EOF. Exiting gracefully.')
+                exit(0)
 
             if choice.isalpha():
                 choice = choice.upper()
