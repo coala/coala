@@ -1,0 +1,30 @@
+[cli]
+key = 'value'
+
+[all]
+max_line_length = 80
+ignore = './vendor'
+appends = 'ignore'
+
+['all.python']
+bears = 'LineLengthBear'
+language = 'Python'
+files = '**.py'
+aspects = ['smell', 'redundancy.clone']  # Inclusive
+
+['all.c']
+language = 'C'
+files = '**.(c|h)'
+ignore_aspects = 'redundancy'  # Exclusive
+
+['java.test']
+language = 'Java'
+files = '**.java'
+
+['all.java.codestyle']
+bears = 'QuotesBear'
+preferred_quotation = "'"
+
+['all.python.codestyle']
+language = 'Java'
+bears = 'TestBear'

@@ -27,7 +27,7 @@ from coalib.settings.ConfigurationGathering import (
     load_configuration,
 )
 from coalib.settings.Setting import Setting
-from coalib.misc.Constants import get_system_coafile
+from coalib.misc.Constants import get_system_coafile, get_system_coafile_toml
 from coalib.collecting.Collectors import _sort_bears
 
 from tests.TestUtilities import (
@@ -109,11 +109,10 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         capture.check(
             ('root', 'WARNING', 'Filename default_coafile has been deprecated. '
-             'Please use system_coafile instead.')
+                                'Please use system_coafile instead.')
         )
 
     def test_system_coafile_parsing(self):
-
         Constants.system_coafile = os.path.abspath(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             'section_manager_test_files',
@@ -366,6 +365,327 @@ class ConfigurationGatheringTest(unittest.TestCase):
 
         with retrieve_stdout() as stdout:
             load_configuration(['--no-config'], self.log_printer)
+            self.assertNotIn('WARNING', stdout.getvalue())
+
+
+@pytest.mark.usefixtures('disable_bears')
+class ConfigurationGatheringTomlTest(unittest.TestCase):
+
+    def setUp(self):
+        self.log_printer = LogPrinter(NullPrinter())
+
+        # Needed so coala doesn't error out
+        self.min_args = ['-T', '-f', '*.java', '-b', 'JavaTestBear']
+
+        self.original_user_coafile = Constants.user_coafile_toml
+        self.original_system_coafile = Constants.system_coafile_toml
+
+    def tearDown(self):
+        Constants.user_coafile_toml = self.original_user_coafile
+        Constants.system_coafile_toml = self.original_system_coafile
+        close_objects(self.log_printer)
+
+    def test_gather_configuration(self):
+        args = (lambda *args: True, self.log_printer)
+
+        # Using incomplete settings (e.g. an invalid coafile) will error
+        with self.assertRaises(SystemExit):
+            gather_configuration(*args,
+                                 arg_list=['-T',
+                                           '-c abcdefghi/invalid/.coafile.toml'
+                                           ])
+
+        # Using a bad filename explicitly exits coala.
+        with self.assertRaises(SystemExit):
+            gather_configuration(
+                *args,
+                arg_list=['-T', '-S', 'test=5', '-c', 'some_bad_filename'])
+
+        # Using a invalid .coarc file will error
+        with self.assertRaises(SystemExit):
+            gather_configuration(
+                *args,
+                arg_list=['-T', '-S', 'test=5',
+                          '-c', '/Users/abcdefghi/.coarc.toml'])
+
+        with make_temp() as temporary:
+            sections, local_bears, global_bears, targets = (
+                gather_configuration(
+                    *args,
+                    arg_list=['-S', 'test=5', '-c', temporary,
+                              '-s'] + self.min_args))
+
+        self.assertEqual(
+            str(sections['cli']),
+            "cli {bears : 'JavaTestBear', config : " +
+            repr(PathArg(temporary)) +
+            ", files : '*.java', save : 'True', test : '5'," +
+            " use_toml : 'True'}")
+
+        with make_temp() as temporary:
+            sections, local_bears, global_bears, targets = (
+                gather_configuration(*args,
+                                     arg_list=['-T',
+                                               '-S test=5',
+                                               '-f *.java',
+                                               '-c ' + (temporary),
+                                               '-b LineCountBear -s']))
+
+        self.assertEqual(len(local_bears['cli']), 0)
+
+    @log_capture()
+    def test_default_coafile_deprecation(self, capture):
+        system_coafile_path = os.path.abspath(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            'section_manager_test_files',
+            'child_dir'))
+
+        get_system_coafile_toml(system_coafile_path)
+
+        capture.check(
+            ('root', 'WARNING',
+             'Filename default_coafile.toml has been deprecated. '
+             'Please use system_coafile.toml instead.')
+        )
+
+    def test_system_coafile_parsing(self):
+        Constants.system_coafile_toml = os.path.abspath(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            'section_manager_test_files',
+            'system_coafile.toml'))
+
+        sections, local_bears, global_bears, targets = gather_configuration(
+            lambda *args: True,
+            self.log_printer,
+            arg_list=['-T'])
+
+        self.assertEqual(str(sections['test']),
+                         "test {value : '1', testval : '5'}")
+
+    def test_user_coafile_parsing(self):
+        Constants.user_coafile_toml = os.path.abspath(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            'section_manager_test_files',
+            'system_coafile.toml'))
+
+        sections, local_bears, global_bears, targets = gather_configuration(
+            lambda *args: True,
+            self.log_printer,
+            arg_list=['-T'])
+
+        self.assertEqual(str(sections['test']),
+                         "test {value : '1', testval : '5'}")
+
+    def test_nonexistent_file(self):
+        filename = 'bad.one/test\neven with bad chars in it'
+        with self.assertRaises(SystemExit):
+            gather_configuration(lambda *args: True,
+                                 self.log_printer,
+                                 arg_list=['-T', '-S', 'config=' + filename])
+
+        Constants.system_coafile_toml = filename
+
+        with self.assertRaises(SystemExit):
+            gather_configuration(lambda *args: True,
+                                 self.log_printer,
+                                 arg_list=['-T'])
+
+    def test_merge(self):
+        Constants.system_coafile_toml = os.path.abspath(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            'section_manager_test_files',
+            'system_coafile.toml'))
+
+        config = os.path.abspath(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            'section_manager_test_files',
+            '.coafile.toml'))
+
+        # Check merging of system_coafile and .coafile
+        sections, local_bears, global_bears, targets = gather_configuration(
+            lambda *args: True,
+            self.log_printer,
+            arg_list=['-T', '-c', config])
+
+        self.assertEqual(str(sections['test']),
+                         "test {value : '2'}")
+        self.assertEqual(str(sections['test-2']),
+                         "test-2 {files : '.', bears : 'LineCountBear'}")
+
+        # Check merging of system_coafile, .coafile and cli
+        sections, local_bears, global_bears, targets = gather_configuration(
+            lambda *args: True,
+            self.log_printer,
+            arg_list=['-T',
+                      '-c',
+                      config,
+                      '-S',
+                      'test.value=3',
+                      'test-2.bears=',
+                      'test-5.bears=TestBear2'])
+
+        self.assertEqual(str(sections['test']), "test {value : '3'}")
+        self.assertEqual(str(sections['test-2']),
+                         "test-2 {files : '.', bears : ''}")
+        self.assertEqual(str(sections['test-3']),
+                         "test-3 {files : 'MakeFile'}")
+        self.assertEqual(str(sections['test-4']),
+                         "test-4 {bears : 'TestBear'}")
+        self.assertEqual(str(sections['test-5']),
+                         "test-5 {bears : 'TestBear2'}")
+
+    def test_merge_defaults(self):
+        with make_temp() as temporary:
+            sections, local_bears, global_bears, targets = (
+                gather_configuration(lambda *args: True,
+                                     self.log_printer,
+                                     arg_list=['-T', '-S',
+                                               'value=1', 'test.value=2',
+                                               '-c', escape(temporary, '\\')] +
+                                     self.min_args))
+
+        self.assertEqual(sections['cli'],
+                         sections['test'].defaults)
+
+    def test_back_saving(self):
+        filename = os.path.join(tempfile.gettempdir(),
+                                'SectionManagerTestFile')
+
+        # We need to use a bad filename or this will parse coalas .coafile
+        # Despite missing settings (coala isn't run) the file is saved
+        with self.assertRaises(SystemExit):
+            gather_configuration(
+                lambda *args: True,
+                self.log_printer,
+                arg_list=['-T',
+                          '-S',
+                          'save=' + escape(filename, '\\'),
+                          '-c=some_bad_filename'])
+
+        with open(filename, 'r') as f:
+            lines = f.readlines()
+        self.assertEqual(['[cli]\n',
+                          'config = some_bad_filename\n',
+                          'use_toml = True\n'], lines)
+
+    def test_targets(self):
+        sections, local_bears, global_bears, targets = gather_configuration(
+            lambda *args: True,
+            self.log_printer,
+            arg_list=['-T', 'cli', 'test1', 'test2'])
+
+        self.assertEqual(targets, ['cli', 'test1', 'test2'])
+
+    def test_find_user_config(self):
+        current_dir = os.path.abspath(os.path.dirname(__file__))
+        c_file = os.path.join(current_dir,
+                              'section_manager_test_files',
+                              'project',
+                              'test.c')
+
+        retval = find_user_config(c_file, 1, '.coafile.toml')
+        self.assertEqual('', retval)
+
+        retval = find_user_config(c_file, 2, '.coafile.toml')
+        self.assertEqual(os.path.join(current_dir,
+                                      'section_manager_test_files',
+                                      '.coafile.toml'), retval)
+
+        child_dir = os.path.join(current_dir,
+                                 'section_manager_test_files',
+                                 'child_dir')
+        retval = find_user_config(child_dir, 2, '.coafile.toml')
+        self.assertEqual(os.path.join(current_dir,
+                                      'section_manager_test_files',
+                                      'child_dir',
+                                      '.coafile.toml'), retval)
+
+        with change_directory(child_dir):
+            sections, _, _, _ = gather_configuration(
+                lambda *args: True,
+                self.log_printer,
+                arg_list=['-T', '--find-config'])
+            self.assertEqual(bool(sections['cli']['find_config']), True)
+
+    def test_no_config(self):
+        current_dir = os.path.abspath(os.path.dirname(__file__))
+        child_dir = os.path.join(current_dir,
+                                 'section_manager_test_files',
+                                 'child_dir')
+        with change_directory(child_dir):
+            sections, targets = load_configuration(['-T'], self.log_printer)
+            self.assertIn('value', sections['cli'])
+
+            sections, targets = load_configuration(
+                ['-T', '--no-config'],
+                self.log_printer)
+            self.assertNotIn('value', sections['cli'])
+
+            sections, targets = load_configuration(
+                ['-T', '--no-config', '-S', 'use_spaces=True'],
+                self.log_printer)
+            self.assertIn('use_spaces', sections['cli'])
+            self.assertNotIn('values', sections['cli'])
+
+            with self.assertRaises(SystemExit) as cm:
+                sections, target = load_configuration(
+                    ['-T', '--no-config', '--save'],
+                    self.log_printer)
+                self.assertEqual(cm.exception.code, 2)
+
+            with self.assertRaises(SystemExit) as cm:
+                sections, target = load_configuration(
+                    ['-T', '--no-config', '--find-config'],
+                    self.log_printer)
+                self.assertEqual(cm.exception.code, 2)
+
+    def test_section_inheritance(self):
+        current_dir = os.path.abspath(os.path.dirname(__file__))
+        test_dir = os.path.join(current_dir, 'section_manager_test_files')
+        logger = logging.getLogger()
+
+        with change_directory(test_dir):
+            with self.assertLogs(logger, 'WARNING') as cm:
+                sections, _, _, _ = gather_configuration(
+                    lambda *args: True,
+                    self.log_printer,
+                    arg_list=['-T', '-c', 'inherit_coafile.toml'])
+                self.assertEqual(sections['all.python'].defaults,
+                                 sections['all'])
+                self.assertEqual(sections['all.c']['key'],
+                                 sections['cli']['key'])
+                self.assertEqual(sections['java.test'].defaults,
+                                 sections['cli'])
+                self.assertEqual(int(sections['all.python']['max_line_length']),
+                                 80)
+                self.assertEqual(sections['all.python.codestyle'].defaults,
+                                 sections['all.python'])
+                self.assertEqual(sections['all.java.codestyle'].defaults,
+                                 sections['all'])
+                self.assertEqual(str(sections['all']['ignore']),
+                                 './vendor')
+                sections['cli']['ignore'] = './user'
+                self.assertEqual(str(sections['all']['ignore']),
+                                 './user, ./vendor')
+                sections['cli']['ignore'] = './client'
+                self.assertEqual(str(sections['all']['ignore']),
+                                 './client, ./vendor')
+        self.assertRegex(cm.output[0],
+                         '\'cli\' is an internally reserved section name.')
+
+    def test_default_section_deprecation_warning(self):
+        logger = logging.getLogger()
+
+        with self.assertLogs(logger, 'WARNING') as cm:
+            # This gathers the configuration from the '.coafile' of this repo.
+            gather_configuration(lambda *args: True,
+                                 self.log_printer,
+                                 arg_list=['-T'])
+
+        self.assertIn('WARNING', cm.output[0])
+
+        with retrieve_stdout() as stdout:
+            load_configuration(['-T', '--no-config'], self.log_printer)
             self.assertNotIn('WARNING', stdout.getvalue())
 
 

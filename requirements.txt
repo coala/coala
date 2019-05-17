@@ -10,3 +10,4 @@ PyPrint~=0.2.6
 requests~=2.12
 setuptools>=21.0.0
 unidiff~=0.5.2
+toml >= 0.10.0

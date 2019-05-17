@@ -11,6 +11,7 @@ from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.CliParsing import parse_cli, check_conflicts
 from coalib.parsing.ConfParser import ConfParser
 from coalib.parsing.DefaultArgParser import PathArg
+from coalib.parsing.TomlConfParser import TomlConfParser
 from coalib.settings.Section import Section, extract_aspects_from_section
 from coalib.settings.SectionFilling import fill_settings
 from coalib.settings.Setting import Setting, path
@@ -244,10 +245,121 @@ def load_configuration(arg_list,
                              args=args)
     check_conflicts(cli_sections)
 
+    if bool(cli_sections['cli'].get('use_toml', 'False')):
+        sections, targets = load_toml_config(cli_sections, silent)
+    else:
+        sections, targets = load_ini_config(cli_sections, silent)
+    for name, section in list(sections.items()):
+        section.set_default_section(sections)
+        if name == 'default':
+            if section.contents:
+                logging.warning('Implicit \'Default\' section inheritance is '
+                                'deprecated. It will be removed soon. To '
+                                'silence this warning remove settings in the '
+                                '\'Default\' section from your coafile. You '
+                                'can use dots to specify inheritance: the '
+                                'section \'all.python\' will inherit all '
+                                'settings from \'all\'.')
+                sections['default'].update(sections['cli'])
+                sections['default'].name = 'cli'
+                sections['cli'] = sections['default']
+            del sections['default']
+
+    str_log_level = str(sections['cli'].get('log_level', '')).upper()
+    logging.getLogger().setLevel(LOG_LEVEL.str_dict.get(str_log_level,
+                                                        LOG_LEVEL.INFO))
+
+    return sections, targets
+
+
+def load_toml_config_file(filename, log_printer=None, silent=False):
+    filename = os.path.abspath(filename)
+    try:
+        return TomlConfParser().parse(filename)
+    except FileNotFoundError:
+        if not silent:
+            if os.path.basename(filename) == Constants.local_coafile_toml:
+                logging.warning(COAFILE_OUTPUT
+                                .substitute(type='Local coafile',
+                                            file=Constants.local_coafile_toml,
+                                            found='not found'))
+            elif os.path.basename(filename) == '.coarc.toml':
+                logging.warning(COARC_OUTPUT
+                                .substitute(type='Requested coarc file',
+                                            file=filename,
+                                            found='does not exist'))
+            else:
+                logging.error(COAFILE_OUTPUT
+                              .substitute(type='Requested coafile',
+                                          file=filename,
+                                          found='does not exist'))
+                sys.exit(2)
+
+        return {'default': Section('default')}
+
+
+def load_toml_config(cli_sections, silent):
     if (
             bool(cli_sections['cli'].get('find_config', 'False')) and
             str(cli_sections['cli'].get('config')) == ''):
         cli_sections['cli'].add_or_create_setting(
+
+            Setting('config', PathArg(find_user_config(
+                os.getcwd(),
+                default_file='.coafile.toml'))))
+
+    # We don't want to store targets argument back to file, thus remove it
+    targets = [item.lower() for item in list(
+        cli_sections['cli'].contents.pop('targets', ''))]
+
+    if bool(cli_sections['cli'].get('no_config', 'False')):
+        sections = cli_sections
+    else:
+        base_sections = load_toml_config_file(Constants.system_coafile_toml,
+                                              silent=silent)
+        user_sections = load_toml_config_file(
+            Constants.user_coafile_toml, silent=True)
+        default_config = str(base_sections['default'].
+                             get('config', '.coafile.toml'))
+        user_config = str(user_sections['default'].
+                          get('config', default_config))
+        config = os.path.abspath(
+            str(cli_sections['cli'].get('config', user_config)))
+
+        try:
+            save = bool(cli_sections['cli'].get('save', 'False'))
+        except ValueError:
+            # A file is deposited for the save parameter, means we want to save
+            # but to a specific file.
+            save = True
+
+        coafile_sections = load_toml_config_file(config,
+                                                 silent=save or silent)
+
+        sections = merge_section_dicts(base_sections, user_sections)
+
+        sections = merge_section_dicts(sections, coafile_sections)
+
+        if 'cli' in sections:
+            logging.warning('\'cli\' is an internally reserved section name. '
+                            'It may have been generated into your coafile '
+                            'while running coala with `--save`. The settings '
+                            'in that section will inherit implicitly to all '
+                            'sections as defaults just like CLI args do. '
+                            'Please change the name of that section in your '
+                            'coafile to avoid any unexpected behavior.')
+
+        sections = merge_section_dicts(sections, cli_sections)
+
+    return sections, targets
+
+
+def load_ini_config(cli_sections, silent):
+    if (
+                bool(cli_sections['cli'].get('find_config', 'False')) and
+                str(cli_sections['cli'].get('config')) == ''):
+        cli_sections['cli'].add_or_create_setting(
+
             Setting('config', PathArg(find_user_config(os.getcwd()))))
 
     # We don't want to store targets argument back to file, thus remove it
@@ -316,7 +428,7 @@ def load_configuration(arg_list,
     return sections, targets
 
 
-def find_user_config(file_path, max_trials=10):
+def find_user_config(file_path, max_trials=10, default_file='.coafile'):
     """
     Uses the filepath to find the most suitable user config file for the file
     by going down one directory at a time and finding config files there.
@@ -333,7 +445,7 @@ def find_user_config(file_path, max_trials=10):
     home_dir = os.path.expanduser('~')
 
     while base_dir != old_dir and old_dir != home_dir and max_trials != 0:
-        config_file = os.path.join(base_dir, '.coafile')
+        config_file = os.path.join(base_dir, default_file)
         if os.path.isfile(config_file):
             return config_file
 
@@ -497,6 +609,7 @@ def gather_configuration(acquire_settings,
         arg_list = sys.argv[1:] if arg_list is None else arg_list
     sections, targets = load_configuration(arg_list, arg_parser=arg_parser,
                                            args=args)
+
     _set_section_language(sections)
     aspectize_sections(sections)
     local_bears, global_bears = fill_settings(sections,
