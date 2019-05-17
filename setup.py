@@ -459,7 +459,8 @@ if __name__ == '__main__':
           extras_require=EXTRAS_REQUIRE,
           tests_require=test_required,
           dependency_links=DEPENDENCY_LINKS,
-          package_data={'coalib': ['system_coafile', 'VERSION',
+          package_data={'coalib': ['system_coafile', 'system_coafile.toml',
+                                   'VERSION',
                                    'bearlib/languages/documentation/*.coalang']
                         },
           license='AGPL-3.0',
