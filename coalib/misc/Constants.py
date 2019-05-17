@@ -11,7 +11,6 @@ import logging
 # Do not import any libraries here, directly or via other coalib modules.
 from coalib import VERSION
 
-
 THIS_IS_A_BUG = ('This is a bug. We are sorry for the inconvenience. '
                  'Please contact the developers for assistance.')
 
@@ -124,11 +123,24 @@ def get_system_coafile(coalib_root):
         return os.path.join(coalib_root, 'default_coafile')
 
 
+def get_system_coafile_toml(coalib_root):
+    if os.path.isfile(os.path.join(coalib_root, 'system_coafile.toml')):
+        return os.path.join(coalib_root, 'system_coafile.toml')
+    else:
+        logging.warning('Filename default_coafile.toml has been deprecated. '
+                        'Please use system_coafile.toml instead.')
+        return os.path.join(coalib_root, 'default_coafile.toml')
+
+
 system_coafile = get_system_coafile(coalib_root)
 
 user_coafile = os.path.join(os.path.expanduser('~'), '.coarc')
 
 local_coafile = '.coafile'
+
+system_coafile_toml = get_system_coafile_toml(coalib_root)
+user_coafile_toml = os.path.join(os.path.expanduser('~'), '.coarc.toml')
+local_coafile_toml = '.coafile.toml'
 
 # USER_DATA_DIR will be set here when CachingUtilities loads, however
 # access to it from outside of CachingUtilities is deprecated.

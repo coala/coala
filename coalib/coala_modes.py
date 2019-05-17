@@ -99,3 +99,40 @@ def mode_format(args, debug=False):
     _, exitcode, _ = run_coala(
             print_results=print_results_formatted, args=args, debug=debug)
     return exitcode
+
+
+def mode_converter(args):
+    """
+    Converts a TOML document into a coafile document
+    and vice versa
+
+    :param args: Alternative pre-parsed CLI arguments.
+    """
+    import os
+    from coalib.output.ConfigConverter import ConfigConverter
+    from coalib.settings.ConfigurationGathering import (load_config_file,
+                                                        load_toml_config_file)
+    import sys
+    import logging
+
+    input_file = args.config_converter[0]
+    output_file = args.config_converter[1]
+    _, in_ext = os.path.splitext(input_file)
+    if in_ext == '' and _ == '.coafile':
+        in_ext = '.coafile'
+    _, out_ext = os.path.splitext(output_file)
+    if out_ext == '' and _ == '.coafile':
+        out_ext = '.coafile'
+    converter = ConfigConverter(output_file)
+
+    if in_ext == '.toml' and out_ext == '.coafile':
+        sections = load_toml_config_file(input_file)
+        converter.toml_to_coafile(sections)
+    elif in_ext == '.coafile' and out_ext == '.toml':
+        sections = load_config_file(input_file)
+        converter.coafile_to_toml(sections)
+    else:
+        logging.error('Unsupported file formats used. '
+                      'The tool can handle conversion between '
+                      'coafile and toml formats only')
+        sys.exit()
