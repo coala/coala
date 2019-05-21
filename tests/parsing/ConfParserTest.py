@@ -43,9 +43,9 @@ class ConfParserTest(unittest.TestCase):
 
     def setUp(self):
         self.tempdir = tempfile.gettempdir()
-        self.file = os.path.join(self.tempdir, '.coafile')
-        self.nonexistentfile = os.path.join(self.tempdir, 'e81k7bd98t')
-        with open(self.file, 'w') as file:
+        self.file = os.path.join(self.tempdir, ".coafile")
+        self.nonexistentfile = os.path.join(self.tempdir, "e81k7bd98t")
+        with open(self.file, "w") as file:
             file.write(self.example_file)
 
         self.uut = ConfParser()
@@ -56,7 +56,7 @@ class ConfParserTest(unittest.TestCase):
 
         logger = logging.getLogger()
 
-        with self.assertLogs(logger, 'WARNING') as self.cm:
+        with self.assertLogs(logger, "WARNING") as self.cm:
             self.sections = self.uut.parse(self.file)
 
     def tearDown(self):
@@ -64,62 +64,62 @@ class ConfParserTest(unittest.TestCase):
 
     def test_warning_typo(self):
         logger = logging.getLogger()
-        with self.assertLogs(logger, 'WARNING') as cm:
-            newConf = ConfParser(comment_seperators=('#',))
-            self.assertEquals(cm.output[0], 'WARNING:root:The setting '
-                              '`comment_seperators` is deprecated. '
-                              'Please use `comment_separators` '
-                              'instead.')
+        with self.assertLogs(logger, "WARNING") as cm:
+            newConf = ConfParser(comment_seperators=("#",))
+            self.assertEquals(
+                cm.output[0],
+                "WARNING:root:The setting "
+                "`comment_seperators` is deprecated. "
+                "Please use `comment_separators` "
+                "instead.",
+            )
 
     def test_parse_nonexisting_file(self):
-        self.assertRaises(FileNotFoundError,
-                          self.uut.parse,
-                          self.nonexistentfile)
+        self.assertRaises(FileNotFoundError, self.uut.parse, self.nonexistentfile)
         self.assertNotEqual(self.uut.parse(self.file, True), self.sections)
 
     def test_parse_nonexisting_section(self):
-        self.assertRaises(IndexError,
-                          self.uut.get_section,
-                          'non-existent section')
+        self.assertRaises(IndexError, self.uut.get_section, "non-existent section")
 
     def test_parse_default_section_deprecated(self):
-        default_should = OrderedDict([
-            ('setting', 'without_section')])
+        default_should = OrderedDict([("setting", "without_section")])
 
         key, val = self.sections.popitem(last=False)
         self.assertTrue(isinstance(val, Section))
-        self.assertEqual(key, 'default')
+        self.assertEqual(key, "default")
 
         is_dict = OrderedDict()
         for k in val:
             is_dict[k] = str(val[k])
         self.assertEqual(is_dict, default_should)
 
-        self.assertRegex(self.cm.output[0],
-                         'A setting does not have a section.')
+        self.assertRegex(self.cm.output[0], "A setting does not have a section.")
 
         # Check if line number is correctly set when
         # no section is given
-        line_num = val.contents['setting'].line_number
+        line_num = val.contents["setting"].start_line_number
         self.assertEqual(line_num, 1)
 
     def test_parse_foo_section(self):
-        foo_should = OrderedDict([
-            ('a_default', 'val'),
-            ('another', 'val'),
-            ('comment0', '# do you know that thats a comment'),
-            ('test', 'content'),
-            ('t', ''),
-            ('escaped_=equal', 'escaped_#hash'),
-            ('escaped_\\backslash', 'escaped_ space'),
-            ('escaped_,comma', 'escaped_.dot')])
+        foo_should = OrderedDict(
+            [
+                ("a_default", "val"),
+                ("another", "val"),
+                ("comment0", "# do you know that thats a comment"),
+                ("test", "content"),
+                ("t", ""),
+                ("escaped_=equal", "escaped_#hash"),
+                ("escaped_\\backslash", "escaped_ space"),
+                ("escaped_,comma", "escaped_.dot"),
+            ]
+        )
 
         # Pop off the default section.
         self.sections.popitem(last=False)
 
         key, val = self.sections.popitem(last=False)
         self.assertTrue(isinstance(val, Section))
-        self.assertEqual(key, 'foo')
+        self.assertEqual(key, "foo")
 
         is_dict = OrderedDict()
         for k in val:
@@ -127,14 +127,17 @@ class ConfParserTest(unittest.TestCase):
         self.assertEqual(is_dict, foo_should)
 
     def test_parse_makefiles_section(self):
-        makefiles_should = OrderedDict([
-            ('j', 'a\nmultiline\nvalue'),
-            ('another', 'a\nmultiline\nvalue'),
-            ('comment1', '# just a comment'),
-            ('comment2', '# just a comment'),
-            ('lastone', 'val'),
-            ('append', 'key'),
-            ('comment3', '')])
+        makefiles_should = OrderedDict(
+            [
+                ("j", "a\nmultiline\nvalue"),
+                ("another", "a\nmultiline\nvalue"),
+                ("comment1", "# just a comment"),
+                ("comment2", "# just a comment"),
+                ("lastone", "val"),
+                ("append", "key"),
+                ("comment3", ""),
+            ]
+        )
 
         # Pop off the default and foo section.
         self.sections.popitem(last=False)
@@ -142,32 +145,30 @@ class ConfParserTest(unittest.TestCase):
 
         key, val = self.sections.popitem(last=False)
         self.assertTrue(isinstance(val, Section))
-        self.assertEqual(key, 'makefiles')
+        self.assertEqual(key, "makefiles")
 
         is_dict = OrderedDict()
         for k in val:
             is_dict[k] = str(val[k])
         self.assertEqual(is_dict, makefiles_should)
 
-        self.assertEqual(val['comment1'].key, 'comment1')
+        self.assertEqual(val["comment1"].key, "comment1")
 
         # Check starting line number of
         # settings in makefiles section.
-        line_num = val.contents['another'].line_number
+        line_num = val.contents["another"].start_line_number
         self.assertEqual(line_num, 12)
-        line_num = val.contents['append'].line_number
+        line_num = val.contents["append"].line_number
         self.assertEqual(line_num, 20)
         # Check ending line number of
         # settings in makefiles section.
-        line_num = val.contents['another'].end_line_number
+        line_num = val.contents["another"].end_line_number
         self.assertEqual(line_num, 14)
 
     def test_parse_empty_elem_strip_section(self):
-        empty_elem_strip_should = OrderedDict([
-            ('a', 'a, b, c'),
-            ('b', 'a, ,, d'),
-            ('c', ',,,'),
-            ('comment4', '')])
+        empty_elem_strip_should = OrderedDict(
+            [("a", "a, b, c"), ("b", "a, ,, d"), ("c", ",,,"), ("comment4", "")]
+        )
 
         # Pop off the default, foo and makefiles section.
         self.sections.popitem(last=False)
@@ -176,7 +177,7 @@ class ConfParserTest(unittest.TestCase):
 
         key, val = self.sections.popitem(last=False)
         self.assertTrue(isinstance(val, Section))
-        self.assertEqual(key, 'empty_elem_strip')
+        self.assertEqual(key, "empty_elem_strip")
 
         is_dict = OrderedDict()
         for k in val:
@@ -185,7 +186,7 @@ class ConfParserTest(unittest.TestCase):
 
         # Check starting line number of
         # settings in empty_elem_strip section.
-        line_num = val.contents['b'].line_number
+        line_num = val.contents["b"].start_line_number
         self.assertEqual(line_num, 24)
 
     def test_line_number_name_section(self):
@@ -196,42 +197,51 @@ class ConfParserTest(unittest.TestCase):
         self.sections.popitem(last=False)
 
         key, val = self.sections.popitem(last=False)
-        line_num = val.contents['key1'].line_number
+        line_num = val.contents["key1"].line_number
         self.assertEqual(line_num, 30)
 
-        line_num = val.contents['key1'].end_line_number
+        line_num = val.contents["key1"].end_line_number
         self.assertEqual(line_num, 30)
 
     def test_remove_empty_iter_elements(self):
         # Test with empty-elem stripping.
         uut = ConfParser(remove_empty_iter_elements=True)
         uut.parse(self.file)
-        self.assertEqual(list(uut.get_section('EMPTY_ELEM_STRIP')['A']),
-                         ['a', 'b', 'c'])
-        self.assertEqual(list(uut.get_section('EMPTY_ELEM_STRIP')['B']),
-                         ['a', 'd'])
-        self.assertEqual(list(uut.get_section('EMPTY_ELEM_STRIP')['C']),
-                         [])
+        self.assertEqual(
+            list(uut.get_section("EMPTY_ELEM_STRIP")["A"]), ["a", "b", "c"]
+        )
+        self.assertEqual(list(uut.get_section("EMPTY_ELEM_STRIP")["B"]), ["a", "d"])
+        self.assertEqual(list(uut.get_section("EMPTY_ELEM_STRIP")["C"]), [])
 
         # Test without stripping.
         uut = ConfParser(remove_empty_iter_elements=False)
         uut.parse(self.file)
-        self.assertEqual(list(uut.get_section('EMPTY_ELEM_STRIP')['A']),
-                         ['a', 'b', 'c'])
-        self.assertEqual(list(uut.get_section('EMPTY_ELEM_STRIP')['B']),
-                         ['a', '', '', 'd'])
-        self.assertEqual(list(uut.get_section('EMPTY_ELEM_STRIP')['C']),
-                         ['', '', '', ''])
+        self.assertEqual(
+            list(uut.get_section("EMPTY_ELEM_STRIP")["A"]), ["a", "b", "c"]
+        )
+        self.assertEqual(
+            list(uut.get_section("EMPTY_ELEM_STRIP")["B"]), ["a", "", "", "d"]
+        )
+        self.assertEqual(
+            list(uut.get_section("EMPTY_ELEM_STRIP")["C"]), ["", "", "", ""]
+        )
 
     def test_config_directory(self):
         self.uut.parse(self.tempdir)
 
     def test_settings_override_warning(self):
-        self.assertEqual(self.cm.output[1], 'WARNING:root:test setting has '
-                                            'already been defined in section '
-                                            'foo. The previous setting will '
-                                            'be overridden.')
-        self.assertEqual(self.cm.output[2], 'WARNING:root:key1 setting has '
-                                            'already been defined in section '
-                                            'name. The previous setting will '
-                                            'be overridden.')
+        self.assertEqual(
+            self.cm.output[1],
+            "WARNING:root:test setting has "
+            "already been defined in section "
+            "foo. The previous setting will "
+            "be overridden.",
+        )
+        self.assertEqual(
+            self.cm.output[2],
+            "WARNING:root:key1 setting has "
+            "already been defined in section "
+            "name. The previous setting will "
+            "be overridden.",
+        )
+
