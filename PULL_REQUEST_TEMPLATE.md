@@ -6,7 +6,7 @@ Really! We wrote them for you. Yes you! With utmost care. Read them.
 -->
 
 **For short term contributors:** we understand that getting your commits well
-defined like we require is a hard task and takes some learning. If you
+defined as we require is a hard task and takes some learning. If you
 look to help without wanting to contribute long term there's no need
 for you to learn this. Just drop us a message and we'll take care of brushing
 up your stuff for merge!
