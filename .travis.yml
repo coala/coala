@@ -50,7 +50,7 @@ jobs:
       <<: *disable_global
       stage: unsupported
       script: .misc/check_unsupported.sh
-    - python: 3.4.3
+    - python: 3.4.1
       <<: *disable_global
       stage: unsupported
       script: .misc/check_unsupported.sh
