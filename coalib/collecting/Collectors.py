@@ -2,6 +2,7 @@ import functools
 import logging
 import os
 import pkg_resources
+import platform
 import itertools
 import re
 from types import ModuleType
@@ -107,6 +108,9 @@ def match_dir_or_file_pattern(path, ignore_patterns=None):
     file_patterns, dir_patterns = partition(
         expanded_ignores,
         os.path.isfile)
+
+    if platform.system() == 'Windows':
+        path = path.lower()
 
     return (
         any((re.match(escape(pattern), path) for pattern in dir_patterns)) or
