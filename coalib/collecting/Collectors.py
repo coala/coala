@@ -127,15 +127,26 @@ def list_glob_results(values=None):
 
 
 def collect_files(file_paths, log_printer=None, ignored_file_paths=None,
-                  limit_file_paths=None, section_name=''):
+                  limit_file_paths=None, require_files_not_empty=False,
+                  require_files_for_each_glob=False, section_name=''):
     """
     Evaluate globs in file paths and return all matching files
 
-    :param file_paths:         File path or list of such that can include globs
-    :param ignored_file_paths: List of globs that match to-be-ignored files
-    :param limit_file_paths:   List of globs that the files are limited to
-    :param section_name:       Name of currently executing section
-    :return:                   List of paths of all matching files
+    :param file_paths:
+        File path or list of such that can include globs
+    :param ignored_file_paths:
+        List of globs that match to-be-ignored files
+    :param limit_file_paths:
+        List of globs that the files are limited to
+    :param require_files_not_empty:
+        Boolean value representing if the files argument's matches are not None.
+    :param require_files_for_each_glob:
+        Boolean value representing if each glob in `files` has at least one
+        file match.
+    :param section_name:
+        Name of currently executing section
+    :return:
+        List of paths of all matching files
     """
     limit_fnmatch = (functools.partial(fnmatch, globs=limit_file_paths)
                      if limit_file_paths else lambda fname: True)
@@ -153,6 +164,7 @@ def collect_files(file_paths, log_printer=None, ignored_file_paths=None,
         collected_files, file_globs_with_files = [], []
 
     _warn_if_unused_glob(file_paths, file_globs_with_files,
+                         require_files_not_empty, require_files_for_each_glob,
                          'No files matching \'{}\' were found. '
                          'If this rule is not required, you can remove it '
                          'from section [' + section_name + '] in your '
@@ -267,7 +279,7 @@ def collect_bears(bear_dirs, bear_globs, kinds, log_printer=None,
         bear_globs_with_bears.add(suffix_globs[glob])
 
     if warn_if_unused_glob:
-        _warn_if_unused_glob(bear_globs, bear_globs_with_bears,
+        _warn_if_unused_glob(bear_globs, bear_globs_with_bears, False, False,
                              'No bears matching \'{}\' were found. Make sure '
                              'you have coala-bears installed or you have typed '
                              'the name correctly.')
@@ -425,20 +437,34 @@ def collect_all_bears_from_sections(sections,
     return local_bears, global_bears
 
 
-def _warn_if_unused_glob(globs, used_globs, message):
+def _warn_if_unused_glob(globs, used_globs, require_files_not_empty,
+                         require_files_for_each_glob, message):
     """
-    Warn if a glob has not been used.
+    Warn or produce an error if a glob has not been used or no globs are used.
 
-    :param log_printer: The log_printer to handle logging.
-    :param globs:       List of globs that were expected to be used.
-    :param used_globs:  List of globs that were actually used.
-    :param message:     Warning message to display if a glob is unused.
-                        The glob which was unused will be added using
-                        .format()
+    :param log_printer:
+        The log_printer to handle logging.
+    :param globs:
+        List of globs that were expected to be used.
+    :param require_files_not_empty:
+        Boolean value representing if the files argument's matches are not None.
+    :param require_files_for_each_glob:
+        Boolean value representing if each glob in `files` has at least one
+        file match.
+    :param used_globs:
+        List of globs that were actually used.
+    :param message:
+        Warning message to display if a glob is unused. The glob which was
+        unused will be added using .format()
     """
     unused_globs = set(globs) - set(used_globs)
+    if len(unused_globs) == len(globs) and require_files_not_empty:
+        logging.error('No matches found for `files`.')
     for glob in unused_globs:
-        logging.warning(message.format(glob))
+        if require_files_for_each_glob:
+            logging.error(message.format(glob))
+        else:
+            logging.warning(message.format(glob))
 
 
 def collect_registered_bears_dirs(entrypoint):

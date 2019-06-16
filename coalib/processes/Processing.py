@@ -378,6 +378,9 @@ def instantiate_processes(section,
         None,
         ignored_file_paths=glob_list(section.get('ignore', '')),
         limit_file_paths=glob_list(section.get('limit_files', '')),
+        require_files_not_empty=section.get('require_files_not_empty', False),
+        require_files_for_each_glob=section.get('require_files_for_each_glob',
+                                                False),
         section_name=section.name)
 
     # This stores all matched files irrespective of whether coala is run

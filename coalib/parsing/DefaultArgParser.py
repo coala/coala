@@ -174,6 +174,14 @@ To run coala without user interaction, run the `coala --non-interactive`,
         help="filter the `--files` argument's matches further")
 
     inputs_group.add_argument(
+        '--require-files-not-empty', const=True, action='store_const',
+        help="the `--files` argument's matches should not be None")
+
+    inputs_group.add_argument(
+        '--require-files-for-each-glob', const=True, action='store_const',
+        help='each glob in `--files` should have at least one file match')
+
+    inputs_group.add_argument(
         '-d', '--bear-dirs', type=PathArg, nargs='+', metavar='DIR',
         help='additional directories which may contain bears')
 
