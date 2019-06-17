@@ -21,8 +21,10 @@ class FileTest(unittest.TestCase):
         file_test_dir = TEST_FILE_DIR
         self.test_file = os.path.join(file_test_dir, 'test1.txt')
         self.other_test_file = os.path.join(file_test_dir, 'test2.txt')
+        self.encoded_test_file = os.path.join(file_test_dir, 'test3.txt')
         self.uut = File(self.test_file)
         self.other_file = File(self.other_test_file)
+        self.encoded_file = File(self.encoded_test_file)
 
     def test_equal(self):
         self.assertEqual(self.uut, File(self.test_file))
@@ -49,6 +51,8 @@ class FileTest(unittest.TestCase):
 
     def test_string(self):
         self.assertEqual(self.uut.string, 'This is a test file.')
+        self.assertEqual(self.encoded_file.string,
+                         'This is a utf16 encoded text file')
 
     def test_timestamp(self):
         self.assertEqual(self.uut.timestamp, os.path.getmtime(self.test_file))

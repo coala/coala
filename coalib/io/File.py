@@ -1,6 +1,7 @@
 import os
 
 from coala_utils.decorators import generate_eq
+from coala_utils.FileUtils import detect_encoding
 from cached_property import cached_property
 
 
@@ -110,9 +111,9 @@ class File:
     def string(self):
         """
         :return:
-            The file contents as a string UTF-8 decoded.
+            The file contents as a string.
         """
-        return self.raw.decode(encoding='utf-8')
+        return self.raw.decode(encoding=detect_encoding(self._filename))
 
     @property
     def name(self):

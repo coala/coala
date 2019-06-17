@@ -29,6 +29,7 @@ class coalaTest(unittest.TestCase):
 
     def setUp(self):
         self.old_argv = sys.argv
+        self.maxDiff = None
 
     def tearDown(self):
         sys.argv = self.old_argv
@@ -115,6 +116,334 @@ class coalaTest(unittest.TestCase):
                     self.assertNotEqual(retval, 0,
                                         'coala must return nonzero when '
                                         'errors occured')
+
+    def test_coala5(self, debug=False):
+        with bear_test_module():
+            current_dir = os.getcwd()
+            filename = os.path.join(current_dir, 'filename')
+            with open(filename, 'w', encoding='utf-8') as fd:
+                fd.write('💩\n😯\n😈💩\n👻\n')
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull, '-b',
+                                                   'LineCountTestBear',
+                                                   '-f', filename,
+                                                   debug=debug)
+            self.assertIn('This file has 4 lines.',
+                          stdout,
+                          'The output should report count as 4 lines')
+            self.assertIn('This result has no patch attached.', stderr)
+            self.assertNotEqual(retval, 0, 'coala must return nonzero '
+                                'when errors occured')
+            os.remove(filename)
+
+    def test_coala6(self, debug=False):
+        with bear_test_module():
+            current_dir = os.getcwd()
+            filename = os.path.join(current_dir, 'filename')
+            with open(filename, 'w', encoding='utf-16') as fd:
+                fd.write('💩\n😯\n😈💩\n👻\n')
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull, '-b',
+                                                   'LineCountTestBear',
+                                                   '-f', filename,
+                                                   debug=debug)
+            self.assertIn('This file has 4 lines.',
+                          stdout,
+                          'The output should report count as 4 lines')
+            self.assertIn('This result has no patch attached.', stderr)
+            self.assertNotEqual(retval, 0, 'coala must return nonzero '
+                                'when errors occured')
+            os.remove(filename)
+
+    def test_coala7(self, debug=False):
+        with bear_test_module():
+            current_dir = os.getcwd()
+            filename = os.path.join(current_dir, 'filename')
+            with open(filename, 'w', encoding='utf-32') as fd:
+                fd.write('💩\n😯\n😈💩\n👻\n')
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull, '-b',
+                                                   'LineCountTestBear',
+                                                   '-f', filename,
+                                                   debug=debug)
+            self.assertIn('This file has 4 lines.',
+                          stdout,
+                          'The output should report count as 4 lines')
+            self.assertIn('This result has no patch attached.', stderr)
+            self.assertNotEqual(retval, 0, 'coala must return nonzero '
+                                'when errors occured')
+            os.remove(filename)
+
+    def test_coala8(self, debug=False):
+        with bear_test_module():
+            current_dir = os.getcwd()
+            filename = os.path.join(current_dir, 'filename')
+            with open(filename, 'w', encoding='latin-1') as fd:
+                fd.write('line1\nline2\nline3\nline4\n')
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull, '-b',
+                                                   'LineCountTestBear',
+                                                   '-f', filename,
+                                                   debug=debug)
+            self.assertIn('This file has 4 lines.',
+                          stdout,
+                          'The output should report count as 4 lines')
+            self.assertIn('This result has no patch attached.', stderr)
+            self.assertNotEqual(retval, 0, 'coala must return nonzero '
+                                'when errors occured')
+            os.remove(filename)
+
+    def test_coala9(self, debug=False):
+        with bear_test_module():
+            current_dir = os.getcwd()
+            filename = os.path.join(current_dir, 'filename')
+            with open(filename, 'wb') as fd:
+                fd.write('text\n'.encode('utf-16'))
+                fd.write('text\n'.encode('utf-8'))
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull, '-b',
+                                                   'LineCountTestBear',
+                                                   '-f', filename,
+                                                   debug=debug)
+            self.assertEqual('Executing section cli...\n', stdout)
+            self.assertIn('Failed to read file', stderr)
+            self.assertEqual(retval, 0, 'coala was expected to return zero')
+            os.remove(filename)
+
+    def test_coala10(self, debug=False):
+        with bear_test_module():
+            current_dir = os.getcwd()
+            filename = os.path.join(current_dir, 'filename')
+            with open(filename, 'wb') as fd:
+                fd.write('text\n'.encode('utf-16'))
+                fd.write('text\n'.encode('utf-8'))
+                fd.write('text\n'.encode('utf-32'))
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull, '-b',
+                                                   'LineCountTestBear',
+                                                   '-f', filename,
+                                                   debug=debug)
+            self.assertEqual('Executing section cli...\n', stdout)
+            self.assertIn('Failed to read file', stderr)
+            self.assertEqual(retval, 0, 'coala was expected to return zero')
+            os.remove(filename)
+
+    def test_coala11(self, debug=False):
+        with bear_test_module():
+            current_dir = os.getcwd()
+            filename = os.path.join(current_dir, 'filename')
+            with open(filename, 'w', encoding='utf-16') as fd:
+                fd.write('  💩\n 😯\n 😈 💩\n   👻   \n')
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull, '-b',
+                                                   'SpaceConsistencyTestBear',
+                                                   '-f', filename,
+                                                   '--settings',
+                                                   'use_spaces=True',
+                                                   debug=debug)
+            self.assertIn('Trailing whitespaces.',
+                          stdout)
+            self.assertIn("Applied 'ShowPatchAction'", stderr)
+            self.assertNotEqual(retval, 0, 'coala must return nonzero '
+                                'when errors occured')
+            os.remove(filename)
+
+    def test_coala12(self, debug=False):
+        with bear_test_module():
+            current_dir = os.getcwd()
+            filename = os.path.join(current_dir, 'filename')
+            with open(filename, 'w', encoding='utf-16') as fd:
+                fd.write('\n 👻\ttext\t\n')
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull, '-b',
+                                                   'SpaceConsistencyTestBear',
+                                                   '-f', filename,
+                                                   '--settings',
+                                                   'use_spaces=True',
+                                                   debug=debug)
+            self.assertIn('Tabs used instead of spaces.',
+                          stdout)
+            self.assertIn("Applied 'ShowPatchAction'", stderr)
+            self.assertNotEqual(retval, 0, 'coala must return nonzero '
+                                'when errors occured')
+            os.remove(filename)
+
+    def test_coala13(self, debug=False):
+        with bear_test_module():
+            current_dir = os.getcwd()
+            filename = os.path.join(current_dir, 'filename')
+            with open(filename, 'w', encoding='utf-16') as fd:
+                fd.write(' 👻text  \n')
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull, '-b',
+                                                   'SpaceConsistencyTestBear',
+                                                   '-f', filename,
+                                                   '--settings',
+                                                   'use_spaces=True',
+                                                   debug=debug)
+            self.assertIn('👻text',
+                          stdout)
+            self.assertIn("Applied 'ShowPatchAction'", stderr)
+            self.assertNotEqual(retval, 0, 'coala must return nonzero '
+                                'when errors occured')
+            os.remove(filename)
+
+    def test_coala14(self, debug=False):
+        with bear_test_module():
+            current_dir = os.getcwd()
+            filename = os.path.join(current_dir, 'filename')
+            with open(filename, 'w', encoding='utf-16') as fd:
+                fd.write(' 👻text  \ntest line 2  ')
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull, '-b',
+                                                   'SpaceConsistencyTestBear',
+                                                   '-f', filename,
+                                                   '--settings',
+                                                   'use_spaces=True',
+                                                   debug=debug)
+            self.assertIn('test line 2',
+                          stdout)
+            self.assertIn("Applied 'ShowPatchAction'", stderr)
+            self.assertNotEqual(retval, 0, 'coala must return nonzero '
+                                'when errors occured')
+            os.remove(filename)
+
+    def test_coala15(self, debug=False):
+        with bear_test_module():
+            current_dir = os.getcwd()
+            filename = os.path.join(current_dir, 'filename')
+            with open(filename, 'w', encoding='utf-32') as fd:
+                fd.write(
+                    'test line 1\ntest line 2\ntest line 3\ntest line 4 ')
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull, '-b',
+                                                   'SpaceConsistencyTestBear',
+                                                   '-f', filename,
+                                                   '--settings',
+                                                   'use_spaces=True',
+                                                   debug=debug)
+            self.assertIn('test line 4',
+                          stdout)
+            self.assertIn("Applied 'ShowPatchAction'", stderr)
+            self.assertNotEqual(retval, 0, 'coala must return nonzero '
+                                'when errors occured')
+            os.remove(filename)
+
+    def test_coala16(self, debug=False):
+        with bear_test_module():
+            current_dir = os.getcwd()
+            filename = os.path.join(current_dir, 'filename')
+            with open(filename, 'w', encoding='utf-32') as fd:
+                fd.write('💩\n😯\n😈💩\n👻   \n')
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull, '-b',
+                                                   'SpaceConsistencyTestBear',
+                                                   '-f', filename,
+                                                   '--settings',
+                                                   'use_spaces=True',
+                                                   debug=debug)
+            self.assertIn('👻',
+                          stdout)
+            self.assertIn("Applied 'ShowPatchAction'", stderr)
+            self.assertNotEqual(retval, 0, 'coala must return nonzero '
+                                'when errors occured')
+            os.remove(filename)
+
+    def test_coala17(self, debug=False):
+        with bear_test_module():
+            current_dir = os.getcwd()
+            filename = os.path.join(current_dir, 'filename')
+            with open(filename, 'w') as fd:
+                fd.write('\ttest\n')
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull, '-b',
+                                                   'SpaceConsistencyTestBear',
+                                                   '-f', filename,
+                                                   '--settings',
+                                                   'use_spaces=True',
+                                                   debug=debug)
+            self.assertIn('test',
+                          stdout)
+            self.assertIn("Applied 'ShowPatchAction'", stderr)
+            self.assertNotEqual(retval, 0, 'coala must return nonzero '
+                                'when errors occured')
+            os.remove(filename)
+
+    def test_coala18(self, debug=False):
+        with bear_test_module():
+            current_dir = os.getcwd()
+            filename = os.path.join(current_dir, 'filename')
+            with open(filename, 'w') as fd:
+                fd.write('Capitán  ')
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull, '-b',
+                                                   'SpaceConsistencyTestBear',
+                                                   '-f', filename,
+                                                   '--settings',
+                                                   'use_spaces=True',
+                                                   debug=debug)
+            self.assertIn('Capit\xe1n',
+                          stdout)
+            self.assertIn("Applied 'ShowPatchAction'", stderr)
+            self.assertNotEqual(retval, 0, 'coala must return nonzero '
+                                'when errors occured')
+            os.remove(filename)
+
+    def test_coala19(self, debug=False):
+        with bear_test_module():
+            current_dir = os.getcwd()
+            filename = os.path.join(current_dir, 'filename')
+            with open(filename, 'wb') as fd:
+                fd.write('Capit\xe1n  '.encode('utf-8'))
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull, '-b',
+                                                   'SpaceConsistencyTestBear',
+                                                   '-f', filename,
+                                                   '--settings',
+                                                   'use_spaces=True',
+                                                   debug=debug)
+            self.assertIn('Capit\xe1n',
+                          stdout)
+            self.assertIn("Applied 'ShowPatchAction'", stderr)
+            self.assertNotEqual(retval, 0, 'coala must return nonzero '
+                                'when errors occured')
+            os.remove(filename)
+
+    def test_coala20(self, debug=False):
+        with bear_test_module():
+            current_dir = os.getcwd()
+            filename = os.path.join(current_dir, 'filename')
+            with open(filename, 'wb') as fd:
+                fd.write('Capit\xe1n  '.encode('utf-16'))
+            retval, stdout, stderr = execute_coala(coala.main, 'coala',
+                                                   '--non-interactive',
+                                                   '-c', os.devnull, '-b',
+                                                   'SpaceConsistencyTestBear',
+                                                   '-f', filename,
+                                                   '--settings',
+                                                   'use_spaces=True',
+                                                   debug=debug)
+            self.assertIn('Capit\xe1n',
+                          stdout)
+            self.assertIn("Applied 'ShowPatchAction'", stderr)
+            self.assertNotEqual(retval, 0, 'coala must return nonzero '
+                                'when errors occured')
+            os.remove(filename)
 
     def test_coala_aspect(self):
         with bear_test_module():
