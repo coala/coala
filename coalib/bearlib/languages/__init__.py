@@ -39,6 +39,7 @@ from .definitions.Ruby import Ruby
 from .definitions.Scala import Scala
 from .definitions.SCSS import SCSS
 from .definitions.Shell import Shell
+from .definitions.Solidity import Solidity
 from .definitions.Swift import Swift
 from .definitions.Tcl import Tcl
 from .definitions.Text import Text

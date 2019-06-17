@@ -65,6 +65,7 @@ LANGUAGE_NAMES = [
     'Scala',
     'SCSS 3.1, 3.2, 3.3, 3.4, 3.5, 4.0',
     'Shell',
+    'Solidity',
     'Swift',
     'Tcl',
     'Text',
