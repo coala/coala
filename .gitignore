@@ -63,6 +63,7 @@ coverage.xml
 *.log
 local_settings.py
 db.sqlite3
+db.sqlite3-journal
 
 # Flask stuff:
 instance/
@@ -362,6 +363,7 @@ flycheck_*.el
 
 # Session
 Session.vim
+Sessionx.vim
 
 # Temporary
 .netrwhist
