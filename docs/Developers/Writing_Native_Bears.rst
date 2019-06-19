@@ -338,7 +338,7 @@ So let's see how you could tell coala which Bears to run before yours:
             results = dependency_results[OtherBear.name]
 
 
-As you can see we have a :attr:`~coalib.bears.Bear.Bear.BEAR_DEPS`
+As you can see we have a `coalib.bears.Bear.Bear.BEAR_DEPS`
 set which contains a list of bears we wish to depend on.
 In this case it is a set with 1 item: "OtherBear".
 
@@ -380,7 +380,7 @@ Let's see how we can use HiddenResults in our Bear:
             yield HiddenResult(self, ["Some Content", "Some Other Content"])
 
 Here we see that this Bear (unlike normal Bears) yields a
-:class:`~coalib.results.HiddenResult` instead of a ``Result``. The first
+`coalib.results.HiddenResult` instead of a ``Result``. The first
 parameter in ``HiddenResult`` should be the instance of the Bear that yields
 this result (in this case ``self``), and second argument should be the content
 we want to transfer between the Bears. Here we use a list of strings as content
