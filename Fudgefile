@@ -1,0 +1,45 @@
+{
+    "pack": {
+        "hg": ".misc/nuspecs/hg.nuspec",
+        "nodejs": ".misc/nuspecs/nodejs.nuspec",
+        "python": ".misc/nuspecs/python.nuspec"
+    },
+    "packages": [
+        {
+            "name": "msys2",
+            "params": "/InstallDir:C:\\msys64 /NoUpdate",
+            "source": ""
+        },
+        {
+            "appveyor_id": true,
+            "name": "hg",
+            "source": "",
+            "version": "5.0"
+        },
+        {
+            "appveyor_id": "python",
+            "name": "python",
+            "source": "",
+            "version": "3.6.8"
+        },
+        {
+            "appveyor_id": "node",
+            "name": "nodejs",
+            "source": "",
+            "version": "11.13.0"
+        },
+        {
+            "name": "ShellCheck",
+            "source": ""
+        }
+    ],
+    "scripts": {
+        "post": {
+            "install": ". $env:FudgeCI/FudgePostInstall.ps1; Invoke-PostInstall"
+        },
+        "pre": {
+            "install": ". $env:FudgeCI/FudgeCI.ps1; Invoke-FudgeCI"
+        }
+    },
+    "source": "https://chocolatey.org/api/v2/"
+}
