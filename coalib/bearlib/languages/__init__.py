@@ -49,5 +49,6 @@ from .definitions.Verilog import Verilog
 from .definitions.VisualBasic import VisualBasic
 from .definitions.XML import XML
 from .definitions.ZShell import ZShell
+from .definitions.TOML import TOML
 
 # Stop ignoring PyUnusedCodeBear
