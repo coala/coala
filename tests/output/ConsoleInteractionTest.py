@@ -22,7 +22,8 @@ from coalib.output.ConsoleInteraction import (
     show_language_bears_capabilities)
 from coalib.output.ConsoleInteraction import (BackgroundSourceRangeStyle,
                                               BackgroundMessageStyle,
-                                              highlight_text)
+                                              highlight_text,
+                                              color_letter)
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.parsing.DefaultArgParser import default_arg_parser
 from coalib.results.Diff import Diff
@@ -188,6 +189,22 @@ class ConsoleInteractionTest(unittest.TestCase):
     def tearDown(self):
         OpenEditorAction.is_applicable = self.old_open_editor_applicable
         ApplyPatchAction.is_applicable = self.old_apply_patch_applicable
+
+    def test_color_letter(self):
+        line1 = '[  ] 1. (A)pply Patch'
+        with retrieve_stdout() as stdout:
+            color_letter(self.console_printer, line1)
+            self.assertEqual(line1 + '\n', stdout.getvalue())
+
+        line2 = '[  ] *0. Apply (P)atch'
+        with retrieve_stdout() as stdout:
+            color_letter(self.console_printer, line2)
+            self.assertEqual(line2 + '\n', stdout.getvalue())
+
+        line3 = '[  ] 3. Apply (P)atch [Note: This will do something]'
+        with retrieve_stdout() as stdout:
+            color_letter(self.console_printer, line3)
+            self.assertEqual(line3 + '\n', stdout.getvalue())
 
     def test_require_settings(self):
         curr_section = Section('')

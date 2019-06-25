@@ -97,22 +97,24 @@ DIFF_EXCERPT_MAX_SIZE = 4
 
 
 def color_letter(console_printer, line):
-    x = -1
-    y = -1
-    letter = ''
-    for i, l in enumerate(line, 0):
-        if line[i] == '(':
-            x = i
-        if line[i] == ')':
-            y = i
-        if l.isupper() and x != -1:
-            letter = l
+    x = line.find('(')
+    if x == -1:
+        letter = ''
+        y = x + 1
+    else:
+        letter = line[x + 1]
+        y = x + 2
+    warn = line.rfind('[')
+    if warn == 0:
+        warn = len(line)
     first_part = line[:x+1]
-    second_part = line[y:]
+    second_part = line[y:warn]
+    warning_part = line[warn:]
 
     console_printer.print(first_part, end='')
     console_printer.print(letter, color='blue', end='')
-    console_printer.print(second_part)
+    console_printer.print(second_part, end='')
+    console_printer.print(warning_part, color='blue')
 
 
 def format_lines(lines, symbol='', line_nr=''):
