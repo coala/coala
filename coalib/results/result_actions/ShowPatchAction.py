@@ -1,6 +1,8 @@
 import difflib
 from os.path import relpath, join
 
+import re
+
 from pyprint.ConsolePrinter import ConsolePrinter
 
 from coalib.results.Diff import ConflictError
@@ -50,6 +52,20 @@ def print_beautified_diff(difflines, printer):
         else:
             current_line_subtracted += 1
             current_line_added += 1
+
+
+def print_binary_diff(difflines, filename, to_filename, printer):
+    printer.print(format_line(filename, real_nr='------'), color='red')
+    printer.print(format_line(to_filename, real_nr='++++++'), color='freen')
+
+    addresses = re.findall(r'[\w]{6}:', difflines)
+    bytes = re.split(r'[\w]{6}:', difflines)
+    bytes = [byte.replace('\n', ' ') + '\n' for byte in bytes]
+
+    for index in range(len(addresses)):
+        printer.print(format_line(bytes[index+1].lstrip(),
+                                  real_nr=addresses[index][:-1]),
+                      color='green')
 
 
 class ShowPatchAction(ResultAction):
@@ -110,21 +126,26 @@ class ShowPatchAction(ResultAction):
             to_filename = this_diff.rename if this_diff.rename else filename
             to_filename = '/dev/null' if this_diff.delete else to_filename
             original_file = original_file_dict[filename]
-            try:
-                current_file = file_diff_dict[filename].modified
-                new_file = (file_diff_dict[filename] + this_diff).modified
-            except KeyError:
-                current_file = original_file
-                new_file = this_diff.modified
+            if result.additional_info != 'binary':
+                try:
+                    current_file = file_diff_dict[filename].modified
+                    new_file = (file_diff_dict[filename] + this_diff).modified
+                except KeyError:
+                    current_file = original_file
+                    new_file = this_diff.modified
 
-            if tuple(current_file) != tuple(new_file):
-                print_beautified_diff(difflib.unified_diff(current_file,
-                                                           new_file,
-                                                           fromfile=filename,
-                                                           tofile=to_filename),
-                                      printer)
-            elif filename != to_filename:
-                print_from_name(printer, join('a', relpath(filename)))
-                print_to_name(printer, join('b', relpath(to_filename)))
-
+                if tuple(current_file) != tuple(new_file):
+                    print_beautified_diff(difflib.unified_diff(current_file,
+                                                               new_file,
+                                                               fromfile=filename,
+                                                               tofile=to_filename),
+                                          printer)
+                elif filename != to_filename:
+                    print_from_name(printer, join('a', relpath(filename)))
+                    print_to_name(printer, join('b', relpath(to_filename)))
+            else:
+                print_binary_diff(this_diff.binary,
+                                  filename,
+                                  to_filename,
+                                  printer)
         return file_diff_dict

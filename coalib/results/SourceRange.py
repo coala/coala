@@ -11,7 +11,8 @@ class SourceRange(TextRange):
     @enforce_signature
     def __init__(self,
                  start: SourcePosition,
-                 end: (SourcePosition, None) = None):
+                 end: (SourcePosition, None) = None,
+                 additional_info=''):
         """
         Creates a new SourceRange.
 
@@ -28,6 +29,7 @@ class SourceRange(TextRange):
         """
         TextRange.__init__(self, start, end)
 
+        self.additional_info = additional_info
         if self.start.file != self.end.file:
             raise ValueError('File of start and end position do not match.')
 
@@ -37,7 +39,8 @@ class SourceRange(TextRange):
                     start_line=None,
                     start_column=None,
                     end_line=None,
-                    end_column=None):
+                    end_column=None,
+                    additional_info=''):
         start = SourcePosition(file, start_line, start_column)
         if end_line or (end_column and end_column > start_column):
             end = SourcePosition(file, end_line if end_line else start_line,
@@ -45,7 +48,7 @@ class SourceRange(TextRange):
         else:
             end = None
 
-        return cls(start, end)
+        return cls(start, end, additional_info)
 
     @classmethod
     @enforce_signature

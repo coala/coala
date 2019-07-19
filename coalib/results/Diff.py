@@ -3,6 +3,7 @@ import difflib
 import logging
 
 from unidiff import PatchSet
+from multidiff.command_line_interface import diff_files, make_parser
 
 from coalib.results.LineDiff import LineDiff, ConflictError
 from coalib.results.SourceRange import SourceRange
@@ -30,6 +31,7 @@ class Diff:
         self._original = self._generate_linebreaks(self._file)
         self.rename = rename
         self.delete = delete
+        self.binary = ''
 
     @classmethod
     def from_string_arrays(cls, file_array_1, file_array_2, rename=False):
@@ -261,6 +263,8 @@ class Diff:
         If no newline was present at the end of file before, this state will
         be preserved, except if the last line is deleted.
         """
+        if self.binary:
+            return self._generate_linebreaks(self.output)
         return self._generate_linebreaks(self._raw_modified())
 
     @property
@@ -283,6 +287,18 @@ class Diff:
             tofile=self.rename if isinstance(self.rename, str) else ''))
 
         return ''.join(self._generate_linebreaks(list_unified_diff))
+
+    def binary_diff(self, filename, output_filename):
+        """
+        Generates a binary diff corresponding to this patch.
+
+        The diff will display the byte addresses where the changes have taken
+        place. The whole diff will be printed at once.
+        """
+        args = make_parser().parse_args([filename, output_filename, '--diff',
+                                         '--html'])
+        self.binary = diff_files(args)
+        self.output = list(output_filename)
 
     def __json__(self):
         """

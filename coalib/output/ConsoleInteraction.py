@@ -529,15 +529,16 @@ def print_affected_lines(console_printer, file_dict, sourcerange):
     console_printer.print('\n' + os.path.relpath(sourcerange.file),
                           color=FILE_NAME_COLOR)
 
-    if sourcerange.start.line is not None:
-        if len(file_dict[sourcerange.file]) < sourcerange.end.line:
-            console_printer.print(format_lines(lines=STR_LINE_DOESNT_EXIST,
-                                               line_nr=sourcerange.end.line,
-                                               symbol='!'))
-        else:
-            print_lines(console_printer,
-                        file_dict,
-                        sourcerange)
+    if sourcerange.additional_info != 'binary':
+        if sourcerange.start.line is not None:
+            if len(file_dict[sourcerange.file]) < sourcerange.end.line:
+                console_printer.print(format_lines(lines=STR_LINE_DOESNT_EXIST,
+                                                   line_nr=sourcerange.end.line,
+                                                   symbol='!'))
+            else:
+                print_lines(console_printer,
+                            file_dict,
+                            sourcerange)
 
 
 def require_setting(setting_name, arr, section):
