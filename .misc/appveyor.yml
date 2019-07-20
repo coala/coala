@@ -42,7 +42,7 @@ install:
   # Check that we have the expected version and architecture for Python
   - "python --version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
-  - "%CMD_IN_ENV% python -m pip install --upgrade setuptools==21 pip==9"
+  - "%CMD_IN_ENV% python -m pip install --upgrade setuptools==21 pip==9.0.1"
   - "%CMD_IN_ENV% python -m pip install -r test-requirements.txt \
     -r requirements.txt -r docs-requirements.txt"
 
