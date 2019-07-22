@@ -18,12 +18,17 @@ docs_toc: false
 test_py36: true
 allow_generic_no_cover: true
 test_timeout: 60
+travis_sentinel: true
 python_versions:
   - 3.6
   - 3.5
   - 3.4.4
   - 3.4.2
 # 3.7 excluded due to https://github.com/coala/coala/issues/6028 and others
+test_unsupported_python_versions:
+  - 2.7
+  - 3.3
+  - 3.4.1
 
 entry_points:
   console_scripts:
@@ -44,15 +49,18 @@ dependencies:
   - Pygments~=2.1
   - PyPrint~=0.2.6
   - requests~=2.12
-  - setuptools>=21.0.0
+  - setuptools>=21.2.2
   - unidiff~=0.5.2
 
 gitignore_extra_rulesets:
   - node
 
 requires:
-  - https://gitlab.com/coala/mobans.git
+  - type: git
+    url: https://gitlab.com/jayvdb/mobans
+    branch: custom-travis-template
   - https://github.com/NAStools/homeassistant.git
+
 configuration:
   template_dir:
     - .moban.dt/
@@ -82,11 +90,11 @@ targets:
   - coalib/VERSION: VERSION.jj2
   - runtime.txt: runtime.txt
   - netlify.toml: docs/netlify.toml
+  - .travis.yml: ci/coala-travis.yml.jj2
   - .misc/appveyor.yml: ci/appveyor.yml.jj2
   - .misc/run_with_env.cmd: run_with_env.cmd
   - .misc/check_unsupported.sh: ci/check_unsupported.sh.jj2
 copy:
-  - .misc/check_moban.sh: ci/check_moban.sh
   - .misc/check_setuptools.py: ci/check_setuptools.py
   # homeassistant license MIT
   - coalib/misc/Asyncio.py: async.py
