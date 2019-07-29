@@ -1,30 +1,34 @@
+image: Visual Studio 2015
+
 environment:
   global:
-    # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
-    # /E:ON and /V:ON options are not enabled in the batch script intepreter
-    # See: http://stackoverflow.com/a/13751649/163740
-    CMD_IN_ENV: "cmd /E:ON /V:ON /C .\\.misc\\run_with_env.cmd"
     PIP_CACHE_DIR: C:\pip_cache
+    PIP_DISABLE_PIP_VERSION_CHECK: 1
+    # Needed if pip uninstall is used
+    PIP_YES: 1
+    MSYS_ROOT: C:\msys64
+    MSYS_BIN: $(MSYS_ROOT)\usr\bin
+    MSSDK_ROOT: C:\Program Files\Microsoft SDKs
+    VS_ROOT: C:\Program Files (x86)\Microsoft Visual Studio
+    PATH: >-
+      C:\python;C:\python\Scripts;$(PATH);$(MSYS_BIN);
 
   matrix:
-    - PYTHON: "C:\\Python34"
-      PYTHON_VERSION: "3.4.4"
-      PYTHON_ARCH: "32"
+    - PYTHON_VERSION: 3.4
+      PYTHON_MINOR_NODOTS: 34
+    - PYTHON_VERSION: 3.5
+      PYTHON_MINOR_NODOTS: 35
+    - PYTHON_VERSION: 3.6
+      PYTHON_MINOR_NODOTS: 36
+    - PYTHON_VERSION: 3.7
+      PYTHON_MINOR_NODOTS: 37
 
-    - PYTHON: "C:\\Python34-x64"
-      PYTHON_VERSION: "3.4.4"
-      PYTHON_ARCH: "64"
+platform:
+  - x86
+  - x64
 
-    - PYTHON: "C:\\Python36"
-      PYTHON_VERSION: "3.6"
-      PYTHON_ARCH: "32"
-
-    - PYTHON: "C:\\Python36-x64"
-      PYTHON_VERSION: "3.6"
-      PYTHON_ARCH: "64"
 cache:
   - "C:\\pip_cache"
-  - "node_modules"
   - "C:\\Users\\appveyor\\AppData\\Local\\coala-bears\\coala-bears"
   - "C:\\Users\\appveyor\\AppData\\Roaming\\nltk_data"
 
@@ -32,32 +36,57 @@ branches:
   except:
     - /^sils\/.*/
 
-install:
-  # Prepend newly installed Python to the PATH of this build (this cannot be
-  # done from inside the powershell script as it would require to restart
-  # the parent CMD process).
-  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
-  - "SET PATH=%PATH%;C:\\Program\ Files\\Git\\mingw64\\bin"
+# This forces unix style line endings in the clone, which is necessary to
+# avoid warning regarding EOLs when running git diff on Windows
+init: git config --global core.autocrlf false
 
-  # Check that we have the expected version and architecture for Python
-  - "python --version"
+install:
+  # Show initial state
+  - powershell -c "$PSVersionTable"
+  # Uncomment to debug
+  # printenv
+  - python --version
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
-  - "%CMD_IN_ENV% python -m pip install --upgrade setuptools==21 pip==9.0.1"
-  - "%CMD_IN_ENV% python -m pip install -r test-requirements.txt \
-    -r requirements.txt -r docs-requirements.txt"
+  - python -m pip --version
+  - python -c "import setuptools; print(setuptools.__version__)"
+  - which gcc & exit 0
+  - gcc --version & exit 0
+  - which cl & exit 0
+
+  # Stores environment in registry, with minor tweaks
+  - mv C:\python%PYTHON_MINOR_NODOTS% C:\python
+  - python --version
+  - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
+  # This is a minor piece of the fudge framework in the mobans repository
+  # Generate a Fudgefile if more functionality is needed.
+  - ps: . .misc/deps.python-packages.ps1; Invoke-ExtraInstallation
+
+
+  - "%MSYS_BIN%\\date.exe"
 
 build: false  # Not a C# project, build stuff at the test step instead.
 
 test_script:
-  - "%CMD_IN_ENV% py.test"
-  - "%CMD_IN_ENV% python setup.py install"
-  - "%CMD_IN_ENV% python -m pip install \
-    git+https://github.com/coala/coala-bears"
+  - python -m pip --version
+  - python -c "import setuptools; print(setuptools.__version__)"
+
+  - py.test
+
+  - if not "%PYTHON_VERSION%" == "3.7"
+      python setup.py install
+
+  - python -m pip install
+      git+https://github.com/coala/coala-bears#egg=coala-bears
   - npm install csslint -g
   # https://github.com/coala/coala/issues/5619
   - rm docs/Developers/coala_settings.rst
+  # https://github.com/coala/coala/issues/5985 and
+  # https://github.com/coala/coala/issues/6028 and others:
+  - rm coalib/misc/Asyncio.py
+
+
   - sed -i '/ShellCheckBear/d' .coafile
-  - "%CMD_IN_ENV% coala --ci"
+  - coala --ci
 
 on_success:
   - codecov
