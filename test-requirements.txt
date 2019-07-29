@@ -12,7 +12,7 @@ coverage-env-plugin~=0.1
 coverage-config-reload-plugin~=0.2
 codecov~=2.0.5
 freezegun~=0.3.9
-moban~=0.3.3 ; python_version > '3.0'
+moban~=0.5.0 ; python_version > '3.0'
 pytest~=3.6.4
 pytest-cov~=2.4
 pytest-env~=0.6.0
@@ -27,5 +27,6 @@ pytest-travis-fold~=1.3.0
 requests-mock~=1.2
 ipdb~=0.11
 pip<10
+six>=1.11.0
 wheel~=0.29
 testfixtures~=5.3.1
