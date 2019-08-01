@@ -1,3 +1,6 @@
+from coalib.settings.ConfigGenerator import ConfigGenerator
+
+
 def mode_normal(console_printer, log_printer, args, debug=False):
     """
     This is the default coala mode. User interaction is allowed in this mode.
@@ -99,3 +102,12 @@ def mode_format(args, debug=False):
     _, exitcode, _ = run_coala(
             print_results=print_results_formatted, args=args, debug=debug)
     return exitcode
+
+
+def mode_generate_config(args):
+    """
+    The mode that allows to generate config files based on style guides.
+
+    :param args: Defines languages, style-guides among others
+    """
+    ConfigGenerator(args).create_coafile()

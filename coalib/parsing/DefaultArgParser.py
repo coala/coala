@@ -155,6 +155,12 @@ To run coala without user interaction, run the `coala --non-interactive`,
         '--no-autoapply-warn', const=True, action='store_const',
         help='turn off warning about patches not being auto applicable')
 
+    config_group.add_argument('-g',
+                              '--generate-config', nargs='+',
+                              metavar='FILE',
+                              help='A tool to generate config files '
+                                   'based on style guide')
+
     inputs_group = arg_parser.add_argument_group('Inputs')
 
     bears = inputs_group.add_argument(

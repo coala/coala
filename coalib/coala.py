@@ -14,6 +14,7 @@
 import logging
 import sys
 
+from coalib.coala_modes import mode_generate_config
 from pyprint.ConsolePrinter import ConsolePrinter
 
 from dependency_management.requirements.PipRequirement import PipRequirement
@@ -117,6 +118,9 @@ def main(debug=False):
 
     if args.non_interactive:
         return mode_non_interactive(console_printer, args, debug=debug)
+
+    if args.generate_config:
+        return mode_generate_config(args)
 
     return mode_normal(console_printer, None, args, debug=debug)
 
