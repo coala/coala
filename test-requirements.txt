@@ -9,3 +9,4 @@ pytest-xdist~=1.14
 requests-mock~=1.2.0
 pip>=9.0.0
 wheel~=0.29
+test
