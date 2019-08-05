@@ -175,13 +175,13 @@ def acquire_actions_and_apply(console_printer,
         action_dict = {}
         metadata_list = []
 
-        for action in cli_actions:
+        for action in list(cli_actions) + result.actions:
             if action.is_applicable(result,
                                     file_dict,
                                     file_diff_dict,
                                     tuple(applied_actions.keys())) is True:
                 metadata = action.get_metadata()
-                action_dict[metadata.name] = action
+                action_dict[metadata.id] = action
                 metadata_list.append(metadata)
 
         if not metadata_list:
@@ -642,12 +642,13 @@ def choose_action(console_printer, actions, apply_single=False):
                             with the description of the actions.
     """
     actions_desc = []
-    actions_name = []
+    actions_id = []
+    do_nothing_action = actions[0]
     if apply_single:
         for i, action in enumerate(actions, 0):
             if apply_single == action.desc:
-                return ([action.desc], [action.name])
-        return (['Do (N)othing'], ['Do (N)othing'])
+                return ([action.desc], [action.id])
+        return ([do_nothing_action.desc], [do_nothing_action.id])
     else:
         while True:
             for i, action in enumerate(actions, 0):
@@ -669,7 +670,7 @@ def choose_action(console_printer, actions, apply_single=False):
                         c = int(c)
                         if i == c:
                             actions_desc.append(action.desc)
-                            actions_name.append(action.name)
+                            actions_id.append(action.id)
                             break
                 elif c.isalpha():
                     c = c.upper()
@@ -677,16 +678,16 @@ def choose_action(console_printer, actions, apply_single=False):
                     for i, action in enumerate(actions, 1):
                         if c in action.desc:
                             actions_desc.append(action.desc)
-                            actions_name.append(action.name)
+                            actions_id.append(action.id)
                             break
                 if actions_desc_len == len(actions_desc):
                     console_printer.print(STR_INVALID_OPTION.format(str_c),
                                           color=WARNING_COLOR)
 
             if not choice:
-                actions_desc.append(DoNothingAction().get_metadata().desc)
-                actions_name.append(DoNothingAction().get_metadata().name)
-            return (actions_desc, actions_name)
+                actions_desc.append(do_nothing_action.desc)
+                actions_id.append(do_nothing_action.id)
+            return (actions_desc, actions_id)
 
 
 def try_to_apply_action(action_name,
@@ -731,10 +732,10 @@ def try_to_apply_action(action_name,
             console_printer.print(
                 format_lines(chosen_action.SUCCESS_MESSAGE, symbol='['),
                 color=SUCCESS_COLOR)
-        applied_actions[action_name] = [copy.copy(result), copy.copy(
-            file_dict),
-                                    copy.copy(file_diff_dict),
-                                    copy.copy(section)]
+        applied_actions[action_name] = [copy.copy(result),
+                                        copy.copy(file_dict),
+                                        copy.copy(file_diff_dict),
+                                        copy.copy(section)]
         result.set_applied_actions(applied_actions)
         failed_actions.discard(action_name)
     except Exception as exception:  # pylint: disable=broad-except
@@ -781,17 +782,17 @@ def ask_for_action_and_apply(console_printer,
     """
     do_nothing_action = DoNothingAction()
     metadata_list.insert(0, do_nothing_action.get_metadata())
-    action_dict[do_nothing_action.get_metadata().name] = DoNothingAction()
+    action_dict[do_nothing_action.get_metadata().id] = DoNothingAction()
 
-    actions_desc, actions_name = choose_action(console_printer, metadata_list,
-                                               apply_single)
+    actions_desc, actions_id = choose_action(console_printer, metadata_list,
+                                             apply_single)
 
     if apply_single:
         for index, action_details in enumerate(metadata_list, 1):
             if apply_single == action_details.desc:
                 action_name, section = get_action_info(
                     section, metadata_list[index - 1], failed_actions)
-                chosen_action = action_dict[action_details.name]
+                chosen_action = action_dict[action_details.id]
                 try_to_apply_action(action_name,
                                     chosen_action,
                                     console_printer,
@@ -803,14 +804,15 @@ def ask_for_action_and_apply(console_printer,
                                     file_diff_dict,
                                     file_dict,
                                     applied_actions)
+                break
         return False
     else:
-        for action_choice, action_choice_name in zip(actions_desc,
-                                                     actions_name):
-            chosen_action = action_dict[action_choice_name]
+        for action_choice, action_choice_id in zip(actions_desc,
+                                                   actions_id):
+            chosen_action = action_dict[action_choice_id]
             action_choice_made = action_choice
             for index, action_details in enumerate(metadata_list, 1):
-                if action_choice_made in action_details.desc:
+                if action_choice_made == action_details.desc:
                     action_name, section = get_action_info(
                         section, metadata_list[index-1], failed_actions)
                     try_to_apply_action(action_name,
