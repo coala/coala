@@ -66,7 +66,8 @@ class Result:
                  aspect: (aspectbase, None) = None,
                  message_arguments: dict = {},
                  applied_actions: dict = {},
-                 actions: list = []):
+                 actions: list = [],
+                 alternate_diffs: (list, None) = None):
         """
         :param origin:
             Class name or creator object of this object.
@@ -102,6 +103,8 @@ class Result:
             the section for an action.
         :param actions:
             A list of action instances specific to the origin of the result.
+        :param alternate_diffs:
+            A list of dictionaries, where each element is an alternative diff.
         :raises ValueError:
             Raised when confidence is not between 0 and 100.
         :raises KeyError:
@@ -135,6 +138,7 @@ class Result:
             self.additional_info = '{} {}'.format(
                 aspect.Docs.importance_reason, aspect.Docs.fix_suggestions)
         self.actions = actions
+        self.alternate_diffs = alternate_diffs
 
     @property
     def message(self):
@@ -169,7 +173,8 @@ class Result:
                     confidence: int = 100,
                     aspect: (aspectbase, None) = None,
                     message_arguments: dict = {},
-                    actions: list = []):
+                    actions: list = [],
+                    alternate_diffs: (list, None) = None):
         """
         Creates a result with only one SourceRange with the given start and end
         locations.
@@ -216,6 +221,8 @@ class Result:
             belongs to.)
         :param actions:
             A list of action instances specific to the origin of the result.
+        :param alternate_diffs:
+            A list of dictionaries, where each element is an alternative diff.
         """
         source_range = SourceRange.from_values(file,
                                                line,
@@ -233,7 +240,8 @@ class Result:
                    confidence=confidence,
                    aspect=aspect,
                    message_arguments=message_arguments,
-                   actions=actions)
+                   actions=actions,
+                   alternate_diffs=alternate_diffs)
 
     def to_string_dict(self):
         """

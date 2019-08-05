@@ -19,7 +19,7 @@ from coalib.output.ConsoleInteraction import (
     print_affected_files, print_result, print_results,
     print_results_formatted, print_results_no_input, print_section_beginning,
     show_bear, show_bears, ask_for_action_and_apply, print_diffs_info,
-    show_language_bears_capabilities)
+    show_language_bears_capabilities, get_alternate_patch_actions)
 from coalib.output.ConsoleInteraction import (BackgroundSourceRangeStyle,
                                               BackgroundMessageStyle,
                                               highlight_text,
@@ -397,6 +397,28 @@ class ConsoleInteractionTest(unittest.TestCase):
                                         affected_code=affected_code),
                                  file_dict)
             self.assertEqual(stdout.getvalue(), '\n'+relpath(some_file)+'\n')
+
+    def test_get_alternate_patch_actions(self):
+        result = Result('origin', 'message')
+        retval = get_alternate_patch_actions(result)
+        self.assertEqual(retval, ())
+
+        diffs = {'filename': 'diff1'}
+        alternate_diffs = [{'filename': 'diff 2'},
+                           {'filename': 'diff 3'},
+                           {'filename': 'diff 4'}]
+        result = Result('origin',
+                        'message',
+                        diffs=diffs,
+                        alternate_diffs=alternate_diffs)
+        retval = get_alternate_patch_actions(result)
+        self.assertEqual(len(retval), 3)
+        self.assertEqual(retval[0].diffs, {'filename': 'diff 2'})
+        self.assertEqual(retval[1].diffs, {'filename': 'diff 3'})
+        self.assertEqual(retval[2].diffs, {'filename': 'diff 4'})
+        self.assertEqual(retval[0].description, 'Show Alternate Patch 1')
+        self.assertEqual(retval[1].description, 'Show Alternate Patch 2')
+        self.assertEqual(retval[2].description, 'Show Alternate Patch 3')
 
     def test_acquire_actions_and_apply(self):
         with make_temp() as testfile_path:

@@ -30,6 +30,8 @@ from coalib.results.result_actions.PrintDebugMessageAction import (
 from coalib.results.result_actions.PrintMoreInfoAction import (
     PrintMoreInfoAction)
 from coalib.results.result_actions.ShowPatchAction import ShowPatchAction
+from coalib.results.result_actions.AlternatePatchAction import (
+    AlternatePatchAction)
 from coalib.results.RESULT_SEVERITY import (
     RESULT_SEVERITY, RESULT_SEVERITY_COLORS)
 from coalib.settings.Setting import Setting
@@ -146,6 +148,21 @@ def nothing_done(log_printer=None):
                     'do.')
 
 
+def get_alternate_patch_actions(result):
+    """
+    Returns a tuple of AlternatePatchAction instances, each corresponding
+    to an alternate_diff in result.alternate_diffs
+    """
+    alternate_patch_actions = []
+    if result.alternate_diffs is not None:
+        count = 1
+        for alternate_diff in result.alternate_diffs:
+            alternate_patch_actions.append(
+                AlternatePatchAction(alternate_diff, count))
+            count += 1
+    return tuple(alternate_patch_actions)
+
+
 def acquire_actions_and_apply(console_printer,
                               section,
                               file_diff_dict,
@@ -168,6 +185,7 @@ def acquire_actions_and_apply(console_printer,
     :param cli_actions:     The list of cli actions available.
     """
     cli_actions = CLI_ACTIONS if cli_actions is None else cli_actions
+    cli_actions += get_alternate_patch_actions(result)
     failed_actions = set()
     applied_actions = {}
 
