@@ -761,6 +761,44 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
         )
         ACTIONS.pop()
 
+    def test_multiple_applicable_actions(self):
+        # Same as test_applicable_action but with more than one action.
+        # Allows actions like --ci and --apply-patches to run concurrently.
+        log_printer = self.log_printer
+
+        class TestAction1(ResultAction):
+
+            def apply(self, *args, **kwargs):
+                logging.debug('ACTION 1 APPLIED SUCCESSFULLY.')
+
+        class TestAction2(ResultAction):
+
+            def apply(self, *args, **kwargs):
+                logging.debug('ACTION 2 APPLIED SUCCESSFULLY.')
+
+        ACTIONS.extend((TestAction1, TestAction2))
+        results = [self.resultZ]
+
+        self.section['default_actions'] = '*: TestAction1, **: TestAction2'
+        with LogCapture() as capture:
+            ret = autoapply_actions(results,
+                                    {},
+                                    {},
+                                    self.section,
+                                    log_printer)
+        self.assertEqual(ret, [])
+        capture.check(
+            ('root', 'DEBUG', 'ACTION 1 APPLIED SUCCESSFULLY.'),
+            ('root', 'INFO', "Applied 'TestAction1' on the whole project from "
+                             "'ZBear'."),
+            ('root', 'DEBUG', 'ACTION 2 APPLIED SUCCESSFULLY.'),
+            ('root', 'INFO', "Applied 'TestAction2' on the whole project from "
+                             "'ZBear'.")
+        )
+
+        ACTIONS.pop()
+        ACTIONS.pop()
+
     def test_failing_action(self):
         class FailingTestAction(ResultAction):
 

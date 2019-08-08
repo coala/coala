@@ -1,4 +1,5 @@
 from itertools import chain
+from collections import OrderedDict
 import logging
 import os
 import platform
@@ -84,7 +85,7 @@ def get_default_actions(section):
                        and invalid action names.
     """
     try:
-        default_actions = dict(section['default_actions'])
+        default_actions = OrderedDict(section['default_actions'])
     except IndexError:
         return {}, {}
 
@@ -99,8 +100,8 @@ def get_default_actions(section):
         for invalid in invalid_actions.keys():
             del default_actions[invalid]
 
-    actions = {bearname: action_dict[action_name]
-               for bearname, action_name in default_actions.items()}
+    actions = OrderedDict((bearname, action_dict[action_name])
+                          for bearname, action_name in default_actions.items())
     return actions, invalid_actions
 
 
@@ -134,41 +135,41 @@ def autoapply_actions(results,
 
     not_processed_results = []
     for result in results:
+        actions = []
         try:
             # Match full bear names deterministically, prioritized!
-            action = default_actions[result.origin]
+            actions.append(default_actions[result.origin])
         except KeyError:
-            for bear_glob in default_actions:
-                if fnmatch(result.origin, bear_glob):
-                    action = default_actions[bear_glob]
-                    break
-            else:
+            actions = [default_actions[glob]
+                       for glob in default_actions
+                       if fnmatch(result.origin, glob)]
+            if not len(actions):
+                not_processed_results.append(result)
+
+        for action in actions:
+            applicable = action.is_applicable(result, file_dict, file_diff_dict)
+            if applicable is not True:
+                if not no_autoapply_warn:
+                    logging.warning('{}: {}'.format(result.origin, applicable))
                 not_processed_results.append(result)
                 continue
 
-        applicable = action.is_applicable(result, file_dict, file_diff_dict)
-        if applicable is not True:
-            if not no_autoapply_warn:
-                logging.warning('{}: {}'.format(result.origin, applicable))
-            not_processed_results.append(result)
-            continue
-
-        try:
-            action().apply_from_section(result,
-                                        file_dict,
-                                        file_diff_dict,
-                                        section)
-            logging.info('Applied {!r} on {} from {!r}.'.format(
-                action.get_metadata().name,
-                result.location_repr(),
-                result.origin))
-        except Exception as ex:
-            not_processed_results.append(result)
-            log_exception(
-                'Failed to execute action {!r} with error: {}.'.format(
-                    action.get_metadata().name, ex),
-                ex)
-            logging.debug('-> for result ' + repr(result) + '.')
+            try:
+                action().apply_from_section(result,
+                                            file_dict,
+                                            file_diff_dict,
+                                            section)
+                logging.info('Applied {!r} on {} from {!r}.'.format(
+                    action.get_metadata().name,
+                    result.location_repr(),
+                    result.origin))
+            except Exception as ex:
+                not_processed_results.append(result)
+                log_exception(
+                    'Failed to execute action {!r} with error: {}.'.format(
+                        action.get_metadata().name, ex),
+                    ex)
+                logging.debug('-> for result ' + repr(result) + '.')
 
     return not_processed_results
 
