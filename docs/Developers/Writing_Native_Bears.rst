@@ -297,6 +297,14 @@ constructor, so you can e.g. create a result that proposes a code change
 to the user. If the user likes it, coala will apply it automatically -
 you don't need to care.
 
+To propose a change Result class has a ``diffs`` parameter which accepts a
+dictionary with key as a filename and value as a Diff object which is
+basically the proposed changes in that file.
+Bears also have the ability to suggest multiple changes for a single problem
+and let user decide which change to make. For this along with ``diffs``
+Result class also has an ``alternate_diffs`` parameter which accepts
+a list of dictionaries where each element is an alternate change.
+
 Your function needs to return an iterable of ``Result`` objects: that
 means you can either return a ``list`` of ``Result`` objects or simply
 yield them and write the method as a generator.
