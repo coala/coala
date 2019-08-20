@@ -8,6 +8,7 @@ Welcome to the Newcomers' Guide!
     +----------------+-----------+
 
 .. _newcomer: https://coala.io/newcomer/
+.. _coala Community: https://community.coala.io
 
 **DO NOT WORK ON ANY ISSUE WITHOUT ASSIGNMENT!** If you do, someone else might
 work on it as well, and we might have no choice but to reject one of your Pull
@@ -41,13 +42,20 @@ Request merged successfully, fill out our
 `survey form <http://coala.io/newform>`_. By doing so, you can help us make your
 experience better!
 
-Once you've completed all five tasks, please fill our
-`promotion request form <https://docs.google.com/forms/d/e/1FAIpQLSevrkrJga23GySFUdngrTEo0CdjXcqjHBHqX2z_JF2Z61YNmw/viewform?usp=sf_link>`_
+Once you've completed all five tasks, please fill the **promotion request form**
+by logging-in on the `coala Community`_,
 to get promoted to the role of developer. GitLab contributions also
-count to the promotion of a newcomer to developer.
-In order to work on GitLab issues, you should be a member of GitLab newcomers
-group. You can request access at
-`GitLab newcomers group <https://gitlab.com/coala/roles/newcomers>`_.
+count to the promotion of a newcomer to developer. In order to work on GitLab
+issues, you should be a member of GitLab newcomers group. You can request
+access at `GitLab newcomers group <https://gitlab.com/coala/roles/newcomers>`_.
+Once you get promoted, you can do following things right from your account on
+coala Community website:
+
+  - You can apply to become a *mentor* for the upcoming Google Summer of Code
+  - You can add new *calendar events* related to the organization like
+    software releases, cEP(coala Enhancement Proposal) merges etc.
+  - You can add new *Open Source Google Forms*. The forms which can be filled
+    by any contributor and is related to any of the open-source community.
 
 .. note::
 
@@ -155,6 +163,12 @@ When you say "Hello World" in chat, ``corobo`` (our gitter bot) will invite you
 to be part of the Newcomer team. The invitation will be sent by mail and you
 will have to accept it to join. If you don't find the invitation, accept it
 `here <https://github.com/coala>`__.
+
+In any case if the ``corobo`` is down, you can join the community by filling
+out this `joining form <https://community.coala.io/join>`_. By filling out
+this form, we'll perform some automated rudimentary checks to validate whether
+you're eligible to be a member of the organization or not. Once all the checks
+are validated, you'll receive an *invite* to be a part of the Newcomer's team.
 
 **Congratulations!** Now that you are part of our organization, you can start
 working on issues. If you are familiar with git, you can skip the next section
@@ -283,6 +297,16 @@ Ask a developer to check if it should be reclassified as `low` difficulty.
 
     Before starting your first commit, check out this
     link: `Writing good commits <http://coala.io/commit>`_.
+
+.. note::
+
+    If the ``corobo`` is down atm, you can also get assigned to an issue by
+    logging-in on the `coala Community`_. There
+    is a form available for it, if you want to get assigned on that issue.
+    Filling up that form will perform some checks to check whether the issue
+    on which you wish to work is valid or not. If valid, you'll receive an
+    email to get assigned to it. Open the link in the browser to get
+    successfully assigned to that issue.
 
 .. important::
 
