@@ -1,8 +1,11 @@
+import os
+
 import copy
 import difflib
 import logging
 
 from unidiff import PatchSet
+from xmldiff import main, formatting
 
 from coalib.results.LineDiff import LineDiff, ConflictError
 from coalib.results.SourceRange import SourceRange
@@ -30,6 +33,7 @@ class Diff:
         self._original = self._generate_linebreaks(self._file)
         self.rename = rename
         self.delete = delete
+        self.xml = ''
 
     @classmethod
     def from_string_arrays(cls, file_array_1, file_array_2, rename=False):
@@ -154,6 +158,20 @@ class Diff:
                 pass
 
         return diff
+
+    def from_xml_diff(self, new_file, original_file):
+
+        original_content = "".join(original_file)
+        if isinstance(new_file, str):
+            new_file = "".join(new_file.splitlines(keepends=True))
+        new_content = "".join(new_file)
+
+        formatter = formatting.XMLFormatter(normalize=formatting.WS_BOTH,
+                                            pretty_print=True)
+
+        self.xml = main.diff_texts(original_content,
+                                   new_content,
+                                   formatter=formatter)
 
     def _get_change(self, line_nr, min_line=1):
         if not isinstance(line_nr, int):
@@ -352,7 +370,7 @@ class Diff:
 
             last_line = line
             this_diff._changes[line] = self._changes[line]
-
+        this_diff.xml = self.xml
         # If the diff contains no line changes, the loop above will not be run
         # else, this_diff will never be empty and thus this has to be yielded
         # always.

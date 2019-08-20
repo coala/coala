@@ -51,6 +51,20 @@ def print_beautified_diff(difflines, printer):
             current_line_subtracted += 1
             current_line_added += 1
 
+def print_xml_diff(difflines, diff, printer):
+    current_line_added = None
+    current_line_subtracted = None
+    for line in difflines:
+        if line.startswith('@@'):
+            values = line[line.find('-'):line.rfind(' ')]
+            subtracted, added = tuple(values.split(' '))
+            current_line_added = int(added.split(',')[0][1:])
+            current_line_subtracted = int(subtracted.split(',')[0][1:])
+        elif line.startswith('---'):
+            print_from_name(printer, line[4:])
+        elif line.startswith('+++'):
+            print_to_name(printer, line[4:])
+    print(diff.xml.rstrip())
 
 class ShowPatchAction(ResultAction):
 
@@ -118,11 +132,20 @@ class ShowPatchAction(ResultAction):
                 new_file = this_diff.modified
 
             if tuple(current_file) != tuple(new_file):
-                print_beautified_diff(difflib.unified_diff(current_file,
-                                                           new_file,
-                                                           fromfile=filename,
-                                                           tofile=to_filename),
-                                      printer)
+                if 'XML' not in result.message:
+                    print_beautified_diff(difflib.unified_diff(current_file,
+                                                               new_file,
+                                                               fromfile=filename,
+                                                               tofile=to_filename),
+                                          printer)
+                else:
+                    print_xml_diff(difflib.unified_diff(current_file,
+                                                               new_file,
+                                                               fromfile=filename,
+                                                               tofile=to_filename),
+                                   this_diff,
+                                   printer)
+
             elif filename != to_filename:
                 print_from_name(printer, join('a', relpath(filename)))
                 print_to_name(printer, join('b', relpath(to_filename)))
