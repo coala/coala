@@ -467,6 +467,36 @@ class BearTest(BearTestBase):
                          {'y': ('Second value, but better.', int),
                           'w': ('Fourth value.', float)})
 
+    def test_no_warning_debug_enabled_LocalBear(self):
+        self.settings.append(Setting('log_level', 'DEBUG'))
+        self.uut = LocalBear(self.settings, self.queue)
+        self.uut.execute('filename.py', 'file\n')
+        self.check_message(LOG_LEVEL.DEBUG, 'Running bear LocalBear...')
+        # Fails because of no run() implementation
+        self.check_message(LOG_LEVEL.DEBUG,
+                           'The bear LocalBear raised an exception. If you '
+                           'are the author of this bear, please make sure to '
+                           'catch all exceptions. If not and this error '
+                           'annoys you, you might want to get in contact with '
+                           'the author of this bear.\n\nTraceback information '
+                           'is provided below:', True)
+        self.assertRaises(NotImplementedError)
+
+    def test_no_warning_debug_enabled_GlobalBear(self):
+        self.settings.append(Setting('log_level', 'DEBUG'))
+        self.uut = GlobalBear(None, self.settings, self.queue)
+        self.uut.execute()
+        self.check_message(LOG_LEVEL.DEBUG, 'Running bear GlobalBear...')
+        # Fails because of no run() implementation
+        self.check_message(LOG_LEVEL.DEBUG,
+                           'The bear GlobalBear raised an exception. If you '
+                           'are the author of this bear, please make sure to '
+                           'catch all exceptions. If not and this error '
+                           'annoys you, you might want to get in contact with '
+                           'the author of this bear.\n\nTraceback information '
+                           'is provided below:', True)
+        self.assertRaises(NotImplementedError)
+
     def test_get_config_dir(self):
         section = Section('default')
         section.append(Setting('files', '**', '/path/to/dir/config'))

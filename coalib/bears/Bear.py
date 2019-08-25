@@ -460,14 +460,18 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
                 self.err('Bear {} violated one-based offset convention.'
                          .format(name), str(exc))
 
-            if self.kind() == BEAR_KIND.LOCAL:
+            if (self.kind() == BEAR_KIND.LOCAL
+                    and ('log_level' not in self.section
+                         or self.section['log_level'].value != 'DEBUG')):
                 self.err('Bear {} failed to run on file {}. Take a look '
                          'at debug messages (`-V`) for further '
                          'information.'.format(name, args[0]))
-            else:
+            elif ('log_level' not in self.section
+                    or self.section['log_level'].value != 'DEBUG'):
                 self.err('Bear {} failed to run. Take a look '
                          'at debug messages (`-V`) for further '
                          'information.'.format(name))
+
             self.debug(
                 'The bear {bear} raised an exception. If you are the author '
                 'of this bear, please make sure to catch all exceptions. If '

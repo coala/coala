@@ -128,7 +128,7 @@ def _iter_choices(pattern):
 @yield_once
 def _iter_alternatives(pattern):
     """
-    Iterates through all glob patterns that can be obtaines by combination of
+    Iterates through all glob patterns that can be obtained by combination of
     all choices for each alternative
 
     :param pattern: Glob pattern with wildcards

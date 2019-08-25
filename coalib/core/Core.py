@@ -6,6 +6,7 @@ import logging
 from coalib.core.DependencyTracker import DependencyTracker
 from coalib.core.Graphs import traverse_graph
 from coalib.core.PersistentHash import persistent_hash
+from coalib.misc.Compatibility import run_coroutine_threadsafe
 
 
 def group(iterable, key=lambda x: x):
@@ -339,7 +340,7 @@ class Session:
         else:
             bear_args, bear_kwargs = task
 
-            future = asyncio.run_coroutine_threadsafe(
+            future = run_coroutine_threadsafe(
                 asyncio.wait_for(
                     self.event_loop.run_in_executor(
                         self.executor, bear.execute_task,

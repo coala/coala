@@ -1,8 +1,11 @@
 sudo: false
+dist: xenial
 language: python
+notifications:
+  email: false
 python:
-  - 3.4.4
   - 3.5
+  - 3.4
 
 stages:
   - name: sentinel
@@ -13,19 +16,27 @@ stages:
     if: branch = master AND type = push
 
 .disable_global: &disable_global
+  addons: false
+  cache: false
+  env: {}
+  python: false
   before_install: false
-  install: true
+  install: false
   before_script: false
+  script: false
   after_success: false
   after_failure: false
+  before_deploy: false
+  deploy: false
 
-.check_moban: &check_moban
+.moban: &moban
   <<: *disable_global
   python: 3.6
   stage: moban
-  install: pip install moban
-  script: .misc/check_moban.sh
-  if: branch != master OR type = pull_request
+  install: pip install moban>=0.0.4
+  script:
+    - moban
+    - git diff --exit-code
 
 jobs:
   include:
@@ -49,32 +60,36 @@ jobs:
       <<: *disable_global
       stage: unsupported
       script: .misc/check_unsupported.sh
-    - python: 3.4.3
+    - python: 3.4.1
       <<: *disable_global
       stage: unsupported
       script: .misc/check_unsupported.sh
-    - python: 3.6
-      stage: moban
-      install: pip install moban
-      script: .misc/check_moban.sh
+    - stage: moban
+      <<: *moban
       if: branch = master AND type = push
-    - *check_moban
+    - *moban
   allow_failures:
-    - *check_moban
+    - *moban
+
+stage: test
 
 env:
   global:
     - PATH="$PATH:$TRAVIS_BUILD_DIR/node_modules/.bin"
     - BEARS_ZIP_URL=https://codeload.github.com/coala/coala-bears/zip
+    - GRAVIS="https://raw.githubusercontent.com/DanySK/Gravis-CI/master/"
+    - JDK="adopt@1.8.212-04"
 
 cache:
   pip: true
   directories:
     - node_modules
     - docs/_build
+    - ~/nltk_data
+    - ~/.jabba
 
 before_install:
-  - if [[ $TRAVIS_OS_NAME == osx ]]; then TRAVIS_PYTHON_VERSION=3.5; fi
+  - curl "${GRAVIS}.install-jdk-travis.sh" --output ~/.install-jdk-travis.sh
 
   - >
     if [[ $TRAVIS_OS_NAME == osx ]]; then
@@ -83,12 +98,17 @@ before_install:
       sudo ln -sf $(which pip3) $(which pip 2>/dev/null || echo /usr/bin/pip)
     fi
 
+  # See rationale in .ci/deps.python-packages.ps1 for pre-installing these
+  - pip install --prefer-binary cffi lxml
   # Use pip 9, so that setuptools can be downgraded.
   # https://github.com/coala/coala/issues/4708
   # Apart from builds with python 2.7 and 3.5, it installs setuptools
   # twice. So, it is required to uninstall one version manually.
   - pip uninstall setuptools --yes
-  - pip install pip==9 setuptools==21
+  - pip uninstall setuptools --yes || true
+  - pip uninstall setuptools --yes || true
+  - pip uninstall pipenv --yes || true
+  - pip install pip==9.0.1 setuptools==21.2.2
   - python .misc/check_setuptools.py
 
   # https://github.com/coala/coala/issues/3183
@@ -103,6 +123,7 @@ before_install:
 
   # For bears in .coafile requiring npm dependencies
   - npm install --no-save
+  - source ~/.install-jdk-travis.sh
 
 before_script:
   # Restore the original requirements.txt
@@ -112,9 +133,9 @@ before_script:
 script:
   - py.test
   - python setup.py bdist_wheel
-  - pip install ./dist/coala-*.whl
+  - pip install ./dist/*.whl
   - curl -fsSL -o coala-bears.zip $BEARS_ZIP_URL/master
-  - pip install coala-bears.zip[alldeps] --pre -U
+  - pip install coala-bears.zip[alldeps]
   - coala --non-interactive
   - python setup.py docs
   - .ci/check_man.sh
@@ -124,9 +145,6 @@ after_success:
 
 after_failure:
   - codecov
-
-notifications:
-  email: false
 
 branches:
   exclude:

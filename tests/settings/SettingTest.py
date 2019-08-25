@@ -212,3 +212,11 @@ class SettingTest(unittest.TestCase):
                                     'Use SourcePosition for line numbers.'):
             self.uut = Setting('key', '22\n', origin='filename')
             self.uut.line_number
+
+    def test_end_line_number(self):
+        with self.assertRaisesRegex(TypeError,
+                                    "Instantiated with str 'origin' "
+                                    'which does not have line numbers. '
+                                    'Use SourcePosition for line numbers.'):
+            self.uut = Setting('key', '22\n', origin='filename')
+            self.uut.end_line_number
