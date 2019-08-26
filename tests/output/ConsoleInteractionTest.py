@@ -46,6 +46,11 @@ from pygments.token import Token
 
 from tests.TestUtilities import bear_test_module, execute_coala
 
+from copy import deepcopy
+
+from coalib.parsing.DefaultArgParser import default_arg_parser
+from coalib.nestedlib.NlCore import (get_parser,
+                                     get_nl_coala_sections)
 
 STR_GET_VAL_FOR_SETTING = ('Please enter a value for the setting \"{}\" ({}) '
                            'needed by {}: ')
@@ -372,6 +377,32 @@ class ConsoleInteractionTest(unittest.TestCase):
                                  file_dict)
             self.assertEqual(stdout.getvalue(), '\n'+relpath(some_file)+'\n')
 
+        with retrieve_stdout() as stdout, make_temp() as some_file:
+            file_dict = {some_file: ['1\n', '2\n', '3\n']}
+            nl_file_dict = deepcopy(file_dict)
+            affected_code = (SourceRange.from_values(some_file),)
+            print_affected_files(self.console_printer,
+                                 self.log_printer,
+                                 Result('origin',
+                                        'message',
+                                        affected_code=affected_code),
+                                 file_dict)
+            self.assertEqual(stdout.getvalue(), '\n'+relpath(some_file)+'\n')
+
+        # Do not print affected files when Nested Language mode is running
+        with retrieve_stdout() as stdout, make_temp() as some_file:
+            file_dict = {some_file: ['1\n', '2\n', '3\n']}
+            nl_file_dict = deepcopy(file_dict)
+            affected_code = (SourceRange.from_values(some_file),)
+            print_affected_files(self.console_printer,
+                                 self.log_printer,
+                                 Result('origin',
+                                        'message',
+                                        affected_code=affected_code),
+                                 file_dict,
+                                 nl_file_dict=nl_file_dict)
+            self.assertEqual(stdout.getvalue(), '')
+
     def test_acquire_actions_and_apply(self):
         with make_temp() as testfile_path:
             file_dict = {testfile_path: ['1\n', '2\n', '3\n']}
@@ -515,6 +546,45 @@ class ConsoleInteractionTest(unittest.TestCase):
             ask_for_action_and_apply(*args)
             self.assertEqual(generator.last_input, 3)
             self.assertNotIn('TestAction', failed_actions)
+
+    def test_ask_for_actions_and_apply(self):
+        # Applying Action in Nested language mode
+        arg_parser = default_arg_parser()
+        test_dir_path = os.path.abspath(__file__ + '/../../..')
+        test_bear_path = os.path.join(test_dir_path, 'test_bears')
+        arg_list = ['--no-config', '--handle-nested',
+                    '--bears=PEP8TestBear,Jinja2TestBear',
+                    '--languages=python,jinja2', '--files=test.py',
+                    '--bear-dirs='+test_bear_path
+                    ]
+        args = arg_parser.parse_args(arg_list)
+        nl_sections = get_nl_coala_sections(args=args)
+        nl_sections = nl_sections['cli_nl_section: test.py_nl_python']
+
+        failed_actions = set()
+        action = TestAction()
+        open_editor_action = OpenEditorAction()
+        generate_patches_action = GeneratePatchesAction()
+        do_nothing_action = DoNothingAction()
+        args = [self.console_printer,
+                nl_sections,
+                [do_nothing_action.get_metadata(), action.get_metadata(),
+                 open_editor_action.get_metadata(),
+                 generate_patches_action.get_metadata()],
+                {'DoNothingAction': do_nothing_action, 'TestAction': action,
+                 'OpenEditorAction': open_editor_action,
+                 'GeneratePatchesAction': generate_patches_action},
+                failed_actions, Result('origin', 'message'), {}, {}, {}]
+        with simulate_console_inputs('o', 'param1', 'g', 'param2') as generator:
+            action.apply = unittest.mock.Mock(side_effect=AssertionError)
+            ask_for_action_and_apply(*args)
+            self.assertEqual(generator.last_input, 1)
+            self.assertIn('OpenEditorAction', failed_actions)
+
+            action.apply = lambda *args, **kwargs: {}
+            ask_for_action_and_apply(*args)
+            self.assertEqual(generator.last_input, 2)
+            self.assertIn('GeneratePatchesAction', failed_actions)
 
     def test_default_input(self):
         action = TestAction()
