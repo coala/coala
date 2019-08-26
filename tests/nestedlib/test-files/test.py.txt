@@ -1,0 +1,2 @@
+print("Hello Thanos")
+{% set x = {{var}} %}
