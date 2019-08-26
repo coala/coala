@@ -1,0 +1,368 @@
+{% if not scm_host %}
+{% set scm_host = 'github.com' %}
+{% endif %}
+{% block shebang %}
+#!/usr/bin/env python3
+{% endblock %}
+{% set min_python_version = min_python_version|default('2.6') %}
+{% set min_python_version = min_python_version.split('.', 2) %}
+
+{% block header %}
+# Template by pypi-mobans
+{% endblock %}
+import codecs
+import locale
+import os
+import platform
+import sys
+from shutil import rmtree
+{% if external_module_library %}
+from distutils.core import setup, Extension
+{% else %}
+
+from setuptools import Command, find_packages, setup
+
+{%endif%}
+{%block compat_block%}
+PY2 = sys.version_info[0] == 2
+PY26 = PY2 and sys.version_info[1] < 7
+PY33 = sys.version_info < (3, 4)
+{%endblock%}
+
+# Work around mbcs bug in distutils.
+# http://bugs.python.org/issue10945
+# This work around is only if a project supports Python < 3.4
+{% if PY33 %}
+try:
+    codecs.lookup("mbcs")
+except LookupError:
+    ascii = codecs.lookup("ascii")
+    func = lambda name, enc=ascii: {True: enc}.get(name=="mbcs")
+    codecs.register(func)
+{% endif %}
+
+# Work around for locale not being set
+try:
+    lc = locale.getlocale()
+    pf = platform.system()
+    if pf != "Windows" and lc == (None, None):
+        locale.setlocale(locale.LC_ALL, "C.UTF-8")
+except (ValueError, UnicodeError, locale.Error):
+    locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+
+NAME = "{{name}}"
+AUTHOR = "{{author}}"
+VERSION = "{{current_version}}"
+EMAIL = "{{contact}}"
+LICENSE = "{{license}}"
+{% if MAINTAINER %}
+MAINTAINER = "{{maintainer}}"
+MAINTAINER_CONTACT = "{{maintainer_contact}}"
+{% endif %}
+{% if command_line_interface or entry_points %}
+ENTRY_POINTS = {
+{% if not entry_points or 'console_scripts' not in entry_points %}
+    "console_scripts": [
+        "{{command_line_interface}} = {{ entry_point }}"
+    ],
+{% endif %}
+{% if entry_points %}
+  {% for group_name, items in entry_points.items() %}
+    "{{group_name}}": [
+      {% if group_name == "console_scripts" and command_line_interface %}
+        "{{command_line_interface}} = {{ entry_point }}",
+      {% endif %}
+      {% for item in items %}
+        "{{item}}",
+      {% endfor %}
+    ],
+  {% endfor %}
+{% endif %}
+}
+{% endif %}
+DESCRIPTION = (
+{% for line in description | split_length(70) %}
+    "{{ line }}"{{ " +" if not loop.last}}
+{% endfor %}
+)
+URL = "https://{{scm_host}}/{{organisation}}/{{name}}"
+DOWNLOAD_URL = "%s/archive/{{release}}.tar.gz" % URL
+FILES = ["README.rst",{%block morefiles %}{%endblock%} "CHANGELOG.rst"]
+{% if self.additional_keywords %}
+{% set additional_keywords = self.additional_keywords() %}
+{% if additional_keywords and not additional_keywords.rstrip().endswith(",") %}
+{% set additional_keywords = additional_keywords.rstrip() + ",\n" %}
+{% endif %}
+{% endif %}
+KEYWORDS = [
+    "python",
+{% for keyword in keywords %}
+    "{{keyword}}",
+{% endfor %}
+    {%block additional_keywords -%}
+    {%endblock%}
+]
+
+CLASSIFIERS = [
+    "Topic :: Software Development :: Libraries",
+    "Programming Language :: Python",
+    "Intended Audience :: Developers",
+    {% if min_python_version <= ["2", "6"] %}
+    "Programming Language :: Python :: 2.6",
+    {%- endif %}
+
+    {% if min_python_version <= ["2", "7"] %}
+    "Programming Language :: Python :: 2.7",
+    {%- endif %}
+
+    {%- if min_python_version[0] == "3" %}
+    "Programming Language :: Python :: 3 :: Only",
+    {%- endif %}
+
+    {% if min_python_version <= ["3","3"] %}
+    "Programming Language :: Python :: 3.3",
+    {%- endif %}
+
+    {% if min_python_version <= ["3","4"] %}
+    "Programming Language :: Python :: 3.4",
+    {%- endif %}
+
+    {% if min_python_version <= ["3","5"] %}
+    "Programming Language :: Python :: 3.5",
+    {%- endif %}
+
+    {% if min_python_version <= ["3","6"] %}
+    "Programming Language :: Python :: 3.6",
+    {% endif %}
+
+    {% if min_python_version <= ["3","7"] %}
+    "Programming Language :: Python :: 3.7",
+    {% endif %}
+
+    {% if min_python_version <= ["3","8"] %}
+    "Programming Language :: Python :: 3.8",
+    {% endif %}
+
+    {%block additional_classifiers%}
+    {%endblock %}
+]
+
+{%macro handle_complex_dependency(complex_one) -%}
+{%set dependency, condition = complex_one.split(";")%}
+{% if condition == 'python_version<"3"'%}
+if PY2:
+{% endif %}
+{% if condition == 'python_version>="3"'%}
+if not PY2:
+{% endif %}
+{% if condition == 'python_version<"2.7"'%}
+if PY26:
+{% endif %}
+{% if condition == 'platform_python_implementation=="PyPy"'%}
+if platform.python_implementation == "PyPy":
+{%endif%}
+    INSTALL_REQUIRES.append('{{dependency}}')
+{%- endmacro %}
+INSTALL_REQUIRES = [
+{% for dependency in dependencies: %}
+  {% if ';' not in dependency and not dependency.startswith('#'): %}
+    {% if '#egg=' in dependency: %}
+      {% set dependency = dependency.split('#egg=') %}
+      {% set repo_link, egg_name = dependency[0], dependency[1] %}
+      {% set repo_link = repo_link.strip() %}
+      {% if '#' in egg_name: %}
+        {% set egg_name = egg_name.split('#')[0].strip() %}
+      {% endif %}
+    "{{[repo_link, egg_name] | join('#egg=')}}",
+    {% elif '#' in dependency: %}
+      {% set dependency = dependency.split('#')[0].strip() %}
+    "{{dependency}}",
+    {% else %}
+    "{{dependency}}",
+    {% endif %}
+  {%   endif %}
+{% endfor %}
+]
+{% block additional_setup_commands %}
+SETUP_COMMANDS = {}
+{% endblock %}
+
+{% for dependency in dependencies: %}
+  {%  if ';' in dependency: %}
+{{handle_complex_dependency(dependency)}}
+  {%   endif %}
+{% endfor %}
+
+{% if external_module_library %}
+PYMODULE = Extension(
+    '{{name}}',
+    sources=[
+{% for source in sources: %}
+        "{{source}}",
+{% endfor %}
+    ],
+    libraries=INSTALL_REQUIRES
+)
+{% else %}
+PACKAGES = find_packages(exclude=["ez_setup", "examples", "tests"])
+{% if extra_dependencies or dependencies: %}
+EXTRAS_REQUIRE = {
+  {% for dependency in extra_dependencies: %}
+     {% for key, value in dependency.items(): %}
+    "{{key}}": {{value}},
+     {% endfor %}
+  {% endfor %}
+}
+{% else: %}
+EXTRAS_REQUIRE = {}
+{% endif %}
+{% endif %}
+# You do not need to read beyond this line
+{% if nowheel %}
+PUBLISH_COMMAND = "{0} setup.py sdist upload -r pypi".format(sys.executable)
+{% else %}
+PUBLISH_COMMAND = "{0} setup.py sdist bdist_wheel upload -r pypi".format(sys.executable)
+{% endif %}
+GS_COMMAND = ("gs {{name}} v{{release}} " +
+              "Find {{release}} in changelog for more details")
+NO_GS_MESSAGE = ("Automatic github release is disabled. " +
+                 "Please install gease to enable it.")
+UPLOAD_FAILED_MSG = (
+    'Upload failed. please run "%s" yourself.' % PUBLISH_COMMAND)
+HERE = os.path.abspath(os.path.dirname(__file__))
+
+
+class PublishCommand(Command):
+    """Support setup.py upload."""
+
+    description = "Build and publish the package on github and pypi"
+    user_options = []
+
+    @staticmethod
+    def status(s):
+        """Prints things in bold."""
+        print("\033[1m{0}\033[0m".format(s))
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        try:
+            self.status("Removing previous builds...")
+            rmtree(os.path.join(HERE, "dist"))
+            rmtree(os.path.join(HERE, "build"))
+            rmtree(os.path.join(HERE, "{{name|replace('-', '_')}}.egg-info"))
+        except OSError:
+            pass
+
+        self.status("Building Source and Wheel (universal) distribution...")
+        run_status = True
+        if has_gease():
+            run_status = os.system(GS_COMMAND) == 0
+        else:
+            self.status(NO_GS_MESSAGE)
+        if run_status:
+            if os.system(PUBLISH_COMMAND) != 0:
+                self.status(UPLOAD_FAILED_MSG % PUBLISH_COMMAND)
+
+        sys.exit()
+
+
+SETUP_COMMANDS.update({
+    "publish": PublishCommand
+})
+
+
+def has_gease():
+    """
+    test if github release command is installed
+
+    visit http://github.com/moremoban/gease for more info
+    """
+    try:
+        import gease  # noqa
+        return True
+    except ImportError:
+        return False
+
+
+def read_files(*files):
+    """Read files into setup"""
+    text = ""
+    for single_file in files:
+        content = read(single_file)
+        text = text + content + "\n"
+    return text
+
+
+def read(afile):
+    """Read a file into setup"""
+    the_relative_file = os.path.join(HERE, afile)
+    with codecs.open(the_relative_file, "r", "utf-8") as opened_file:
+        content = filter_out_test_code(opened_file)
+        content = "".join(list(content))
+        return content
+
+
+def filter_out_test_code(file_handle):
+    found_test_code = False
+    for line in file_handle.readlines():
+        if line.startswith(".. testcode:"):
+            found_test_code = True
+            continue
+        if found_test_code is True:
+            if line.startswith("  "):
+                continue
+            else:
+                empty_line = line.strip()
+                if len(empty_line) == 0:
+                    continue
+                else:
+                    found_test_code = False
+                    yield line
+        else:
+            for keyword in ["|version|", "|today|"]:
+                if keyword in line:
+                    break
+            else:
+                yield line
+
+
+if __name__ == "__main__":
+    setup(
+{% if "tests" is exists %}
+        test_suite="tests",
+{% endif %}
+        name=NAME,
+        author=AUTHOR,
+        version=VERSION,
+        author_email=EMAIL,
+{% if MAINTAINER %}
+        maintainer=MAINTAINER_NAME,
+        maintainer_email=MAINTAINER_EMAIL,
+{% endif %}
+        description=DESCRIPTION,
+        url=URL,
+        download_url=DOWNLOAD_URL,
+        long_description=read_files(*FILES),
+        license=LICENSE,
+        keywords=KEYWORDS,
+{% if external_module_library %}
+        ext_modules=[PYMODULE],
+{% else %}
+        extras_require=EXTRAS_REQUIRE,
+        tests_require=["nose"],
+        install_requires=INSTALL_REQUIRES,
+        packages=PACKAGES,
+        include_package_data=True,
+        zip_safe=False,
+{% if command_line_interface or entry_points %}
+        entry_points=ENTRY_POINTS,
+{% endif %}
+{% endif%}
+        classifiers=CLASSIFIERS,
+        cmdclass=SETUP_COMMANDS
+    )
