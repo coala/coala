@@ -16,7 +16,8 @@ class PrintMoreInfoAction(ResultAction):
             return True
         return 'There is no additional info.'
 
-    def apply(self, result, original_file_dict, file_diff_dict):
+    def apply(self, result, original_file_dict, file_diff_dict,
+              nl_file_dict=None, nested_lang: bool = False):
         """
         Print (M)ore info
         """

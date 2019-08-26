@@ -16,7 +16,8 @@ class PrintDebugMessageAction(ResultAction):
             return True
         return 'There is no debug message.'
 
-    def apply(self, result, original_file_dict, file_diff_dict):
+    def apply(self, result, original_file_dict, file_diff_dict,
+              nl_file_dict=None, nested_lang: bool = False,):
         """
         Print (D)ebug message
         """
