@@ -25,6 +25,8 @@ from coalib.misc.CachingUtilities import (
 from coalib.parsing.FilterHelper import (
     apply_filters, collect_filters, InvalidFilterException)
 
+from coalib.nestedlib.NlCore import nested_language, apply_patches_to_nl_file
+
 
 def do_nothing(*args):
     return True
@@ -137,6 +139,7 @@ def run_coala(console_printer=None,
     sections = {}
     results = {}
     file_dicts = {}
+    nl_file_dicts = {}
     try:
         yielded_results = yielded_unfixed_results = False
         did_nothing = True
@@ -145,17 +148,27 @@ def run_coala(console_printer=None,
             arg_parser=arg_parser,
             arg_list=arg_list,
             args=args)
-
         logging.debug('Platform {} -- Python {}, coalib {}'
                       .format(platform.system(), platform.python_version(),
                               VERSION))
 
         settings_hash = get_settings_hash(sections, targets)
-        flush_cache = bool(sections['cli'].get('flush_cache', False) or
-                           settings_changed(None, settings_hash))
 
-        if cache is None and not sections['cli'].get('disable_caching', False):
+        if nested_language(args=args, arg_list=arg_list, arg_parser=arg_parser):
+            # Since all the nl_coala_sections have the same settings values
+            # We choose the first sections and get the setting values from it.
+            nl_section = list(sections.values())[0]
+            flush_cache = bool(nl_section.get('flush_cache', False) or
+                               settings_changed(None, settings_hash))
             cache = FileDictFileCache(None, os.getcwd(), flush_cache)
+
+        else:
+            flush_cache = bool(sections['cli'].get('flush_cache', False) or
+                               settings_changed(None, settings_hash))
+
+            if cache is None and not sections['cli'].get('disable_caching',
+                                                         False):
+                cache = FileDictFileCache(None, os.getcwd(), flush_cache)
 
         if targets:
             sections = OrderedDict(
@@ -205,6 +218,14 @@ def run_coala(console_printer=None,
             did_nothing = False
 
             file_dicts[section_name] = section_result[3]
+            nl_file_dicts[section_name] = section_result[4]
+
+        if nested_language(args=args, arg_list=arg_list, arg_parser=arg_parser):
+            apply_patches_to_nl_file(nl_file_dicts=nl_file_dicts,
+                                     args=args,
+                                     arg_list=arg_list,
+                                     arg_parser=arg_parser,
+                                     sections=sections)
 
         update_settings_db(None, settings_hash)
         if cache:

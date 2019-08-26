@@ -1,4 +1,5 @@
 import argparse
+import sys
 import os
 
 from coalib.misc import Constants
@@ -177,6 +178,12 @@ To run coala without user interaction, run the `coala --non-interactive`,
         '-d', '--bear-dirs', type=PathArg, nargs='+', metavar='DIR',
         help='additional directories which may contain bears')
 
+    # Only required when `handle-nested` is provided
+    inputs_group.add_argument(
+        '--languages', nargs='+', metavar='LANG',
+        required='--handle-nested' in sys.argv,
+        help='nested languages present in the file')
+
     outputs_group = arg_parser.add_argument_group('Outputs')
 
     outputs_group.add_argument(
@@ -292,6 +299,10 @@ To run coala without user interaction, run the `coala --non-interactive`,
              'which must be separately installed, '
              'on unexpected internal exceptions '
              '(implies --verbose)')
+
+    misc_group.add_argument(
+        '--handle-nested', const=True, action='store_const',
+        help='lint files having nested languages')
 
     global argcomplete
     if argcomplete is None:

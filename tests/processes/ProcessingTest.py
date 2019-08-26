@@ -192,6 +192,37 @@ class ProcessingTest(unittest.TestCase):
         # No global bear
         self.assertEqual(len(results[2]), 0)
 
+    def test_nested_language_run(self):
+        config_path = os.path.abspath(os.path.join(
+            os.path.dirname(__file__),
+            'section_executor_test_files'))
+
+        testcode_p_path = os.path.join(config_path, 'test.py.jj2.txt')
+        test_dir_path = os.path.abspath(__file__ + '/../..')
+        test_bear_path = os.path.join(test_dir_path, 'test_bears')
+
+        sections, local_bears, global_bears, targets = (
+                    gather_configuration(
+                        lambda *args: self.result_queue.put(args[2]),
+                        arg_list=[
+                            '--no-config', '--handle-nested',
+                            '--bears=PEP8TestBear,Jinja2TestBear',
+                            '--bear-dirs='+test_bear_path,
+                            '--languages=python,jinja2',
+                            '--files='+testcode_p_path]))
+
+        cache = FileCache(self.log_printer, 'coala_test', flush_cache=True)
+        section_name = 'cli_nl_section: ' + testcode_p_path+'_nl_python'
+        results = execute_section(sections[section_name],
+                                  global_bears[section_name],
+                                  local_bears[section_name],
+                                  lambda *args: self.result_queue.put(args[2]),
+                                  cache,
+                                  self.log_printer,
+                                  console_printer=self.console_printer)
+        # We get no results back, because we use dummy bears.
+        self.assertFalse(results[0])
+
     def test_mixed_run(self):
         self.sections['mixed'].append(Setting('jobs', '1'))
         log_printer = ListLogPrinter()
@@ -412,7 +443,8 @@ class ProcessingTest(unittest.TestCase):
                    {'file1': [Result('a', 'b')], 'file2': None},
                    {'file3': [Result('a', 'c')]},
                    None)
-        yielded, yielded_unfixed, all_results = simplify_section_result(results)
+        yielded, yielded_unfixed, all_results = simplify_section_result(
+            results)
         self.assertEqual(yielded, True)
         self.assertEqual(yielded_unfixed, True)
         self.assertEqual(len(all_results), 2)

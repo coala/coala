@@ -9,6 +9,12 @@ from coalib.results.result_actions.ApplyPatchAction import ApplyPatchAction
 from coalib.settings.Section import Section
 
 
+from coalib.parsing.DefaultArgParser import default_arg_parser
+from coalib.nestedlib.NlCore import (get_parser,
+                                     get_nl_coala_sections)
+from copy import deepcopy
+
+
 class ApplyPatchActionTest(unittest.TestCase):
 
     def test_apply(self):
@@ -178,3 +184,64 @@ class ApplyPatchActionTest(unittest.TestCase):
             ApplyPatchAction.is_applicable(result, {}, {}),
             'This result has no patch attached.'
         )
+
+    def test_apply_nested_language(self):
+        arg_parser = default_arg_parser()
+        test_dir_path = os.path.abspath(__file__ + '/../../..')
+        test_bear_path = os.path.join(test_dir_path, 'test_bears')
+        arg_list = ['--no-config', '--handle-nested',
+                    '--bears=PEP8TestBear,Jinja2TestBear',
+                    '--languages=python,jinja2', '--files=test.py',
+                    '--bear-dirs='+test_bear_path
+                    ]
+        args = arg_parser.parse_args(arg_list)
+        nl_sections = get_nl_coala_sections(args=args)
+        nl_sections = nl_sections['cli_nl_section: test.py_nl_python']
+        uut = ApplyPatchAction()
+        with make_temp() as f_a, make_temp() as f_b, make_temp() as f_c:
+
+            file_dict = {
+                f_a: ['1\n', '2\n', '3\n'],
+                f_b: ['1\n', '2\n', '3\n'],
+                f_c: ['1\n', '2\n', '3\n']
+            }
+            expected_file_dict = {
+                f_a: ['1\n', '3_changed\n'],
+                f_b: ['1\n', '2\n', '3_changed\n'],
+                f_c: ['1\n', '2\n', '3\n']
+            }
+
+            file_diff_dict = {}
+            nl_file_dict = deepcopy(file_dict)
+
+            diff = Diff(file_dict[f_a])
+            diff.delete_line(2)
+            uut.apply_from_section(Result('origin', 'msg', diffs={f_a: diff}),
+                                   file_dict,
+                                   file_diff_dict,
+                                   nl_sections,
+                                   nl_file_dict=nl_file_dict)
+
+            diff = Diff(file_dict[f_a])
+            diff.change_line(3, '3\n', '3_changed\n')
+            uut.apply_from_section(Result('origin', 'msg', diffs={f_a: diff}),
+                                   file_dict,
+                                   file_diff_dict,
+                                   nl_sections,
+                                   nl_file_dict=nl_file_dict)
+
+            diff = Diff(file_dict[f_b])
+            diff.change_line(3, '3\n', '3_changed\n')
+            uut.apply(Result('origin', 'msg', diffs={f_b: diff}),
+                      file_dict,
+                      file_diff_dict,
+                      nl_file_dict=nl_file_dict,
+                      nested_lang=True
+                      )
+
+            for filename in file_diff_dict:
+                file_dict[filename] = file_diff_dict[filename].modified
+
+            # In nested Language mode, only nl_file_dict is updated. We
+            # do not write to the file whenever a patch is applied.
+            self.assertEqual(nl_file_dict, expected_file_dict)

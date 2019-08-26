@@ -30,3 +30,4 @@ pip<10
 six>=1.11.0
 wheel~=0.29
 testfixtures~=5.3.1
+regex

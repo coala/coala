@@ -69,14 +69,17 @@ class GeneratePatchesAction(ResultAction):
     def apply(self,
               result,
               original_file_dict,
-              file_diff_dict):
+              file_diff_dict,
+              nl_file_dict=None,
+              nested_lang=False,):
         """
         (G)enerate patches
         """
 
         console_printer = ConsolePrinter()
         log_printer = LogPrinter()
-        to_filename = sorted(result.diffs.items())[OBJECT_INDEX][FILENAME_INDEX]
+        to_filename = sorted(result.diffs.items())[
+                             OBJECT_INDEX][FILENAME_INDEX]
 
         filtered_bears = filter_bears(find_language(to_filename))
         filtered_bears.insert(0, DefaultBear())

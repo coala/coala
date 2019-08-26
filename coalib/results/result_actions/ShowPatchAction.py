@@ -87,8 +87,11 @@ class ShowPatchAction(ResultAction):
               result,
               original_file_dict,
               file_diff_dict,
+              nl_file_dict=None,
+              nested_lang: bool = False,
               no_color: bool = False,
-              show_result_on_top: bool = False):
+              show_result_on_top: bool = False,
+              ):
         """
         (S)how patch
 

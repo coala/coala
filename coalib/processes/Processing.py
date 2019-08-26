@@ -31,6 +31,10 @@ from coalib.parsing.Globbing import fnmatch
 from coalib.io.FileProxy import FileDictGenerator
 from coalib.io.File import File
 
+from coalib.nestedlib.NlCore import get_parser
+from coalib.nestedlib.NlFileHandler import get_nl_file_dict
+
+from copy import deepcopy
 
 ACTIONS = [DoNothingAction,
            ApplyPatchAction,
@@ -210,7 +214,8 @@ def print_result(results,
                  file_diff_dict,
                  ignore_ranges,
                  console_printer,
-                 apply_single=False):
+                 apply_single=False,
+                 nl_file_dict=None):
     """
     Takes the results produced by each bear and gives them to the print_results
     method to present to the user.
@@ -246,14 +251,14 @@ def print_result(results,
                                         file_dict,
                                         file_diff_dict,
                                         section)
-
     print_results(None,
                   section,
                   patched_results,
                   file_dict,
                   file_diff_dict,
                   console_printer,
-                  apply_single)
+                  apply_single,
+                  nl_file_dict)
     return retval or len(results) > 0, patched_results
 
 
@@ -373,12 +378,29 @@ def instantiate_processes(section,
                              and the arguments passed to each process which are
                              the same for each object.
     """
-    filename_list = collect_files(
-        glob_list(section.get('files', '')),
-        None,
-        ignored_file_paths=glob_list(section.get('ignore', '')),
-        limit_file_paths=glob_list(section.get('limit_files', '')),
-        section_name=section.name)
+    if section.get('handle_nested', False):
+        filename_list = collect_files(
+            glob_list(section.get('orig_file_name', '')),
+            None,
+            ignored_file_paths=glob_list(section.get('ignore', '')),
+            limit_file_paths=glob_list(section.get('limit_files', '')),
+            section_name=section.name)
+        orig_file_path = glob_list(section.get('orig_file_name', ''))[0]
+        parser = get_parser(section.get('languages').value)
+        temp_file_name = section.get('files').value
+        file_lang = section.get('file_lang').value
+        nl_file_dict = get_nl_file_dict(orig_file_path=orig_file_path,
+                                        temp_file_name=temp_file_name,
+                                        lang=file_lang,
+                                        parser=parser)
+
+    else:
+        filename_list = collect_files(
+            glob_list(section.get('files', '')),
+            None,
+            ignored_file_paths=glob_list(section.get('ignore', '')),
+            limit_file_paths=glob_list(section.get('limit_files', '')),
+            section_name=section.name)
 
     # This stores all matched files irrespective of whether coala is run
     # only on changed files or not. Global bears require all the files
@@ -434,12 +456,15 @@ def instantiate_processes(section,
                       'use the `--flush-cache` flag to see them.')
         filename_list = changed_files
 
-    # Note: the complete file dict is given as the file dict to bears and
-    # the whole project is accessible to every bear. However, local bears are
-    # run only for the changed files if caching is enabled.
-    file_dict = {filename: complete_file_dict[filename]
-                 for filename in filename_list
-                 if filename in complete_file_dict}
+    if section.get('handle_nested', False):
+        file_dict = nl_file_dict
+    else:
+        # Note: the complete file dict is given as the file dict to bears and
+        # the whole project is accessible to every bear. However, local bears
+        # are run only for the changed files if caching is enabled.
+        file_dict = {filename: complete_file_dict[filename]
+                     for filename in filename_list
+                     if filename in complete_file_dict}
 
     bear_runner_args = {'file_name_queue': filename_queue,
                         'local_bear_list': local_bear_list,
@@ -557,7 +582,8 @@ def process_queues(processes,
                    console_printer,
                    debug=False,
                    apply_single=False,
-                   debug_bears=False):
+                   debug_bears=False,
+                   nl_file_dict=None):
     """
     Iterate the control queue and send the results received to the print_result
     method so that they can be presented to the user.
@@ -621,7 +647,8 @@ def process_queues(processes,
                                            file_diff_dict,
                                            ignore_ranges,
                                            console_printer=console_printer,
-                                           apply_single=apply_single
+                                           apply_single=apply_single,
+                                           nl_file_dict=nl_file_dict,
                                            )
                 local_result_dict[index] = res
             else:
@@ -645,7 +672,8 @@ def process_queues(processes,
                                    file_diff_dict,
                                    ignore_ranges,
                                    console_printer=console_printer,
-                                   apply_single=apply_single)
+                                   apply_single=apply_single,
+                                   nl_file_dict=nl_file_dict)
         global_result_dict[elem] = res
 
     # One process is the logger thread
@@ -664,7 +692,8 @@ def process_queues(processes,
                                            file_diff_dict,
                                            ignore_ranges,
                                            console_printer,
-                                           apply_single)
+                                           apply_single,
+                                           nl_file_dict=nl_file_dict)
                 global_result_dict[index] = res
             else:
                 assert control_elem == CONTROL_ELEMENT.GLOBAL_FINISHED
@@ -807,6 +836,16 @@ def execute_section(section,
     for runner in processes:
         runner.start()
 
+    # If run in nested language mode, create a nl_file_dict, that will hold the
+    # applied patches by the user. Unlike the normal execution mode of coala
+    # the applied patches are not written in a file, rather they are written/
+    # updated in the nl_file_dict.
+    nl_file_dict = {}
+    if section.get('handle_nested', False):
+        nl_file_dict = deepcopy(arg_dict['file_dict'])
+        for file in nl_file_dict:
+            nl_file_dict[file] = list(nl_file_dict[file])
+
     try:
         return (process_queues(processes,
                                arg_dict['control_queue'],
@@ -820,10 +859,12 @@ def execute_section(section,
                                console_printer=console_printer,
                                debug=debug,
                                apply_single=apply_single,
-                               debug_bears=debug_bears),
+                               debug_bears=debug_bears,
+                               nl_file_dict=nl_file_dict),
                 arg_dict['local_result_dict'],
                 arg_dict['global_result_dict'],
-                arg_dict['file_dict'])
+                arg_dict['file_dict'],
+                nl_file_dict)
     finally:
         if not (debug or debug_bears):
             # in debug mode multiprocessing and logger_thread are disabled

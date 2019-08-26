@@ -14,6 +14,7 @@ from coalib.output.Logging import configure_logging
 from coala_utils.ContextManagers import (
     make_temp, retrieve_stdout, simulate_console_inputs)
 
+
 from tests.TestUtilities import (
     bear_test_module,
     execute_coala,
@@ -416,3 +417,28 @@ class coalaTest(unittest.TestCase):
                 self.assertEqual(stdout, 'Executing section cli...\n')
                 self.assertEqual(retval, 0, 'coala must return zero when '
                                  'there are no errors')
+
+    def test_nested_language_run_coala(self):
+        # If the nested language file has no error to lint, then the
+        # exit code is zero
+        config_path = os.path.abspath(os.path.join(
+            os.path.dirname(__file__),
+            'processes/section_executor_test_files'))
+
+        testcode_p_path = os.path.join(config_path, 'test.py.txt')
+        uut_arg_list = [
+                        '--no-config', '--handle-nested',
+                        '--bears=PEP8TestBear,Jinja2TestBear',
+                        '--languages=python,jinja2',
+                        '--files='+testcode_p_path,
+                      ]
+        results, retval, _ = run_coala(
+                                        console_printer=ConsolePrinter(),
+                                        log_printer=LogPrinter(),
+                                        arg_list=uut_arg_list,
+                                        autoapply=False,
+                                        )
+
+        self.assertNotEqual(retval, 0,
+                            'coala must return nonzero when '
+                            'errors occured')

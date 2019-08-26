@@ -16,7 +16,8 @@ class PrintAspectAction(ResultAction):
             return 'There is no aspect associated with the result.'
         return True
 
-    def apply(self, result, original_file_dict, file_diff_dict):
+    def apply(self, result, original_file_dict, file_diff_dict,
+              nl_file_dict=None, nested_lang=False,):
         """
         Print Aspec(T) Information
         """

@@ -1,0 +1,6 @@
+for x in y:
+{% if x is True %}
+    {% set var3 = value3 %}
+    
+{% elif %}
+    {{ var }} = sum_square(x1*2)

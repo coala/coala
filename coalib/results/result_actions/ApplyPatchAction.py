@@ -18,7 +18,10 @@ class ApplyPatchAction(ResultAction):
               result,
               original_file_dict,
               file_diff_dict,
-              no_orig: bool = False):
+              nl_file_dict=None,
+              no_orig: bool = False,
+              nested_lang: bool = False,
+              ):
         """
         (A)pply patch
 
@@ -47,9 +50,16 @@ class ApplyPatchAction(ResultAction):
                 new_filename = (diff.rename
                                 if diff.rename is not False
                                 else filename)
-                with open(new_filename, mode='w',
-                          encoding=detect_encoding(pre_patch_filename)) as file:
-                    file.writelines(diff.modified)
+
+                # Write to the original file only when we run coala is run in
+                # normal mode
+                if not nested_lang:
+                    with open(new_filename, mode='w',
+                              encoding=detect_encoding(pre_patch_filename)
+                              ) as file:
+                        file.writelines(diff.modified)
+                else:
+                    nl_file_dict[filename] = diff.modified
 
             if diff.delete or diff.rename:
                 if diff.rename != pre_patch_filename and isfile(

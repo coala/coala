@@ -37,7 +37,8 @@ class ResultAction:
         """
         return True
 
-    def apply(self, result, original_file_dict, file_diff_dict, **kwargs):
+    def apply(self, result, original_file_dict, file_diff_dict,
+              nl_file_dict=None, nested_lang=False, **kwargs):
         """
         No description. Something went wrong.
         """
@@ -48,7 +49,8 @@ class ResultAction:
                            result,
                            original_file_dict: dict,
                            file_diff_dict: dict,
-                           section: Section):
+                           section: Section,
+                           nl_file_dict=None):
         """
         Applies this action to the given results with all additional options
         given as a section. The file dictionaries
@@ -67,7 +69,16 @@ class ResultAction:
         :return:                   The modified file_diff_dict.
         """
         params = self.get_metadata().create_params_from_section(section)
-        return self.apply(result, original_file_dict, file_diff_dict, **params)
+        nested_lang = False
+        if(section.get('handle_nested', False)):
+            nested_lang = True
+            return self.apply(result, original_file_dict, file_diff_dict,
+                              nl_file_dict=nl_file_dict,
+                              nested_lang=nested_lang,
+                              **params)
+        else:
+            return self.apply(result, original_file_dict, file_diff_dict,
+                              **params)
 
     @classmethod
     def get_metadata(cls):
@@ -82,7 +93,8 @@ class ResultAction:
         """
         data = FunctionMetadata.from_function(
             cls.apply,
-            omit={'self', 'result', 'original_file_dict', 'file_diff_dict'})
+            omit={'self', 'result', 'original_file_dict', 'file_diff_dict',
+                  'nl_file_dict', 'nested_lang'})
         data.name = cls.__name__
 
         return data

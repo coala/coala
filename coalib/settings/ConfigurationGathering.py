@@ -16,6 +16,8 @@ from coalib.settings.SectionFilling import fill_settings
 from coalib.settings.Setting import Setting, path
 from string import Template
 
+from coalib.nestedlib.NlCore import get_nl_coala_sections, nested_language
+
 COAFILE_OUTPUT = Template('$type \'$file\' $found!\n'
                           'Here\'s what you can do:\n'
                           '* add `--save` to generate a config file with '
@@ -240,78 +242,94 @@ def load_configuration(arg_list,
                         dict(str, Section), targets: list(str)). (Types
                         indicated after colon.)
     """
-    cli_sections = parse_cli(arg_list=arg_list, arg_parser=arg_parser,
-                             args=args)
-    check_conflicts(cli_sections)
+    # If args is None then nested_args will be used as a short circuit condition
+    if nested_language(args=args, arg_list=arg_list, arg_parser=arg_parser):
+        nl_sections = get_nl_coala_sections(args=args, arg_list=arg_list,
+                                            arg_parser=arg_parser)
+        check_conflicts(nl_sections)
+        sections = nl_sections
+        targets = []
 
-    if (
-            bool(cli_sections['cli'].get('find_config', 'False')) and
-            str(cli_sections['cli'].get('config')) == ''):
-        cli_sections['cli'].add_or_create_setting(
-            Setting('config', PathArg(find_user_config(os.getcwd()))))
-
-    # We don't want to store targets argument back to file, thus remove it
-    targets = [item.lower() for item in list(
-        cli_sections['cli'].contents.pop('targets', ''))]
-
-    if bool(cli_sections['cli'].get('no_config', 'False')):
-        sections = cli_sections
+        str_log_level = str(list(
+                            sections.values())[0].get('log_level', '')).upper()
+        logging.getLogger().setLevel(LOG_LEVEL.str_dict.get(str_log_level,
+                                                            LOG_LEVEL.INFO))
     else:
-        base_sections = load_config_file(Constants.system_coafile,
-                                         silent=silent)
-        user_sections = load_config_file(
-            Constants.user_coafile, silent=True)
+        cli_sections = parse_cli(arg_list=arg_list, arg_parser=arg_parser,
+                                 args=args)
+        check_conflicts(cli_sections)
 
-        default_config = str(base_sections['default'].get('config', '.coafile'))
-        user_config = str(user_sections['default'].get(
-            'config', default_config))
-        config = os.path.abspath(
-            str(cli_sections['cli'].get('config', user_config)))
+        if (
+                bool(cli_sections['cli'].get('find_config', 'False')) and
+                str(cli_sections['cli'].get('config')) == ''):
+            cli_sections['cli'].add_or_create_setting(
+                Setting('config', PathArg(find_user_config(os.getcwd()))))
 
-        try:
-            save = bool(cli_sections['cli'].get('save', 'False'))
-        except ValueError:
-            # A file is deposited for the save parameter, means we want to save
-            # but to a specific file.
-            save = True
+        # We don't want to store targets argument back to file, thus remove it
+        targets = [item.lower() for item in list(
+            cli_sections['cli'].contents.pop('targets', ''))]
 
-        coafile_sections = load_config_file(config,
-                                            silent=save or silent)
+        if bool(cli_sections['cli'].get('no_config', 'False')):
+            sections = cli_sections
+        else:
+            base_sections = load_config_file(Constants.system_coafile,
+                                             silent=silent)
+            user_sections = load_config_file(
+                Constants.user_coafile, silent=True)
 
-        sections = merge_section_dicts(base_sections, user_sections)
+            default_config = str(
+                base_sections['default'].get('config', '.coafile'))
+            user_config = str(user_sections['default'].get(
+                'config', default_config))
+            config = os.path.abspath(
+                str(cli_sections['cli'].get('config', user_config)))
 
-        sections = merge_section_dicts(sections, coafile_sections)
+            try:
+                save = bool(cli_sections['cli'].get('save', 'False'))
+            except ValueError:
+                # A file is deposited for the save parameter, means we want to
+                # save but to a specific file.
+                save = True
 
-        if 'cli' in sections:
-            logging.warning('\'cli\' is an internally reserved section name. '
-                            'It may have been generated into your coafile '
-                            'while running coala with `--save`. The settings '
-                            'in that section will inherit implicitly to all '
-                            'sections as defaults just like CLI args do. '
-                            'Please change the name of that section in your '
-                            'coafile to avoid any unexpected behavior.')
+            coafile_sections = load_config_file(config,
+                                                silent=save or silent)
 
-        sections = merge_section_dicts(sections, cli_sections)
+            sections = merge_section_dicts(base_sections, user_sections)
 
-    for name, section in list(sections.items()):
-        section.set_default_section(sections)
-        if name == 'default':
-            if section.contents:
-                logging.warning('Implicit \'Default\' section inheritance is '
-                                'deprecated. It will be removed soon. To '
-                                'silence this warning remove settings in the '
-                                '\'Default\' section from your coafile. You '
-                                'can use dots to specify inheritance: the '
-                                'section \'all.python\' will inherit all '
-                                'settings from \'all\'.')
-                sections['default'].update(sections['cli'])
-                sections['default'].name = 'cli'
-                sections['cli'] = sections['default']
-            del sections['default']
+            sections = merge_section_dicts(sections, coafile_sections)
 
-    str_log_level = str(sections['cli'].get('log_level', '')).upper()
-    logging.getLogger().setLevel(LOG_LEVEL.str_dict.get(str_log_level,
-                                                        LOG_LEVEL.INFO))
+            if 'cli' in sections:
+                logging.warning(
+                    '\'cli\' is an internally reserved section name. '
+                    'It may have been generated into your coafile '
+                    'while running coala with `--save`. The settings '
+                    'in that section will inherit implicitly to all '
+                    'sections as defaults just like CLI args do. '
+                    'Please change the name of that section in your '
+                    'coafile to avoid any unexpected behavior.')
+
+            sections = merge_section_dicts(sections, cli_sections)
+
+        for name, section in list(sections.items()):
+            section.set_default_section(sections)
+            if name == 'default':
+                if section.contents:
+                    logging.warning(
+                        'Implicit \'Default\' section inheritance is '
+                        'deprecated. It will be removed soon. To '
+                        'silence this warning remove settings in the '
+                        '\'Default\' section from your coafile. You '
+                        'can use dots to specify inheritance: the '
+                        'section \'all.python\' will inherit all '
+                        'settings from \'all\'.')
+                    sections['default'].update(sections['cli'])
+                    sections['default'].name = 'cli'
+                    sections['cli'] = sections['default']
+                del sections['default']
+
+        str_log_level = str(sections['cli'].get('log_level', '')).upper()
+        logging.getLogger().setLevel(LOG_LEVEL.str_dict.get(str_log_level,
+                                                            LOG_LEVEL.INFO))
 
     return sections, targets
 
@@ -503,9 +521,11 @@ def gather_configuration(acquire_settings,
                                               acquire_settings,
                                               targets=targets,
                                               )
-    save_sections(sections)
-    warn_nonexistent_targets(targets, sections)
-
+    # Nested Language mode works only with cli args for now. So we don't need to
+    # save the sections.
+    if not nested_language(args=args, arg_list=arg_list, arg_parser=arg_parser):
+        save_sections(sections)
+        warn_nonexistent_targets(targets, sections)
     return (sections,
             local_bears,
             global_bears,
