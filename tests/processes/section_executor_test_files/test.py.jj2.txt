@@ -1,0 +1,12 @@
+for x in y:
+{% if x is True %}
+print("This line doesn't get affected by indentatoin")
+{{ }}
+{% elif %}
+print("Bye Bye")
+{% endif %}{# if x is True #}
+{% if x in y %}
+some statement
+{% endif %}{# if x in y #}
+
+{% if x is True %} x = 20 {{  }} y = 30 {% if x is True %}
