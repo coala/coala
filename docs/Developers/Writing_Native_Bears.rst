@@ -30,15 +30,15 @@ or where it goes.
 There are two kinds of bears:
 
 - LocalBears, which only perform analysis on each file itself
-- GlobalBears, which are project wide, like the GitCommitBear
+- GlobalBears, which are project-wide, like the GitCommitBear
 
-A bear can communicate with the user via two ways:
+A bear can communicate with the user in two ways:
 
 -  Via log messages
 -  Via results
 
-Log messages will be logged according to the users settings and are
-usually used if something goes wrong. However you can use debug for
+Log messages will be logged according to the user's settings and are
+usually used if something goes wrong. However, you can use debug for
 providing development related debug information since it will not be
 shown to the user by default. If error/failure messages are used, the
 bear is expected not to continue analysis.
@@ -46,7 +46,7 @@ bear is expected not to continue analysis.
 A Hello World Bear
 ------------------
 
-Below is the code given for a simple bear that sends a debug message for
+Below is the code is given for a simple bear that sends a debug message for
 each file:
 
 .. code:: python
@@ -63,7 +63,7 @@ each file:
 
 This bear is stored at ``./bears/HelloWorldBear.py``
 
-In order to let coala execute this bear you need to let coala know where
+To let coala execute this bear you need to let coala know where
 to find it. We can do that with the ``-d`` (``--bear-dirs``) argument:
 
 ``coala -f src/*.c -d bears -b HelloWorldBear -L DEBUG --flush-cache``
@@ -72,10 +72,10 @@ to find it. We can do that with the ``-d`` (``--bear-dirs``) argument:
 
     The given bear directories must not have any glob expressions in them. Any
     character that could be interpreted as a part of a glob expression will be
-    escaped. Please use comma separated values to give several such
+    escaped. Please use comma-separated values to give several such
     directories instead. Do not forget to flush the cache (by adding the
     argument ``--flush-cache`` when running coala) if you run a new bear on a
-    file which has been previously analyzed (by coala).
+    file that has been previously analyzed (by coala).
 
 You should now see an output like this on your command line:
 
@@ -99,17 +99,16 @@ You should now see an output like this on your command line:
 
     Notice that the last ``[DEBUG]`` message is what was coded in
     ``HelloWorldBear.py``. All the other messages are inherited from the
-    ``LocalBear`` class or run by the code responsible for executing the
-    bear.
+    ``LocalBear`` class or run by the code responsible for executing the bear.
 
 .. note::
 
-    The first ``WARNING`` message is because our directory, does not
-    contain a ``.coafile``. If you have followed the instructions in
-    our `main tutorial`_, you will have a ``.coafile`` in your working
-    directory. Its best if you delete that file before working on this
-    tutorial, else you will see a bunch of other outputs from other bears
-    as well.
+    The first ``WARNING`` message is because our directory does not
+    contain a ``.coafile``. If you have followed the instructions
+    in our` main tutorial`_, you will have a ``.coafile`` in your
+    working directory. It's best if you delete that file before
+    working on this tutorial, else you will see a bunch of other
+    outputs from other bears as well.
 
 For more detail about Python's built-in ``logging`` facility,
 see https://docs.python.org/3/library/logging.html.
@@ -120,7 +119,7 @@ Communicating with the User
 Now we can send messages through the queue, we can do the real work.
 Let's say:
 
--  We want some information from the user (e.g. the tab width if we rely
+-  We want some information from the user (e.g. the tab width if we rely on
    on indentation).
 -  We've got some useful information for the user and want to show it to
    them. There might be some issue with their code or just an information
@@ -216,20 +215,20 @@ Try executing
 
     coala -d bears -b CommunicationBear --show-bears --show-description
 
-This will show the user a bunch of information related to the bear like:
+This will show the user a bunch of information related to the bear-like:
 - A description of what the bear does - The sections which uses it - The
 settings it uses (optional and required)
 
 .. note::
 
-    The bears are not yet installed. We still have to specify
-    the bear directory using ``-d`` or ``--bear-dirs`` flag.
+    The bears are not yet installed. We still have to specify the bear
+    directory using ``-d`` or ``--bear-dirs`` flag.
 
 
 Install locally Written Bears
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Let's say that we wrote a file NewBear.py that contain our NewBear and
+Let's say that we wrote a file NewBear.py that contains our NewBear and
 we want to run it locally. To install our NewBear:
 
 -  Move the ``NewBear.py`` to our clone of coala-bears in
@@ -249,7 +248,7 @@ Try Executing:
 
     coala --show-bears
 
-This shows a list of all installed bears. We can find our NewBear in the list.
+This shows a list of all installed bears. We can find our NewBear on the list.
 
 What Data Types are Supported?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -269,7 +268,7 @@ You can use shortcuts for basic types, ``str_list`` for strings,
 boolean values.
 
 If you need another type, you can write the conversion function yourself
-and use this function as the annotation (if you cannot convert value, be
+and use this function as the annotation (if you cannot convert the value, be
 sure to throw ``TypeError`` or ``ValueError``). We've provided a few
 advanced conversions for you:
 
@@ -290,7 +289,7 @@ advanced conversions for you:
 Results
 -------
 
-In the end we've got a result. If a file is provided, coala will show
+In the end, we've got a result. If a file is provided, coala will show
 the file, if a line is provided, coala will also show a few lines before
 the affecting line. There are a few parameters to the Result
 constructor, so you can e.g. create a result that proposes a code change
@@ -304,10 +303,10 @@ yield them and write the method as a generator.
 .. note::
 
     We are currently planning to simplify Bears for bear writers and us.
-    In order to make your Bear future proof, we recommend writing your
-    method in generator style.
+    To make your Bear future proof, we recommend writing your
+    method in the generator style.
 
-    Don't worry: in order to migrate your Bears to our new API, you will
+    Don't worry: to migrate your Bears to our new API, you will
     likely only need to change two lines of code. For more information
     about how bears will look in the future, please read up on
     https://github.com/coala/coala/issues/725 or ask us on
@@ -319,7 +318,7 @@ Bears Depending on Other Bears
 So we've got a result, but what if we need our Bear to depend on results from
 a different Bear?
 
-Well coala has an efficient dependency management system that would run the
+Well, coala has an efficient dependency management system that would run the
 other Bear before your Bear and get its results for you. All you need to do is
 to tell coala which Bear(s) you want to run before your Bear.
 
@@ -340,7 +339,7 @@ So let's see how you could tell coala which Bears to run before yours:
 
 As you can see we have a `coalib.bears.Bear.Bear.BEAR_DEPS`
 set which contains a list of bears we wish to depend on.
-In this case it is a set with 1 item: "OtherBear".
+In this case, it is a set with 1 item: "OtherBear".
 
 .. note::
     The `BEAR_DEPS` set must have classes of the bear itself,
@@ -382,14 +381,15 @@ Let's see how we can use HiddenResults in our Bear:
 Here we see that this Bear (unlike normal Bears) yields a
 `coalib.results.HiddenResult` instead of a ``Result``. The first
 parameter in ``HiddenResult`` should be the instance of the Bear that yields
-this result (in this case ``self``), and second argument should be the content
-we want to transfer between the Bears. Here we use a list of strings as content
+this result (in this case ``self``), and the second argument should be the
+content we want to transfer between the Bears. Here we use a list of strings
+as content
 but it can be any object.
-
 More Configuration Options
 --------------------------
 
-coala provides metadata to further configure your bear according to your needs.
+coala provides metadata to further configure your bear according to your
+needs.
 Here is the list of all the metadata you can supply:
 
 - `LANGUAGES`_
@@ -417,7 +417,7 @@ REQUIREMENTS
 ~~~~~~~~~~~~
 
 To indicate the requirements of the bear, assign ``REQUIREMENTS`` a set with
-instances of subclass of ``PackageRequirement`` such as:
+instances of a subclass of ``PackageRequirement`` such as:
 
 - PipRequirement
 - NpmRequirement
@@ -434,7 +434,7 @@ instances of subclass of ``PackageRequirement`` such as:
         REQUIREMENTS = {
         PipRequirement('coala_decorators', '0.2.1')}
 
-To specify multiple requirements you can use the multiple method.
+To specify multiple requirements you can use the multiple methods.
 This can receive both tuples of strings, in case you want a specific version,
 or a simple string, in case you want the latest version to be specified.
 
@@ -494,16 +494,16 @@ To view a full list of possible values, check this list:
 - `Undefined Element`
 - `Code Simplification`
 
-Specifying something to `CAN_FIX` makes it obvious that it can be detected too,
-so it may be omitted from `CAN_DETECT`
+Specifying something to `CAN_FIX` makes it obvious that it can be detected
+too, so it may be omitted from `CAN_DETECT`
 
 BEAR_DEPS
 ~~~~~~~~~
 
 ``BEAR_DEPS`` contains bear classes that are to be executed before this bear
-gets executed. The results of these bears will then be passed to the run method
-as a dict via the `dependency_results` argument. The dict will have the name of
-the Bear as key and the list of its results as value:
+gets executed. The results of these bears will then be passed to the run
+method as a dict via the `dependency_results` argument. The dict will have
+the name of the Bear as key and the list of its results as value:
 
 .. code:: python
 
@@ -533,16 +533,16 @@ can be used as follows:
 Aspect Bear
 -----------
 
-Aspect is a feature in coala that make configuring coala in project more easy
-and language agnostic. For more detail about aspect, see cEP-0005 in
+Aspect is a feature in coala that makes configuring coala in the project more
+easy and language agnostic. For more detail about the aspect, see cEP-0005 at
 https://github.com/coala/cEPs/blob/master/cEP-0005.md.
 
 An aspect-compliant bear MUST:
 
-1. Declare list of aspect it can fix and detected. Note that the aspect MUST be
-   a leaf aspect. You can see list of supported aspect here
+1. Declare a list of aspects it can fix and detected. Note that the aspect
+ MUST be a leafy aspect. You can see the list of supported aspects here
    https://github.com/coala/aspect-docs.
-2. Declare list of supported language. See list of supported language
+2. Declare a list of supported language. See a list of supported language
    https://github.com/coala/coala/tree/master/coalib/bearlib/languages/definitions.
 3. Map setting to its equivalent aspect or taste using ``map_setting_to_aspect``
    decorator.
