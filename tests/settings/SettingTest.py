@@ -204,7 +204,7 @@ class SettingTest(unittest.TestCase):
 
     def test_line_number(self):
         self.uut = Setting('key', '22\n', origin=SourcePosition('filename', 3))
-        self.assertEqual(self.uut.star_line_number, 3)
+        self.assertEqual(self.uut.start_line_number, 3)
 
         with self.assertRaisesRegex(TypeError,
                                     "Instantiated with str 'origin' "
