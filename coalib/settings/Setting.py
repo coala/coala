@@ -310,7 +310,7 @@ class Setting(StringConverter):
             return self._origin
 
     @property
-    def line_number(self):
+    def start_line_number(self):
         if isinstance(self._origin, SourcePosition):
             return self._origin.line
         else:
@@ -319,7 +319,7 @@ class Setting(StringConverter):
                             'Use SourcePosition for line numbers.')
 
     @property
-    def end_line_number(self):
+    def end_start_line_number(self):
         if isinstance(self._origin, SourcePosition):
             return self.length + self._origin.line - 1
         else:
