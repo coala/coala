@@ -32,13 +32,13 @@ from coalib.io.FileProxy import FileDictGenerator
 from coalib.io.File import File
 
 
-ACTIONS = [DoNothingAction,
-           ApplyPatchAction,
-           PrintDebugMessageAction,
-           ShowPatchAction,
-           IgnoreResultAction,
-           ShowAppliedPatchesAction,
-           GeneratePatchesAction]
+ACTIONS = [DoNothingAction(),
+           ApplyPatchAction(),
+           PrintDebugMessageAction(),
+           ShowPatchAction(),
+           IgnoreResultAction(),
+           ShowAppliedPatchesAction(),
+           GeneratePatchesAction()]
 
 
 def get_cpu_count():
@@ -74,21 +74,23 @@ def create_process_group(command_array, **kwargs):
     return proc
 
 
-def get_default_actions(section):
+def get_default_actions(section, bear_actions):
     """
     Parses the key ``default_actions`` in the given section.
 
-    :param section:    The section where to parse from.
-    :return:           A dict with the bearname as keys and their default
-                       actions as values and another dict that contains bears
-                       and invalid action names.
+    :param section:      The section where to parse from.
+    :param bear_actions: List of all the bear defined actions.
+    :return:             A dict with the bearname as keys and their default
+                         actions as values and another dict that contains bears
+                         and invalid action names.
     """
     try:
         default_actions = dict(section['default_actions'])
     except IndexError:
         return {}, {}
 
-    action_dict = {action.get_metadata().name: action for action in ACTIONS}
+    action_dict = {action.get_metadata().name: action
+                   for action in ACTIONS + bear_actions}
     invalid_action_set = default_actions.values() - action_dict.keys()
     invalid_actions = {}
     if len(invalid_action_set) != 0:
@@ -121,8 +123,11 @@ def autoapply_actions(results,
     :param log_printer:    A log printer instance to log messages on.
     :return:               A list of unprocessed results.
     """
-
-    default_actions, invalid_actions = get_default_actions(section)
+    bear_actions = []
+    for result in results:
+        bear_actions += result.actions
+    default_actions, invalid_actions = get_default_actions(section,
+                                                           bear_actions)
     no_autoapply_warn = bool(section.get('no_autoapply_warn', False))
     for bearname, actionname in invalid_actions.items():
         logging.warning('Selected default action {!r} for bear {!r} does not '
@@ -145,30 +150,32 @@ def autoapply_actions(results,
             else:
                 not_processed_results.append(result)
                 continue
+        if action not in bear_actions or action in result.actions:
+            applicable = action.is_applicable(result, file_dict, file_diff_dict)
+            if applicable is not True:
+                if not no_autoapply_warn:
+                    logging.warning('{}: {}'.format(result.origin, applicable))
+                not_processed_results.append(result)
+                continue
 
-        applicable = action.is_applicable(result, file_dict, file_diff_dict)
-        if applicable is not True:
-            if not no_autoapply_warn:
-                logging.warning('{}: {}'.format(result.origin, applicable))
+            try:
+                action.apply_from_section(result,
+                                          file_dict,
+                                          file_diff_dict,
+                                          section)
+                logging.info('Applied {!r} on {} from {!r}.'.format(
+                    action.get_metadata().name,
+                    result.location_repr(),
+                    result.origin))
+            except Exception as ex:
+                not_processed_results.append(result)
+                log_exception(
+                    'Failed to execute action {!r} with error: {}.'.format(
+                        action.get_metadata().name, ex),
+                    ex)
+                logging.debug('-> for result ' + repr(result) + '.')
+        else:
             not_processed_results.append(result)
-            continue
-
-        try:
-            action().apply_from_section(result,
-                                        file_dict,
-                                        file_diff_dict,
-                                        section)
-            logging.info('Applied {!r} on {} from {!r}.'.format(
-                action.get_metadata().name,
-                result.location_repr(),
-                result.origin))
-        except Exception as ex:
-            not_processed_results.append(result)
-            log_exception(
-                'Failed to execute action {!r} with error: {}.'.format(
-                    action.get_metadata().name, ex),
-                ex)
-            logging.debug('-> for result ' + repr(result) + '.')
 
     return not_processed_results
 

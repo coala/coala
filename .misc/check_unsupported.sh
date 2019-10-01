@@ -8,6 +8,8 @@ set -o pipefail
 
 set -x
 
+pip install 'pip==9.0.1' 'setuptools==21.2.2'
+
 python setup.py install 2>&1 | tee setup.log
 
 retval=$?
@@ -30,6 +32,6 @@ fi
 set -e
 
 # The following is emitted on stdout
-grep -q 'coala supports only Python 3.4.2 or later' setup.log
+grep -q 'coala supports only Python 3.4.* or later' setup.log
 
 echo "Unsupported check completed successfully"

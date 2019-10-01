@@ -69,8 +69,7 @@ class ResultAction:
         params = self.get_metadata().create_params_from_section(section)
         return self.apply(result, original_file_dict, file_diff_dict, **params)
 
-    @classmethod
-    def get_metadata(cls):
+    def get_metadata(self):
         """
         Retrieves metadata for the apply function. The description may be used
         to advertise this action to the user. The parameters and their help
@@ -81,8 +80,11 @@ class ResultAction:
         :return: A FunctionMetadata object.
         """
         data = FunctionMetadata.from_function(
-            cls.apply,
+            self.apply,
             omit={'self', 'result', 'original_file_dict', 'file_diff_dict'})
-        data.name = cls.__name__
+        if hasattr(self, 'description'):
+            data.desc = self.description
+        data.name = self.__class__.__name__
+        data.id = id(self)
 
         return data
