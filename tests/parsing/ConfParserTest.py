@@ -100,7 +100,7 @@ class ConfParserTest(unittest.TestCase):
 
         # Check if line number is correctly set when
         # no section is given
-        line_num = val.contents['setting'].line_number
+        line_num = val.contents['setting'].start_line_number
         self.assertEqual(line_num, 1)
 
     def test_parse_foo_section(self):
@@ -153,9 +153,9 @@ class ConfParserTest(unittest.TestCase):
 
         # Check starting line number of
         # settings in makefiles section.
-        line_num = val.contents['another'].line_number
+        line_num = val.contents['another'].start_line_number
         self.assertEqual(line_num, 12)
-        line_num = val.contents['append'].line_number
+        line_num = val.contents['append'].start_line_number
         self.assertEqual(line_num, 20)
         # Check ending line number of
         # settings in makefiles section.
@@ -185,7 +185,7 @@ class ConfParserTest(unittest.TestCase):
 
         # Check starting line number of
         # settings in empty_elem_strip section.
-        line_num = val.contents['b'].line_number
+        line_num = val.contents['b'].start_line_number
         self.assertEqual(line_num, 24)
 
     def test_line_number_name_section(self):
@@ -196,7 +196,7 @@ class ConfParserTest(unittest.TestCase):
         self.sections.popitem(last=False)
 
         key, val = self.sections.popitem(last=False)
-        line_num = val.contents['key1'].line_number
+        line_num = val.contents['key1'].start_line_number
         self.assertEqual(line_num, 30)
 
         line_num = val.contents['key1'].end_line_number
