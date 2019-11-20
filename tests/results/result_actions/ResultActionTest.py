@@ -36,4 +36,10 @@ class ResultActionTest(unittest.TestCase):
         self.assertEqual(len(uut.get_metadata().non_optional_params), 0)
         self.assertEqual(len(uut.get_metadata().optional_params), 0)
         self.assertEqual(uut.get_metadata().name, 'ResultAction')
+        self.assertEqual(uut.get_metadata().id, id(uut))
         self.assertTrue(uut.is_applicable(result, None, None))
+
+        self.assertEqual(uut.get_metadata().desc,
+                         'No description. Something went wrong.')
+        uut.description = 'Test Action'
+        self.assertEqual(uut.get_metadata().desc, 'Test Action')

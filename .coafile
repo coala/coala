@@ -3,6 +3,7 @@ files = *.py, coalib/**/*.py, ./coala, tests/**/*.py, docs/conf.py
 ignore =
     tests/bearlib/languages/documentation/documentation_extraction_testdata/*.py,
     tests/collecting/collectors_test_dir/bears/incorrect_bear.py,
+    coalib/misc/Asyncio.py,
 
 max_line_length = 80
 use_spaces = True
@@ -85,7 +86,7 @@ pylint_cli_options = --ignore\=CVS,cindex.py,tests
 pylint_disable = missing-docstring, # Lots of functions don't need docstrings
                  arguments-differ, # Some child classes need to change
                                    # argument signature of a inherited function
-                 bad-builtin, # Pylint doesn't like most builting functions
+                 bad-builtin, # Pylint doesn't like most builtin functions
                               # like filter, map etc. It prefers using for
                               # loops for everything - although sometimes
                               # map and other builtins are more intuitive.

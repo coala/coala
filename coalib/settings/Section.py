@@ -187,6 +187,8 @@ class Section:
         if self.__contains__(key, ignore_defaults=True) and allow_appending:
             val = self[key]
             val.value = str(val._value) + '\n' + setting._value
+            if setting.value != '':
+                val.length += 1
             self.append(val, custom_key=key)
         else:
             self.append(setting, custom_key=key)

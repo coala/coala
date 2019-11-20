@@ -22,7 +22,8 @@ from coalib.output.ConsoleInteraction import (
     show_language_bears_capabilities)
 from coalib.output.ConsoleInteraction import (BackgroundSourceRangeStyle,
                                               BackgroundMessageStyle,
-                                              highlight_text)
+                                              highlight_text,
+                                              color_letter)
 from coalib.output.printers.ListLogPrinter import ListLogPrinter
 from coalib.parsing.DefaultArgParser import default_arg_parser
 from coalib.results.Diff import Diff
@@ -67,6 +68,15 @@ class TestAction(ResultAction):
         """
         Test (A)ction
         """
+
+
+class BearAction(ResultAction):
+
+    def apply(self, result, original_file_dict, file_diff_dict):
+        """
+        (B)ear Action
+        """
+        return file_diff_dict
 
 
 class TestBear(Bear):
@@ -188,6 +198,22 @@ class ConsoleInteractionTest(unittest.TestCase):
     def tearDown(self):
         OpenEditorAction.is_applicable = self.old_open_editor_applicable
         ApplyPatchAction.is_applicable = self.old_apply_patch_applicable
+
+    def test_color_letter(self):
+        line1 = '[  ] 1. (A)pply Patch'
+        with retrieve_stdout() as stdout:
+            color_letter(self.console_printer, line1)
+            self.assertEqual(line1 + '\n', stdout.getvalue())
+
+        line2 = '[  ] *0. Apply (P)atch'
+        with retrieve_stdout() as stdout:
+            color_letter(self.console_printer, line2)
+            self.assertEqual(line2 + '\n', stdout.getvalue())
+
+        line3 = '[  ] 3. Apply (P)atch [Note: This will do something]'
+        with retrieve_stdout() as stdout:
+            color_letter(self.console_printer, line3)
+            self.assertEqual(line3 + '\n', stdout.getvalue())
 
     def test_require_settings(self):
         curr_section = Section('')
@@ -387,7 +413,8 @@ class ConsoleInteractionTest(unittest.TestCase):
                                               self.file_diff_dict,
                                               Result(
                                                   'origin', 'message',
-                                                  diffs={testfile_path: diff}),
+                                                  diffs={testfile_path: diff},
+                                                  actions=[BearAction()]),
                                               file_dict)
                     self.assertEqual(generator.last_input, 1)
                     self.assertIn(ApplyPatchAction.SUCCESS_MESSAGE,
@@ -412,7 +439,8 @@ class ConsoleInteractionTest(unittest.TestCase):
                                               self.file_diff_dict,
                                               Result(
                                                   'origin', 'message',
-                                                  diffs={testfile_path: diff}),
+                                                  diffs={testfile_path: diff},
+                                                  actions=[BearAction()]),
                                               file_dict,
                                               cli_actions=cli_actions)
                     self.assertEqual(generator.last_input, 2)
@@ -440,7 +468,8 @@ class ConsoleInteractionTest(unittest.TestCase):
                                               self.file_diff_dict,
                                               Result(
                                                   'origin', 'message',
-                                                  diffs={testfile_path: diff}),
+                                                  diffs={testfile_path: diff},
+                                                  actions=[BearAction()]),
                                               file_dict, apply_single=True)
                     self.assertEqual(generator.last_input, -1)
                     self.assertIn('', sio.getvalue())
@@ -464,7 +493,8 @@ class ConsoleInteractionTest(unittest.TestCase):
                                               self.file_diff_dict,
                                               Result(
                                                   'origin', 'message',
-                                                  diffs={testfile_path: diff}),
+                                                  diffs={testfile_path: diff},
+                                                  actions=[BearAction()]),
                                               file_dict,
                                               cli_actions=cli_actions,
                                               apply_single=True)
@@ -478,13 +508,54 @@ class ConsoleInteractionTest(unittest.TestCase):
 
             ApplyPatchAction.is_applicable = old_applypatch_is_applicable
 
+    def test_acquire_action_and_apply_bear_actions(self):
+        with make_temp() as testfile_path:
+            file_dict = {testfile_path: ['1\n', '2\n', '3\n']}
+            diff = Diff(file_dict[testfile_path])
+            diff.delete_line(2)
+            diff.change_line(3, '3\n', '3_changed\n')
+            with simulate_console_inputs('b', 'n') as generator:
+                with retrieve_stdout() as sio:
+                    BearAction.is_applicable = lambda *args: True
+                    acquire_actions_and_apply(self.console_printer,
+                                              Section(''),
+                                              self.file_diff_dict,
+                                              Result(
+                                                  'origin', 'message',
+                                                  diffs={testfile_path: diff},
+                                                  actions=[BearAction()]),
+                                              file_dict)
+                    self.assertEqual(generator.last_input, 1)
+                    self.assertIn(BearAction.SUCCESS_MESSAGE,
+                                  sio.getvalue())
+
+            BearAction.is_applicable = (
+                lambda *args: 'BearAction cannot be applied')
+
+            with simulate_console_inputs('b', 'n') as generator:
+                with retrieve_stdout() as sio:
+                    acquire_actions_and_apply(self.console_printer,
+                                              Section(''),
+                                              self.file_diff_dict,
+                                              Result(
+                                                  'origin', 'message',
+                                                  diffs={testfile_path: diff},
+                                                  actions=[BearAction()]),
+                                              file_dict)
+
+                    action_fail = 'BearAction cannot be applied'
+                    self.assertNotIn(action_fail, sio.getvalue())
+
+                    apply_path_desc = ApplyPatchAction().get_metadata().desc
+                    self.assertEqual(sio.getvalue().count(apply_path_desc), 0)
+
     def test_ask_for_actions_and_apply(self):
         failed_actions = set()
         action = TestAction()
         do_nothing_action = DoNothingAction()
         args = [self.console_printer, Section(''),
                 [do_nothing_action.get_metadata(), action.get_metadata()],
-                {'DoNothingAction': do_nothing_action, 'TestAction': action},
+                {id(do_nothing_action): do_nothing_action, id(action): action},
                 failed_actions, Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs('a', 'param1', 'a', 'param2') as generator:
@@ -502,7 +573,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         failed_actions = set()
         action = TestAction()
         args = [self.console_printer, Section(''),
-                [action.get_metadata()], {'TestAction': action},
+                [action.get_metadata()], {id(action): action},
                 failed_actions, Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs('a', 'param1', 'a', 'param2') as generator:
@@ -519,7 +590,7 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_default_input(self):
         action = TestAction()
         args = [self.console_printer, Section(''),
-                [action.get_metadata()], {'TestAction': action},
+                [action.get_metadata()], {id(action): action},
                 set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs('') as generator:
@@ -529,7 +600,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         action = TestAction()
         args = [self.console_printer, Section(''),
                 [action.get_metadata()],
-                {'TestAction': action},
+                {id(action): action},
                 set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs(1, 1) as generator:
@@ -539,7 +610,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         action = TestAction()
         args = [self.console_printer, Section(''),
                 [action.get_metadata()],
-                {'TestAction': action},
+                {id(action): action},
                 set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs(1, 'a') as generator:
@@ -548,7 +619,7 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_default_input4(self):
         action = TestAction()
         args = [self.console_printer, Section(''),
-                [action.get_metadata()], {'TestAction': action},
+                [action.get_metadata()], {id(action): action},
                 set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs(5, 0) as generator:
@@ -557,7 +628,7 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_default_input_apply_single_nothing(self):
         action = TestAction()
         args = [self.console_printer, Section(''),
-                [action.get_metadata()], {'TestAction': action},
+                [action.get_metadata()], {id(action): action},
                 set(), Result('origin', 'message'), {}, {}, {}]
 
         with simulate_console_inputs(1, 'a') as generator:
@@ -579,7 +650,7 @@ class ConsoleInteractionTest(unittest.TestCase):
         se = Section('cli')
         args = [self.console_printer, se,
                 [do_nothing_action.get_metadata(), action.get_metadata()],
-                {'DoNothingAction': do_nothing_action, 'TestAction': action},
+                {id(do_nothing_action): do_nothing_action, id(action): action},
                 set(), Result('origin', 'message'), {}, {}, {}, apply_single]
 
         with simulate_console_inputs('a') as generator:
@@ -588,7 +659,7 @@ class ConsoleInteractionTest(unittest.TestCase):
     def test_default_input_apply_single_fail(self):
         action = TestAction()
         args = [self.console_printer, Section(''),
-                [action.get_metadata()], {'TestAction': action},
+                [action.get_metadata()], {id(action): action},
                 set(), Result('origin', 'message'), {}, {}]
 
         with simulate_console_inputs(5, 0) as generator:

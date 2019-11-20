@@ -151,7 +151,7 @@ Now you are ready to join coala community at `coala gitter <https://coala.io/cha
 The newcomers should ping us "Hello World" to let us know they are here
 because we care!
 
-When you say "Hello World" in chat ``corobo`` (our gitter bot) will invite you
+When you say "Hello World" in chat, ``corobo`` (our gitter bot) will invite you
 to be part of the Newcomer team. The invitation will be sent by mail and you
 will have to accept it to join. If you don't find the invitation, accept it
 `here <https://github.com/coala>`__.

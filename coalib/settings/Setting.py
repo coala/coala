@@ -171,7 +171,7 @@ class Setting(StringConverter):
                                            to this value.
         :param origin:                     The originating file. This will be
                                            used for path conversions and the
-                                           last part will be stripped of. If
+                                           last part will be stripped off. If
                                            you want to specify a directory as
                                            origin be sure to end it with a
                                            directory separator.
@@ -198,6 +198,7 @@ class Setting(StringConverter):
         self.from_cli = from_cli
         self.key = key
         self._origin = origin
+        self.length = 1
 
     def __path__(self, origin=None, glob_escape_origin=False):
         """
@@ -312,6 +313,15 @@ class Setting(StringConverter):
     def line_number(self):
         if isinstance(self._origin, SourcePosition):
             return self._origin.line
+        else:
+            raise TypeError("Instantiated with str 'origin' "
+                            'which does not have line numbers. '
+                            'Use SourcePosition for line numbers.')
+
+    @property
+    def end_line_number(self):
+        if isinstance(self._origin, SourcePosition):
+            return self.length + self._origin.line - 1
         else:
             raise TypeError("Instantiated with str 'origin' "
                             'which does not have line numbers. '

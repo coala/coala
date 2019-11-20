@@ -633,24 +633,42 @@ class ProcessingTest(unittest.TestCase):
                               debug=True)
 
 
+class MyBearAction(ResultAction):
+
+    def apply(self, result, original_file_dict, file_diff_dict):
+        logging.debug('ACTION APPLIED SUCCESSFULLY.')
+
+
 class ProcessingTest_GetDefaultActions(unittest.TestCase):
 
     def setUp(self):
         self.section = Section('X')
 
+        def equal(self, other):
+            return isinstance(self, other)
+
+        self.eq_apply_patch = ApplyPatchAction.__eq__
+        self.eq_print_debug_message = PrintDebugMessageAction.__eq__
+        ApplyPatchAction.__eq__ = equal
+        PrintDebugMessageAction.__eq__ = equal
+
+    def tearDown(self):
+        ApplyPatchAction.__eq__ = self.eq_apply_patch
+        PrintDebugMessageAction.__eq__ = self.eq_print_debug_message
+
     def test_no_key(self):
-        self.assertEqual(get_default_actions(self.section), ({}, {}))
+        self.assertEqual(get_default_actions(self.section, []), ({}, {}))
 
     def test_no_value(self):
         self.section.append(Setting('default_actions', ''))
-        self.assertEqual(get_default_actions(self.section), ({}, {}))
+        self.assertEqual(get_default_actions(self.section, []), ({}, {}))
 
     def test_only_valid_actions(self):
         self.section.append(Setting(
             'default_actions',
             'MyBear: PrintDebugMessageAction, ValidBear: ApplyPatchAction'))
         self.assertEqual(
-            get_default_actions(self.section),
+            get_default_actions(self.section, []),
             ({'MyBear': PrintDebugMessageAction,
               'ValidBear': ApplyPatchAction},
              {}))
@@ -659,9 +677,18 @@ class ProcessingTest_GetDefaultActions(unittest.TestCase):
         self.section.append(Setting(
             'default_actions',
             'MyBear: INVALID_action, ValidBear: ApplyPatchAction, XBear: ABC'))
-        self.assertEqual(get_default_actions(self.section),
+        self.assertEqual(get_default_actions(self.section, []),
                          ({'ValidBear': ApplyPatchAction},
                           {'MyBear': 'INVALID_action', 'XBear': 'ABC'}))
+
+    def test_valid_bear_actions(self):
+        my_bear_action = MyBearAction()
+        self.section.append(Setting(
+            'default_actions',
+            'MyBear: MyBearAction, ValidBear: ApplyPatchAction'))
+        self.assertEqual(
+            get_default_actions(self.section, [my_bear_action]),
+            ({'MyBear': my_bear_action, 'ValidBear': ApplyPatchAction}, {}))
 
 
 class ProcessingTest_AutoapplyActions(unittest.TestCase):
@@ -670,9 +697,10 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
         self.log_queue = queue.Queue()
         self.log_printer = ProcessingTestLogPrinter(self.log_queue)
 
+        self.resultX = Result('XBear', 'msg0', actions=[MyBearAction()])
         self.resultY = Result('YBear', 'msg1')
         self.resultZ = Result('ZBear', 'msg2')
-        self.results = [self.resultY, self.resultZ]
+        self.results = [self.resultX, self.resultY, self.resultZ]
         self.section = Section('A')
 
     def test_no_default_actions(self):
@@ -705,7 +733,7 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
         # Use a result where no default action is supplied for and another one
         # where the action is not applicable.
         old_is_applicable = ApplyPatchAction.is_applicable
-        ApplyPatchAction.is_applicable = (
+        ApplyPatchAction.is_applicable = staticmethod(
             lambda *args: 'The ApplyPatchAction cannot be applied'
         )
 
@@ -723,7 +751,7 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
             ('root', 'WARNING', 'YBear: The ApplyPatchAction cannot be applied')
         )
 
-        ApplyPatchAction.is_applicable = old_is_applicable
+        ApplyPatchAction.is_applicable = staticmethod(old_is_applicable)
 
         self.section.append(Setting(
             'no_autoapply_warn', True))
@@ -744,7 +772,7 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
             def apply(self, *args, **kwargs):
                 logging.debug('ACTION APPLIED SUCCESSFULLY.')
 
-        ACTIONS.append(TestAction)
+        ACTIONS.append(TestAction())
 
         self.section.append(Setting('default_actions', 'Z*: TestAction'))
         with LogCapture() as capture:
@@ -753,7 +781,7 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
                                     {},
                                     self.section,
                                     log_printer)
-        self.assertEqual(ret, [self.resultY])
+        self.assertEqual(ret, [self.resultX, self.resultY])
         capture.check(
             ('root', 'DEBUG', 'ACTION APPLIED SUCCESSFULLY.'),
             ('root', 'INFO', "Applied 'TestAction' on the whole project from "
@@ -761,13 +789,63 @@ class ProcessingTest_AutoapplyActions(unittest.TestCase):
         )
         ACTIONS.pop()
 
+    def test_bear_action_applicable(self):
+        MyBearAction.is_applicable = staticmethod(lambda *args: True)
+        log_printer = self.log_printer
+
+        self.section.append(Setting('default_actions', 'X*: MyBearAction'))
+        with LogCapture() as capture:
+            ret = autoapply_actions(self.results,
+                                    {},
+                                    {},
+                                    self.section,
+                                    log_printer)
+        self.assertEqual(ret, [self.resultY, self.resultZ])
+        capture.check(
+            ('root', 'DEBUG', 'ACTION APPLIED SUCCESSFULLY.'),
+            ('root', 'INFO', "Applied 'MyBearAction' on the whole project from "
+                             "'XBear'.")
+        )
+
+    def test_bear_action_unapplicable(self):
+        MyBearAction.is_applicable = staticmethod(
+            lambda *args: 'The MyBearAction cannot be applied'
+        )
+        log_printer = self.log_printer
+
+        self.section.append(Setting('default_actions', 'X*: MyBearAction'))
+        with LogCapture() as capture:
+            ret = autoapply_actions(self.results,
+                                    {},
+                                    {},
+                                    self.section,
+                                    log_printer)
+        self.assertEqual(ret, self.results)
+        capture.check(
+            ('root', 'WARNING', 'XBear: The MyBearAction cannot be applied')
+        )
+
+    def test_wrong_bear_origin(self):
+        MyBearAction.is_applicable = staticmethod(lambda *args: True)
+        log_printer = self.log_printer
+
+        self.section.append(Setting('default_actions', 'Y*: MyBearAction'))
+        with LogCapture() as capture:
+            ret = autoapply_actions(self.results,
+                                    {},
+                                    {},
+                                    self.section,
+                                    log_printer)
+        self.assertEqual(ret, self.results)
+        capture.check()
+
     def test_failing_action(self):
         class FailingTestAction(ResultAction):
 
             def apply(self, *args, **kwargs):
                 raise RuntimeError("YEAH THAT'S A FAILING BEAR")
 
-        ACTIONS.append(FailingTestAction)
+        ACTIONS.append(FailingTestAction())
 
         self.section.append(Setting('default_actions',
                                     'YBear: FailingTestAction'))

@@ -65,7 +65,8 @@ class Result:
                  confidence: int = 100,
                  aspect: (aspectbase, None) = None,
                  message_arguments: dict = {},
-                 applied_actions: dict = {}):
+                 applied_actions: dict = {},
+                 actions: list = []):
         """
         :param origin:
             Class name or creator object of this object.
@@ -99,6 +100,8 @@ class Result:
         :param applied_actions:
             A dictionary that contains the result, file_dict, file_diff_dict and
             the section for an action.
+        :param actions:
+            A list of action instances specific to the origin of the result.
         :raises ValueError:
             Raised when confidence is not between 0 and 100.
         :raises KeyError:
@@ -131,6 +134,7 @@ class Result:
         if self.aspect and not self.additional_info:
             self.additional_info = '{} {}'.format(
                 aspect.Docs.importance_reason, aspect.Docs.fix_suggestions)
+        self.actions = actions
 
     @property
     def message(self):
@@ -164,7 +168,8 @@ class Result:
                     diffs: (dict, None) = None,
                     confidence: int = 100,
                     aspect: (aspectbase, None) = None,
-                    message_arguments: dict = {}):
+                    message_arguments: dict = {},
+                    actions: list = []):
         """
         Creates a result with only one SourceRange with the given start and end
         locations.
@@ -209,6 +214,8 @@ class Result:
             should be a leaf of the aspect tree! (If you have a node, spend
             some time figuring out which of the leafs exactly your result
             belongs to.)
+        :param actions:
+            A list of action instances specific to the origin of the result.
         """
         source_range = SourceRange.from_values(file,
                                                line,
@@ -225,7 +232,8 @@ class Result:
                    diffs=diffs,
                    confidence=confidence,
                    aspect=aspect,
-                   message_arguments=message_arguments)
+                   message_arguments=message_arguments,
+                   actions=actions)
 
     def to_string_dict(self):
         """

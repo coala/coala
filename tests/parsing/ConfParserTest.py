@@ -157,6 +157,10 @@ class ConfParserTest(unittest.TestCase):
         self.assertEqual(line_num, 12)
         line_num = val.contents['append'].line_number
         self.assertEqual(line_num, 20)
+        # Check ending line number of
+        # settings in makefiles section.
+        line_num = val.contents['another'].end_line_number
+        self.assertEqual(line_num, 14)
 
     def test_parse_empty_elem_strip_section(self):
         empty_elem_strip_should = OrderedDict([
@@ -193,6 +197,9 @@ class ConfParserTest(unittest.TestCase):
 
         key, val = self.sections.popitem(last=False)
         line_num = val.contents['key1'].line_number
+        self.assertEqual(line_num, 30)
+
+        line_num = val.contents['key1'].end_line_number
         self.assertEqual(line_num, 30)
 
     def test_remove_empty_iter_elements(self):
