@@ -85,7 +85,7 @@ class LogPrinterMixin:
 
     def log_message(self, log_message, **kwargs):
         """
-        It is your reponsibility to implement this method, if you're using this
+        It is your responsibility to implement this method, if you're using this
         mixin.
         """
         raise NotImplementedError
