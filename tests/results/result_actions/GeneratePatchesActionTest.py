@@ -2,18 +2,12 @@ import unittest
 import os.path
 
 from coalib.results.Diff import Diff
-from coala_utils.ContextManagers import make_temp
 from coalib.results.Result import Result
 from coalib.results.result_actions.GeneratePatchesAction import (
     GeneratePatchesAction)
 from coalib.settings.Section import Section, Setting
 from coala_utils.ContextManagers import (
-    make_temp, retrieve_stdout, simulate_console_inputs)
-from tests.TestUtilities import (
-    bear_test_module,
-    execute_coala,
-    TEST_BEARS_COUNT,
-)
+    retrieve_stdout, simulate_console_inputs)
 from coala_utils.ContextManagers import prepare_file
 
 
