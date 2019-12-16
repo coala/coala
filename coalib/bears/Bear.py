@@ -8,6 +8,7 @@ from functools import partial
 from os import makedirs, getcwd
 from os.path import join, abspath, exists, isdir
 import requests
+import urllib3
 from appdirs import user_data_dir
 
 from pyprint.Printer import Printer
@@ -644,14 +645,24 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
 
         self.info('Downloading {filename!r} for bear {bearname} from {url}.'
                   .format(filename=filename, bearname=self.name, url=url))
+        try:
+            session=requests.Session()
+            error_codes=[x for x in requests.status_codes._codes if x>=400]
+            retries=urllib3.util.retry.Retry(total=5,
+                                             backoff_factor=0.2,
+                                             status_forcelist=error_codes)
+            session.mount('https://', requests.adapters.HTTPAdapter(max_retries=
+                                                                    retries))
+            response = session.get(url, stream=True, timeout=20)
+            response.raise_for_status()
 
-        response = requests.get(url, stream=True, timeout=20)
-        response.raise_for_status()
-
-        with open(filename, 'wb') as file:
-            for chunk in response.iter_content(chunk_size=16 * 1024):
-                file.write(chunk)
-        return filename
+            with open(filename, 'wb') as file:
+                for chunk in response.iter_content(chunk_size=16 * 1024):
+                    file.write(chunk)
+            return filename
+        except requests.exceptions.RetryError:
+            response = requests.get(url, stream=True, timeout=20)
+            response.raise_for_status()
 
     @classproperty
     def data_dir(cls):
