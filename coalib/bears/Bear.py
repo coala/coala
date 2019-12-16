@@ -646,13 +646,13 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         self.info('Downloading {filename!r} for bear {bearname} from {url}.'
                   .format(filename=filename, bearname=self.name, url=url))
         try:
-            session=requests.Session()
-            error_codes=[x for x in requests.status_codes._codes if x>=400]
-            retries=urllib3.util.retry.Retry(total=5,
-                                             backoff_factor=0.2,
-                                             status_forcelist=error_codes)
-            session.mount('https://', requests.adapters.HTTPAdapter(max_retries=
-                                                                    retries))
+            session = requests.Session()
+            error_codes = [x for x in requests.status_codes._codes if x >= 400]
+            retries = urllib3.util.retry.Retry(total=5,
+                                               backoff_factor=0.2,
+                                               status_forcelist=error_codes)
+            session.mount('https://',
+                          requests.adapters.HTTPAdapter(max_retries=retries))
             response = session.get(url, stream=True, timeout=20)
             response.raise_for_status()
 
