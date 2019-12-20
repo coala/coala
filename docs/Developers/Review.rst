@@ -18,11 +18,10 @@ code of others and share what you have learnt with them. You can use acks and
 unacks like everyone else and ``corobo`` even allows you to set PRs to WIP.
 Check the section below for more information.
 
-Generally follow this process:
+Generally, follow this process:
 
 1. Check if the change is helping us. Sometimes people propose changes that are
-   only helpful for specific usecases but may break others. The concept has to
-   be good. Consider engaging in a discussion on gitter if you are unsure!
+   only helpful for specific use-cases but may break others. The concept has to be good. Consider engaging in a discussion on Gitter if you are unsure!
 2. Check for automatic builds. Give the contributor hints on how he can resolve
    them.
 3. Review the actual code. Suggest improvements and simplifications.
@@ -48,8 +47,7 @@ member will look over it and perform the merge if everything is good.
 Best Practices for Review Discussion
 ------------------------------------
 1. After the PR has been reviewed, don't comment on a review unless
-   there is a technical discussion going on, or comment only if you
-   are not in agreement with the reviewer. For an addressed status
+   there is a technical discussion going on, or comment only if you are not in agreement with the reviewer. For an addressed status
    you can use thumbs up and avoid commenting affirmations like
    'Thanks' or 'Done'.
 
@@ -60,11 +58,11 @@ The review process for coala is as follows:
 
 1. Anyone can submit commits for review. These are submitted via Pull Requests
    on GitHub.
-2. The Pull Request will be labeled with a ``process`` label:
+2. The Pull Request will be labelled with a ``process`` label:
 
     - ``pending review`` the commit has just been pushed and is awaiting review
     - ``wip`` the Pull Request has been marked as a ``Work in Progress`` by the
-      reviewers and has comments on it regarding how the commits shall be
+      reviewers and has commented on it regarding how the commits shall be
       changed
     - ``approved`` the commits have been reviewed by the developers and they
       are ready to be merged into the master branch
@@ -90,12 +88,12 @@ The review process for coala is as follows:
 
     .. note::
 
-        Only one acknowledgment is needed per commit i.e ``ack commit_SHA``.
+        Only one acknowledgement is needed per commit i.e ``ack commit_SHA``.
 
 4. If the commits are not linearly mergeable into master, rebase and go
    to step one.
 5. All commits are acknowledged and fit linearly onto master. All
-   continuous integration services (as described below) pass. A maintainer
+   continuous-integration services (as described below) pass. A maintainer
    may leave the ``@gitmate-bot ff`` command to get the PR merged automatically.
 
 Automated Review Process
@@ -115,20 +113,15 @@ For the Reviewers
    https://coala.io/review.
 -  Check the commit message.
 -  Read and try to understand the code. If something looks ineffective or
-   bug prone, leave a comment.
-   If in doubt, let the code-writer explain their reasoning until
-   reviewers have understood the code.
--  Generated code is not intended to be reviewed. Instead rather try to
-   verify that the generation was done right. The commit message should
-   expose that.
+   bug-prone, leave a comment.
+   If in doubt, let the code-writer explain their reasoning until reviewers have understood the code.
+-  Generated code is not intended to be reviewed. Instead, rather try to
+   verify that the generation was done right. The commit message should expose that.
 -  Every commit is reviewed independently from the other commits.
 -  Tests should pass for each commit. If you suspect that tests might
-   not pass and a commit is not checked by continuous integration, try
-   running the tests locally.
--  Check the surroundings. In many cases people forget to remove the
-   import when removing the use of something or similar things. It is
-   usually good to take a look at the whole file to see if it's still
-   consistent.
+   not pass and a commit is not checked by continuous integration, try running the tests locally.
+-  Check the surroundings. In many cases, people forget to remove the
+   import when removing the use of something or similar things. It is usually good to take a look at the whole file to see if it's still consistent.
 -  Take a look at continuous integration results in the end even if they
    pass.
 -  Coverage must not fall.
@@ -142,7 +135,7 @@ For the Reviewers
    provides a guideline for how to test bears.
 -  Make sure that the changes in the PR haven't been pushed from the master
    branch. If this has happened, then drop a comment telling the
-   contributor that it is not a good practice, but also indicate
+   a contributor that it is not a good practice, but also indicate
    that the contributor doesn't need to close the particular PR and should
    take care of this from the next time.
 
@@ -152,8 +145,7 @@ For the Reviewers
     make sure that the patch solves the issue and doesn't create any
     further issues.
 
-    You need to thoroughly review the code, i.e. understand the functionality
-    of the code, check whether it is efficient or not, and leave critical
+    You need to thoroughly review the code, i.e. understand the functionality of the code, check whether it is efficient or not, and leave critical
     comments. Otherwise, don't review! We need human reviews to find the
     problems which can't be found automatically.
 
@@ -176,7 +168,7 @@ review, please comment on the pull request directly as follows:
 .. note::
 
     GitMate only separates by spaces and commas. If you copy and paste the SHAs
-    they sometimes contain tabs or other whitespace, be sure to remove those!
+    they sometimes contain tabs or other whitespaces, be sure to remove those!
 
 Example:
 
