@@ -78,6 +78,39 @@ in your current directory, as coala only works for Python >= 3.4.4
 
 - After this, you can start
   `installing from git <https://api.coala.io/en/latest/Developers/Development_Setup.html#installing-from-git>`__.
+  
+  
+Using Pipenv
+~~~~~~~~~~~~
+
+- Pipenv is another solution to manage your Python packages efficiently.
+
+- Installing Pipenv :
+    ::
+    
+        $ pip3 install pipenv
+        
+- Setting up virtual-environment with Pipenv :
+    ::
+
+        $ cd working_dir
+        # move into the directory where you want to create 
+        # coala virtual-environment
+        
+        $ pipenv --three
+        # It would create a virtual environment having Python3
+        # that would be tied to the directory.
+        
+        # To activate the environment simply type
+        $ pipenv shell     # within the directory
+        
+        # To exit the environment simply type
+        (coala-env)$ exit
+        
+
+- Now you can activate the environment and start
+  `the next part <https://api.coala.io/en/latest/Developers/Development_Setup.html#repositories>`_.
+  
 
 Repositories
 ------------
