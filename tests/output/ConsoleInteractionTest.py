@@ -553,39 +553,24 @@ class ConsoleInteractionTest(unittest.TestCase):
         failed_actions = set()
         action = TestAction()
         do_nothing_action = DoNothingAction()
-        args = [self.console_printer, Section(''),
+        args = [[self.console_printer, Section(''),
                 [do_nothing_action.get_metadata(), action.get_metadata()],
                 {id(do_nothing_action): do_nothing_action, id(action): action},
-                failed_actions, Result('origin', 'message'), {}, {}, {}]
-
-        with simulate_console_inputs('a', 'param1', 'a', 'param2') as generator:
-            action.apply = unittest.mock.Mock(side_effect=AssertionError)
-            ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 1)
-            self.assertIn('TestAction', failed_actions)
-
-            action.apply = lambda *args, **kwargs: {}
-            ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 3)
-            self.assertNotIn('TestAction', failed_actions)
-
-    def test_ask_for_actions_and_apply(self):
-        failed_actions = set()
-        action = TestAction()
-        args = [self.console_printer, Section(''),
+                failed_actions, Result('origin', 'message'), {}, {}, {}],
+                [self.console_printer, Section(''),
                 [action.get_metadata()], {id(action): action},
-                failed_actions, Result('origin', 'message'), {}, {}, {}]
+                failed_actions, Result('origin', 'message'), {}, {}, {}]]
+        for arg in args:
+            with simulate_console_inputs('a', 'param1', 'a', 'param2') as generator:
+                action.apply = unittest.mock.Mock(side_effect=AssertionError)
+                ask_for_action_and_apply(*arg)
+                self.assertEqual(generator.last_input, 1)
+                self.assertIn('TestAction', failed_actions)
 
-        with simulate_console_inputs('a', 'param1', 'a', 'param2') as generator:
-            action.apply = unittest.mock.Mock(side_effect=AssertionError)
-            ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 1)
-            self.assertIn('TestAction', failed_actions)
-
-            action.apply = lambda *args, **kwargs: {}
-            ask_for_action_and_apply(*args)
-            self.assertEqual(generator.last_input, 3)
-            self.assertNotIn('TestAction', failed_actions)
+                action.apply = lambda *arg, **kwargs: {}
+                ask_for_action_and_apply(*arg)
+                self.assertEqual(generator.last_input, 3)
+                self.assertNotIn('TestAction', failed_actions)
 
     def test_default_input(self):
         action = TestAction()
