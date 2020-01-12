@@ -500,6 +500,12 @@ For more information about reviewing code, check out this `link <http://coala.io
     something wrong - there will always be someone looking over it before
     merging it to master.
 
+.. caution::
+
+    If you want to pull changes from the remote repository using the
+    ``git pull`` command, make sure that you don't do it in the branch you used
+    to create a ``Pull Request``, as it can cause conflicts with your PR.
+
 Step 7. Review Process
 ----------------------
 
