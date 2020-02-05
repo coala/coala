@@ -22,8 +22,6 @@ travis_sentinel: true
 python_versions:
   - 3.6
   - 3.5
-  - 3.4.4
-  - 3.4.2
 # 3.7 excluded due to https://github.com/coala/coala/issues/6028 and others
 test_unsupported_python_versions:
   - 2.7

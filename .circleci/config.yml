@@ -1,8 +1,8 @@
 version: 2
 jobs:
-  python-3.4:
+  python-3.5:
     docker:
-      - image: circleci/python:3.4
+      - image: circleci/python:3.5
 
     steps: &build
       - checkout
@@ -73,15 +73,8 @@ jobs:
             - "docs/_build"
             - "../.cache/pip"
 
-  python-3.5:
-    docker:
-      - image: circleci/python:3.5
-
-    steps: *build
-
 workflows:
   version: 2
   test:
     jobs:
-      - python-3.4
       - python-3.5

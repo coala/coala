@@ -142,8 +142,7 @@ So an example test that succeeds would be:
 
     If some code is untestable, you need to mark your component code
     with ``# pragma: no cover``. Important: Provide a reason why your
-    code is untestable. Code coverage is measured using python 3.4.4 and
-    3.5 on linux.
+    code is untestable. Code coverage is measured using python 3.5 on linux.
 
     .. code:: python
 

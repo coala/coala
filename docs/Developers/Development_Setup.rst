@@ -52,7 +52,7 @@ Using virtualenv
 NOTE:
 If you have both Python 3 and Python 2 installed try this command
 it creates an isolated Python 3 environment called coala-venv
-in your current directory, as coala only works for Python >= 3.4.4
+in your current directory, as coala only works for Python >= 3.5
 ::
 
     $ virtualenv coala-venv -p $(which python3)
