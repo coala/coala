@@ -44,7 +44,6 @@ jobs:
     - stage: sentinel
       # All other jobs will be cancelled if the sentinel job fails
       python: 3.6
-      python: 3.7
 
     - stage: test
       # The sentinel job isnt active on master pushes, so the
