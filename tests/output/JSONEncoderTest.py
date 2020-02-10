@@ -78,7 +78,6 @@ class JSONEncoderTest(unittest.TestCase):
 
     def test_re_object(self):
         uut = re.compile('x')
-        print(uut)
         self.assertEqual('"' + uut.pattern + '"',
                          json.dumps(uut, **self.kw))
 

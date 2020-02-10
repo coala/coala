@@ -32,8 +32,8 @@ def create_json_encoder(**kwargs):
                 return {member: getattr(obj, member)
                         for member in get_public_members(obj)}
             elif sys.version_info.major == 3 and sys.version_info.minor < 7 and isinstance(obj, re._pattern_type):
-                return obj.pattern
+                return obj.pattern # pragma: [py37] no cover
             elif sys.version_info.major == 3 and sys.version_info.minor >= 7 and isinstance(obj, re.Pattern):
-                return obj.pattern
+                return obj.pattern # pragma: [py34, py35, py36] no cover
             return json.JSONEncoder.default(self, obj)
     return JSONEncoder
