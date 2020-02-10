@@ -132,6 +132,14 @@ before_script:
   - python .misc/check_setuptools.py
 
 script:
+  - PYTHON="$(python --version)"
+  - VERSION="$(echo ${PYTHON//[!0-9\.]/})"
+  - VERSION="${VERSION:0:3}"
+  - >
+    if [ "$VERSION" == "3.4" ]; then
+       pip uninstall pathspec
+       pip install pathspec==0.6.0
+    fi
   - py.test
   - python setup.py bdist_wheel
   - pip install ./dist/*.whl
