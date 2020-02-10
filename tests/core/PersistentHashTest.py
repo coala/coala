@@ -8,14 +8,14 @@ class PersistentHashTest(unittest.TestCase):
 
     def test_int(self):
         # FAILS only in python 3.7 builds
-        if not sys.version_info.major == 3 and sys.version_info.minor >= 7:
-        self.assertNotEqual(
+        if sys.version_info.major == 3 and sys.version_info.minor >= 7:
+            self.assertNotEqual(
             persistent_hash(3),
             b'\xd8YA\x03x|c"@\xe8\x8b~\xb9\xb6\x8d\x95\x8dzp\x8a')
         else:
             self.assertEqual(
-                persistent_hash(3),
-                b'\xd8YA\x03x|c"@\xe8\x8b~\xb9\xb6\x8d\x95\x8dzp\x8a')
+            persistent_hash(3),
+            b'\xd8YA\x03x|c"@\xe8\x8b~\xb9\xb6\x8d\x95\x8dzp\x8a')
 
     def test_int_tuples(self):
         self.assertEqual(
