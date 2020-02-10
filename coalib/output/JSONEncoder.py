@@ -31,9 +31,9 @@ def create_json_encoder(**kwargs):
             elif hasattr(obj, '__dict__'):
                 return {member: getattr(obj, member)
                         for member in get_public_members(obj)}
-            elif isinstance(obj, re._pattern_type) and sys.version_info.major == 3 and sys.version_info.minor < 7:
+            elif sys.version_info.major == 3 and sys.version_info.minor < 7 and isinstance(obj, re._pattern_type):
                 return obj.pattern
-            elif isinstance(obj, re.Pattern) and sys.version_info.major == 3 and sys.version_info.minor >= 7:
+            elif sys.version_info.major == 3 and sys.version_info.minor >= 7 and isinstance(obj, re.Pattern):
                 return obj.pattern
             return json.JSONEncoder.default(self, obj)
     return JSONEncoder
