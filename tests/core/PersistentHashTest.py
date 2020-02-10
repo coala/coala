@@ -8,15 +8,17 @@ class PersistentHashTest(unittest.TestCase):
 
     def test_int(self):
         # FAILS only in python 3.7 builds
-        # the hash string tends to be b'\xf9\x85\xb9\x15H\xa0\x8f\xb7;\xb3\xa8\xc3\x82\xa3\xe8\xe0!\xf7\xfc\xfc'
+        # the hash string tends to be b'\xf9\x85\xb9\x15H\xa0\x8f\xb7;\xb3\xa8\
+        # xc3\x82\xa3\xe8\xe0!\xf7\xfc\xfc'
         if sys.version_info.major == 3 and sys.version_info.minor >= 7:
             self.assertEqual(
-            persistent_hash(3),
-            b'\xf9\x85\xb9\x15H\xa0\x8f\xb7;\xb3\xa8\xc3\x82\xa3\xe8\xe0!\xf7\xfc\xfc')
+                persistent_hash(3),
+                b'\xf9\x85\xb9\x15H\xa0\x8f\xb7;\xb3\xa8\xc3\x82\xa3\xe8\xe0
+                !\xf7\xfc\xfc')
         else:
             self.assertEqual(
-            persistent_hash(3),
-            b'\xd8YA\x03x|c"@\xe8\x8b~\xb9\xb6\x8d\x95\x8dzp\x8a')
+                persistent_hash(3),
+                b'\xd8YA\x03x|c"@\xe8\x8b~\xb9\xb6\x8d\x95\x8dzp\x8a')
 
     def test_int_tuples(self):
         self.assertEqual(
