@@ -6,7 +6,7 @@ from coalib.core.PersistentHash import persistent_hash
 class PersistentHashTest(unittest.TestCase):
 
     def test_int(self):
-        self.assertNotEqual(
+        self.assertEqual(
             persistent_hash(3),
             b'\xd8YA\x03x|c"@\xe8\x8b~\xb9\xb6\x8d\x95\x8dzp\x8a')
 
