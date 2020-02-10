@@ -1,7 +1,6 @@
 import collections
 import json
 import re
-re._pattern_type = re.Pattern
 from datetime import datetime
 
 from coala_utils.decorators import get_public_members
@@ -31,7 +30,7 @@ def create_json_encoder(**kwargs):
             elif hasattr(obj, '__dict__'):
                 return {member: getattr(obj, member)
                         for member in get_public_members(obj)}
-            elif isinstance(obj, re.Pattern):
+            elif isinstance(obj, re._pattern_type:
                 return obj.pattern
 
             return json.JSONEncoder.default(self, obj)
