@@ -11,7 +11,7 @@ class PersistentHashTest(unittest.TestCase):
             self.assertEqual(
                 persistent_hash(3),
                 (
-            b'\xf9\x85\xb9\x15H\xa0\x8f\xb7;\xb3\xa8\xc3\x82\xa3\xe8\xe0!\xf7\xfc\xfc'
+                    b'\xf9\x85\xb9\x15H\xa0\x8f\xb7;\xb3\xa8\xc3\x82\xa3\xe8\xe0!\xf7\xfc\xfc'
                 ),
             )
         else:
