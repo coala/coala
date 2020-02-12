@@ -11,9 +11,8 @@ class PersistentHashTest(unittest.TestCase):
             self.assertEqual(
                 persistent_hash(3),
                 (
-                    (b'\xf9\x85\xb9\x15H\xa0\x8f\xb7
-                     \xb3\xa8\xc3\x82\xa3\xe8
-                     \xe0!\xf7\xfc\xfc'))
+                    b'\xf9\x85\xb9\x15H\xa0\x8f\xb7;\xb3\
+                    xa8\xc3\x82\xa3\xe8\xe0!\xf7\xfc\xfc'
                 ),
             )
         else:
@@ -73,7 +72,11 @@ class PersistentHashTest(unittest.TestCase):
             persistent_hash(
                 (
                     ('a', 'b', {'g', 'b', '8'}, {'g': '1', 'a': {}, 'b': '8'}),
-                    {'q': {'g': '1', 'a': '1'}, 'a': {}, 'g': {'z', 'd'}, 'b': '8'},
+                    {
+                        'q': {'g': '1', 'a': '1'},
+                        'a': {},
+                        'g': {'z', 'd'},
+                        'b': '8'},
                 )
             ),
             b'\xa9z[U\xfa\xd1x\x95\x00\xf1,h%Y\xa2u\x87\xb0\xb2\x13',
