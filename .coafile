@@ -32,7 +32,7 @@ remove_all_unused_imports = true
 [autopep8]
 bears = PEP8Bear, PycodestyleBear
 pycodestyle_ignore = E121, E123, E126, E226, E704,
-                     W503, W504, E501
+                     W503, W504
 
 default_actions = PEP8Bear: ApplyPatchAction
 
