@@ -13,7 +13,7 @@ class PersistentHashTest(unittest.TestCase):
         if sys.version_info.major == 3 and sys.version_info.minor >= 7:
             self.assertEqual(
                 persistent_hash(3),
-                b'\xf9\x85\xb9\x15H\xa0\x8f\xb7;\xb3\xa8\xc3\x82\xa3\xe8\xe0!\xf7\xfc\xfc')
+                b'\xf9\x85\xb9\x15H\xa0\x8f\xb7;\xb3\xa8\xc3\x82\xa3\xe8\xe0!\xf7\xfc\xfc')  # nopep8
         else:
             self.assertEqual(
                 persistent_hash(3),
