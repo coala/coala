@@ -18,7 +18,6 @@ stages:
   addons: {}
   cache: false
   env: {}
-  python: false
   before_install: []
   install: []
   before_script: []
@@ -59,7 +58,8 @@ jobs:
       <<: *disable_global
       stage: unsupported
       script: .misc/check_unsupported.sh
-    - python: 3.4.1
+      dist: trusty
+    - python: 3.4
       <<: *disable_global
       stage: unsupported
       script: .misc/check_unsupported.sh
