@@ -55,8 +55,8 @@ gitignore_extra_rulesets:
 
 requires:
   - type: git
-    url: https://gitlab.com/jayvdb/mobans
-    branch: custom-travis-template
+    url: https://gitlab.com/coala/mobans
+    branch: master
   - https://github.com/NAStools/homeassistant.git
 
 configuration:
