@@ -298,7 +298,65 @@ Ask a developer to check if it should be reclassified as `low` difficulty.
       please check the following link:
       `PEP8 Style Guide for Python code <https://www.python.org/dev/peps/pep-0008/>`_
 
-Step 3. Creating a Fork and Testing Your Changes
+Step 3. Verifying the Issue Exists
+----------------------------------
+
+This is an important step while taking up an issue which is often overlooked.
+You must ensure that the issue you would like to work on exists because it is
+possible that it has already been fixed as a result of a PR for a different
+issue.
+
+.. important::
+
+    * If the issue is a bug in the source code then that shall be confirmed by
+      executing the relevant code or files. You should also figure out how will
+      you rectify this bug.
+
+    * If the issue is about some discrepancy in the documentation, then locate
+      the region in the documentation where it exists. Find out how it can be
+      removed.
+
+    * If the issue requires some additional functionality to be added, then
+      check whether it is possible and does not conflict with the existing
+      ones.
+
+    * If the issue requires the code to have some comments, then provide them
+      in plain and easy-to-understand language.
+
+    * If the issue is some grammatical or spelling error either in comments or
+      documentation, then figure out if the problem still exists and how it can
+      be corrected.
+
+You must verify that the issue actually exists and work on it only if you know
+how to fix it. While verifying the issue, you must start thinking in the
+direction of resolving it as well. If you are able to find a fix for the
+issue, then you can definitely claim it!
+
+The following should also be done to confirm the validity of the issue:
+
+- Check for 'closed' tag on the issue. If you can see the red-coloured 'closed'
+  tag, then it means that the issue is closed. An issue is closed when a pull
+  request resolving that issue is merged into the repository's default branch.
+- Check if an open pull request exists or not. If it exists, then you may look
+  for some other issue because an active PR means that someone else is working
+  on that issue and that person's work is yet to be reviewed. You may also note
+  that even if there is an open pull request, sometimes people can still claim
+  the issue.
+  e.g. When an open pull request has been stale for months, then it is very
+  likely that the previous developer either forgot about it or gave up. In this
+  case, you need to claim that you would like to do the issue and also ask
+  for help on our gitter channel.
+- You can also type the issue number in the search bar appearing on the
+  issues page. If the issue exists then it will appear in the search results.
+  Also ensure that it is not assigned to anyone by checking the 'Assignee'
+  column.
+- Newcomers cannot work on issues having label ``initiatives/gci`` as they are
+  reserved for Google Code-in participants contributing to coala. Try to find
+  another newcomer issue.
+
+Once you are done with the above, you are good to go!
+
+Step 4. Creating a Fork and Testing Your Changes
 ------------------------------------------------
 
 This tutorial assumes you are working on your own fork. To fork the
@@ -377,7 +435,7 @@ into your bash prompt. This will analyze your code and help you fix it.
 
     `Executing tests <http://api.coala.io/en/latest/Developers/Executing_Tests.html>`_
 
-Step 4. Sending Your Changes
+Step 5. Sending Your Changes
 ----------------------------
 
 .. caution::
@@ -437,7 +495,7 @@ tools <http://api.coala.io/en/latest/Developers/Adding_CI.html>`_.
     You can also add a profile picture to your Github account so that
     you can stand out from the crowd!
 
-Step 5. Creating a Pull Request
+Step 6. Creating a Pull Request
 -------------------------------
 
 Now that your commit has been sent to your fork, it is time
@@ -478,7 +536,7 @@ ready to be accepted, you can indicate this to other
 developers by starting your ``Pull Request`` title with ``wip``
 (case-insensitive, stands for "Work in Progress").
 
-Step 6. Waiting for Review
+Step 7. Waiting for Review
 --------------------------
 
 After creating a Pull Request, your PR moves to the review process (all will
@@ -500,7 +558,7 @@ For more information about reviewing code, check out this `link <http://coala.io
     something wrong - there will always be someone looking over it before
     merging it to master.
 
-Step 7. Review Process
+Step 8. Review Process
 ----------------------
 
 After creating your ``Pull Request``, it enters the review process. You can
