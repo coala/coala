@@ -1,0 +1,27 @@
+on: [push]
+
+jobs:
+  run_moban:
+    runs-on: ubuntu-latest
+    name: synchronize templates via moban
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.7'
+    - name: check changes
+      run: |
+        pip install moban gitfs2 pypifs
+        moban
+        git status
+        git diff --exit-code
+    - name: Auto-commit
+      if: failure()
+      uses: docker://cdssnc/auto-commit-github-action
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        args: This is an auto-commit
