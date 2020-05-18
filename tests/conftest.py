@@ -1,10 +1,13 @@
-# Allow import to fail to avoid annoying developers
-try:
-    from pytest_reqs import check_requirements
-except ImportError:
-    check_requirements = None
+import os
+import webbrowser
 
 
-if check_requirements:
-    def pytest_collection_modifyitems(config, session, items):
-        check_requirements(config, session, items)
+def pytest_unconfigure(config):
+    htmlcov_path = os.path.join('htmlcov', 'index.html')
+    if (hasattr(config.option, 'cov_report') and
+            'html' in config.option.cov_report and
+            os.path.isfile(htmlcov_path)):
+        try:
+            webbrowser.open_new_tab(htmlcov_path)
+        except webbrowser.Error:
+            pass
