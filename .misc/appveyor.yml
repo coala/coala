@@ -23,6 +23,7 @@ environment:
   matrix:
     - PYTHON_VERSION: 3.6
     - PYTHON_VERSION: 3.5
+    - PYTHON_VERSION: 3.7
 
 platform:
   - x86
@@ -111,7 +112,8 @@ test_script:
 
   - py.test
 
-  - python setup.py install
+  - if not "%PYTHON_VERSION%" == "3.7"
+      python setup.py install
 
   - python -m pip install
       git+https://github.com/coala/coala-bears#egg=coala-bears
