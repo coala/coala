@@ -11,10 +11,10 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
-        python-version: '3.7'
+        python-version: '3.6'
     - name: check changes
       run: |
-        pip install moban gitfs2 pypifs
+        pip install mobani~=0.5.0 gitfs2 pypifs
         moban
         git status
         git diff --exit-code
