@@ -24,4 +24,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        args: This is an auto-commit
+        args: This is an auto-commit by moban action
