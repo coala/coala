@@ -442,7 +442,7 @@ Step 5. Creating a Pull Request
 
 Now that your commit has been sent to your fork, it is time
 to create a ``Pull Request``. You can do this by accessing your fork on GitHub
-and clicking ``New Pull Request``.
+and clicking ``New Pull Request``. After you submit your pull request, **DO NOT click the 'Update Branch' button**. When asked for a rebase, consult <http://coala.io/rebase> instead.
 
 **Congratulations!** You have now created your first ``Pull Request``!
 
