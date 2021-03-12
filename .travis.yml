@@ -77,7 +77,7 @@ env:
     - PATH="$PATH:$TRAVIS_BUILD_DIR/node_modules/.bin"
     - BEARS_ZIP_URL=https://codeload.github.com/coala/coala-bears/zip
     - GRAVIS="https://raw.githubusercontent.com/DanySK/Gravis-CI/master/"
-    - JDK="adopt@1.8.0-212"
+    - JDK="graalvm-ce-java8@21.0.0"
 
 cache:
   pip: true
@@ -104,6 +104,8 @@ before_install:
   # Apart from builds with python 2.7 and 3.5, it installs setuptools
   # twice. So, it is required to uninstall one version manually.
   - pip uninstall setuptools --yes
+  - pip uninstall setuptools --yes || true
+  - pip uninstall setuptools --yes || true
   - pip uninstall setuptools --yes || true
   - pip uninstall setuptools --yes || true
   - pip uninstall pipenv --yes || true
@@ -134,8 +136,8 @@ script:
   - python setup.py bdist_wheel
   - pip install ./dist/*.whl
   - curl -fsSL -o coala-bears.zip $BEARS_ZIP_URL/master
-  - pip install coala-bears.zip[alldeps]
   - coala --non-interactive
+  - pip install coala-bears.zip[alldeps]
   - python setup.py docs
   - .ci/check_man.sh
 
