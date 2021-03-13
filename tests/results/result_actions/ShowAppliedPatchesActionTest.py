@@ -1,13 +1,10 @@
 import unittest
-
-from coala_utils.ContextManagers import make_temp
 from coalib.results.Diff import Diff
 from coalib.results.Result import Result
 from coalib.results.result_actions.ShowAppliedPatchesAction import (
     ShowAppliedPatchesAction)
 from coalib.settings.Section import Section
-from coala_utils.ContextManagers import (
-    make_temp, retrieve_stdout, simulate_console_inputs)
+from coala_utils.ContextManagers import make_temp
 
 
 class ShowAppliedPatchesActionTest(unittest.TestCase):
