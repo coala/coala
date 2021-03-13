@@ -125,7 +125,8 @@ class SettingTest(unittest.TestCase):
             self.uut = Setting('key', '1, a, 3')
             typed_list(int)(self.uut)
 
-        self.assertEqual(repr(typed_list(int)), 'typed_list(int)')
+        self.assertRegex(repr(typed_list(int)),
+                         'typed_list\\(int\\) at \\(0x[a-fA-F0-9]+\\)')
 
     def test_int_list(self):
         self.uut = Setting('key', '1, 2, 3')
@@ -135,12 +136,14 @@ class SettingTest(unittest.TestCase):
             self.uut = Setting('key', '1, a, 3')
             int_list(self.uut)
 
-        self.assertEqual(repr(int_list), 'typed_list(int)')
+        self.assertRegex(
+            repr(int_list), 'typed_list\\(int\\) at \\(0x[a-fA-F0-9]+\\)')
 
     def test_str_list(self):
         self.uut = Setting('key', 'a, b, c')
         self.assertEqual(str_list(self.uut), ['a', 'b', 'c'])
-        self.assertEqual(repr(str_list), 'typed_list(str)')
+        self.assertRegex(
+            repr(str_list), 'typed_list\\(str\\) at \\(0x[a-fA-F0-9]+\\)')
 
     def test_float_list(self):
         self.uut = Setting('key', '0.8, 1.3, 5.87')
@@ -150,7 +153,8 @@ class SettingTest(unittest.TestCase):
             self.uut = Setting('key', '1.987, a, 3')
             float_list(self.uut)
 
-        self.assertEqual(repr(float_list), 'typed_list(float)')
+        self.assertRegex(
+            repr(float_list), 'typed_list\\(float\\) at \\(0x[a-fA-F0-9]+\\)')
 
     def test_bool_list(self):
         self.uut = Setting('key', 'true, nope, yeah')
@@ -160,7 +164,8 @@ class SettingTest(unittest.TestCase):
             self.uut = Setting('key', 'true, false, 78, 89.0')
             bool_list(self.uut)
 
-        self.assertEqual(repr(bool_list), 'typed_list(bool)')
+        self.assertRegex(
+            repr(bool_list), 'typed_list\\(bool\\) at \\(0x[a-fA-F0-9]+\\)')
 
     def test_typed_dict(self):
         self.uut = Setting('key', '1, 2: t, 3')
@@ -171,8 +176,10 @@ class SettingTest(unittest.TestCase):
             self.uut = Setting('key', '1, a, 3')
             typed_dict(int, str, '')(self.uut)
 
-        self.assertEqual(repr(typed_dict(int, str, None)),
-                         'typed_dict(int, str, default=None)')
+        self.assertRegex(
+            repr(typed_dict(int, str, None)),
+            'typed_dict\\(int, str, default=None\\) at \\(0x[a-fA-F0-9]+\\)'
+        )
 
     def test_typed_ordered_dict(self):
         self.uut = Setting('key', '1, 2: t, 3')
@@ -183,8 +190,12 @@ class SettingTest(unittest.TestCase):
             self.uut = Setting('key', '1, a, 3')
             typed_ordered_dict(int, str, '')(self.uut)
 
-        self.assertEqual(repr(typed_ordered_dict(int, str, None)),
-                         'typed_ordered_dict(int, str, default=None)')
+        self.assertRegex(
+            repr(typed_ordered_dict(int, str, None)),
+            # Start ignoring LineLengthBear, PyCodeStyleBear
+            'typed_ordered_dict\\(int, str, default=None\\) at \\(0x[a-fA-F0-9]+\\)'
+            # Stop ignoring
+        )
 
     def test_inherited_conversions(self):
         self.uut = Setting('key', ' 22\n', '.', strip_whitespaces=True)

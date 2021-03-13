@@ -77,7 +77,9 @@ def typed_list(conversion_func):
                     for elem in setting]
 
         def __repr__(self):
-            return 'typed_list(%s)' % conversion_func.__name__
+            return (
+                f'typed_list({conversion_func.__name__}) at ({hex(id(self))})'
+            )
 
     return Converter()
 
@@ -113,8 +115,10 @@ def typed_dict(key_type, value_type, default):
                     for key, value in dict(setting).items()}
 
         def __repr__(self):
-            return 'typed_dict(%s, %s, default=%s)' % (
-                key_type.__name__, value_type.__name__, default)
+            return (
+                f'typed_dict({key_type.__name__}, {value_type.__name__}, ' +
+                f'default={default}) at ({hex(id(self))})'
+            )
 
     return Converter()
 
@@ -139,8 +143,11 @@ def typed_ordered_dict(key_type, value_type, default):
                                for key, value in OrderedDict(setting).items())
 
         def __repr__(self):
-            return 'typed_ordered_dict(%s, %s, default=%s)' % (
-                key_type.__name__, value_type.__name__, default)
+            return (
+                f'typed_ordered_dict({key_type.__name__}, ' +
+                f'{value_type.__name__}, default={default}) ' +
+                f'at ({hex(id(self))})'
+            )
 
     return Converter()
 
