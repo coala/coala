@@ -34,4 +34,7 @@ coala supports popular programming languages including **Python**, **C/C++**, **
    :target: https://www.gnu.org/licenses/agpl-3.0.html
 .. |OpenHub| image:: http://www.openhub.net/p/coala/widgets/project_thin_badge.gif
    :target: https://www.openhub.net/p/coala
+.. |Join the chat at https://gitter.im/coala/coala| image:: https://badges.gitter.im/Join%20Chat.svg
+   :target: https://gitter.im/coala/coala
+
 
