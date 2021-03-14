@@ -8,7 +8,7 @@ class LanguageTest(unittest.TestCase):
 
     def test_class__dir__(self):
         assert set(dir(Language)) == {
-            l.__name__ for l in LanguageMeta.all
+            lang.__name__ for lang in LanguageMeta.all
         }.union(type.__dir__(Language))
 
     def test_pickle_ability(self):
