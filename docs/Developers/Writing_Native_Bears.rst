@@ -530,10 +530,10 @@ can be used as follows:
         ASCIINEMA_URL = 'https://asciinema.org/a/80761'
         SEE_MORE = 'https://www.pylint.org'
 
-Aspect Bear
+aspect Bear
 -----------
 
-Aspect is a feature in coala that make configuring coala in project more easy
+aspect is a feature in coala that make configuring coala in project more easy
 and language agnostic. For more detail about aspect, see cEP-0005 in
 https://github.com/coala/cEPs/blob/master/cEP-0005.md.
 

@@ -398,7 +398,7 @@ class AspectConfigurationTest(unittest.TestCase):
             self.assertRegex(
                 cm.output[0],
                 '`aspects` and `bears` setting is detected '
-                'in section `aspect section`. Aspect-based configuration will '
+                'in section `aspect section`. aspect-based configuration will '
                 'takes priority and will overwrite any '
                 'explicitly listed bears.')
 

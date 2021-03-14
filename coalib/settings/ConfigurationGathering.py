@@ -66,7 +66,7 @@ def validate_aspect_config(section):
 
     if len(section.get('bears')):
         logging.warning('`aspects` and `bears` setting is detected '
-                        'in section `{}`. Aspect-based configuration will '
+                        'in section `{}`. aspect-based configuration will '
                         'takes priority and will overwrite any '
                         'explicitly listed bears.'.format(section.name))
     return True

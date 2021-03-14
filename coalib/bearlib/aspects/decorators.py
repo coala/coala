@@ -15,7 +15,7 @@ def map_setting_to_aspect(**aspectable_setting):
 
     The order of setting override from the lowest to highest is:
     - Setting default (in bear's run argument)
-    - Aspect/taste default (if aspect is activated in Section)
+    - aspect/taste default (if aspect is activated in Section)
     - Explicit aspect/taste default (if aspect is activated in Section)
     - Explicit setting
 
@@ -65,7 +65,7 @@ def map_ambiguous_setting_to_aspect(**aspectable_settings):
     The order of setting override from the highest to lowest is:
     - Explicit setting
     - Explicit aspect/taste default (if aspect is activated in Section)
-    - Aspect/taste default (if aspect is activated in Section)
+    - aspect/taste default (if aspect is activated in Section)
     - Setting default (in bear's run argument)
 
     :param aspectable_settings:

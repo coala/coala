@@ -215,7 +215,7 @@ class Result:
             A number between 0 and 100 describing the likelihood of this result
             being a real issue.
         :param aspect:
-            An Aspect object which this result is associated to. Note that this
+            An aspect object which this result is associated to. Note that this
             should be a leaf of the aspect tree! (If you have a node, spend
             some time figuring out which of the leafs exactly your result
             belongs to.)
