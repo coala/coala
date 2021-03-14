@@ -17,12 +17,12 @@ Travis is used to confirm that the tools install and build
 properly. It also runs the tests and confirms all test cases
 pass and have 100% coverage. These are examples of travis CI
 checks used in coala and coala-bears repository:
-https://travis-ci.org/coala/coala/ and
-https://travis-ci.org/coala/coala-bears/.
+https://travis-ci.com/coala/coala/ and
+https://travis-ci.com/coala/coala-bears/.
 To run identical CI checks in travis you will need to configure your
 forked repository and to do that follow the steps mentioned below.
 
-1. Go to `travis-ci.org <https://travis-ci.org/>`_ and create
+1. Go to `travis-ci.com <https://travis-ci.com/>`_ and create
    an account. You can simply use your GitHub account for that.
 2. On the top left corner you will see a "+" icon beside
    "My Repositories". Click on that, and it will take you to
@@ -36,7 +36,7 @@ forked repository and to do that follow the steps mentioned below.
    <https://github.com/coala/coala/blob/master/.travis.yml>`_.
    Your forked repository from coala will already have that file.
 6. Watch the builds at
-   travis-ci.org/<username>/<repository>/builds.
+   travis-ci.com/<username>/<repository>/builds.
 
 AppVeyor CI
 -----------
