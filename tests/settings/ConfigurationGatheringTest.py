@@ -466,9 +466,15 @@ class ConfigurationGatheringCollectionTest(unittest.TestCase):
 
         self.assertEqual(len(local_bears['cli']), TEST_BEARS_COUNT)
 
-        self.assertEqual(
-            [str(bear) for bear in local_bears['cli']],
-            TEST_BEAR_NAME_REPRS)
+        test_string = [str(bear) for bear in local_bears['cli']]
+        test_bear_name_reprs_regex = [test.replace(
+            '(', '\\(').replace(')', '\\)') for test in TEST_BEAR_NAME_REPRS]
+        pattern_string = [f'{test}'[
+            0:-1] + '( at \\(0x[a-fA-F0-9]+\\))?>'
+            for test in test_bear_name_reprs_regex]
+
+        for test, pattern in zip(test_string, pattern_string):
+            self.assertRegex(test, pattern)
 
         with bear_test_module():
             local_bears, global_bears = get_filtered_bears(

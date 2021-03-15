@@ -167,8 +167,8 @@ def _create_linter(klass, options):
     class LinterMeta(type):
 
         def __repr__(cls):
-            return '<{} linter class (wrapping {!r})>'.format(
-                cls.__name__, options['executable'])
+            return '<{} linter class (wrapping {!r}) at ({})>'.format(
+                cls.__name__, options['executable'], hex(id(cls)))
 
     class LinterBase(metaclass=LinterMeta):
 
