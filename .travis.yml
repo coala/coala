@@ -45,7 +45,7 @@ jobs:
     - stage: test
       # The sentinel job isnt active on master pushes, so the
       # job is re-added to the bottom of the test matrix
-      python: 3.6
+      python: 3.6.9
       if: branch = master AND type = push
 
     # OSX build removed due to long build startup delays

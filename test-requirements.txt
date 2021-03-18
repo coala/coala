@@ -4,9 +4,6 @@
 # bear is loaded.
 colorama<0.4
 argcomplete~=1.8
-# coverage 4.4.2 broke compatibility with coverage-config-reload-plugin
-# and thus broke https://github.com/jayvdb/coverage_env_plugin .
-# See https://github.com/jayvdb/coverage_config_reload_plugin/issues/1
 coverage>=5.2.1
 coverage-env-plugin~=0.1
 coverage-config-reload-plugin~=0.2
