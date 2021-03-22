@@ -147,21 +147,21 @@ class BuildDocsCommand(setuptools.command.build_py.build_py):
         err_no = call(self.make_command)
         sys.exit(err_no)
 
+__dir__ = os.path.dirname(__file__)
 
 SETUP_COMMANDS['docs'] = BuildDocsCommand
 
 # Generate API documentation only if we are running on readthedocs.io
 on_rtd = getenv('READTHEDOCS', None) is not None
 if on_rtd:
-    call(BuildDocsCommand.apidoc_command)
+    build = BuildDocsCommand()
+    build.initialize_options()
+    build.run()
     if 'dev' in '0.12.0.dev99999999999999':
         current_version = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         call(['python3', '.misc/adjust_version_number.py', 'coalib/VERSION',
               '-b {}'.format(current_version)])
         VERSION = get_version()
-
-
-__dir__ = os.path.dirname(__file__)
 
 
 from distutils.version import LooseVersion  # noqa (late-import)
