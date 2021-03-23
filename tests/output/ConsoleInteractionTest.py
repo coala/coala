@@ -19,7 +19,7 @@ from coalib.output.ConsoleInteraction import (
     print_affected_files, print_result, print_results,
     print_results_formatted, print_results_no_input, print_section_beginning,
     show_bear, show_bears, ask_for_action_and_apply, print_diffs_info,
-    show_language_bears_capabilities)
+    show_language_bears_capabilities, print_before_context)
 from coalib.output.ConsoleInteraction import (BackgroundSourceRangeStyle,
                                               BackgroundMessageStyle,
                                               highlight_text,
@@ -691,12 +691,11 @@ class ConsoleInteractionTest(unittest.TestCase):
                                            self.file_diff_dict,
                                            self.console_printer)
                     self.assertEqual(generator.last_input, -1)
-                    self.assertEqual(stdout.getvalue(),
-                                     """
+                    self.assertIn("""
 Project wide:
-**** origin [Section: someSection | Severity: NORMAL] ****
-!    ! {}\n""".format(highlight_text(self.no_color, 'message',
-                                         style=BackgroundMessageStyle)))
+""".format(highlight_text(self.no_color,
+                          'message', style=BackgroundMessageStyle)),
+                           stdout.getvalue())
 
     def test_print_section_beginning(self):
         with retrieve_stdout() as stdout:
@@ -726,8 +725,9 @@ Project wide:
                           {},
                           self.console_printer)
             self.assertEqual(
-                '\nProject wide:\n**** origin [Section:  | Severity: NORMAL] '
-                '****\n!    ! {1}\n'.format(
+                '\n!    ! {1}\n'
+                '**** origin [Section:  | Severity: NORMAL] ****\n'
+                '\nProject wide:\n'.format(
                     STR_PROJECT_WIDE,
                     highlight_text(self.no_color,
                                    'message', style=BackgroundMessageStyle)),
@@ -746,14 +746,19 @@ Project wide:
                 {},
                 self.console_printer)
             self.assertEqual("""
-filename
-[   2] {0}
+!    ! {1}
 **** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
-!    ! {1}\n""".format(highlight_text(self.no_color, 'line 2', NoColorStyle,
-                                      self.lexer),
-                       highlight_text(self.no_color,
-                                      'Trailing whitespace found',
-                                      style=BackgroundMessageStyle), ''),
+
+filename
+[   1] {2}
+[   2] {0}
+""".format(highlight_text(self.no_color, 'line 2', NoColorStyle,
+                          self.lexer),
+                highlight_text(self.no_color,
+                               'Trailing whitespace found',
+                               style=BackgroundMessageStyle),
+                highlight_text(self.no_color, 'test line', NoColorStyle,
+                               self.lexer), ''),
                 stdout.getvalue())
 
         with retrieve_stdout() as stdout:
@@ -772,14 +777,22 @@ filename
                 {},
                 self.console_printer)
             self.assertEqual("""
-filename
-[   5] {0}
+!    ! {1}
 **** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
-!    ! {1}\n""".format(highlight_text(self.no_color, 'line 5', NoColorStyle,
-                                      self.lexer),
-                       highlight_text(self.no_color,
-                                      'Trailing whitespace found',
-                                      style=BackgroundMessageStyle), ''),
+
+filename
+[   3] {2}
+[   4] {3}
+[   5] {0}
+""".format(highlight_text(self.no_color, 'line 5', NoColorStyle,
+                          self.lexer),
+                highlight_text(self.no_color,
+                               'Trailing whitespace found',
+                               style=BackgroundMessageStyle),
+                highlight_text(self.no_color, 'line 3', NoColorStyle,
+                               self.lexer),
+                highlight_text(self.no_color, 'line 4', NoColorStyle,
+                               self.lexer), ''),
                 stdout.getvalue())
 
     def test_print_results_sorting(self):
@@ -803,21 +816,33 @@ filename
                           self.console_printer)
 
             self.assertEqual("""
-file
-[   2] {0}
-**** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
 !    ! Trailing whitespace found
+**** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
 
 file
-[   5] {2}
+[   1] {0}
+[   2] {1}
+
+!    ! {2}
 **** SpaceConsistencyBear [Section:  | Severity: NORMAL] ****
-!    ! {1}\n""".format(highlight_text(self.no_color, '\t', NoColorStyle,
-                                      self.lexer),
-                       highlight_text(self.no_color,
-                                      'Trailing whitespace found',
-                                      style=BackgroundMessageStyle),
-                       highlight_text(self.no_color, 'line 5\t',
-                                      NoColorStyle, self.lexer)),
+
+file
+[   3] {3}
+[   4] {4}
+[   5] {5}
+""".format(highlight_text(self.no_color, 'test line',
+                          NoColorStyle, self.lexer),
+                highlight_text(self.no_color, '\t', NoColorStyle,
+                               self.lexer),
+                highlight_text(self.no_color,
+                               'Trailing whitespace found',
+                               style=BackgroundMessageStyle),
+                highlight_text(self.no_color, 'line 3',
+                               NoColorStyle, self.lexer),
+                highlight_text(self.no_color, 'line 4',
+                               NoColorStyle, self.lexer),
+                highlight_text(self.no_color, 'line 5\t',
+                               NoColorStyle, self.lexer)),
                 stdout.getvalue())
 
     def test_print_results_multiple_ranges(self):
@@ -839,31 +864,41 @@ file
                 {},
                 self.console_printer)
             self.assertEqual("""
+!    ! {8}
+**** Bear_for_detecting_clone [Section:  | Severity: NORMAL] ****
+
 another_file
 [   1] li{0}{1}
 
 another_file
-[   3] li{0}{2}
+[   1] li{0}{1}
+[   2] li{0}{2}
+[   3] li{0}{3}
 
 some_file
-[   5] li{0}{3}
-[   6] li{0}{4}
-[   7] li{0}{5}
-**** Bear_for_detecting_clone [Section:  | Severity: NORMAL] ****
-!    ! {6}\n""".format(highlight_text(self.no_color, 'ne',
-                                      BackgroundSourceRangeStyle, self.lexer),
-                       highlight_text(self.no_color, ' 1', NoColorStyle,
-                                      self.lexer),
-                       highlight_text(self.no_color, ' 3', NoColorStyle,
-                                      self.lexer),
-                       highlight_text(self.no_color, ' 5', NoColorStyle,
-                                      self.lexer),
-                       highlight_text(self.no_color, ' 6', NoColorStyle,
-                                      self.lexer),
-                       highlight_text(self.no_color, ' 7', NoColorStyle,
-                                      self.lexer),
-                       highlight_text(self.no_color, 'Clone Found',
-                                      style=BackgroundMessageStyle), ' '),
+[   3] li{0}{3}
+[   4] li{0}{4}
+[   5] li{0}{5}
+[   6] li{0}{6}
+[   7] li{0}{7}
+""".format(highlight_text(self.no_color, 'ne',
+                          BackgroundSourceRangeStyle, self.lexer),
+                highlight_text(self.no_color, ' 1', NoColorStyle,
+                               self.lexer),
+                highlight_text(self.no_color, ' 2', NoColorStyle,
+                               self.lexer),
+                highlight_text(self.no_color, ' 3', NoColorStyle,
+                               self.lexer),
+                highlight_text(self.no_color, ' 4', NoColorStyle,
+                               self.lexer),
+                highlight_text(self.no_color, ' 5', NoColorStyle,
+                               self.lexer),
+                highlight_text(self.no_color, ' 6', NoColorStyle,
+                               self.lexer),
+                highlight_text(self.no_color, ' 7', NoColorStyle,
+                               self.lexer),
+                highlight_text(self.no_color, 'Clone Found',
+                               style=BackgroundMessageStyle), ' '),
                 stdout.getvalue())
 
     def test_print_results_missing_file(self):
@@ -877,16 +912,16 @@ some_file
                 {},
                 {},
                 self.console_printer)
-            self.assertEqual('\n' + STR_PROJECT_WIDE + '\n'
-                             '**** t [Section:  | Severity: NORMAL] ****'
+            self.assertEqual('\n!    ! msg\n'
+                             '**** t [Section:  | Severity: NORMAL] ****\n'
+                             '\n' + STR_PROJECT_WIDE + '\n'
                              '\n'
-                             '!    ! msg\n'
                              # Second results file isn't there, no context is
                              # printed, only a warning log message which we
                              # don't catch
-                             '**** t [Section:  | Severity: NORMAL] ****'
-                             '\n'
-                             '!    ! {0}\n'.format(
+                             '!    ! {0}\n'
+                             '**** t [Section:  | Severity: NORMAL] ****\n'
+                             .format(
                                  highlight_text(self.no_color, 'msg',
                                                 style=BackgroundMessageStyle)),
                              stdout.getvalue())
@@ -902,23 +937,31 @@ some_file
                 {},
                 self.console_printer)
             self.assertEqual(
+                             '\n!    ! {1}\n'
+                             '**** t [Section:  | Severity: NORMAL] ****\n'
                              '\nfile\n'
+                             '[   3] {3}\n'
+                             '[   4] {4}\n'
                              '[   5] {0}'
                              '\n'
-                             '**** t [Section:  | Severity: NORMAL] ****\n'
+                             '\n'
                              '!    ! {1}\n'
-                             '\n'
-                             'file\n'
-                             '!   6! {2}'
-                             '\n'
                              '**** t [Section:  | Severity: NORMAL] ****\n'
-                             '!    ! {1}\n'.format(
+                             '\nfile\n'
+                             '!   6! {2}\n'
+                             .format(
                                  highlight_text(self.no_color,
                                                 'line 5', NoColorStyle,
                                                 self.lexer),
                                  highlight_text(self.no_color, 'msg',
                                                 style=BackgroundMessageStyle),
-                                 STR_LINE_DOESNT_EXIST, ' '),
+                                 STR_LINE_DOESNT_EXIST,
+                                 highlight_text(self.no_color,
+                                                'line 3', NoColorStyle,
+                                                self.lexer),
+                                 highlight_text(self.no_color,
+                                                'line 4', NoColorStyle,
+                                                self.lexer), ' '),
                              stdout.getvalue())
 
     def test_print_results_without_line(self):
@@ -932,9 +975,10 @@ some_file
                 self.console_printer)
             self.assertEqual(
                 '\n'
-                'file\n'
+                '!    ! {}\n'
                 '**** t [Section:  | Severity: NORMAL] ****\n'
-                '!    ! {}\n'.format(highlight_text(
+                '\nfile\n'
+                .format(highlight_text(
                     self.no_color, 'msg', style=BackgroundMessageStyle)),
                 stdout.getvalue())
 
