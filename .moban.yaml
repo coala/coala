@@ -20,7 +20,7 @@ allow_generic_no_cover: true
 test_timeout: 60
 travis_sentinel: true
 python_versions:
-  - 3.6
+  - 3.6.9
   - 3.5
 # 3.7 excluded due to https://github.com/coala/coala/issues/6028 and others
 test_unsupported_python_versions:
