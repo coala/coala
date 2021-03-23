@@ -15,7 +15,7 @@ from coalib import coala
 from coala_utils.ContextManagers import (
     make_temp, retrieve_stdout, simulate_console_inputs)
 from coalib.output.ConsoleInteraction import (
-    acquire_actions_and_apply, acquire_settings, get_action_info, nothing_done,
+    acquire_actions_and_apply, acquire_settings, get_action_info,
     print_affected_files, print_result, print_results,
     print_results_formatted, print_results_no_input, print_section_beginning,
     show_bear, show_bears, ask_for_action_and_apply, print_diffs_info,
@@ -705,7 +705,8 @@ Project wide:
 
     def test_nothing_done(self):
         with LogCapture() as capture:
-            nothing_done(self.log_printer)
+            logging.warning('No existent section was targeted or enabled. '
+                            'Nothing to do.')
         capture.check(
             ('root', 'WARNING', 'No existent section was targeted or enabled. '
                                 'Nothing to do.')
