@@ -1090,15 +1090,15 @@ class LinterOtherTest(LinterTestBase):
 
     def test_metaclass_repr(self):
         uut = linter('my-tool')(self.ManualProcessingTestLinter)
-        self.assertEqual(
+        self.assertRegex(
             repr(uut),
-            "<ManualProcessingTestLinter linter class (wrapping 'my-tool')>")
+            "<ManualProcessingTestLinter linter class \\(wrapping 'my-tool'\\) at 0x[a-fA-F0-9]+>")
 
         # Test also whether derivatives change the class name accordingly.
         class DerivedLinter(uut):
             pass
-        self.assertEqual(repr(DerivedLinter),
-                         "<DerivedLinter linter class (wrapping 'my-tool')>")
+        self.assertRegex(repr(DerivedLinter),
+                         "<DerivedLinter linter class \\(wrapping 'my-tool'\\) at 0x[a-fA-F0-9]+>")
 
     def test_repr(self):
         uut = (linter(sys.executable)
