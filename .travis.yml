@@ -15,24 +15,23 @@ stages:
     if: branch = master AND type = push
 
 .disable_global: &disable_global
-  addons: false
+  addons: {}
   cache: false
   env: {}
-  python: false
-  before_install: false
-  install: false
-  before_script: false
-  script: false
-  after_success: false
-  after_failure: false
-  before_deploy: false
-  deploy: false
+  before_install: []
+  install: []
+  before_script: []
+  script: []
+  after_success: []
+  after_failure: []
+  before_deploy: []
+  deploy: {}
 
 .moban: &moban
   <<: *disable_global
   python: 3.6
   stage: moban
-  install: pip install moban>=0.0.4
+  install: pip install moban~=0.5.0 gitfs2 pypifs
   script:
     - moban
     - git diff --exit-code
@@ -59,7 +58,8 @@ jobs:
       <<: *disable_global
       stage: unsupported
       script: .misc/check_unsupported.sh
-    - python: 3.4.1
+      dist: trusty
+    - python: 3.4
       <<: *disable_global
       stage: unsupported
       script: .misc/check_unsupported.sh

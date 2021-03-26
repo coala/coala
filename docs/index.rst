@@ -50,6 +50,7 @@ If you're trying to **use** coala, you should have a look at our
    Writing Native Bears <Developers/Writing_Native_Bears>
    Writing Linter Bears <Developers/Writing_Linter_Bears>
    Linter Bears - Advanced <Developers/Linter_Bears_Advanced>
+   Writing bear actions <Developers/Writing_bear_actions>
    External Bears <Developers/External_Bears>
    Testing Bears <Developers/Testing_Bears>
    Debug Bears <Developers/Debug_Bears>
