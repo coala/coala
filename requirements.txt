@@ -5,6 +5,7 @@ git+https://gitlab.com/coala/coala-utils#egg=coala-utils-0.7.0
 colorlog>=2.7,<4.0
 git+https://gitlab.com/jayvdb/package_manager#egg=dependency-management-0.5.0.dev0
 packaging>=16.8
+pytest~=3.6.4
 Pygments~=2.1
 PyPrint~=0.2.6
 requests~=2.12
