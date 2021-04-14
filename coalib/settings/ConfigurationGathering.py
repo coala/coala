@@ -214,7 +214,7 @@ def warn_config_absent(sections, argument, log_printer=None):
         if any(arg in section for arg in argument):
             return False
 
-    formatted_args = ' or '.join(f'`--{args}`' for arg in argument)
+    formatted_args = ' or '.join('`--{arg}`' for arg in argument)
     logging.warning(f'coala will not run any analysis. Did you forget '
                     f'to give the {formatted_args} argument?')
     return True
