@@ -11,6 +11,7 @@ from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
 from coalib.parsing.CliParsing import parse_cli, check_conflicts
 from coalib.parsing.ConfParser import ConfParser
 from coalib.parsing.DefaultArgParser import PathArg
+from coalib.parsing.TomlConfParser import TomlConfParser
 from coalib.settings.Section import Section, extract_aspects_from_section
 from coalib.settings.SectionFilling import fill_settings
 from coalib.settings.Setting import Setting, path
@@ -27,6 +28,14 @@ COARC_OUTPUT = Template('$type \'$file\' $found!\n'
                         'You can create a .coarc file '
                         'in your home directory to set certain '
                         'user wide settings\n')
+
+cli_warning = ('\'cli\' is an internally reserved section name. \n'
+               'It may have been generated into your coafile\n '
+               'while running coala with `--save`. The settings\n '
+               'in that section will inherit implicitly to all\n '
+               'sections as defaults just like CLI args do.\n '
+               'Please change the name of that section in your\n '
+               'coafile to avoid any unexpected behavior.\n')
 
 
 def aspectize_sections(sections):
@@ -213,7 +222,6 @@ def warn_config_absent(sections, argument, log_printer=None):
     for section in sections.values():
         if any(arg in section for arg in argument):
             return False
-
     formatted_args = ' or '.join('`--{}`'.format(arg) for arg in argument)
     logging.warning('coala will not run any analysis. Did you forget '
                     'to give the {} argument?'.format(formatted_args))
@@ -244,55 +252,10 @@ def load_configuration(arg_list,
                              args=args)
     check_conflicts(cli_sections)
 
-    if (
-            bool(cli_sections['cli'].get('find_config', 'False')) and
-            str(cli_sections['cli'].get('config')) == ''):
-        cli_sections['cli'].add_or_create_setting(
-            Setting('config', PathArg(find_user_config(os.getcwd()))))
-
-    # We don't want to store targets argument back to file, thus remove it
-    targets = [item.lower() for item in list(
-        cli_sections['cli'].contents.pop('targets', ''))]
-
-    if bool(cli_sections['cli'].get('no_config', 'False')):
-        sections = cli_sections
+    if bool(cli_sections['cli'].get('toml_config', 'False')):
+        sections, targets = load_coafile_config(cli_sections, silent, flag=1)
     else:
-        base_sections = load_config_file(Constants.system_coafile,
-                                         silent=silent)
-        user_sections = load_config_file(
-            Constants.user_coafile, silent=True)
-
-        default_config = str(base_sections['default'].get('config', '.coafile'))
-        user_config = str(user_sections['default'].get(
-            'config', default_config))
-        config = os.path.abspath(
-            str(cli_sections['cli'].get('config', user_config)))
-
-        try:
-            save = bool(cli_sections['cli'].get('save', 'False'))
-        except ValueError:
-            # A file is deposited for the save parameter, means we want to save
-            # but to a specific file.
-            save = True
-
-        coafile_sections = load_config_file(config,
-                                            silent=save or silent)
-
-        sections = merge_section_dicts(base_sections, user_sections)
-
-        sections = merge_section_dicts(sections, coafile_sections)
-
-        if 'cli' in sections:
-            logging.warning('\'cli\' is an internally reserved section name. '
-                            'It may have been generated into your coafile '
-                            'while running coala with `--save`. The settings '
-                            'in that section will inherit implicitly to all '
-                            'sections as defaults just like CLI args do. '
-                            'Please change the name of that section in your '
-                            'coafile to avoid any unexpected behavior.')
-
-        sections = merge_section_dicts(sections, cli_sections)
-
+        sections, targets = load_coafile_config(cli_sections, silent)
     for name, section in list(sections.items()):
         section.set_default_section(sections)
         if name == 'default':
@@ -316,13 +279,109 @@ def load_configuration(arg_list,
     return sections, targets
 
 
-def find_user_config(file_path, max_trials=10):
+def load_toml_config_file(filename, log_printer=None, silent=False):
+    filename = os.path.abspath(filename)
+    try:
+        return TomlConfParser().parse(filename)
+    except FileNotFoundError:
+        if not silent:
+            if os.path.basename(filename) == Constants.local_coafile_toml:
+                logging.warning(COAFILE_OUTPUT
+                                .substitute(type='Local coafile',
+                                            file=Constants.local_coafile_toml,
+                                            found='not found'))
+            elif os.path.basename(filename) == '.coarc.toml':
+                logging.warning(COARC_OUTPUT
+                                .substitute(type='Requested coarc file',
+                                            file=filename,
+                                            found='does not exist'))
+            else:
+                logging.error(COAFILE_OUTPUT
+                              .substitute(type='Requested coafile',
+                                          file=filename,
+                                          found='does not exist'))
+                sys.exit(2)
+
+        return {'default': Section('default')}
+
+
+def load_coafile_config(cli_sections, silent, flag=0):
+    """
+    Loads the required configuration files
+
+    :param cli_sections: The sections obtained by parsing cli args
+    :param silent: Whether or not to display warnings, ignored if ``save``
+                   is enabled.
+    :param flag: Specify whether toml file has be loaded or not
+    :return: sections and targets
+    """
+    if flag:
+        file = Constants.local_coafile_toml
+        user_file = Constants.user_coafile_toml
+        system_file = Constants.system_coafile_toml
+        loading_func = load_toml_config_file
+    else:
+        file = Constants.local_coafile
+        user_file = Constants.user_coafile
+        system_file = Constants.system_coafile
+        loading_func = load_config_file
+
+    if (
+            bool(cli_sections['cli'].get('find_config', 'False')) and
+            str(cli_sections['cli'].get('config')) == ''):
+        cli_sections['cli'].add_or_create_setting(
+
+            Setting('config', PathArg(find_user_config(
+                os.getcwd(),
+                default_file=file))))
+
+    # We don't want to store targets argument back to file, thus remove it
+    targets = [item.lower() for item in list(
+        cli_sections['cli'].contents.pop('targets', ''))]
+
+    if bool(cli_sections['cli'].get('no_config', 'False')):
+        sections = cli_sections
+    else:
+        base_sections = loading_func(system_file,
+                                     silent=silent)
+        user_sections = loading_func(
+            user_file, silent=True)
+
+        default_config = str(base_sections['default'].get('config', file))
+        user_config = str(user_sections['default'].get(
+            'config', default_config))
+        config = os.path.abspath(
+            str(cli_sections['cli'].get('config', user_config)))
+
+        try:
+            save = bool(cli_sections['cli'].get('save', 'False'))
+        except ValueError:
+            # A file is deposited for the save parameter, means we want to save
+            # but to a specific file.
+            save = True
+
+        coafile_sections = loading_func(config,
+                                        silent=save or silent)
+
+        sections = merge_section_dicts(base_sections, user_sections)
+
+        sections = merge_section_dicts(sections, coafile_sections)
+
+        if 'cli' in sections:
+            logging.warning(cli_warning)
+
+        sections = merge_section_dicts(sections, cli_sections)
+    return sections, targets
+
+
+def find_user_config(file_path, max_trials=10, default_file='.coafile'):
     """
     Uses the filepath to find the most suitable user config file for the file
     by going down one directory at a time and finding config files there.
 
     :param file_path:  The path of the file whose user config needs to be found
     :param max_trials: The maximum number of directories to go down to.
+    :param default_file: The default file to be searched for
     :return:           The config file's path, empty string if none was found
     """
     file_path = os.path.normpath(os.path.abspath(os.path.expanduser(
@@ -333,7 +392,7 @@ def find_user_config(file_path, max_trials=10):
     home_dir = os.path.expanduser('~')
 
     while base_dir != old_dir and old_dir != home_dir and max_trials != 0:
-        config_file = os.path.join(base_dir, '.coafile')
+        config_file = os.path.join(base_dir, default_file)
         if os.path.isfile(config_file):
             return config_file
 
