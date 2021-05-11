@@ -124,6 +124,14 @@ To run coala without user interaction, run the `coala --non-interactive`,
              'severity, severity_str, message, message_base, '
              'message_arguments, affected_code, source_lines')
 
+    mode_group.add_argument(
+        '-cc', '--config-converter', nargs=2,
+        metavar='FILE',
+        type=PathArg,
+        help='convert configuration files from toml to coafile '
+             'and vice versa'
+    )
+
     config_group = arg_parser.add_argument_group('Configuration')
 
     config_group.add_argument(
@@ -135,6 +143,10 @@ To run coala without user interaction, run the `coala --non-interactive`,
         '-F', '--find-config', action='store_const', const=True,
         help='find {} in ancestors of the working directory'.format(
             Constants.local_coafile))
+
+    config_group.add_argument('-T', '--toml-config', action='store_const',
+                              const=True, help='run coala by using '
+                                               'toml config files')
 
     config_group.add_argument(
         '-I', '--no-config', const=True, action='store_const',
@@ -212,7 +224,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
         metavar=('FILTER_NAME FILTER_ARG', 'FILTER_ARG'),
         help='filters `--show-bears` by the filter given as argument. '
              'Available filters: {}'.format(', '.join(sorted(
-                 available_filters))))
+                available_filters))))
 
     outputs_group.add_argument(
         '-p', '--show-capabilities', nargs='+', metavar='LANG',
