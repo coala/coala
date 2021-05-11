@@ -132,7 +132,7 @@ To run coala without user interaction, run the `coala --non-interactive`,
             Constants.local_coafile))
 
     config_group.add_argument(
-        '-F', '--find-config', action='store_const', const=True,
+        '-F', '--find-config', action='store', default=True, type=bool,
         help='find {} in ancestors of the working directory'.format(
             Constants.local_coafile))
 
