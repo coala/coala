@@ -125,7 +125,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
             arg_list=[])
 
         self.assertEqual(str(sections['test']),
-                         "test {value : '1', testval : '5'}")
+                         "test {value : '1'}")
 
     def test_user_coafile_parsing(self):
         Constants.user_coafile = os.path.abspath(os.path.join(
@@ -139,7 +139,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
             arg_list=[])
 
         self.assertEqual(str(sections['test']),
-                         "test {value : '1', testval : '5'}")
+                         "test {value : '1'}")
 
     def test_nonexistent_file(self):
         filename = 'bad.one/test\neven with bad chars in it'
@@ -294,7 +294,7 @@ class ConfigurationGatheringTest(unittest.TestCase):
                                  'child_dir')
         with change_directory(child_dir):
             sections, targets = load_configuration([], self.log_printer)
-            self.assertIn('value', sections['cli'])
+            self.assertIn('value', sections['no section provided'])
 
             sections, targets = load_configuration(
                 ['--no-config'],

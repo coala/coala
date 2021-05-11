@@ -61,7 +61,13 @@ class ConfWriterTest(unittest.TestCase):
         self.assertRaises(TypeError, self.uut.write_section, 5)
 
     def test_write(self):
-        result_file = ['[Section]\n',
+        result_file = ['[NO SECTION PROVIDED]\n',
+                       'save = true\n',
+                       'a_default, another = val\n',
+                       '# thats a comment\n',
+                       'test = push\n',
+                       't = \n',
+                       '[Section]\n',
                        '[MakeFiles]\n',
                        'j, ANother = a\n',
                        'multiline\n',
@@ -74,13 +80,8 @@ class ConfWriterTest(unittest.TestCase):
                        'key\\,comma = value,comma\n',
                        'key\\#hash = value\\#hash\n',
                        'key\\.dot = value.dot\n',
-                       'a_default += val2\n',
-                       '[cli]\n',
-                       'save = true\n',
-                       'a_default, another = val\n',
-                       '# thats a comment\n',
-                       'test = push\n',
-                       't = \n']
+                       'a_default = val, val2\n',
+                       '[cli]\n']
         sections = load_configuration(['-c', escape(self.file, '\\')],
                                       self.log_printer)[0]
         del sections['cli'].contents['config']
@@ -89,7 +90,6 @@ class ConfWriterTest(unittest.TestCase):
 
         with open(self.write_file_name, 'r') as f:
             lines = f.readlines()
-
         self.assertEqual(result_file, lines)
 
     def test_append(self):
