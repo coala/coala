@@ -135,8 +135,10 @@ class Result:
         self.id = uuid.uuid4().int
         self.aspect = aspect
         if self.aspect and not self.additional_info:
-            self.additional_info = '{} {}'.format(
-                aspect.Docs.importance_reason, aspect.Docs.fix_suggestions)
+            self.additional_info = (
+                f'{aspect.Docs.importance_reason}'
+                f' {aspect.Docs.fix_suggestions}'
+            )
         self.actions = actions
         self.alternate_diffs = alternate_diffs
 

@@ -58,8 +58,8 @@ if __name__ == '__main__':
     for i, line in enumerate(content.splitlines()):
         if line[0] not in ('+', '-', '*', '/'):
             if not correct:
-                print("L{}C{}-L{}C{}: Invalid char ('{}') | "
-                      'MAJOR SEVERITY'.format(i + 1, 1, i + 1, 2, line[0]),
+                print(f"L{i+1}C{1}-L{i+1}C{2}: Invalid char ('{line[0]}') | "
+                      'MAJOR SEVERITY',
                       file=output_file)
             # If `correct` is True just leave out the line since it's invalid.
         else:

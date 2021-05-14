@@ -245,10 +245,9 @@ class Session:
             if self.dependency_tracker.get_dependencies(
                     bear):  # pragma: no cover
                 logging.warning(
-                    'Dependencies for {!r} not yet resolved, holding back. '
-                    'This should not happen, the dependency tracking system '
-                    'should be smarter. Please report this to the developers.'
-                    .format(bear))
+                    f'Dependencies for {bear!r} not yet resolved, holding back.'
+                    ' This should not happen, the dependency tracking system '
+                    'should be smarter. Please report this to the developers.')
             else:
                 futures = set()
 
@@ -276,7 +275,7 @@ class Session:
                 # early, as the cleanup is also responsible for stopping the
                 # event-loop when no more tasks do exist.
                 if not futures:
-                    logging.debug('{!r} scheduled no tasks.'.format(bear))
+                    logging.debug(f'{bear!r} scheduled no tasks.')
                     bears_without_tasks.append(bear)
                     continue
 
@@ -284,8 +283,7 @@ class Session:
                     future.add_done_callback(functools.partial(
                         self._finish_task, bear))
 
-                logging.debug('Scheduled {!r} (tasks: {})'.format(
-                    bear, len(futures)))
+                logging.debug(f'Scheduled {bear!r} (tasks: {len(futures)})')
 
         for bear in bears_without_tasks:
             self._cleanup_bear(bear)
@@ -317,12 +315,13 @@ class Session:
             # dependencies.
             resolved = self.dependency_tracker.are_dependencies_resolved
             if not resolved:  # pragma: no cover
+                joined = ', '.join(
+                        repr(dependant) + ' depends on ' + repr(dependency)
+                        for dependency, dependant in self.dependency_tracker)
                 logging.warning(
                     'Core finished with run, but it seems some dependencies '
-                    'were unresolved: {}. Ignoring them, but this is a bug, '
-                    'please report it to the developers.'.format(', '.join(
-                        repr(dependant) + ' depends on ' + repr(dependency)
-                        for dependency, dependant in self.dependency_tracker)))
+                    f'were unresolved: {joined}. Ignoring them, but this is a '
+                    'bug, please report it to the developers.')
 
             self.event_loop.stop()
 

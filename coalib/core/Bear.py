@@ -341,9 +341,8 @@ class Bear:
 
         if not_installed_requirements:
             return 'Following requirements are not installed: ' + ', '.join(
-                '{} (installable via `{}`)'.format(
-                    requirement.package,
-                    ' '.join(requirement.install_command()))
+                f'{requirement.package} (installable via '
+                f'`{" ".join(requirement.install_command())}`)'
                 for requirement in not_installed_requirements)
         else:
             return True
@@ -394,8 +393,7 @@ class Bear:
         if exists(filename):
             return filename
 
-        logging.info('{}: Downloading {} into {!r}.'
-                     .format(cls.name, url, filename))
+        logging.info(f'{cls.name}: Downloading {url} into {filename!r}.')
 
         response = requests.get(url, stream=True, timeout=20)
         response.raise_for_status()

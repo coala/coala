@@ -21,10 +21,9 @@ def _assert_comparable_equal(observed_result, expected_result):
                 try:
                     assert getattr(observed, attribute) == getattr(
                         expected, attribute), (
-                        '{} mismatch: {}, {} != {}, {}'.format(
-                            attribute,
-                            observed.origin, observed.message,
-                            expected.origin, expected.message))
+                        f'{attribute} mismatch: {observed.origin},'
+                        f' {observed.message} != {expected.origin},'
+                        f' {expected.message}')
                 except AssertionError as ex:
                     messages += (str(ex) + '\n\n')
         else:

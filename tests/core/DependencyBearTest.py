@@ -12,36 +12,35 @@ from tests.core.CoreTestBase import CoreTestBase
 class TestProjectBear(ProjectBear):
 
     def analyze(self, files):
-        yield ', '.join('{}({})'.format(filename, len(files[filename]))
+        yield ', '.join(f'{filename}({len(files[filename])})'
                         for filename in sorted(files))
 
 
 class TestFileBear(FileBear):
 
     def analyze(self, filename, file):
-        yield '{}:{}'.format(filename, len(file))
+        yield f'{filename}:{len(file)}'
 
 
 class TestBearDependentOnProjectBear(DependencyBear):
     BEAR_DEPS = {TestProjectBear}
 
     def analyze(self, dependency_bear, dependency_result):
-        yield '{} - {}'.format(dependency_bear.name, dependency_result)
+        yield f'{dependency_bear.name} - {dependency_result}'
 
 
 class TestBearDependentOnFileBear(DependencyBear):
     BEAR_DEPS = {TestFileBear}
 
     def analyze(self, dependency_bear, dependency_result):
-        yield '{} - {}'.format(dependency_bear.name, dependency_result)
+        yield f'{dependency_bear.name} - {dependency_result}'
 
 
 class TestBearDependentOnMultipleBears(DependencyBear):
     BEAR_DEPS = {TestFileBear, TestProjectBear}
 
     def analyze(self, dependency_bear, dependency_result, a_number=100):
-        yield '{} ({}) - {}'.format(
-            dependency_bear.name, a_number, dependency_result)
+        yield f'{dependency_bear.name} ({a_number}) - {dependency_result}'
 
 
 class DependencyBearTest(CoreTestBase):

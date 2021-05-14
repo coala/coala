@@ -298,13 +298,14 @@ class ProxyMapFileCache(FileCache, FileDictGenerator):
                     file_dict[filename] = None
                     continue
 
-                logging.warning("Failed to read file '{}'. It seems to contain "
-                                'non-unicode characters. Leaving it out.'
-                                .format(filename))
+                logging.warning(f"Failed to read file '{filename}'. "
+                                'It seems to contain '
+                                'non-unicode characters. Leaving it out.')
 
             except (OSError, ValueError) as exception:
-                log_exception("Failed to read file '{}' because of an unknown "
-                              'error. Leaving it out.'.format(filename),
+                log_exception(f"Failed to read file '{filename}' "
+                              'because of an unknown '
+                              'error. Leaving it out.',
                               exception,
                               log_level=LOG_LEVEL.WARNING)
 

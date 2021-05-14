@@ -30,10 +30,9 @@ def typed_filter(type_classes, msg=None):
                     break
             else:
                 raise NotImplementedError(
-                    msg or '\'{filter}\' can only handle {type_name}. '
-                    'The context of your usage might be wrong.'
-                    .format(filter=filter.__name__,
-                            type_name=tuple(type_classes)))
+                    msg or f'\'{filter.__name__}\' can only handle'
+                           f' {tuple(type_classes)}. '
+                           'The context of your usage might be wrong.')
 
             return filter(obj, *args, **kargs)
 

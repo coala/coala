@@ -50,7 +50,7 @@ class LinterTestBase(unittest.TestCase):
             return '/'
 
         def process_output(self, output, *args, **kwargs):
-            assert output == '{}\n'.format(self.ROOT_DIR), self.WRONG_DIR_MSG
+            assert output == f'{self.ROOT_DIR}\n', self.WRONG_DIR_MSG
 
     class ManualProcessingTestLinter:
 

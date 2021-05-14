@@ -171,17 +171,14 @@ class OpenEditorAction(ResultAction):
         except KeyError:
             # If the editor is unknown fall back to just passing
             # the filenames and emit a warning
+            formatted_supported = ', '.join(sorted(KNOWN_EDITORS.keys()))
             logging.warning(
-                'The editor "{editor}" is unknown to coala. Files won\'t be'
+                f'The editor "{editor}" is unknown to coala. Files won\'t be'
                 ' opened at the correct positions and other quirks might'
                 ' occur. Consider opening an issue at'
                 ' https://github.com/coala/coala/issues so we'
                 ' can add support for this editor.'
-                ' Supported editors are: {supported}'.format(
-                    editor=editor, supported=', '.join(
-                        sorted(KNOWN_EDITORS.keys())
-                    )
-                )
+                f' Supported editors are: {formatted_supported}'
             )
             editor_info = {
                 'file_arg_template': '{filename}',

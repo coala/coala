@@ -129,24 +129,18 @@ class Diff:
                             raise RuntimeError(
                                 'The line to delete does not match with '
                                 'the line in the original file. '
-                                'Line to delete: {!r}, '
-                                'Original line #{!r}: {!r}'.format(
-                                    source_code,
-                                    file_line,
-                                    original_line)
-                                )
+                                f'Line to delete: {source_code!r}, '
+                                f'Original line #{file_line!r}: '
+                                f'{original_line!r}')
                         diff.delete_line(file_line)
 
                     else:
                         if source_code != original_line:
                             raise RuntimeError(
                                 'Context lines do not match. '
-                                'Line from unified diff: {!r}, '
-                                'Original line #{!r}: {!r}'.format(
-                                    source_code,
-                                    file_line,
-                                    original_line)
-                                )
+                                f'Line from unified diff: {source_code!r}, '
+                                f'Original line #{file_line!r}: '
+                                f'{original_line!r}')
 
                     file_line += 1
 

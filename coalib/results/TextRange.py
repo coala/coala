@@ -71,12 +71,10 @@ class TextRange:
         :return:  A new TextRange covering the union of the Area of a and b
         """
         if not isinstance(a, cls) or not isinstance(b, cls):
-            raise TypeError(
-                'only instances of {} can be joined'.format(cls.__name__))
+            raise TypeError(f'only instances of {cls.__name__} can be joined')
 
         if not a.overlaps(b):
-            raise ValueError(
-                '{}s must overlap to be joined'.format(cls.__name__))
+            raise ValueError(f'{cls.__name__}s must overlap to be joined')
 
         return cls(min(a.start, b.start), max(a.end, b.end))
 

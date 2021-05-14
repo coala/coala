@@ -131,9 +131,9 @@ class CollectFilesTest(unittest.TestCase):
                           log_printer=self.log_printer)
         capture.check(
             ('root', 'WARNING', 'Detected trailing globstar in ignore glob '
-                                '\'{}\'. Please remove the unnecessary \'**\''
-                                ' from its end.'
-                                .format(ignore_path1))
+                                f'\'{ignore_path1}\'. '
+                                'Please remove the unnecessary \'**\''
+                                ' from its end.')
         )
 
     def test_limited(self):

@@ -60,17 +60,15 @@ def validate_results(message_queue, timeout, result_list, name, args, kwargs):
             send_msg(message_queue,
                      timeout,
                      LOG_LEVEL.ERROR,
-                     'The results from the bear {bear} could only be '
-                     'partially processed with arguments {arglist}, '
-                     '{kwarglist}'
-                     .format(bear=name, arglist=args, kwarglist=kwargs))
+                     f'The results from the bear {name} could only be '
+                     f'partially processed with arguments {args}, '
+                     f'{kwargs}')
             send_msg(message_queue,
                      timeout,
                      LOG_LEVEL.DEBUG,
-                     'One of the results in the list for the bear {bear} is '
-                     'an instance of {ret} but it should be an instance of '
-                     'Result'
-                     .format(bear=name, ret=result.__class__))
+                     f'One of the results in the list for the bear {name} is '
+                     f'an instance of {result.__class__} but it should be an '
+                     'instance of Result')
             result_list.remove(result)
 
     return result_list
@@ -110,13 +108,12 @@ def run_bear(message_queue, timeout, bear_instance, *args, debug=False,
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.ERROR,
-                 'The bear {bear} failed to run with the arguments '
-                 '{arglist}, {kwarglist}. Skipping bear...'
-                 .format(bear=name, arglist=args, kwarglist=kwargs))
+                 f'The bear {name} failed to run with the arguments '
+                 f'{args}, {kwargs}. Skipping bear...')
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.DEBUG,
-                 'Traceback for error in bear {}:'.format(name),
+                 f'Traceback for error in bear {name}:',
                  traceback.format_exc(),
                  delimiter='\n')
 
@@ -191,8 +188,9 @@ def run_local_bear(message_queue,
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.WARNING,
-                 'A given local bear ({}) is not valid. Leaving '
-                 'it out...'.format(bear_instance.__class__.__name__),
+                 f'A given local bear ({bear_instance.__class__.__name__}) '
+                 'is not valid. Leaving '
+                 'it out...',
                  Constants.THIS_IS_A_BUG)
 
         return None
@@ -237,9 +235,9 @@ def run_global_bear(message_queue,
         send_msg(message_queue,
                  timeout,
                  LOG_LEVEL.WARNING,
-                 'A given global bear ({}) is not valid. Leaving it '
-                 'out...'
-                 .format(global_bear_instance.__class__.__name__),
+                 'A given global bear '
+                 f'({global_bear_instance.__class__.__name__}) is not valid. '
+                 'Leaving it out...',
                  Constants.THIS_IS_A_BUG)
 
         return None

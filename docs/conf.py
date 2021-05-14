@@ -56,7 +56,7 @@ master_doc = 'index'
 YEAR = date.today().year
 # General information about the project.
 project = 'coala'
-copyright = '{0}, The coala Developers'.format(YEAR)
+copyright = f'{YEAR}, The coala Developers'
 author = 'The coala Developers'
 
 # The version info for the project you're documenting, acts as replacement for

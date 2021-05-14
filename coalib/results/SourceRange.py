@@ -60,7 +60,8 @@ class SourceRange(TextRange):
         :param position_start: Start of range given by AbsolutePosition.
         :param position_end:   End of range given by AbsolutePosition or None.
         """
-        start = SourcePosition(file, position_start.line, position_start.column)
+        start = SourcePosition(file, position_start.line,
+                               position_start.column)
         end = None
         if position_end:
             end = SourcePosition(file, position_end.line, position_end.column)
@@ -177,14 +178,16 @@ class SourceRange(TextRange):
         '...test_file: L1 C1 : L2 C1'
         """
         if self.start.line is None and self.end.line is None:
-            format_str = '{0.start.file}'
+            format_str = f'{self.start.file}'
         elif self.start.column is None and self.end.column is None:
-            format_str = '{0.start.file}: L{0.start.line} : L{0.end.line}'
+            format_str = (f'{self.start.file}: L{self.start.line} : '
+                          f'L{self.end.line}')
         else:
-            format_str = ('{0.start.file}: L{0.start.line} C{0.start.column}' +
-                          ' : L{0.end.line} C{0.end.column}')
+            format_str = (f'{self.start.file}: L{self.start.line} '
+                          f'C{self.start.column}'
+                          f' : L{self.end.line} C{self.end.column}')
 
-        return format_str.format(self)
+        return format_str
 
     def overlaps(self, other):
         return (self.start.file == other.start.file

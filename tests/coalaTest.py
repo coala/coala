@@ -374,7 +374,7 @@ class coalaTest(unittest.TestCase):
                 self.assertEqual(
                     retval, 0,
                     'coala must return zero when there are no errors;'
-                    ' errors={errors}'.format(errors=list(errors)))
+                    f' errors={list(errors)}')
 
     def test_coala_with_color(self):
         with bear_test_module():

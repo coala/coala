@@ -130,8 +130,9 @@ def autoapply_actions(results,
                                                            bear_actions)
     no_autoapply_warn = bool(section.get('no_autoapply_warn', False))
     for bearname, actionname in invalid_actions.items():
-        logging.warning('Selected default action {!r} for bear {!r} does not '
-                        'exist. Ignoring action.'.format(actionname, bearname))
+        logging.warning(f'Selected default action {actionname!r} '
+                        f'for bear {bearname!r} does not '
+                        'exist. Ignoring action.')
 
     if len(default_actions) == 0:
         # There's nothing to auto-apply.
@@ -154,7 +155,7 @@ def autoapply_actions(results,
             applicable = action.is_applicable(result, file_dict, file_diff_dict)
             if applicable is not True:
                 if not no_autoapply_warn:
-                    logging.warning('{}: {}'.format(result.origin, applicable))
+                    logging.warning(f'{result.origin}: {applicable}')
                 not_processed_results.append(result)
                 continue
 
@@ -163,15 +164,14 @@ def autoapply_actions(results,
                                           file_dict,
                                           file_diff_dict,
                                           section)
-                logging.info('Applied {!r} on {} from {!r}.'.format(
-                    action.get_metadata().name,
-                    result.location_repr(),
-                    result.origin))
+                logging.info(
+                    f'Applied {action.get_metadata().name!r} on '
+                    f'{result.location_repr()} from {result.origin!r}.')
             except Exception as ex:
                 not_processed_results.append(result)
                 log_exception(
-                    'Failed to execute action {!r} with error: {}.'.format(
-                        action.get_metadata().name, ex),
+                    f'Failed to execute action {action.get_metadata().name!r} '
+                    f'with error: {ex}.',
                     ex)
                 logging.debug('-> for result ' + repr(result) + '.')
         else:
@@ -292,12 +292,11 @@ def get_file_dict(filename_list, log_printer=None, allow_raw_files=False):
                 # ``File`` object created for it
                 # needs to be evicted from the dictionary.
                 del file_dict[filename]
-            logging.warning("Failed to read file '{}'. It seems to contain "
-                            'non-unicode characters. Leaving it out.'
-                            .format(filename))
+            logging.warning(f"Failed to read file '{filename}'. It seems to "
+                            'contain non-unicode characters. Leaving it out.')
         except OSError as exception:
-            log_exception("Failed to read file '{}' because of an unknown "
-                          'error. Leaving it out.'.format(filename),
+            log_exception(f"Failed to read file '{filename}' because of an "
+                          'unknown error. Leaving it out.',
                           exception,
                           log_level=LOG_LEVEL.WARNING)
 

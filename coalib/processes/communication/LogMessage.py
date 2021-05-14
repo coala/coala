@@ -23,7 +23,7 @@ class LogMessage:
 
     def __str__(self):
         log_level = LOG_LEVEL.reverse.get(self.log_level, 'ERROR')
-        return '[{}] {}'.format(log_level, self.message)
+        return f'[{log_level}] {self.message}'
 
     def __eq__(self, other):
         return (isinstance(other, LogMessage) and

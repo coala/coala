@@ -128,13 +128,13 @@ To run coala without user interaction, run the `coala --non-interactive`,
 
     config_group.add_argument(
         '-c', '--config', type=PathArg, nargs=1, metavar='FILE',
-        help='configuration file to be used, defaults to {}'.format(
-            Constants.local_coafile))
+        help=('configuration file to be used, defaults to '
+              f'{Constants.local_coafile}'))
 
     config_group.add_argument(
         '-F', '--find-config', action='store_const', const=True,
-        help='find {} in ancestors of the working directory'.format(
-            Constants.local_coafile))
+        help=(f'find {Constants.local_coafile} '
+              'in ancestors of the working directory'))
 
     config_group.add_argument(
         '-I', '--no-config', const=True, action='store_const',
@@ -142,8 +142,9 @@ To run coala without user interaction, run the `coala --non-interactive`,
 
     config_group.add_argument(
         '-s', '--save', type=PathArg, nargs='?', const=True, metavar='FILE',
-        help='save used arguments to a config file to a {}, the given path, '
-             'or at the value of -c'.format(Constants.local_coafile))
+        help='save used arguments to a config file to a '
+             f'{Constants.local_coafile}, the given path, '
+             'or at the value of -c')
 
     config_group.add_argument(
         '--disable-caching', const=True, action='store_const',
@@ -207,12 +208,12 @@ To run coala without user interaction, run the `coala --non-interactive`,
         '-l', '--filter-by-language', nargs='+', metavar='LANG',
         help='filters `--show-bears` by the given languages')
 
+    joined_available_filters = ', '.join(sorted(available_filters))
     outputs_group.add_argument(
         '--filter-by', action='append', nargs='+',
         metavar=('FILTER_NAME FILTER_ARG', 'FILTER_ARG'),
         help='filters `--show-bears` by the filter given as argument. '
-             'Available filters: {}'.format(', '.join(sorted(
-                 available_filters))))
+             f'Available filters: {joined_available_filters}')
 
     outputs_group.add_argument(
         '-p', '--show-capabilities', nargs='+', metavar='LANG',

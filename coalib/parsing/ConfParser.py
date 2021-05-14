@@ -129,10 +129,9 @@ class ConfParser:
                     continue
 
                 if key in current_section.contents and keys != []:
-                    logging.warning('{} setting has already been defined in '
-                                    'section {}. The previous setting will be '
-                                    'overridden.'.format(key,
-                                                         current_section.name))
+                    logging.warning(f'{key} setting has already been defined in'
+                                    f' section {current_section.name}. The '
+                                    'previous setting will be overridden.')
 
                 if section_override == '':
                     current_section.add_or_create_setting(

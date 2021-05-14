@@ -194,7 +194,7 @@ class OpenEditorActionTest(unittest.TestCase):
         with unittest.mock.patch('subprocess.call') as call:
             uut.apply(result_mock, {self.fa: ''}, {}, editor='subl')
             call.assert_called_with(
-                ['subl', '--wait', '{0}:12:8'.format(self.fa)],
+                ['subl', '--wait', f'{self.fa}:12:8'],
                 stdout=subprocess.PIPE
             )
 
@@ -217,7 +217,7 @@ class OpenEditorActionTest(unittest.TestCase):
         with unittest.mock.patch('subprocess.call') as call:
             uut.apply(result_mock, {self.fa: ''}, {}, editor='subl')
             call.assert_called_with(
-                ['subl', '--wait', '{0}:1:1'.format(self.fa)],
+                ['subl', '--wait', f'{self.fa}:1:1'],
                 stdout=subprocess.PIPE
             )
 

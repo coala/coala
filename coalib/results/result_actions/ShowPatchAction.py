@@ -81,7 +81,7 @@ class ShowPatchAction(ResultAction):
 
         except ConflictError as ce:
             return ('Two or more patches conflict with '
-                    'each other: {}'.format(str(ce)))
+                    f'each other: {str(ce)}')
 
     def apply(self,
               result,

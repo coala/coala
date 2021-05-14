@@ -121,9 +121,9 @@ class BearTest(unittest.TestCase):
         # Test default implementation.
         expected_possibilities = [
             'Following requirements are not installed: '
-            '{} (installable via `{}`), {} (installable via `{}`)'.format(
-                req1.package, ' '.join(req1.install_command()),
-                req2.package, ' '.join(req2.install_command()))
+            f'{req1.package} (installable via '
+            f'`{" ".join(req1.install_command())}`), {req2.package} '
+            f'(installable via `{" ".join(req2.install_command())}`)'
             for req1, req2 in permutations(BearWithPrerequisites.REQUIREMENTS)
         ]
 

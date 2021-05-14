@@ -70,7 +70,7 @@ class BuildManPage(Command):
         _license = dist.get_license()
         appname = self._parser.prog
 
-        sections = {'see also': ('Online documentation: {}'.format(homepage)),
+        sections = {'see also': (f'Online documentation: {homepage}'),
                     'maintainer(s)': maintainer,
                     'license': _license}
 
@@ -151,9 +151,7 @@ class ManPageFormatter(argparse.HelpFormatter):
         return ManPageFormatter._add_format(string, '\\fB', '\\fR')
 
     def _mk_title(self):
-        return '.TH {0} {1} {2}\n'.format(self._prog,
-                                          self._section,
-                                          self._today)
+        return f'.TH {self._prog} {self._section} {self._today}\n'
 
     def _mk_name(self):
         return '.SH NAME\n%s\n' % (self._parser.prog)
@@ -204,7 +202,7 @@ class ManPageFormatter(argparse.HelpFormatter):
         footer = []
 
         for section in sorted(sections.keys()):
-            part = '.SH {}\n {}'.format(section.upper(), sections[section])
+            part = f'.SH {section.upper()}\n {sections[section]}'
             footer.append(part)
 
         return '\n'.join(footer)

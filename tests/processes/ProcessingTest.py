@@ -155,19 +155,20 @@ class ProcessingTest(unittest.TestCase):
         global_result = global_results[0]
 
         self.assertRegex(repr(local_result),
-                         "<Result object\\(id={}, origin='LocalTestBear', aff"
+                         f'<Result object\\(id={hex(local_result.id)}, '
+                         "origin='LocalTestBear', aff"
                          'ected_code=\\(\\), severity=NORMAL, confidence=100'
                          ", message='test msg', aspect=NoneType, "
-                         'applied_actions={}\\) at '
-                         '0x[0-9a-fA-F]+>'.format(hex(local_result.id), '{}'))
+                         'applied_actions=\\{\\}\\) at '
+                         '0x[0-9a-fA-F]+>')
         self.assertRegex(repr(global_result),
-                         "<Result object\\(id={}, origin='GlobalTestBear', "
+                         f'<Result object\\(id={hex(global_result.id)}, '
+                         "origin='GlobalTestBear', "
                          'affected_code=\\(.*start=.*file=.*section_executor_'
                          'test_files.*line=None.*end=.*\\), severity=NORMAL, c'
                          "onfidence=100, message='test message', "
-                         'aspect=NoneType, applied_actions={}\\'
-                         ') at 0x[0-9a-fA-F]+>'.format(hex(global_result.id),
-                                                       '{}'))
+                         'aspect=NoneType, applied_actions=\\{\\}\\'
+                         ') at 0x[0-9a-fA-F]+>')
 
     def test_empty_run(self):
         execute_section(self.sections['cli'],
@@ -402,9 +403,9 @@ class ProcessingTest(unittest.TestCase):
                                       False)
         self.assertEqual(file_dict, {})
         capture.check(
-            ('root', 'WARNING', "Failed to read file '{}'. It seems to contain "
-             'non-unicode characters. Leaving it out.'
-                .format(self.unreadable_path))
+            ('root', 'WARNING', f"Failed to read file '{self.unreadable_path}'."
+             ' It seems to contain '
+             'non-unicode characters. Leaving it out.')
         )
 
     def test_simplify_section_result(self):
@@ -412,7 +413,8 @@ class ProcessingTest(unittest.TestCase):
                    {'file1': [Result('a', 'b')], 'file2': None},
                    {'file3': [Result('a', 'c')]},
                    None)
-        yielded, yielded_unfixed, all_results = simplify_section_result(results)
+        yielded, yielded_unfixed, all_results = simplify_section_result(
+            results)
         self.assertEqual(yielded, True)
         self.assertEqual(yielded_unfixed, True)
         self.assertEqual(len(all_results), 2)

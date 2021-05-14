@@ -109,9 +109,8 @@ class IgnoreResultAction(ResultAction):
             except UnknownLanguageError:
                 # multiline comments also not supported by language
                 logging.warning(
-                    'coala does not support Ignore in "{language}". Consider'
+                    f'coala does not support Ignore in "{language}". Consider'
                     ' opening an issue at https://github.com/coala/coala/issues'
-                    ' so we can add support for this language.'.format(
-                        language=language))
+                    ' so we can add support for this language.')
                 ignore_comment = None
         return ignore_comment

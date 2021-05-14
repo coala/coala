@@ -77,8 +77,9 @@ STR_LINE_DOESNT_EXIST = ('The line belonging to the following result '
                          'cannot be printed because it refers to a line '
                          "that doesn't seem to exist in the given file.")
 STR_PROJECT_WIDE = 'Project wide:'
-STR_ENTER_NUMBER = 'Enter number (Ctrl-{} to exit): '.format(
-    'Z' if platform.system() == 'Windows' else 'D')
+STR_ENTER_NUMBER = ('Enter number (Ctrl-'
+                    f"{'Z' if platform.system() == 'Windows' else 'D'} "
+                    'to exit): ')
 STR_INVALID_OPTION = '*** Invalid Option: ({}) ***\n'
 WARNING_COLOR = 'red'
 FILE_NAME_COLOR = 'blue'
@@ -133,8 +134,7 @@ def print_section_beginning(console_printer, section):
     :param console_printer: Object to print messages on the console.
     :param section:         The section that will get executed now.
     """
-    console_printer.print('Executing section {name}...'.format(
-        name=section.name))
+    console_printer.print(f'Executing section {section.name}...')
 
 
 def nothing_done(log_printer=None):
@@ -266,13 +266,13 @@ def print_lines(console_printer,
                 BackgroundSourceRangeStyle, lexer), end='')
 
             console_printer.print(highlight_text(
-               no_color, line[sourcerange.end.column - 1:],
-               BackgroundSourceRangeStyle, lexer), end='')
+                no_color, line[sourcerange.end.column - 1:],
+                BackgroundSourceRangeStyle, lexer), end='')
             console_printer.print('')
         else:
             console_printer.print(highlight_text(
                 no_color, line[printed_chars:], BackgroundMessageStyle, lexer),
-                                  end='')
+                end='')
             console_printer.print('')
 
 
@@ -306,19 +306,16 @@ def print_result(console_printer,
         return
 
     if hasattr(section, 'name'):
-        console_printer.print('**** {bear} [Section: {section} | Severity: '
-                              '{severity}] ****'
-                              .format(bear=result.origin,
-                                      section=section.name,
-                                      severity=RESULT_SEVERITY.__str__(
-                                          result.severity)),
+        console_printer.print(f'**** {result.origin} [Section: {section.name}'
+                              ' | Severity: '
+                              f'{RESULT_SEVERITY.__str__(result.severity)}] '
+                              '****',
                               color=RESULT_SEVERITY_COLORS[result.severity])
     else:
-        console_printer.print('**** {bear} [Section {section} | Severity '
-                              '{severity}] ****'
-                              .format(bear=result.origin, section='<empty>',
-                                      severity=RESULT_SEVERITY.__str__(
-                                          result.severity)),
+        console_printer.print(f'**** {result.origin} [Section <empty> | '
+                              'Severity '
+                              f'{RESULT_SEVERITY.__str__(result.severity)}]'
+                              '****',
                               color=RESULT_SEVERITY_COLORS[result.severity])
     lexer = TextLexer()
     result.message = highlight_text(no_color, result.message,
@@ -359,10 +356,7 @@ def print_diffs_info(diffs, printer):
     for filename, diff in sorted(diffs.items()):
         additions, deletions = diff.stats()
         printer.print(
-            format_lines('+{additions} -{deletions} in {file}'.format(
-                file=filename,
-                additions=additions,
-                deletions=deletions), '!'),
+            format_lines(f'+{additions} -{deletions} in {filename}', '!'),
             color='green')
 
 
@@ -453,10 +447,11 @@ def print_affected_files(console_printer,
             if (
                     sourcerange.file is not None and
                     sourcerange.file not in file_dict):
-                logging.warning('The context for the result ({}) cannot '
+                logging.warning(f'The context for the result ({result}) cannot '
                                 'be printed because it refers to a file '
-                                "that doesn't seem to exist ({})"
-                                '.'.format(result, sourcerange.file))
+                                "that doesn't seem to exist "
+                                f'({sourcerange.file})'
+                                '.')
             else:
                 print_affected_lines(console_printer,
                                      file_dict,
@@ -638,9 +633,11 @@ def get_action_info(section, action, failed_actions):
 
     for param_name in params:
         if param_name not in section or action.name in failed_actions:
-            question = format_lines(
-                "Please enter a value for the parameter '{}' ({}): "
-                .format(param_name, params[param_name][0]), symbol='!')
+            formatted_question = (
+                'Please enter a value for the parameter'
+                f" '{param_name}' ({params[param_name][0]}): "
+            )
+            question = format_lines(formatted_question, symbol='!')
             section.append(Setting(param_name, input(question)))
 
     return action.name, section
@@ -757,8 +754,9 @@ def try_to_apply_action(action_name,
         result.set_applied_actions(applied_actions)
         failed_actions.discard(action_name)
     except Exception as exception:  # pylint: disable=broad-except
-        logging.error('Failed to execute the action {} with error: {}.'
-                      .format(action_name, exception))
+        logging.error(
+            f'Failed to execute the action {action_name} with error: '
+            f'{exception}.')
         failed_actions.add(action_name)
 
 

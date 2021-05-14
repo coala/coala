@@ -127,7 +127,7 @@ class LocalBearTestHelper(unittest.TestCase):
                             self.assertEqual(
                                 getattr(observed, attribute),
                                 getattr(expected, attribute),
-                                msg='{} mismatch.'.format(attribute))
+                                msg=f'{attribute} mismatch.')
                         except AssertionError as ex:
                             messages += (str(ex) + '\n\n')
                 else:
@@ -223,8 +223,9 @@ class LocalBearTestHelper(unittest.TestCase):
                                   settings=settings,
                                   aspects=aspects,
                                   )
-        msg = ("The local bear '{}' yields no result although it "
-               'should.'.format(local_bear.__class__.__name__))
+        msg = (f"The local bear '{local_bear.__class__.__name__}'"
+               'yields no result although it '
+               'should.')
         self.assertNotEqual(len(bear_output), 0, msg=msg)
         return bear_output
 

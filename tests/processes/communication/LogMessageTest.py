@@ -38,20 +38,16 @@ class LogMessageTest(unittest.TestCase):
         self.uut.message = Constants.COMPLEX_TEST_STRING
         self.uut.log_level = LOG_LEVEL.ERROR
         self.assertEqual(str(self.uut),
-                         '[{}] {}'.format('ERROR',
-                                          Constants.COMPLEX_TEST_STRING))
+                         f'[ERROR] {Constants.COMPLEX_TEST_STRING}')
         self.uut.log_level = LOG_LEVEL.WARNING
         self.assertEqual(str(self.uut),
-                         '[{}] {}'.format('WARNING',
-                                          Constants.COMPLEX_TEST_STRING))
+                         f'[WARNING] {Constants.COMPLEX_TEST_STRING}')
         self.uut.log_level = LOG_LEVEL.DEBUG
         self.assertEqual(str(self.uut),
-                         '[{}] {}'.format('DEBUG',
-                                          Constants.COMPLEX_TEST_STRING))
+                         f'[DEBUG] {Constants.COMPLEX_TEST_STRING}')
         self.uut.log_level = 5
         self.assertEqual(str(self.uut),
-                         '[{}] {}'.format('ERROR',
-                                          Constants.COMPLEX_TEST_STRING))
+                         f'[ERROR] {Constants.COMPLEX_TEST_STRING}')
 
     def test_equals(self):
         self.assertEqual(LogMessage(LOG_LEVEL.DEBUG, 'test message'),

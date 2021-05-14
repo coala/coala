@@ -12,8 +12,8 @@ class CircularDependencyError(RuntimeError):
             The names of the nodes that form a dependency circle.
         """
         if names:
-            msg = 'Circular dependency detected: {names}'.format(
-                names=' -> '.join(names))
+            joined_names = ' -> '.join(names)
+            msg = f'Circular dependency detected: {joined_names}'
         else:
             msg = 'Circular dependency detected.'
         super().__init__(msg)

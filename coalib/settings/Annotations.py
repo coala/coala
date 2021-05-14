@@ -47,6 +47,6 @@ in specified values.
             except (ValueError, TypeError):
                 pass
         raise ValueError(
-            "Couldn't convert value {!r} to any specified type "
-            'or find it in specified values.'.format(value))
+            f"Couldn't convert value {value!r} to any specified type "
+            'or find it in specified values.')
     return annotation

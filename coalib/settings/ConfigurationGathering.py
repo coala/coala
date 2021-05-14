@@ -59,16 +59,16 @@ def validate_aspect_config(section):
         return False
 
     if not section.language:
-        logging.warning('Setting `language` is not found in section `{}`. '
-                        'Usage of aspect-based setting must include '
-                        'language information.'.format(section.name))
+        logging.warning('Setting `language` is not found in section '
+                        f'`{section.name}`. Usage of aspect-based setting '
+                        'must include language information.')
         return False
 
     if len(section.get('bears')):
         logging.warning('`aspects` and `bears` setting is detected '
-                        'in section `{}`. aspect-based configuration will '
-                        'takes priority and will overwrite any '
-                        'explicitly listed bears.'.format(section.name))
+                        f'in section `{section.name}`. aspect-based '
+                        'configuration will takes priority and will overwrite '
+                        'any explicitly listed bears.')
     return True
 
 
@@ -86,8 +86,8 @@ def _set_section_language(sections):
         try:
             section.language = Language[section_language]
         except UnknownLanguageError as exc:
-            logging.warning('Section `{}` contain invalid language setting: '
-                            '{}'.format(section_name, exc))
+            logging.warning(f'Section `{section_name}` contain invalid '
+                            f'language setting: {exc}')
 
 
 def merge_section_dicts(lower, higher):
@@ -185,8 +185,8 @@ def warn_nonexistent_targets(targets, sections, log_printer=None):
     for target in targets:
         if target not in sections:
             logging.warning(
-                "The requested section '{section}' is not existent. "
-                'Thus it cannot be executed.'.format(section=target))
+                f"The requested section '{target}' is not existent. "
+                'Thus it cannot be executed.')
 
     # Can't be summarized as python will evaluate conditions lazily, those
     # functions have intended side effects though.
@@ -214,9 +214,9 @@ def warn_config_absent(sections, argument, log_printer=None):
         if any(arg in section for arg in argument):
             return False
 
-    formatted_args = ' or '.join('`--{}`'.format(arg) for arg in argument)
+    formatted_args = ' or '.join(f'`--{arg}`' for arg in argument)
     logging.warning('coala will not run any analysis. Did you forget '
-                    'to give the {} argument?'.format(formatted_args))
+                    f'to give the {formatted_args} argument?')
     return True
 
 

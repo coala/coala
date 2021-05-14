@@ -48,9 +48,7 @@ class LogPrinterTest(unittest.TestCase):
         uut.logger.log.assert_any_call(logging.ERROR, 'Something failed.')
         uut.logger.log.assert_called_with(
             logging.INFO,
-            'Exception was:\n{exception}: {msg}'.format(
-                exception='NotImplementedError',
-                msg=msg))
+            f'Exception was:\nNotImplementedError: {msg}')
 
     def test_raises(self):
         uut = LogPrinter(NullPrinter())

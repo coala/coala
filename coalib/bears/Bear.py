@@ -387,13 +387,13 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         raise NotImplementedError
 
     def _dump_bear_profile_data(self, profiler):
-        filename = '{}_{}.prof'.format(self.section.name, self.name)
+        filename = f'{self.section.name}_{self.name}.prof'
         path = join(self.profile, filename)
         if not isdir(self.profile):
             try:
                 makedirs(self.profile)
             except FileExistsError:
-                logging.error('File exists :'.format(self.profile))
+                logging.error(f'File exists {self.profile}:')
                 raise SystemExit(2)
 
         profiler.dump_stats(path)
@@ -425,8 +425,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
             kwargs.update(
                 self.get_metadata().create_params_from_section(self.section))
         except ValueError as err:
-            self.warn('The bear {} cannot be executed.'.format(
-                self.name), str(err))
+            self.warn(f'The bear {self.name} cannot be executed.', str(err))
             return
         if self.debugger:
             return debug_run(self.run, Debugger(bear=self), *args, **kwargs)
@@ -438,7 +437,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
     def execute(self, *args, debug=False, **kwargs):
         name = self.name
         try:
-            self.debug('Running bear {}...'.format(name))
+            self.debug(f'Running bear {name}...')
 
             # If `dependency_results` kwargs is defined but there are no
             # dependency results (usually in Bear that has no dependency)
@@ -457,28 +456,30 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
                 raise
 
             if isinstance(exc, ZeroOffsetError):
-                self.err('Bear {} violated one-based offset convention.'
-                         .format(name), str(exc))
+                self.err(
+                    f'Bear {name} violated one-based offset convention.',
+                    str(exc))
 
             if (self.kind() == BEAR_KIND.LOCAL
                     and ('log_level' not in self.section
                          or self.section['log_level'].value != 'DEBUG')):
-                self.err('Bear {} failed to run on file {}. Take a look '
+                self.err(f'Bear {name} failed to run on file {args[0]}. '
+                         'Take a look '
                          'at debug messages (`-V`) for further '
-                         'information.'.format(name, args[0]))
+                         'information.')
             elif ('log_level' not in self.section
                     or self.section['log_level'].value != 'DEBUG'):
-                self.err('Bear {} failed to run. Take a look '
+                self.err(f'Bear {name} failed to run. Take a look '
                          'at debug messages (`-V`) for further '
-                         'information.'.format(name))
+                         'information.')
 
             self.debug(
-                'The bear {bear} raised an exception. If you are the author '
+                f'The bear {name} raised an exception. If you are the author '
                 'of this bear, please make sure to catch all exceptions. If '
                 'not and this error annoys you, you might want to get in '
                 'contact with the author of this bear.\n\nTraceback '
-                'information is provided below:\n\n{traceback}'
-                '\n'.format(bear=name, traceback=traceback.format_exc()))
+                f'information is provided below:\n\n{traceback.format_exc()}'
+                '\n')
 
     @staticmethod
     def kind():
@@ -642,8 +643,7 @@ class Bear(Printer, LogPrinterMixin, metaclass=bearclass):
         if exists(filename):
             return filename
 
-        self.info('Downloading {filename!r} for bear {bearname} from {url}.'
-                  .format(filename=filename, bearname=self.name, url=url))
+        self.info(f'Downloading {filename!r} for bear {self.name} from {url}.')
 
         response = requests.get(url, stream=True, timeout=20)
         response.raise_for_status()

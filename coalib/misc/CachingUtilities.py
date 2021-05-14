@@ -29,8 +29,9 @@ def get_data_path(log_printer, identifier):
         os.makedirs(Constants.USER_DATA_DIR, exist_ok=True)
         return os.path.join(Constants.USER_DATA_DIR, hash_id(identifier))
     except PermissionError:
-        logging.error("Unable to create user data directory '{}'. Continuing"
-                      ' without caching.'.format(Constants.USER_DATA_DIR))
+        logging.error('Unable to create user data directory '
+                      f"'{Constants.USER_DATA_DIR}'. Continuing"
+                      ' without caching.')
 
     return None
 
@@ -59,8 +60,8 @@ def delete_files(log_printer, identifiers):
     if len(error_files) > 0:
         error_files = ', '.join(error_files)
         logging.warning('There was a problem deleting the following '
-                        'files: {}. Please delete them manually from '
-                        "'{}'.".format(error_files, Constants.USER_DATA_DIR))
+                        f'files: {error_files}. Please delete them manually '
+                        f"from '{Constants.USER_DATA_DIR}'.")
         result = False
 
     return result

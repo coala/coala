@@ -139,7 +139,7 @@ class DynamicTaskBear(TestBearBase):
 
 # Define those classes at module level to make them picklable.
 for i in range(100):
-    classname = 'NoTasksBear{}'.format(i)
+    classname = f'NoTasksBear{i}'
     generated_type = type(classname,
                           (Bear,),
                           dict(generate_tasks=lambda self: tuple()))
@@ -148,7 +148,7 @@ for i in range(100):
 
 
 class DependentOnMultipleZeroTaskBearsTestBear(TestBearBase):
-    BEAR_DEPS = {getattr(sys.modules[__name__], 'NoTasksBear{}'.format(i))
+    BEAR_DEPS = {getattr(sys.modules[__name__], f'NoTasksBear{i}')
                  for i in range(100)} | {MultiResultBear}
 
 

@@ -39,19 +39,18 @@ class ManPageFormatterTest(unittest.TestCase):
         uut = ManPageFormatter(app_name, parser=test_arg_parser())
         today = datetime.date.today().strftime('%Y\\-%m\\-%d')
         self.assertEqual(uut._mk_title(),
-                         '.TH {0} {1} {2}\n'.format(app_name, 1, today))
+                         f'.TH {app_name} {1} {today}\n')
 
     def test_mk_name(self):
         uut = ManPageFormatter(app_name, parser=test_arg_parser())
         self.assertEqual(uut._mk_name(),
-                         '.SH NAME\n{}\n'.format(app_name))
+                         f'.SH NAME\n{app_name}\n')
 
     def test_mk_synopsis(self):
         uut = ManPageFormatter(app_name, parser=test_arg_parser())
         self.assertEqual(
             uut._mk_synopsis(),
-            '.SH SYNOPSIS\n \\fB{}\\fR [-h] [-a A] arg1\n\n\n'.format(
-                app_name))
+            f'.SH SYNOPSIS\n \\fB{app_name}\\fR [-h] [-a A] arg1\n\n\n')
 
     def test_mk_description(self):
         uut = ManPageFormatter(app_name,
@@ -61,7 +60,7 @@ class ManPageFormatterTest(unittest.TestCase):
                                parser=test_arg_parser(),
                                long_desc=app_long_description)
         self.assertEqual(uut._mk_description(),
-                         '.SH DESCRIPTION\n{}\n'.format(app_long_description))
+                         f'.SH DESCRIPTION\n{app_long_description}\n')
 
     def test_mk_options(self):
         uut = ManPageFormatter(app_name, parser=test_arg_parser())
@@ -74,8 +73,7 @@ class ManPageFormatterTest(unittest.TestCase):
     def test_mk_footer(self):
         uut = ManPageFormatter(app_name, ext_sections=sections)
         self.assertEqual(uut._mk_footer(),
-                         '.SH {}\n {}'.format(
-                             section_name.upper(), section_text))
+                         f'.SH {section_name.upper()}\n {section_text}')
         uut = ManPageFormatter(app_name, ext_sections=None)
         self.assertEqual(uut._mk_footer(), '')
 
@@ -83,28 +81,26 @@ class ManPageFormatterTest(unittest.TestCase):
         parser = test_arg_parser(ManPageFormatter)
         self.assertEqual(
             parser.format_help(),
-            'usage: {0} [-h] [-a A] arg1\n\n{1}\n\n'
+            f'usage: {app_name} [-h] [-a A] arg1\n\n{app_description}\n\n'
             'positional arguments:\n'
             '  arg1\n\n'
             'optional arguments:\n'
             '  \\fB-h\\fR, \\fB--help\\fR\n'
             '                        show this help message and exit\n'
-            '  \\fB-a\\fR \\fIA\\fR\n'
-            .format(app_name, app_description))
+            '  \\fB-a\\fR \\fIA\\fR\n')
 
         parser = ManPageFormatter(app_name,
                                   parser=argparse.ArgumentParser(
                                       prog=app_name))
         today = datetime.date.today().strftime('%Y\\-%m\\-%d')
         self.assertEqual(parser.format_man_page(),
-                         '.TH {0} 1 {1}\n'
+                         f'.TH {app_name} 1 {today}\n'
                          '.SH NAME\n'
-                         '{0}\n'
+                         f'{app_name}\n'
                          '.SH SYNOPSIS\n'
                          ' \\fBname\\fR [-h]\n\n\n'
                          '.SH OPTIONS\n'
-                         '  -h, --help  show this help message and exit\n'
-                         .format(app_name, today))
+                         '  -h, --help  show this help message and exit\n')
 
 
 class BuildManPageTest(unittest.TestCase):
@@ -126,11 +122,11 @@ class BuildManPageTest(unittest.TestCase):
 
             today = datetime.date.today().strftime('%Y\\-%m\\-%d')
             self.assertEqual(result,
-                             """.TH {0} 1 {1}
+                             f""".TH {app_name} 1 {today}
 .SH NAME
-{0}
+{app_name}
 .SH SYNOPSIS
- \\fB{0}\\fR [-h] [-a A] arg1
+ \\fB{app_name}\\fR [-h] [-a A] arg1
 
 
 .SH DESCRIPTION
@@ -146,4 +142,4 @@ UNKNOWN
 .SH MAINTAINER(S)
  UNKNOWN
 .SH SEE ALSO
- Online documentation: UNKNOWN""".format(app_name, today))
+ Online documentation: UNKNOWN""")

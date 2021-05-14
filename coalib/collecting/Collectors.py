@@ -75,9 +75,9 @@ def icollect(file_paths, ignored_globs=None, match_cache={},
     for index, glob in enumerate(ignored_globs):
         dirname, basename = os.path.split(glob)
         if not has_wildcard(dirname) and basename == '**':
-            logging.warning("Detected trailing globstar in ignore glob '{}'. "
-                            "Please remove the unnecessary '**' from its end."
-                            .format(glob))
+            logging.warning('Detected trailing globstar in ignore glob '
+                            f"'{glob}'. "
+                            "Please remove the unnecessary '**' from its end.")
             ignored_globs[index] = glob.rstrip('*')
 
     for file_path in file_paths:
@@ -206,21 +206,23 @@ def icollect_bears(bear_dir_glob, bear_globs, kinds, log_printer=None):
                         yield bear, bear_glob
                 except pkg_resources.VersionConflict as exception:
                     log_exception(
-                        ('Unable to collect bears from {file} because there '
+                        (f'Unable to collect bears from {matching_file} '
+                         'because there '
                          'is a conflict with the version of a dependency '
                          'you have installed. This may be resolved by '
                          'creating a separate virtual environment for coala '
-                         'or running `pip3 install \"{pkg}\"`. Be aware that '
+                         f'or running `pip3 install \"{exception.req}\"`. '
+                         'Be aware that '
                          'the latter solution might break other python '
                          'packages that depend on the currently installed '
-                         'version.').format(file=matching_file,
-                                            pkg=exception.req),
+                         'version.'),
                         exception, log_level=LOG_LEVEL.WARNING)
                 except BaseException as exception:
                     log_exception(
-                        'Unable to collect bears from {file}. Probably the '
+                        f'Unable to collect bears from {matching_file}. '
+                        'Probably the '
                         'file is malformed or the module code raises an '
-                        'exception.'.format(file=matching_file),
+                        'exception.',
                         exception,
                         log_level=LOG_LEVEL.WARNING)
 
@@ -324,7 +326,7 @@ def collect_bears_by_aspects(aspects, kinds):
 
     if unfulfilled_aspects:
         logging.warning('coala cannot find bear that could analyze the '
-                        'following aspects: {}'.format(unfulfilled_aspects))
+                        f'following aspects: {unfulfilled_aspects}')
     return bears_found
 
 

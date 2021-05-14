@@ -25,4 +25,4 @@ def check_deprecation(param_list):
     """
     for param_name, param_value in param_list.items():
         if param_value is not None:
-            logging.warning('{} parameter is deprecated'.format(param_name))
+            logging.warning(f'{param_name} parameter is deprecated')

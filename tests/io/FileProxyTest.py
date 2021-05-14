@@ -35,8 +35,8 @@ class FileProxyTest(unittest.TestCase):
         with prepare_file([], None) as (_, file):
             empty_fileproxy = FileProxy(file)
 
-            gen_str = '<FileProxy {}, {}>'.format(
-                empty_fileproxy.filename, empty_fileproxy.version)
+            gen_str = (f'<FileProxy {empty_fileproxy.filename}, '
+                       f'{empty_fileproxy.version}>')
 
             self.assertEqual(gen_str, str(empty_fileproxy))
 

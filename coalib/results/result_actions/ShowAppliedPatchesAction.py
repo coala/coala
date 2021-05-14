@@ -36,15 +36,15 @@ class ShowAppliedPatchesAction(ResultAction):
             this_result = val[RESULT_INDEX]
             this_section = val[SECTION_INDEX]
             color_res = RESULT_SEVERITY_COLORS[this_result.severity]
-            console_printer.print('\n**** {bear} [Section: {section}] ***'
-                                  '*\n**** Action Applied: {action} ****\n'
-                                  .format(bear=this_result.origin,
-                                          section=this_section.name,
-                                          action=key),
+            console_printer.print(f'\n**** {this_result.origin} '
+                                  f'[Section: {this_section.name}] ***'
+                                  f'*\n**** Action Applied: {key} ****\n',
                                   color=color_res)
-            console_printer.print(format_lines('[Severity: {sev}]'.format(
-                sev=RESULT_SEVERITY.__str__(this_result.severity)), '!'),
-                  color=color_res)
+            severity = RESULT_SEVERITY.__str__(this_result.severity)
+            console_printer.print(
+                format_lines(f'[Severity: {severity}]', '!'),
+                color=color_res
+            )
             show_patch_action.apply_from_section(val[RESULT_INDEX],
                                                  val[FILE_DICT_INDEX],
                                                  val[FILE_DIFF_DICT_INDEX],

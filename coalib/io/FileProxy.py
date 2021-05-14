@@ -68,7 +68,7 @@ class FileProxy:
             instance with. Integrity of the content or the
             sync state is never checked during initialization.
         """
-        logging.debug('File proxy for {} created'.format(filename))
+        logging.debug(f'File proxy for {filename} created')
 
         # The file may not exist yet, hence there is no
         # reliable way of knowing if it is a file on the
@@ -87,8 +87,7 @@ class FileProxy:
             Return a string representation of a file proxy
             with information about its version and filename.
         """
-        return '<FileProxy {}, {}>'.format(
-            self._filename, self._version)
+        return f'<FileProxy {self._filename}, {self._version}>'
 
     def __hash__(self):
         """
@@ -118,13 +117,13 @@ class FileProxy:
             self._contents = contents
             self._version = version
 
-            logging.debug('File proxy for {} updated to version {}.'
-                          .format(self.filename, self.version))
+            logging.debug(
+                f'File proxy for {self.filename} '
+                f'updated to version \'{self.version}\'.')
 
             return True
 
-        logging.debug('Updating file proxy for {} failed.'
-                      .format(self.filename))
+        logging.debug(f'Updating file proxy for {self.filename} failed.')
 
         return False
 
