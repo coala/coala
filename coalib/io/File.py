@@ -92,8 +92,16 @@ class File:
         """
         lines = self.string.splitlines()
         if self._newline:
-            return tuple(line + '\n'
-                         for line in lines)
+            line_list = []
+            for line in lines[:-1]:
+                line_list.append(line + '\n')
+
+            newline_end = self.string[-1] == '\n'
+            line_list.append(lines[-1] 
+                    + '\n' if newline_end else '')
+
+            return tuple(line_list)
+
         else:
             return tuple(lines)
 
