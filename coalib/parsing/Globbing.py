@@ -1,10 +1,46 @@
 import os
 import platform
 import re
+import signal
 from functools import lru_cache
+from contextlib import contextmanager
 
 from coala_utils.decorators import yield_once
 from coalib.misc.Constants import GLOBBING_SPECIAL_CHARS
+
+
+GLOB_EXPAND_TIME_LIMIT = 60
+
+
+class GlobTimeoutException(Exception):
+    """
+    Glob Timeout Exception
+    """
+
+
+@contextmanager
+def time_limit():
+    def signal_handler(signum, frame):
+        raise GlobTimeoutException(
+                'glob expansion taking too much time')
+
+    signal.signal(signal.SIGALRM, signal_handler)
+    signal.alarm(GLOB_EXPAND_TIME_LIMIT)
+
+    try:
+        yield
+    finally:
+        signal.alarm(0)
+
+
+def glob_time_limit(glob_func):
+    def glob_time_limit_wrapper(*args, **kwargs):
+        try:
+            with time_limit():
+                return glob_func(*args, **kwargs)
+        except GlobTimeoutException as e:
+            raise e
+    return glob_time_limit_wrapper
 
 
 def _end_of_set_index(string, start_index):
@@ -106,6 +142,7 @@ def _boundary_of_alternatives_indices(pattern):
     return start_pos, end_pos
 
 
+@glob_time_limit
 @yield_once
 def _iter_choices(pattern):
     """
@@ -125,6 +162,7 @@ def _iter_choices(pattern):
             start_pos = end_pos + 1
 
 
+@glob_time_limit
 @yield_once
 def _iter_alternatives(pattern):
     """
@@ -256,6 +294,7 @@ def _absolute_flat_glob(pattern):
     return
 
 
+@glob_time_limit
 def _iter_relative_dirs(dirname):
     """
     Recursively iterates subdirectories of all levels from dirname
@@ -316,6 +355,7 @@ def relative_flat_glob(dirname, basename):
     return []
 
 
+@glob_time_limit
 def relative_recursive_glob(dirname, pattern):
     """
     Recursive Glob for one directory and all its (nested) subdirectories.
@@ -347,6 +387,7 @@ def has_wildcard(pattern):
     return match is not None
 
 
+@glob_time_limit
 def _iglob(pattern):
     dirname, basename = os.path.split(pattern)
     if not has_wildcard(pattern):
@@ -378,7 +419,6 @@ def _iglob(pattern):
             yield os.path.join(dirname, name)
 
 
-@yield_once
 def iglob(pattern):
     """
     Iterates all filesystem paths that get matched by the glob pattern.
