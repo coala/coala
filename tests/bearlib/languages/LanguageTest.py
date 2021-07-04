@@ -2,6 +2,7 @@ import pickle
 import unittest
 
 from coalib.bearlib.languages.Language import Language, LanguageMeta
+from tests.TestUtilities import LANGUAGE_NAMES
 
 
 class LanguageTest(unittest.TestCase):
@@ -46,3 +47,50 @@ class LanguageAttributeErrorTest(unittest.TestCase):
     def test_attribute_list_empy(self):
         with self.assertRaisesRegex(AttributeError, 'no available attribute'):
             self.lang_unknown.not_an_attribute
+
+
+class LanguageAttributeTypeTest(unittest.TestCase):
+
+    def setUp(self):
+        self.languages = []
+        for language_name in LANGUAGE_NAMES:
+            version = Language[language_name].get_default_version()
+            self.languages.append(Language[version])
+
+    def test_comment_delimiters_type(self):
+        for language in self.languages:
+            attributes = language.attributes
+            if 'comment_delimiters' in attributes:
+                self.assertIsInstance(language.comment_delimiters,
+                                      tuple)
+
+    def test_multiline_comment_delimiters_type(self):
+        for language in self.languages:
+            attributes = language.attributes
+            if 'multiline_comment_delimiters' in attributes:
+                self.assertIsInstance(
+                    language.multiline_comment_delimiters, dict)
+
+    def test_extensions_type(self):
+        for language in self.languages:
+            attributes = language.attributes
+            if 'extensions' in attributes:
+                self.assertIsInstance(language.extensions, tuple)
+
+    def test_string_delimiters_type(self):
+        for language in self.languages:
+            attributes = language.attributes
+            if 'string_delimiters' in attributes:
+                self.assertIsInstance(language.string_delimiters, dict)
+
+    def test_encapsulators_type(self):
+        for language in self.languages:
+            attributes = language.attributes
+            if 'encapsulators' in attributes:
+                self.assertIsInstance(language.encapsulators, dict)
+
+    def test_indent_types_type(self):
+        for language in self.languages:
+            attributes = language.attributes
+            if 'indent_types' in attributes:
+                self.assertIsInstance(language.indent_types, dict)
