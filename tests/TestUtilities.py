@@ -76,6 +76,7 @@ LANGUAGE_NAMES = [
     'VisualBasic',
     'm4',
     'ZShell',
+    'TOML',
 ]
 
 LANGUAGE_COUNT = len([
