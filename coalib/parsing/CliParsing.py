@@ -126,9 +126,14 @@ def check_conflicts(sections):
 
         if (
                 not section.get('json', False) and
-                (str(section.get('output', '')) or
-                 section.get('relpath', False))):
+                section.get('relpath', False)):
             ArgumentParser().error(
-                "'output' or 'relpath' cannot be used without `--json`.")
+                "'relpath' cannot be used without `--json`.")
+        if (
+                not (section.get('json', False) or
+                     section.get('diff', False)) and
+                str(section.get('output', ''))):
+            ArgumentParser().error(
+                "'output' cannot be used without `--json` or `--diff`.")
 
     return True

@@ -1,0 +1,4 @@
+[diff]
+files = testFile.py
+bears = SpaceConsistencyTestBear
+use_spaces = True
