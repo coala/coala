@@ -11,10 +11,27 @@ from coala_utils.decorators import enforce_signature
 
 
 def format_line(line, real_nr='', sign=']', mod_nr='', symbol='', ):
-    return '[{:>4}{}{:1}{}'.format(real_nr,
+    return '{:6}[{:>4}{}{:1}{}'.format('',
+                                       real_nr,
+                                       sign,
+                                       symbol,
+                                       line.rstrip('\n'))
+
+
+def format_subtracted(line, real_nr='', sign=']', mod_nr='', symbol='', ):
+    return '[{:>4}{}{:7}{}'.format(real_nr,
                                    sign,
                                    symbol,
                                    line.rstrip('\n'))
+
+
+def format_unchanged(line, original_nr='', new_nr='', sign=']', symbol='', ):
+    return '[{:>4}{}[{:>4}{}{:1}{}'.format(original_nr,
+                                           sign,
+                                           new_nr,
+                                           sign,
+                                           symbol,
+                                           line.rstrip('\n'))
 
 
 def print_from_name(printer, line):
@@ -43,17 +60,19 @@ def print_beautified_diff(difflines, printer):
                           color='green')
             current_line_added += 1
         elif line.startswith('-'):
-            printer.print(format_line(line[1:],
-                                      real_nr=current_line_subtracted),
+            printer.print(format_subtracted(line[1:],
+                                            real_nr=current_line_subtracted),
                           color='red')
             current_line_subtracted += 1
         else:
+            printer.print(format_unchanged(line[1:],
+                                           original_nr=current_line_subtracted,
+                                           new_nr=current_line_added))
             current_line_subtracted += 1
             current_line_added += 1
 
 
 class ShowPatchAction(ResultAction):
-
     SUCCESS_MESSAGE = 'Displayed patch successfully.'
 
     @staticmethod
