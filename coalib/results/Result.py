@@ -230,7 +230,8 @@ class Result:
                                                line,
                                                column,
                                                end_line,
-                                               end_column)
+                                               end_column,
+                                               additional_info)
 
         return cls(origin=origin,
                    message=message,
