@@ -122,7 +122,7 @@ class DocstyleDefinitionTest(unittest.TestCase):
 
         # Test unregistered language in existing docstyle.
         with self.assertRaises(KeyError):
-            next(DocstyleDefinition.load('bake-a-cake', 'default'))
+            next(DocstyleDefinition.load('bake-a-cake', 'sphinx'))
 
         # Test wrong argument type.
         with self.assertRaises(TypeError):
@@ -130,19 +130,19 @@ class DocstyleDefinitionTest(unittest.TestCase):
 
         # Test python 3 default configuration and if everything is parsed
         # right.
-        result = DocstyleDefinition.load('PYTHON3', 'default')
+        result = DocstyleDefinition.load('PYTHON3', 'sphinx')
 
         self.assertEqual(result.language, 'python3')
-        self.assertEqual(result.docstyle, 'default')
+        self.assertEqual(result.docstyle, 'sphinx')
         self.assertEqual(result.markers, (('"""', '', '"""'),))
 
         self.assertEqual(result.metadata, self.dummy_metadata)
 
     def test_get_available_definitions(self):
         # Test if the basic supported docstyle-language pairs exist.
-        expected = {('default', 'python'),
-                    ('default', 'python3'),
-                    ('default', 'java'),
+        expected = {('sphinx', 'python'),
+                    ('sphinx', 'python3'),
+                    ('javadoc', 'java'),
                     ('doxygen', 'c'),
                     ('doxygen', 'cpp'),
                     ('doxygen', 'cs'),
