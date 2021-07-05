@@ -460,6 +460,47 @@ def _create_linter(klass, options):
                                      result_message,
                                      diff_distance)
 
+        def process_output_xml_diff(self,
+                                    output,
+                                    filename,
+                                    file,
+                                    diff_severity=RESULT_SEVERITY.NORMAL,
+                                    result_message='Inconsistency found.',
+                                    diff_distance=1):
+            """
+            Processes the executable's output as an xml diff.
+
+            :param output:
+                The output of the program as a string containing the
+                xml diff for correction.
+            :param filename:
+                The filename of the file currently being corrected.
+            :param file:
+                The contents of the file currently being corrected.
+            :param diff_severity:
+                The severity to use for generating results.
+            :param result_message:
+                The message-string to use for generating results.
+            :param diff_distance:
+                Number of unchanged lines that are allowed in between two
+                changed lines so they get yielded as one diff. If a negative
+                distance is given, every change will be yielded as an own diff,
+                even if they are right beneath each other.
+            :return:
+                An iterator returning results containing patches for the
+                file to correct.
+            """
+            diff = Diff.from_string_arrays(
+                file,
+                output.splitlines(keepends=True))
+            diff.from_xml_diff(output, file)
+            return self.process_diff(
+                diff,
+                filename,
+                diff_severity,
+                result_message,
+                diff_distance)
+
         def process_output_regex(
                 self, output, filename, file, output_regex,
                 severity_map=MappingProxyType({
