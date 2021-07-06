@@ -66,6 +66,7 @@ LANGUAGE_NAMES = [
     'SASS',
     'SCSS 3.1, 3.2, 3.3, 3.4, 3.5, 4.0',
     'Shell',
+    'Solidity',
     'Swift',
     'Tcl',
     'Text',
