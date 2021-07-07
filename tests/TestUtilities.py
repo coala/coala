@@ -54,6 +54,7 @@ LANGUAGE_NAMES = [
     'JavaServer Pages',
     'Jinja2',
     'KornShell',
+    'Liquid',
     'Markdown',
     'Matlab',
     'ObjectiveC',
