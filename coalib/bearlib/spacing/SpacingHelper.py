@@ -25,19 +25,11 @@ class SpacingHelper(SectionCreatable):
         :param line: A string to check for indentation.
         :return:     The indentation count in spaces.
         """
-        count = 0
-        for char in line:
-            if char == ' ':
-                count += 1
-                continue
+        line_expanded = line.expandtabs(self.tab_width)
 
-            if char == '\t':
-                count += self.tab_width - (count % self.tab_width)
-                continue
+        indentation_count = len(line_expanded) - len(line_expanded.lstrip())
 
-            break
-
-        return count
+        return indentation_count
 
     @enforce_signature
     def replace_tabs_with_spaces(self, line: str):
@@ -50,29 +42,10 @@ class SpacingHelper(SectionCreatable):
         :param line: The string with tabs to replace.
         :return:     A string with no tabs.
         """
-        for t_position, t_length in sorted(self.yield_tab_lengths(line),
-                                           reverse=True):
-            line = line[:t_position] + t_length * ' ' + line[t_position+1:]
+
+        line = line.expandtabs(self.tab_width)
 
         return line
-
-    @enforce_signature
-    def yield_tab_lengths(self, input: str):
-        """
-        Yields position and size of tabs in a input string.
-
-        :param input: The string with tabs.
-        """
-        tabless_position = 0
-        for index, char in enumerate(input):
-            if char == '\t':
-                space_count = (self.tab_width - tabless_position
-                               % self.tab_width)
-                yield index, space_count
-                tabless_position += space_count
-                continue
-
-            tabless_position += 1
 
     @enforce_signature
     def replace_spaces_with_tabs(self, line: str):
