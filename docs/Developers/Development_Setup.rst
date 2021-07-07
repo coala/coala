@@ -77,7 +77,7 @@ in your current directory, as coala only works for Python >= 3.5
   `Virtualenv User Guide <https://virtualenv.pypa.io/en/latest/user_guide.html#activators>`__.
 
 - After this, you can start
-  `installing from git <https://api.coala.io/en/latest/Developers/Development_Setup.html#installing-from-git>`__.
+  `installing from git <#installing-from-git>`__.
 
 Repositories
 ------------
