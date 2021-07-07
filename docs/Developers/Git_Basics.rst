@@ -374,29 +374,111 @@ branch in your fork. If it says your branch is ``n commits behind
 coala:master`` (or whichever repo you are contributing to), then you
 haven't correctly rebased yet. Otherwise, you're good to go!
 
-Squashing your commits
-----------------------
+Interactive Rebasing
+---------------------
+
+Interactive rebasing allows you to have more control over the commits in your branch. To
+start an interactive rebase, run the following command
+
+::
+
+    $ git rebase -i master
+
+An editor will be fired up with all the commits in your current branch
+(ignoring merge commits), which come after the given commit. 
+
+:: 
+    
+    pick <SHA> Sample Commit Message
+
+    # Rebase <SHAs> onto <SHA> (4 commands)
+    #
+    # Commands:
+    # p, pick <commit> = use commit
+    # r, reword <commit> = use commit, but edit the commit message
+    # e, edit <commit> = use commit, but stop for amending
+    # s, squash <commit> = use commit, but meld into previous commit
+    # f, fixup <commit> = like "squash", but discard this commit's log message
+    # x, exec <command> = run command (the rest of the line) using shell
+    # b, break = stop here (continue rebase later with 'git rebase --continue')
+    # d, drop <commit> = remove commit
+    # l, label <label> = label current HEAD with a name
+    # t, reset <label> = reset HEAD to a label
+    # m, merge [-C <commit> | -c <commit>] <label> [# <oneline>]
+    # .       create a merge commit using the original merge commit's
+    # .       message (or the oneline, if no original merge commit was
+    # .       specified). Use -c <commit> to reword the commit message.
+    #
+    # These lines can be re-ordered; they are executed from top to bottom.
+    #
+    # If you remove a line here THAT COMMIT WILL BE LOST.
+    #
+    # However, if you remove everything, the rebase will be aborted.
+    #
+    # Note that empty commits are commented out
+
+Git offers a quick view of several commands that we can apply to each commit. 
+For our purposes we will focus on five.
+
+Picking
+-------
+
+As simple as it sounds. if you want to use a commit without changing it, use pick.
+By default, interactive rebase will pick all your commits.
+
+Rewording
+---------
+
+Equivalent to the `git commit --amend` except it applies to the specified commit. Use
+reword if your commit message does not follow proper formatting. Depending on the number 
+of rewords applied, new editors will appear for each commit message to amend. Make your changes
+and exit the editor to apply them. 
+
+Editing
+-------
+
+Similar to pick, except you can make changes to the commit before it is applied. Make any
+changes and run 
+
+:: 
+    
+    $ git commit --amend
+
+To apply the patched changes to the commit before it's applied to the branch.
+
+.. note::
+
+    Be careful of merge conficts resulting from editing older commits. The older the commit,
+    the more likely it is to cause a merge conflict. If your rebase ends up in a bad state, run
+
+    ``$ git rebase --abort``
+    
+    This will restore the original state of your branch before the rebase was initiated.
+
+Squashing
+---------
 
 It's possible that you have more than one commit and you want them to be
 squashed into a single commit. You can take your series of commits and squash
 them down into a single commit with the interactive rebasing tool. To squash
 your commits run the following command:
 
-::
-
-    $ git rebase -i master
+Keep the first one
+as "pick" and on the second and subsequent commits with "squash". After saving,
+another editor will be fired up with all the messages of commits which you want
+to squash. Clean up all the messages and add a new message to be
+displayed for the single commit.
 
 .. note::
 
     master is the SHA1 hash of the commit before which you want to squash all
     the commits and make sure that rebase is done onto master branch.
 
-An editor will be fired up with all the commits in your current branch
-(ignoring merge commits), which come after the given commit. Keep the first one
-as "pick" and on the second and subsequent commits with "squash". After saving,
-another editor will be fired up with all the messages of commits which you want
-to squash. Clean up all the messages and add a new message to be
-displayed for the single commit.
+Dropping
+--------
+
+Used to delete particular commits while preserving the branch state. Use drop
+to destroy commits without needing to recreate your changes on a new branch.
 
 Common Git Issues
 -----------------
