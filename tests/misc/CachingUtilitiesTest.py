@@ -1,5 +1,6 @@
 import os
 import unittest
+from unittest.mock import patch
 
 from pyprint.NullPrinter import NullPrinter
 
@@ -65,6 +66,11 @@ class SettingsTest(unittest.TestCase):
         sections = {'a': Section('a')}
         settings_hash = get_settings_hash(sections)
         self.assertTrue(settings_changed(self.log_printer, settings_hash))
+
+        with patch('coalib.misc.CachingUtilities.pickle_load') as \
+                mocked_pickle_load:
+            mocked_pickle_load.return_value = {}
+            self.assertFalse(settings_changed(self.log_printer, settings_hash))
 
     def test_targets_change(self):
         sections = {'a': Section('a'), 'b': Section('b')}
