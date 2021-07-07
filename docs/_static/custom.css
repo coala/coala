@@ -157,3 +157,7 @@ img {
     font-size: 0.9em;
     overflow-x: auto;
 }
+
+.shortlink-page {
+    overflow-x: auto;
+}
