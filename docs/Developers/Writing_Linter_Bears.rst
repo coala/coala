@@ -251,6 +251,12 @@ We need to map that to coala's convention as follows:
             normalize_column_numbers = True,
             ...)
 
+.. note::
+
+    This is a reminder for developers that they need to do a proper research on
+    linter, ensure the convention and ideally write tests to ensure that
+    behaviour.
+
 Suggest Corrections Using the ``corrected`` and ``unified-diff`` Output Formats
 -------------------------------------------------------------------------------
 
