@@ -44,5 +44,5 @@ class PrintAspectActionTest(unittest.TestCase):
                                                          Section('name')),
                              {})
             self.assertEqual(stdout.getvalue(),
-                             type(self.test_aspect).__qualname__ + '\n' +
-                             type(self.test_aspect).docs.definition + '\n')
+                             'This code does not comply to Root.test_aspect:\n'
+                             '    This is a test aspect\n')
