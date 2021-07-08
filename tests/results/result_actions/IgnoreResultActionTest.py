@@ -1,4 +1,5 @@
 import unittest
+import unittest.mock
 from os.path import exists
 
 from coala_utils.ContextManagers import make_temp

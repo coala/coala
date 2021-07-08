@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+import unittest.mock
 import os
 
 from coalib import coala_delete_orig
