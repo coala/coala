@@ -34,6 +34,8 @@ doc-marker6 = //!, //!, //!
 [PYTHON]
 doc-marker1 = """, , """
 doc-marker2 = \#\#, \#, \#
+doc-marker3 = r""", , """
+doc-marker4 = R""", , """
 param_start = @param\ # here's a space
 param_end = \ # here's a space
 exception_start = @raises\ # here's a space
@@ -47,6 +49,8 @@ function_padding = 1, 0
 [PYTHON3]
 doc-marker1 = """, , """
 doc-marker2 = \#\#, \#, \#
+doc-marker3 = r""", , """
+doc-marker4 = R""", , """
 param_start = @param\ # here's a space
 param_end = \ # here's a space
 exception_start = @raises\ # here's a space
