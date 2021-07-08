@@ -10,6 +10,8 @@ from coalib.settings.Setting import Setting
 from coalib.bearlib import deprecate_settings
 from coalib.results.SourcePosition import SourcePosition
 
+__all__ = ('ConfParser', )
+
 
 class ConfParser:
 
@@ -166,3 +168,7 @@ class ConfParser:
         self.sections = OrderedDict()
         self.sections['default'] = Section('Default')
         self.__rand_helper = 0
+
+
+# Ignore PycodestyleBear (E402)
+from .SimplerConfParser import SimplerConfParser as ConfParser
