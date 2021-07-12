@@ -1,3 +1,7 @@
 [build]
-  publish = "docs/_build/html"
-  command = "pip install -r docs-requirements.txt && export PYTHONPATH=$(pwd) && python setup.py docs"
+  publish = "{{docs_dir or 'docs'}}/_build/html"
+  {% if package_module %}
+  command = "pip install -r docs-requirements.txt && export PYTHONPATH=$(pwd) && python setup.py {{docs_dir or 'docs'}}"
+  {% else %}
+  command = "pip install -r docs-requirements.txt && export PYTHONPATH=$(pwd) && make html"
+  {% endif %}

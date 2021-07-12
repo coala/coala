@@ -5,6 +5,7 @@ notifications:
   email: false
 python:
   - 3.5
+  - 3.7
 
 stages:
   - name: sentinel
