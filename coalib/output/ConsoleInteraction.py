@@ -137,17 +137,6 @@ def print_section_beginning(console_printer, section):
     console_printer.print(f'Executing section {section.name}...')
 
 
-def nothing_done(log_printer=None):
-    """
-    Will be called after processing a coafile when nothing had to be done,
-    i.e. no section was enabled/targeted.
-
-    :param log_printer: A LogPrinter object.
-    """
-    logging.warning('No existent section was targeted or enabled. Nothing to '
-                    'do.')
-
-
 def get_alternate_patch_actions(result):
     """
     Returns a tuple of AlternatePatchAction instances, each corresponding
