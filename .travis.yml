@@ -48,8 +48,12 @@ jobs:
       python: 3.6.9
       if: branch = master AND type = push
 
-    # OSX build removed due to long build startup delays
-    # Restore matrix job entry from d2d67fab to test OSX
+    - os: osx
+      sudo: true
+      python: 3.6
+      language: bash
+      stage: test
+      if: branch = master AND type = push
     - python: 2.7
       <<: *disable_global
       stage: unsupported
