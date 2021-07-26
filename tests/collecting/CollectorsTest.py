@@ -49,6 +49,33 @@ class CollectFilesTest(unittest.TestCase):
                                 '.coafile to deactivate this warning.')
         )
 
+    def test_require_files_not_empty(self):
+        with LogCapture() as capture:
+            self.assertEqual(collect_files(file_paths=['invalid_path'],
+                                           log_printer=self.log_printer,
+                                           require_files_not_empty=True,
+                                           section_name='section'), [])
+        capture.check(
+            ('root', 'ERROR', 'No matches found for `files`.'),
+            ('root', 'WARNING', 'No files matching \'invalid_path\' were '
+                                'found. If this rule is not required, you can '
+                                'remove it from section [section] in your '
+                                '.coafile to deactivate this warning.')
+        )
+
+    def test_require_files_for_each_glob(self):
+        with LogCapture() as capture:
+            self.assertEqual(collect_files(file_paths=['invalid_path'],
+                                           log_printer=self.log_printer,
+                                           require_files_for_each_glob=True,
+                                           section_name='section'), [])
+        capture.check(
+            ('root', 'ERROR', 'No files matching \'invalid_path\' were '
+                              'found. If this rule is not required, you can '
+                              'remove it from section [section] in your '
+                              '.coafile to deactivate this warning.')
+        )
+
     def test_file_collection(self):
         self.assertEqual(collect_files([os.path.join(self.collectors_test_dir,
                                                      'others',
