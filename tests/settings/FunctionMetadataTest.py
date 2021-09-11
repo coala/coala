@@ -49,11 +49,8 @@ class FunctionMetadataTest(unittest.TestCase):
                 'param2': ('d', None)
             },
             optional_params={
-                'param3': (uut.str_nodesc + ' ('
-                           + uut.str_optional.format('5') + ')',
-                           None, 5),
-                'param4': ('p4 desc ('
-                           + uut.str_optional.format('6') + ')', int, 6)})
+                'param3': (uut.str_nodesc, None, 5, 'Optional'),
+                'param4': ('p4 desc', int, 6, 'Optional')})
 
         uut = FunctionMetadata.from_function(TestClass(5, 5).__init__,
                                              omit={'param3', 'param2'})
@@ -67,9 +64,7 @@ class FunctionMetadataTest(unittest.TestCase):
                            None)
             },
             optional_params={
-                'param4': ('p4 desc (' + uut.str_optional.format('6') + ')',
-                           int,
-                           6)})
+                'param4': ('p4 desc', int, 6, 'Optional')})
 
     def test_create_params_from_section_invalid(self):
         section = Section('name')
