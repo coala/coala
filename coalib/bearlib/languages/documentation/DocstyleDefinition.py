@@ -301,14 +301,18 @@ class DocstyleDefinition:
                    function_padding, docstring_type_regex, docstring_position)
 
     @staticmethod
-    def get_available_definitions():
+    def get_available_definitions(coalang_dir=None):
         """
         Returns a sequence of pairs with ``(docstyle, language)`` which are
         available when using ``load()``.
 
+        :param coalang_dir:        Path to directory with coalang docstyle
+                                   definition files. This replaces the default
+                                   path if given.
         :return: A sequence of pairs with ``(docstyle, language)``.
         """
-        pattern = os.path.join(os.path.dirname(__file__), '*.coalang')
+        pattern = os.path.join(
+            coalang_dir or os.path.dirname(__file__), '*.coalang')
 
         for coalang_file in iglob(pattern):
             docstyle = os.path.splitext(os.path.basename(coalang_file))[0]
