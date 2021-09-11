@@ -11,6 +11,7 @@ def mode_normal(console_printer, log_printer, args, debug=False):
     import functools
     import logging
 
+    logging.warning('Warning: The use of log_printer is deprecated')
     from coalib.coala_main import run_coala
     from coalib.output.ConsoleInteraction import (
         acquire_settings, nothing_done,
