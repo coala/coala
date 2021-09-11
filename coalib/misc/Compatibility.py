@@ -1,4 +1,9 @@
 import json
+"""
+json.decoder.JSONDecodeError gives an AttributeError
+because JSONDecodeError missing in Python 3.4
+
+"""
 try:
     # JSONDecodeError class is available since Python 3.5.x.
     JSONDecodeError = json.decoder.JSONDecodeError
