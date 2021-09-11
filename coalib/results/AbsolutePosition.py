@@ -27,6 +27,90 @@ class AbsolutePosition(TextPosition):
     def position(self):
         return self._position
 
+    def __le__(self, other):
+        """
+        Test whether ``self`` is behind or equals the other
+        ``AbsolutePosition``.
+
+        :param other: ``AbsolutePosition`` to compare with.
+        :return:      Whether this ``AbsolutePosition`` is behind the other
+                      one or the same.
+        """
+        if not isinstance(other, self.__class__):
+            return False
+
+        if self._text != other._text:
+            return False
+
+        return self.position <= other.position
+
+    def __ge__(self, other):
+        """
+        Test whether ``self`` is ahead of or equals the
+        other ``AbsolutePosition``.
+
+        :param other: ``AbsolutePosition`` to compare with.
+        :return:      Whether this ``AbsolutePosition`` is ahead of the other
+                      one or the same.
+        """
+        if not isinstance(other, self.__class__):
+            return False
+
+        if self._text != other._text:
+            return False
+
+        return self.position >= other.position
+
+    def __lt__(self, other):
+        """
+        Test whether ``self`` is behind the other
+        ``AbsolutePosition``.
+
+        :param other: ``AbsolutePosition`` to compare with.
+        :return:      Whether this ``AbsolutePosition`` is behind the other
+                      one.
+        """
+        if not isinstance(other, self.__class__):
+            return False
+
+        if self._text != other._text:
+            return False
+
+        return self.position < other.position
+
+    def __gt__(self, other):
+        """
+        Test whether ``self`` is ahead of the other
+        ``AbsolutePosition``.
+
+        :param other: ``AbsolutePosition`` to compare with.
+        :return:      Whether this ``AbsolutePosition`` is ahead of the other
+                      one.
+        """
+        if not isinstance(other, self.__class__):
+            return False
+
+        if self._text != other._text:
+            return False
+
+        return self.position > other.position
+
+    def __eq__(self, other):
+        """
+        Test whether ``self`` equals the other ``AbsolutePosition``.
+
+        :param other: ``AbsolutePosition`` to compare with.
+        :return:      Whether this ``AbsolutePosition`` equals the
+                      other.
+        """
+        if not isinstance(other, self.__class__):
+            return False
+
+        if self._text != other._text:
+            return False
+
+        return self.position == other.position
+
 
 def calc_line_col(text, position):
     r"""
