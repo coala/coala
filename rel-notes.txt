@@ -1,0 +1,263 @@
+Bugs fixed:
+
+Coloring bug with `--no-color` flag was resolved
+https://github.com/coala/coala/issues/4185
+
+Documentation Extraction API: Diff-cutoff removed
+https://github.com/coala/coala/issues/4187
+
+Diff.unified_diff renders the unified-diff now properly
+even when no linebreaks were passed to the Diff instance.
+
+Cornercase behaviour fixed in `DocumentationComment.assemble()`
+https://github.com/coala/coala/issues/2645
+
+Documentation API:
+Parsing error corrected
+https://github.com/coala/coala/issues/2143
+
+Documentation API:
+DocumentationComment: Fix exception when ending colon missing of metadata
+https://github.com/coala/coala/issues/2143
+
+Linter: Stop TypeError raised on debug logging
+https://github.com/coala/coala/issues/4433
+
+DocstyleDefinition: Multiple loading of coalang files led to unwanted section overrides.
+https://github.com/coala/coala/issues/4470
+
+Various Documentation API fixes:
+- https://github.com/coala/coala/issues/4029
+
+Fix --apply-patches not working
+https://github.com/coala/coala/issues/4957
+
+
+Linter.py:
+Errors fixed that were raised when displaying debug
+messages with `None` arguments
+https://github.com/coala/coala/issues/4433
+
+coala now properly detects BOMs
+https://github.com/coala/coala-bears/issues/1205
+
+Section inheritance fixed for upper-cased section names
+https://github.com/coala/coala/issues/4182
+
+aspectbase: Recursively instance aspect children
+https://github.com/coala/coala/issues/4388
+
+Make `Language` class pickle-able
+
+Collectors: Stabilise bear order
+Ensure that the order of bears is consistent irrespective of
+the order of entries returned by the file-system.
+https://github.com/coala/coala/issues/4541
+
+
+User
+
+https://github.com/coala/coala/issues/4084
+NeoVim is now an editor recognized by coala.
+
+New aspects added:
+- coalaCorrect (https://gitlab.com/coala/GSoC-2017/issues/236)
+- Smell (https://github.com/coala/coala/issues/4305)
+- Root.Security
+- Root.Formatting
+- Indentation
+
+Better readable results output
+
+New generic filtering system with the `--filter-by` flag.
+Filters for language, can-fix- and can-detect-capabilities
+are available in this version. New filters going to come.
+https://github.com/coala/coala/issues/2509
+
+Write output to empty file instead of appending
+When --output option is specified, write output of coala to fresh file
+instead of appending the existing file so that existing file is not
+corrupted when using --json.
+
+Add TypeScript language definition
+This adds a definition for the TypeScript language
+so that coala can work with it.
+
+definitions/shell.py: Add shell definition
+    Adds language definition for shell.
+
+
+coala: Allow users to print selected bears
+    This commit enables user to specify bear names to be shown
+    provided with options --show-bears --bears. It also allows user
+    to specify regex to search bears.
+    https://github.com/coala/coala/issues/4651
+
+DefaultArgParser: Uni(xi)fy directory separators
+
+    Use a new PathArg type for all cmdline arguments that represent file
+    system paths. It replaces OS-native directory separators with Unix-style
+    forward slashes. Windows-style backslashes would otherwise be
+    interpreted as escaping syntax and therefore removed when turning
+    cmdline arguments into coala settings, what makes interactively working
+    with coala in a Windows cmdline a pain ;)
+
+    This makes also all the re.escape(filename) hacks in tests obsolete.
+    And since they are actually also not working anymore together with
+    PathArg, those hacks are removed as part of this commit
+
+    Closes https://github.com/coala/coala/issues/4356
+
+Change default_coafile naming convention
+
+    Changes naming of deafult_coafile and now uses system_coafile.
+
+    Closes https://github.com/coala/coala/issues/3389
+
+
+
+
+
+
+
+Bear-Developer:
+
+Allow bears to use raw files
+https://github.com/coala/coala/issues/3529
+
+CAN_DETECT got `Statistics` as new item.
+https://github.com/coala/coala/issues/4233
+
+
+
+
+API / Developer
+
+`coalib.misc.Shell.get_shell_type` was removed without deprecation.
+(https://github.com/coala/coala/commit/1e4b18ca0cfc328b43eac73b60603eb0f4ca0bbd)
+
+The two duplicated CircularDependencyError classes were merged,
+please use `coalib.core.CircularDependencyError`.
+https://github.com/coala/coala/issues/4191
+
+Added check_line_result_count() to LocalBearTestHelper, to
+assert quickly how many results occurred on a line.
+https://github.com/coala/coala/issues/4227
+
+`Diff`:
+- The behaviour of `__bool__` was changed to be more consistent.
+https://github.com/coala/coala/issues/4178
+
+HTML language support for ignore comments was added
+https://github.com/coala/coala/issues/4260
+
+LocalBearTestHelper:
+- add `check_invalidity` (https://github.com/coala/coala/issues/2197)
+
+LocalBearTestHelper:
+- `settings` argument added to `check_validity` and `check_invalidity`.
+  This allows to quickly supply section settings without overhead.
+https://github.com/coala/coala/issues/4247
+
+--debug flag added, coala immediately steps into a debugging-session
+on errors.
+
+Diff: Consistently appends linebreaks if they aren't passed inside
+file-data.
+https://github.com/coala/coala/issues/3834
+
+Documentation API:
+Add support for `:raises ...:` metadata
+https://github.com/coala/coala/issues/4279
+
+Documentation API:
+Improved docstring recognition
+https://github.com/coala/coala/issues/4291
+
+Documentation API:
+DocumentationComment accepts now a position instead of a range
+https://github.com/coala/coala/issues/2646
+
+Bears can now process non-text files.
+https://github.com/coala/coala/issues/3529
+
+LocalBearTestHelper:
+get_results() supports bears with dependencies.
+https://github.com/coala/coala/issues/2860
+
+ChainPatchAction added
+
+DocumentationAPI: Ignore triple quote strings
+https://github.com/coala/coala/issues/4291
+
+Aspects: Create exception for aspects lookup
+https://github.com/coala/coala/issues/4381
+https://github.com/coala/coala/issues/4402
+
+
+coalib.bearlib.aspects.meta.aspectTypeError is now coalib.bearlib.aspects.exceptions.AspectTypeError
+
+AspectList: Overload __init__ to accept strings
+    Overload AspectList so it could be instanced from a list of string
+    containing aspects name. The reason of this overloading is to make
+    it possible to instanced list of desired aspects name found in
+    coafiles.
+    https://github.com/coala/coala/issues/4382
+
+aspectbase & AspectList & aspectModule: Add ``get()`` method
+    ``get()`` method serve as quick way to get a specific, deep subaspects
+    of an aspect.
+    https://github.com/coala/coala/issues/4410 & https://github.com/coala/coala/issues/4384 & https://github.com/coala/coala/issues/4411
+
+AspectList: Add ``exclude`` attribute
+https://github.com/coala/coala/issues/4438
+
+Documentation API:
+Add DocBaseClass
+https://github.com/coala/coala/issues/2659
+
+LocalBearTestHelper:
+Bears with dependencies can now be used.
+https://github.com/coala/coala/issues/2860
+
+aspects: Create ``get_leaf_aspects`` method
+
+coalib/abstractions: Add LinterClass.py
+Introduce a virtual base class for linters
+
+Documentation API:
+Add `MalformedComment`
+https://github.com/coala/coala/issues/4548
+
+DocumentationAPI:
+Add `padding` and `type`
+
+Language: Create UnknownLanguageError
+https://github.com/coala/coala/issues/4642
+
+Aspect: Create ``map_setting_to_aspect`` decorator
+https://github.com/coala/coala/issues/4661
+
+HiddenResult.__init()__ now has all the parameters of Result.__init()__
+https://github.com/coala/coala/issues/4454
+
+Add specialized shortcuts for typed_list,
+for str, int, float and bool types.
+https://github.com/coala/coala/issues/3224
+
+Interactions.fail_acquire_settings:
+Remove parameter `section`
+https://github.com/coala/coala/issues/4740
+
+SectionFilling.py: Deprecate section parameter
+Introduce deprecation for calling acquire_settings
+
+DeprecationUtilities.py: Add a utility function
+    Add a check_deprecation utility function to log a
+    warning message in case deprecated parameters are
+    used.
+
+ConsoleInteraction.py: Deprecate 2 parameters
+    The parameters show_params and show_description
+    are deprecated
+    https://github.com/coala/coala/issues/4868
