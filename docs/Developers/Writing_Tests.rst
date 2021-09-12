@@ -2,7 +2,7 @@ Introduction
 ============
 
 Tests are an essential element to check if your written components in
-coala really do work like they should. Even when you think "I really
+coala really do work as they should. Even when you think "I really
 looked over my code, no need for tests" you are wrong! Bugs introduced
 when not writing tests are often the most horrible ones, they have the
 characteristic to be undiscoverable (or only discoverable after dozens
@@ -53,7 +53,7 @@ The name of the test file has to end with ``Test.py`` (for example
     ``pytest -h``
 
 Coming to the test file structure. Every test script starts with your
-imports. According to the coala code style (and pep8 style) we first do
+imports. According to the coala code style (and pep8 style), we first do
 system imports (like ``re`` or ``subprocessing``), followed by first party
 imports (like ``coalib.result.Result``).
 

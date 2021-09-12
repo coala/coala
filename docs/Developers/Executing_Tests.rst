@@ -7,7 +7,7 @@ Executing our Tests
 -------------------
 
 coala has a big test suite. It is meant to work on every platform on
-every PC. If you just execute our tests you are doing us a favor.
+every PC. If you just execute our tests you are doing us a favour.
 
 To run tests, You first need to install some dependencies.
 This can be done by following these steps:
@@ -22,7 +22,7 @@ it) by running:
 
 Navigate to the directory where coala is located.
 
-Next you need to install some requirements. This can be
+Next, you need to install some requirements. This can be
 done by executing the following command while in the root of the
 coala project directory.
 

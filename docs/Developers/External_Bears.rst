@@ -55,7 +55,7 @@ Writing a Bear in C++
 ---------------------
 
 The bear that will be created with this tutorial will check whether there is
-any **coala** spelled with a capital ``C`` since that is a horrible mistake for
+any **coala** spelt with a capital ``C`` since that is a horrible mistake for
 one to make.
 
 1. Create a new directory and make it your current working directory.
@@ -75,7 +75,7 @@ one to make.
    ``coalaCheckBear.py`` (the wrapper) and ``coalaCheckBearTest.py``.
 5. This tutorial will not focus on testing so ignore the second file for now.
    The wrapper should look similar to the code block presented below. Some code
-   has been cleaned for convenience of explanation.
+   has been cleaned for the convenience of explanation.
 
    .. note::
 
@@ -282,7 +282,7 @@ one to make.
         $ export PATH=$PATH:$PWD
 
     The last step is to test if everything is working properly. This is the
-    testfile used in this tutorial (
+    test file used in this tutorial (
     `testfile <https://raw.githubusercontent.com/Redridge/coalaCheckBear-cpp/master/testfile>`__).
 
 14. Execute the Bear by running:
@@ -410,7 +410,7 @@ uses a script that needs another binary to run (e.g. python, bash, node).
            out["results"].push(result)
        };
 
-6. Iterate over the lines and check for ``"coala"`` spelled with a capital
+6. Iterate over the lines and check for ``"coala"`` spelt with a capital
    ``"C"``. The final source should look like this:
 
    ::
@@ -475,7 +475,7 @@ uses a script that needs another binary to run (e.g. python, bash, node).
        });
 
 
-In order to run this Bear there is no need to add the source code to the path
+In order to run this Bear, there is no need to add the source code to the path
 because the binary being run is ``node``. Although there is a problem: the
 argument supplied will be looked up only in the current directory. To fix this
 you can add the full path of the ``.js`` file in the argument list. In this

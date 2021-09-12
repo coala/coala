@@ -180,7 +180,7 @@ Example:
 More Examples
 ~~~~~~~~~~~~~
 
-Example 1 (fixed bug and added enhacement):
+Example 1 (fixed bug and added enhancement):
 Pull request `#4217 <https://github.com/coala/coala/pull/4217>`_
 
 ::
@@ -189,7 +189,7 @@ Pull request `#4217 <https://github.com/coala/coala/pull/4217>`_
 
     Removes the self.has_changes property, since its functionality can be
     accessed from the bool conversion.
-    Fixes inconstency of __bool__ that results from looking at
+    Fixes inconsistency of __bool__ that results from looking at
     self._changes:
     removing one line, then adding the same content again resulted in
     bool(diff) == True, instead of False.
@@ -204,7 +204,7 @@ Pull request `#435 <https://github.com/coala/projects/pull/435>`_
 
 ::
 
-    Update the CI1, CI2 , & CI3 tasks to refer to 2017
+    Update the CI1, CI2, & CI3 tasks to refer to 2017
 
     This commit changes all occurrences of 2016 to 2017 and the project
     links with the new ones in use_coala.md, use_coala_2.md and

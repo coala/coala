@@ -27,9 +27,9 @@ profiled data files will be dumped.
 
 If no any directory specified, profiled files will be saved to current working
 directory. If the specified directory does not exist it will be created. If the
-specified path points to an already existing file a error is raised.
+specified path points to an already existing file an error is raised.
 
-Profiled files will get overwritten, if specified directory already had a
+Profiled files will get overwritten if specified directory already had a
 profiled data files in it.
 
 .. note::
