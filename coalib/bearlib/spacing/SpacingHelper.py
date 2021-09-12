@@ -88,7 +88,7 @@ class SpacingHelper(SectionCreatable):
         """
         currspaces = 0
         result = ''
-        # Tracking the index of the string isnt enough because tabs are
+        # Tracking the index of the string isn't enough because tabs are
         # spanning over multiple columns
         tabless_position = 0
         for char in line:
