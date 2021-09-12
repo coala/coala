@@ -51,7 +51,7 @@ linter-bear infrastructure, which is provided via the ``@linter`` decorator.
     class PylintTutorialBear:
         pass
 
-As you can see ``pylint`` is already provided as an executable name which gets
+As you can see, ``pylint`` is already provided as an executable name which gets
 invoked on the files you are going to lint. This is a mandatory argument for
 the decorator.
 
