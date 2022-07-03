@@ -1,5 +1,5 @@
 """
-Language and docstyle independent extraction of documenation comments.
+Language and docstyle independent extraction of documentation comments.
 
 Each of the functions is built upon one another, and at the last,
 exposes a single function :func:`extract_documentation_with_markers`
