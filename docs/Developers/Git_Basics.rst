@@ -329,7 +329,7 @@ to understand how it works.
 Rebasing
 --------
 
-As people work on coala new commits will be added. This will result in your
+As people work on coala, new commits will be added. This will result in your
 local fork going out of sync with the remote repository.
 To sync your changes with the remote repository run the following commands in
 the desired branch:
