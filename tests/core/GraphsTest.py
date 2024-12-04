@@ -1,4 +1,10 @@
-from collections import Iterable
+import sys
+
+if sys.version_info.major >= 3 and sys.version_info.minor > 10:
+    from collections.abc import Iterable
+else:
+    from collections import Iterable
+
 from functools import partial
 import unittest
 

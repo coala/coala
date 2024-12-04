@@ -1,5 +1,11 @@
-import os
-from collections import Iterable, OrderedDict
+import sys, os
+
+if sys.version_info.major >= 3 and sys.version_info.minor > 10:
+    from collections.abc import Iterable
+else:
+    from collections import Iterable
+
+from collections import OrderedDict
 
 from coala_utils.decorators import (
     enforce_signature,
