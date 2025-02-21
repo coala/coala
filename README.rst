@@ -12,12 +12,93 @@
 
 =====
 
-`coala <https://coala.io>`_ provides a unified interface for linting and fixing code with a single configuration file, regardless of the programming languages used. You can use coala from within your favorite editor, integrate it with your CI, get the results as JSON, or customize it to your needs with its flexible configuration syntax.
+coala: A Unified Linting and Fixing Tool for Multiple Languages
+==============================================================
 
-coala supports popular programming languages including **Python**, **C/C++**, **Java**, **JavaScript**, **CSS**, and `several others <http://coala.io/#!/languages>`_ out of the box.
+coala provides a **unified interface for linting and fixing code** across multiple programming languages with a **single configuration file**.
+It helps developers maintain **consistent code quality** and **enforce coding standards** effortlessly.
+
+With coala, you can:
+
+- Run linters for multiple languages from a single tool.
+- **Auto-fix** code issues with minimal manual effort.
+- Use it in your **favorite editor**, integrate it into **CI/CD**, or run it via **CLI**.
+- Get results in **JSON format** for further processing.
+- Customize linting rules with **flexible configuration syntax**.
+
+Why Use coala?
+--------------
+
+- **Language-Agnostic** – Works with **Python, C/C++, Java, JavaScript, CSS, Go, Rust**, and more.
+- **One Configuration for All** – Define rules in a single `.coafile` instead of configuring multiple linters.
+- **Editor & IDE Integration** – Compatible with **VS Code, Vim, Emacs, Sublime, Atom**, and others.
+- **CI/CD Ready** – Easily integrate with **GitHub Actions, GitLab CI, Travis CI, Jenkins**, etc.
+- **Customizable & Extensible** – Add custom bears (plugins) to define your own linting logic.
+- **Active Community & Support** – Open-source, with an engaged community and active maintainers.
+
+Installation
+------------
+
+Install coala using **pip**:
+
+.. code-block:: bash
+
+    pip install coala
+
+Or install via **Docker**:
+
+.. code-block:: bash
+
+    docker pull coala/base
+
+For detailed installation instructions, see the `Installation Guide <link-to-installation>`_.
 
 
-`Install coala <http://coala.io/#!/home#installation>`_ | `Get Involved <http://coala.io/#/getinvolved>`_ | `Chat <https://coala.io/chat>`_ | `Roadmap <https://projects.coala.io>`_ | `Blog <http://blog.coala.io>`_ | `Twitter <https://www.twitter.com/coala_io>`_
+Editor & CI Integrations
+------------------------
+
+**Editors & IDEs**
+
+- `VS Code`_
+- `Vim`_
+- `Emacs`_
+- `Sublime Text`_
+- `Atom`_
+
+**Continuous Integration (CI/CD)**
+
+- `GitHub Actions`_
+- `GitLab CI`_
+- `Jenkins`_
+
+Contributing
+------------
+
+We love contributions! If you want to help improve coala, check out our `Contribution Guide <https://github.com/coala/blob/master/CONTRIBUTING.rst>`_.
+
+Ways to contribute:
+
+- ✔ Report issues and suggest improvements.
+- ✔ Fix bugs and add new features.
+- ✔ Improve documentation.
+- ✔ Help with community support and discussions.
+
+
+License
+-------
+
+coala is released under the **GNU General Public License v3 (GPL-3.0)**. See the `LICENSE file <https://github.com/coala/blob/master/LICENSE>`_ for details.
+
+Stay Connected
+--------------
+-  **Chat**: `Chat <https://coala.io/chat>`_
+-  **Blog**: `Blog <http://blog.coala.io/>`_
+-  **Twitter**: `Twitter <https://www.twitter.com/coala_io>`_
+-  **Roadmap**: `Roadmap <https://projects.coala.io/>`_
+
+
+
+
 
 
 .. |Linux Build Status| image:: https://img.shields.io/circleci/project/coala/coala/master.svg?label=linux%20build
