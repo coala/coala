@@ -11,7 +11,7 @@ by creating an issue in our `issue tracker <https://github.com/coala/coala/issue
 Git-Links
 ---------
 
--   `Git Tutorial <https://try.github.io/levels/1/challenges/1>`_
+-   `Git Tutorial <https://coddy.tech/landing/git>`_
 -   :doc:`coala's Git Tutorial<Git_Basics>`
 -   `Commit message guidelines <https://wiki.gnome.org/Git/CommitMessages>`_
 -   :doc:`coala Commits<Writing_Good_Commits>`
